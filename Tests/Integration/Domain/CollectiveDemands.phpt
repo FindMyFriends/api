@@ -1,0 +1,39 @@
+<?php
+declare(strict_types = 1);
+/**
+ * @testCase
+ * @phpVersion > 7.1
+ */
+namespace FindMyFriends\Integration\Domain;
+
+use FindMyFriends\Domain;
+use FindMyFriends\Misc;
+use FindMyFriends\TestCase;
+use Klapuch\Access;
+use Klapuch\Dataset;
+use Klapuch\Output;
+use Tester\Assert;
+
+require __DIR__ . '/../../bootstrap.php';
+
+final class CollectiveDemands extends \Tester\TestCase {
+	use TestCase\TemplateDatabase;
+
+	public function testAskingForFirstDemand() {
+		(new Misc\SampleDemand($this->database, ['general' => ['gender' => 'man'], 'created_at' => new \DateTime()]))->try();
+		(new Misc\SampleDemand($this->database, ['general' => ['gender' => 'woman'], 'created_at' => new \DateTime('2000-01-01')]))->try();
+		$demands = (new Domain\CollectiveDemands(
+			new Domain\OwnedDemands(new Access\FakeUser('1'), $this->database),
+			$this->database
+		))->all(new Dataset\FakeSelection('', []));
+		$demand = $demands->current();
+		Assert::contains('"gender": "man"', $demand->print(new Output\Json())->serialization());
+		$demands->next();
+		$demand = $demands->current();
+		Assert::contains('"gender": "woman"', $demand->print(new Output\Json())->serialization());
+		$demands->next();
+		Assert::null($demands->current());
+	}
+}
+
+(new CollectiveDemands())->run();

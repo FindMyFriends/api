@@ -1,0 +1,248 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "properties": {
+    "body": {
+      "id": "/properties/body",
+      "properties": {
+        "build": {
+          "id": "/properties/body/properties/build",
+          "type": ["string", "null"]
+        },
+        "height": {
+          "id": "/properties/body/properties/height",
+          "type": ["integer", "null"]
+        },
+        "skin": {
+          "id": "/properties/body/properties/skin",
+          "type": ["string", "null"]
+        },
+        "weight": {
+          "id": "/properties/body/properties/weight",
+          "type": ["integer", "null"]
+        }
+      },
+      "required": [
+        "skin",
+        "weight",
+        "build",
+        "height"
+      ],
+      "type": "object",
+      "default": {
+        "build": null,
+        "height": null,
+        "skin": null,
+        "weight": null
+      }
+    },
+    "face": {
+      "id": "/properties/face",
+      "properties": {
+        "acne": {
+          "id": "/properties/face/properties/acne",
+          "type": ["null", "boolean"]
+        },
+        "beard": {
+          "id": "/properties/face/properties/beard",
+          "type": ["null"]
+        },
+        "complexion": {
+          "id": "/properties/face/properties/complexion",
+          "type": ["null"]
+        },
+        "eyebrow": {
+          "id": "/properties/face/properties/eyebrow",
+          "type": ["null"]
+        },
+        "freckles": {
+          "id": "/properties/face/properties/freckles",
+          "type": ["null", "boolean"]
+        },
+        "hair": {
+          "id": "/properties/face/properties/hair",
+          "properties": {
+            "color": {
+              "id": "/properties/face/properties/hair/properties/color",
+              "type": ["null"]
+            },
+            "highlights": {
+              "id": "/properties/face/properties/hair/properties/highlights",
+              "type": ["null"]
+            },
+            "length": {
+              "id": "/properties/face/properties/hair/properties/length",
+              "type": ["null"]
+            },
+            "nature": {
+              "id": "/properties/face/properties/hair/properties/nature",
+              "type": ["null"]
+            },
+            "roots": {
+              "id": "/properties/face/properties/hair/properties/roots",
+              "type": ["null"]
+            },
+            "style": {
+              "id": "/properties/face/properties/hair/properties/style",
+              "type": ["null"]
+            }
+          },
+          "required": [
+            "roots",
+            "length",
+            "highlights",
+            "color",
+            "nature",
+            "style"
+          ],
+          "type": "object"
+        },
+        "left_eye": {
+          "id": "/properties/face/properties/left_eye",
+          "properties": {
+            "color": {
+              "id": "/properties/face/properties/left_eye/properties/color",
+              "type": ["null"]
+            },
+            "lenses": {
+              "id": "/properties/face/properties/left_eye/properties/lenses",
+              "type": ["null"]
+            }
+          },
+          "required": [
+            "lenses",
+            "color"
+          ],
+          "type": "object"
+        },
+        "right_eye": {
+          "id": "/properties/face/properties/right_eye",
+          "properties": {
+            "color": {
+              "id": "/properties/face/properties/right_eye/properties/color",
+              "type": ["null"]
+            },
+            "lenses": {
+              "id": "/properties/face/properties/right_eye/properties/lenses",
+              "type": ["null"]
+            }
+          },
+          "required": [
+            "lenses",
+            "color"
+          ],
+          "type": "object"
+        },
+        "shape": {
+          "id": "/properties/face/properties/shape",
+          "type": ["null"]
+        },
+        "teeth": {
+          "id": "/properties/face/properties/teeth",
+          "properties": {
+            "braces": {
+              "id": "/properties/face/properties/teeth/properties/braces",
+              "type": ["null"]
+            },
+            "care": {
+              "id": "/properties/face/properties/teeth/properties/care",
+              "type": ["null"]
+            }
+          },
+          "required": [
+            "care",
+            "braces"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "beard",
+        "teeth",
+        "complexion",
+        "shape",
+        "left_eye",
+        "hair",
+        "eyebrow",
+        "acne",
+        "freckles",
+        "right_eye"
+      ],
+      "type": "object",
+      "default": {
+        "acne": null,
+        "beard": null,
+        "complexion": null,
+        "eyebrow": null,
+        "freckles": null,
+        "hair": {
+          "color": null,
+          "highlights": null,
+          "length": null,
+          "nature": null,
+          "roots": null,
+          "style": null
+        },
+        "left_eye": {
+          "color": null,
+          "lenses": null
+        },
+        "right_eye": {
+          "color": null,
+          "lenses": null
+        },
+        "shape": null,
+        "teeth": {
+          "braces": null,
+          "care": null
+        }
+      }
+    },
+    "general": {
+      "id": "/properties/general",
+      "properties": {
+        "age": {
+          "id": "/properties/general/properties/age",
+          "type": ["integer", "null"]
+        },
+        "firstname": {
+          "id": "/properties/general/properties/firstname",
+          "type": ["null"],
+          "default": null
+        },
+        "gender": {
+          "id": "/properties/general/properties/gender",
+          "type": "string"
+        },
+        "lastname": {
+          "id": "/properties/general/properties/lastname",
+          "type": ["null"],
+          "default": null
+        },
+        "race": {
+          "id": "/properties/general/properties/race",
+          "type": "string"
+        }
+      },
+      "required": [
+        "lastname",
+        "firstname",
+        "race",
+        "age",
+        "gender"
+      ],
+      "type": "object",
+      "default": {
+        "firstname": null,
+        "lastname": null
+      }
+    }
+  },
+  "required": [
+    "general",
+    "face",
+    "body"
+  ],
+  "type": "object"
+}

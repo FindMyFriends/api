@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "general": {
+      "properties": {
+        "age": {
+          "type": "integer"
+        },
+        "firstname": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "age"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "general"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+	<permission resource="v1/tokens" role="guest"/>
+	<permission resource="v1/demands/{num}" role="guest"/>
+	<permission resource="v1/demands" role="guest"/>
+</permissions>

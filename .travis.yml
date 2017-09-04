@@ -1,0 +1,55 @@
+sudo: required
+
+services:
+  - postgresql
+
+addons:
+  postgresql: 9.5
+
+language: php
+
+php:
+  - 7.2
+  - nightly
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
+
+before_script:
+  - cp -f Tests/Configuration/.config.travis.ini Tests/Configuration/.config.local.ini
+  - sudo cp -f ./docker/sendmail /usr/sbin/fake-sendmail && sudo chmod +x /usr/sbin/fake-sendmail
+  - psql -c 'CREATE DATABASE find_my_friends_test;' -U postgres
+  - psql -U postgres find_my_friends_test < Tests/fixtures/schema.sql
+  - wget https://raw.githubusercontent.com/klapuch/plpgunit/master/install/1.install-unit-test.sql -O Tests/fixtures/plpgunit.sql
+  - psql -U postgres find_my_friends_test < Tests/fixtures/plpgunit.sql
+
+script:
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then vendor/bin/phing ci; else vendor/bin/phing; fi # Code coverage test
+
+after_script:
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar && php coveralls.phar --verbose --config Tests/.coveralls.yml; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then php coveralls.phar --verbose --config Tests/.coveralls.yml; fi
+
+after_failure:
+  - for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+
+#before_deploy:
+#  - openssl aes-256-cbc -K $encrypted_c4f6e40ac2f7_key -iv $encrypted_c4f6e40ac2f7_iv -in active24.enc -out active24 -d
+#  - chmod 600 active24
+#  - mkdir -p ~/.ssh
+#  - mv active24 ~/.ssh/id_rsa
+#  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+#
+#deploy:
+#  provider: script
+#  skip_cleanup: true
+#  script: ./vendor/bin/dep deploy
+#  on:
+#    branch: master
+
+cache:
+    directories:
+      - $HOME/.composer/cache
