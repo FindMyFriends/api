@@ -5,7 +5,6 @@ namespace FindMyFriends\Misc;
 use Predis;
 
 final class ETagRedis implements Predis\ClientInterface {
-	private const SECTION = '_ETAG:';
 	private $origin;
 
 	public function __construct(Predis\ClientInterface $origin) {
@@ -45,14 +44,18 @@ final class ETagRedis implements Predis\ClientInterface {
 	}
 
 	public function get($key): string {
-		return $this->origin->get(self::SECTION . $key);
+		return $this->origin->get($this->key($key));
 	}
 
 	public function set($key, $value, $expireResolution = null, $expireTTL = null, $flag = null) {
-		return $this->origin->set(self::SECTION . $key, $value);
+		return $this->origin->set($this->key($key), $value);
 	}
 
 	public function exists($key): int {
-		return $this->origin->exists(self::SECTION . $key);
+		return $this->origin->exists($this->key($key));
+	}
+
+	private function key(string $key): string {
+		return sprintf('_ETAG:%s', $key);
 	}
 }
