@@ -360,10 +360,9 @@ CREATE TABLE general (
     id integer NOT NULL,
     gender genders NOT NULL,
     race races NOT NULL,
-    age integer NOT NULL,
+    age int4range NOT NULL,
     firstname character varying(100),
-    lastname character varying(100),
-    CONSTRAINT general_age_check CHECK ((age > 0))
+    lastname character varying(100)
 );
 
 

@@ -39,7 +39,7 @@ final class StoredDemand extends \Tester\TestCase {
 				'seeker' => 1,
 				'created_at' => new \DateTime('2017-09-16 00:00:00+00'),
 				'general' => [
-					'age' => 21,
+					'age' => [20, 21],
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => 'Dom',
@@ -91,7 +91,7 @@ final class StoredDemand extends \Tester\TestCase {
 				'gender' => 'man',
 				'lastname' => 'Klapuch',
 				'firstname' => 'Dom',
-				'age' => 21,
+				'age' => '[20,22)',
 				'teeth' => ['care' => 'high', 'braces' => false],
 				'shape' => 'oval',
 				'right_eye' => ['color' => 'blue', 'lenses' => false],
