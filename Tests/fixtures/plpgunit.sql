@@ -192,6 +192,9 @@ AS
 $BODY$
 BEGIN
     EXECUTE callback;
+    message := format('EXCEPTION WAS NOT THROWN');
+    result := false;
+    RETURN;
     EXCEPTION WHEN OTHERS THEN
     IF (expected.message IS NOT NULL AND expected.message <> SQLERRM) THEN
         message := format('EXPECTED EXCEPTION WITH MESSAGE "%s", BUT GIVEN "%s"', expected.message, SQLERRM);

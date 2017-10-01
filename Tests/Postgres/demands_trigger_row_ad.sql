@@ -7,7 +7,7 @@ BEGIN
 	INSERT INTO general (gender, race, age, firstname, lastname) VALUES (
 		'man',
 		'european',
-		21,
+		'[20,22)',
 		NULL,
 		NULL
 	);

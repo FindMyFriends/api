@@ -15,42 +15,42 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -199,6 +199,24 @@ $$;
 
 
 ALTER FUNCTION public.demands_trigger_row_ad() OWNER TO postgres;
+
+--
+-- Name: demands_trigger_row_bu(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION demands_trigger_row_bu() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	IF (old.created_at <> new.created_at) THEN
+		RAISE EXCEPTION 'Column created_at is read only';
+	END IF;
+	RETURN new;
+END;
+$$;
+
+
+ALTER FUNCTION public.demands_trigger_row_bu() OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -557,11 +575,10 @@ CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECU
 
 
 --
--- Name: demands demands_descriptions_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: demands demands_row_bu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY demands
-    ADD CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id);
+CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
 
 --

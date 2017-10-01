@@ -204,7 +204,7 @@
       "properties": {
         "age": {
           "id": "/properties/general/properties/age",
-          "type": ["integer", "null"]
+          "type": "string"
         },
         "firstname": {
           "id": "/properties/general/properties/firstname",
