@@ -18,4 +18,12 @@ interface Demand {
 	 * @return void
 	 */
 	public function retract(): void;
+
+	/**
+	 * Reconsider the current demand by the new description
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 * @return void
+	 */
+	public function reconsider(array $description): void;
 }

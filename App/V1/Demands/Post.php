@@ -23,7 +23,7 @@ final class Post extends V1\Api {
 					json_decode(
 						(new Request\StructuredJsonRequest(
 							new Request\JsonRequest(new Application\PlainRequest()),
-							new \SplFileInfo(__DIR__ . '/schema/request.json')
+							new \SplFileInfo(__DIR__ . '/schema/post.json')
 						))->body()->serialization(),
 						true
 					)

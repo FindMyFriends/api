@@ -32,6 +32,13 @@ final class ExistingDemand extends \Tester\TestCase {
 				$this->database
 			))->retract();
 		}, \UnexpectedValueException::class, 'Demand 1 does not exist');
+		Assert::exception(function() {
+			(new Domain\ExistingDemand(
+				new Domain\FakeDemand(),
+				1,
+				$this->database
+			))->reconsider([]);
+		}, \UnexpectedValueException::class, 'Demand 1 does not exist');
 	}
 
 	public function testPassingWithExisting() {
@@ -40,6 +47,7 @@ final class ExistingDemand extends \Tester\TestCase {
 			$demand = new Domain\ExistingDemand(new Domain\FakeDemand(), 1, $this->database);
 			$demand->print(new Output\FakeFormat());
 			$demand->retract();
+			$demand->reconsider([]);
 		});
 	}
 }

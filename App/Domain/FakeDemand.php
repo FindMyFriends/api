@@ -11,4 +11,8 @@ final class FakeDemand implements Demand {
 
 	public function retract(): void {
 	}
+
+	public function reconsider(array $description): void {
+
+	}
 }

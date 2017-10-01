@@ -48,4 +48,69 @@ final class StoredDemand implements Demand {
 			[$this->id]
 		))->execute();
 	}
+
+	public function reconsider(array $description): void {
+		(new Storage\Transaction($this->database))->start(function() use ($description) {
+			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->description($this->id);
+			(new Storage\ParameterizedQuery(
+				$this->database,
+				'UPDATE general
+				SET gender = :gender,
+					race = :race,
+					age = :age,
+					firstname = :firstname,
+					lastname = :lastname
+				WHERE id = :id',
+				['id' => $general] + $description['general']
+			))->execute();
+			(new Storage\FlatParameterizedQuery(
+				$this->database,
+				'UPDATE faces
+				SET teeth = ROW(:teeth_care, :teeth_braces)::tooth,
+					freckles = :freckles,
+					complexion = :complexion,
+					beard = :beard,
+					acne = :acne,
+					shape = :shape,
+					hair = ROW(
+						:hair_style,
+						:hair_color,
+						:hair_length,
+						:hair_highlights,
+						:hair_roots,
+						:hair_nature
+					)::hair,
+					eyebrow = :eyebrow,
+					left_eye = ROW(:left_eye_color, :left_eye_lenses)::eye,
+					right_eye = ROW(:right_eye_color, :right_eye_lenses)::eye
+				WHERE id = :id',
+				['id' => $face] + $description['face']
+			))->execute();
+			(new Storage\ParameterizedQuery(
+				$this->database,
+				'UPDATE bodies
+				SET build = :build,
+					skin = :skin,
+					weight = :weight,
+					height = :height
+				WHERE id = :id',
+				['id' => $body] + $description['body']
+			))->execute();
+		});
+	}
+
+	/**
+	 * Description belonging to the demand
+	 * @param int $demand
+	 * @return array
+	 */
+	private function description(int $demand): array {
+		return (new Storage\ParameterizedQuery(
+			$this->database,
+			'SELECT general_id, body_id, face_id
+			FROM descriptions
+			WHERE id = (SELECT description_id FROM demands WHERE id = ?)',
+			[$demand]
+		))->row();
+	}
 }

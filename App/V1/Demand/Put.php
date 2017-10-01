@@ -2,29 +2,39 @@
 declare(strict_types = 1);
 namespace FindMyFriends\V1\Demand;
 
+use FindMyFriends\Domain;
 use FindMyFriends\Misc;
-use FindMyFriends\Response;
 use FindMyFriends\Request;
+use FindMyFriends\Response;
 use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
-use Predis;
 
 final class Put extends V1\Api {
 	public function template(array $parameters): Output\Template {
 		try {
-			$description = json_decode(
-				(new Request\JsonRequest(
-					new Request\ConcurrentlyControlledRequest(
-						new Application\PlainRequest(),
-						$this->url,
-						new Misc\ETagRedis($this->redis)
-					)
-				))->body()->serialization(),
-				true
+			(new Domain\StoredDemand(
+				$parameters['id'],
+				$this->database
+			))->reconsider(
+				json_decode(
+					(new Request\StructuredJsonRequest(
+						new Request\JsonRequest(
+							new Request\ConcurrentlyControlledRequest(
+								new Request\CachedRequest(
+									new Application\PlainRequest()
+								),
+								$this->url,
+								new Misc\ETagRedis($this->redis)
+							)
+						),
+						new \SplFileInfo(__DIR__ . '/schema/put.json')
+					))->body()->serialization(),
+					true
+				)
 			);
 			return new Application\RawTemplate(
-				new Response\JsonResponse(
+				new Response\HttpResponse(
 					new Response\EmptyResponse(),
 					204
 				)

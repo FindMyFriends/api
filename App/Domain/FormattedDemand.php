@@ -24,4 +24,8 @@ final class FormattedDemand implements Demand {
 	public function retract(): void {
 		$this->origin->retract();
 	}
+
+	public function reconsider(array $description): void {
+		$this->origin->reconsider($description);
+	}
 }

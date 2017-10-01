@@ -28,6 +28,12 @@ final class ExistingDemand implements Demand {
 		$this->origin->retract();
 	}
 
+	public function reconsider(array $description): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Demand %d does not exist', $this->id));
+		$this->origin->reconsider($description);
+	}
+
 	private function exists(int $id): bool {
 		return (bool) (new Storage\ParameterizedQuery(
 			$this->database,
