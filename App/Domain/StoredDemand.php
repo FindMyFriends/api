@@ -38,7 +38,39 @@ final class StoredDemand implements Demand {
 				'teeth' => 'tooth',
 			]
 		))->row();
-		return new Output\FilledFormat($format, $demand);
+		return new Output\FilledFormat(
+			$format,
+			[
+				'id' => $demand['id'],
+				'seeker_id' => $demand['seeker_id'],
+				'created_at' => $demand['created_at'],
+				'general' => [
+					'age' => $demand['age'],
+					'firstname' => $demand['firstname'],
+					'lastname' => $demand['lastname'],
+					'gender' => $demand['gender'],
+					'race' => $demand['race'],
+				],
+				'face' => [
+					'acne' => $demand['acne'],
+					'beard' => $demand['beard'],
+					'complexion' => $demand['complexion'],
+					'eyebrow' => $demand['eyebrow'],
+					'freckles' => $demand['freckles'],
+					'hair' => $demand['hair'],
+					'left_eye' => $demand['left_eye'],
+					'right_eye' => $demand['right_eye'],
+					'shape' => $demand['shape'],
+					'teeth' => $demand['teeth'],
+				],
+				'body' => [
+					'build' => $demand['build'],
+					'skin' => $demand['skin'],
+					'weight' => $demand['weight'],
+					'height' => $demand['height'],
+				]
+			]
+		);
 	}
 
 	public function retract(): void {
