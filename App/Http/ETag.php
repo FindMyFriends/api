@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Misc;
+namespace FindMyFriends\Http;
 
 final class ETag {
 	private $entity;

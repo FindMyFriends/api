@@ -4,35 +4,35 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.1
  */
-namespace FindMyFriends\Unit\Misc;
+namespace FindMyFriends\Unit\Http;
 
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
 final class ETag extends \Tester\TestCase {
 	public function testHexFormat() {
-		Assert::match('"%h%"', (string) new Misc\ETag(new \stdClass()));
+		Assert::match('"%h%"', (string) new Http\ETag(new \stdClass()));
 	}
 
 	public function testSameClassesWithSameTag() {
 		Assert::same(
-			(string) new Misc\ETag(new \stdClass()),
-			(string) new Misc\ETag(new \stdClass())
+			(string) new Http\ETag(new \stdClass()),
+			(string) new Http\ETag(new \stdClass())
 		);
 	}
 
 	public function testDifferentClassesWithDifferentTag() {
 		Assert::notSame(
-			(string) new Misc\ETag(new \ArrayIterator()),
-			(string) new Misc\ETag(new \stdClass())
+			(string) new Http\ETag(new \ArrayIterator()),
+			(string) new Http\ETag(new \stdClass())
 		);
 	}
 
 	public function testAllowedForAnonymousClass() {
 		Assert::noError(function() {
-			(string) new Misc\ETag(new class {
+			(string) new Http\ETag(new class {
 			});
 		});
 	}

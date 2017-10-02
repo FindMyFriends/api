@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Demand;
 
 use FindMyFriends\Domain;
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
 use FindMyFriends\V1;
@@ -25,7 +25,7 @@ final class Put extends V1\Api {
 									new Application\PlainRequest()
 								),
 								$this->url,
-								new Misc\ETagRedis($this->redis)
+								new Http\ETagRedis($this->redis)
 							)
 						),
 						new \SplFileInfo(__DIR__ . '/schema/put.json')

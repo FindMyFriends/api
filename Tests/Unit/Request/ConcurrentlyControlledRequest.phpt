@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Request;
 
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use FindMyFriends\Request;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
@@ -23,9 +23,9 @@ final class ConcurrentlyControlledRequest extends \Tester\TestCase {
 		(new Request\ConcurrentlyControlledRequest(
 			new Application\FakeRequest(new Output\FakeFormat(), []),
 			new Uri\FakeUri(null, '/books/1'),
-			new Misc\ETagRedis($this->redis)
+			new Http\ETagRedis($this->redis)
 		))->body();
-		Assert::match('"%h%"', (new Misc\ETagRedis($this->redis))->get('/books/1'));
+		Assert::match('"%h%"', (new Http\ETagRedis($this->redis))->get('/books/1'));
 	}
 
 	public function testThrowingOnSecondSameRequestsWithoutETag() {
@@ -90,15 +90,15 @@ final class ConcurrentlyControlledRequest extends \Tester\TestCase {
 		(new Request\ConcurrentlyControlledRequest(
 			new Application\FakeRequest(new Output\FakeFormat(), []),
 			new Uri\FakeUri(null, '/books/1'),
-			new Misc\ETagRedis($this->redis)
+			new Http\ETagRedis($this->redis)
 		))->body();
-		$eTag = (new Misc\ETagRedis($this->redis))->get('/books/1');
+		$eTag = (new Http\ETagRedis($this->redis))->get('/books/1');
 		(new Request\ConcurrentlyControlledRequest(
 			new Application\FakeRequest(new Output\Json(['a' => 'b']), ['if-match' => $eTag]),
 			new Uri\FakeUri(null, '/books/1'),
-			new Misc\ETagRedis($this->redis)
+			new Http\ETagRedis($this->redis)
 		))->body();
-		Assert::notSame((new Misc\ETagRedis($this->redis))->get('/books/1'), $eTag);
+		Assert::notSame((new Http\ETagRedis($this->redis))->get('/books/1'), $eTag);
 	}
 
 	public function testAllowingAnonymousClasses() {

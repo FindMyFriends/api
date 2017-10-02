@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Request;
 
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -30,7 +30,7 @@ final class ConcurrentlyControlledRequest implements Application\Request {
 	public function body(): Output\Format {
 		if ($this->redis->exists($this->uri->path()) && !$this->matches($this->redis->get($this->uri->path()), $this->headers()))
 			throw new \UnexpectedValueException('ETag does not match your preferences');
-		$this->redis->set($this->uri->path(), new Misc\ETag($this->origin->body()));
+		$this->redis->set($this->uri->path(), new Http\ETag($this->origin->body()));
 		return $this->origin->body();
 	}
 

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Response;
 
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -28,7 +28,7 @@ final class ConcurrentlyCreatedResponse implements Application\Response {
 	}
 
 	public function headers(): array {
-		$this->redis->set($this->uri->path(), new Misc\ETag($this->origin->body()));
+		$this->redis->set($this->uri->path(), new Http\ETag($this->origin->body()));
 		return $this->origin->headers();
 	}
 }

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Demand;
 
 use FindMyFriends\Domain;
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use FindMyFriends\Response;
 use FindMyFriends\V1;
 use Klapuch\Application;
@@ -35,7 +35,7 @@ final class Get extends V1\Api {
 								)
 							),
 							$this->url,
-							new Misc\ETagRedis($this->redis)
+							new Http\ETagRedis($this->redis)
 						)
 					)
 				)

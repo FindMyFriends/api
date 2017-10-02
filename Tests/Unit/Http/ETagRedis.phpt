@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Misc;
 
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use FindMyFriends\TestCase;
 use Tester\Assert;
 
@@ -17,7 +17,7 @@ final class ETagRedis extends \Tester\TestCase {
 
 	public function testSection() {
 		static $key = '/books/1';
-		$redis = new Misc\ETagRedis($this->redis);
+		$redis = new Http\ETagRedis($this->redis);
 		Assert::same(0, $redis->exists($key));
 		$redis->set($key, 'abc');
 		Assert::same('abc', $redis->get($key));

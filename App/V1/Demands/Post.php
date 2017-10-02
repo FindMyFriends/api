@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Demands;
 
 use FindMyFriends\Domain;
-use FindMyFriends\Misc;
+use FindMyFriends\Http;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
 use FindMyFriends\V1;
@@ -14,7 +14,7 @@ use Klapuch\Uri;
 final class Post extends V1\Api {
 	public function template(array $parameters): Output\Template {
 		try {
-			$url = new Misc\CreatedResourceUrl(
+			$url = new Http\CreatedResourceUrl(
 				new Uri\RelativeUrl($this->url, 'v1/demands/{id}'),
 				(new Domain\OwnedDemands(
 					$this->user,
@@ -33,7 +33,7 @@ final class Post extends V1\Api {
 				new Response\HttpResponse(
 					new Response\ConcurrentlyCreatedResponse(
 						new Response\JsonResponse(new Response\EmptyResponse()),
-						new Misc\ETagRedis($this->redis),
+						new Http\ETagRedis($this->redis),
 						$url
 					),
 					201,
