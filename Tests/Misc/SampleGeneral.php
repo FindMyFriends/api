@@ -18,9 +18,9 @@ final class SampleGeneral implements Sample {
 	public function try(): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			"INSERT INTO general (gender, race, age, firstname, lastname) VALUES
+			'INSERT INTO general (gender, race, age, firstname, lastname) VALUES
 			(?, ?, ?, ?, ?)
-			RETURNING id",
+			RETURNING id',
 			[
 				$this->general['gender'] ?? self::GENDERS[array_rand(self::GENDERS)],
 				$this->general['race'] ?? self::RACES[array_rand(self::RACES)],

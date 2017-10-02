@@ -4,7 +4,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.1
  */
-namespace FindMyFriends\Unit\Misc;
+namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
 use FindMyFriends\TestCase;

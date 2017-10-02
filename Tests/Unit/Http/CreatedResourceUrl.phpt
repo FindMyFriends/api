@@ -6,9 +6,9 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Http;
 
+use FindMyFriends\Http;
 use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
-use FindMyFriends\Http;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';

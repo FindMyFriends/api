@@ -70,7 +70,7 @@ final class StoredDemand implements Demand {
 					'skin',
 					'weight',
 					'height',
-				]
+				],
 			]
 		);
 	}
@@ -84,7 +84,7 @@ final class StoredDemand implements Demand {
 	}
 
 	public function reconsider(array $description): void {
-		(new Storage\Transaction($this->database))->start(function() use ($description) {
+		(new Storage\Transaction($this->database))->start(function() use ($description): void {
 			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->description($this->id);
 			(new Storage\ParameterizedQuery(
 				$this->database,

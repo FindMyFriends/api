@@ -13,6 +13,5 @@ final class FakeDemand implements Demand {
 	}
 
 	public function reconsider(array $description): void {
-
 	}
 }

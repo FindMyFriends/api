@@ -45,8 +45,7 @@ final class MovingFormat implements Output\Format {
 			function(array $copies, $field) use ($source, $moves): array {
 				if (is_array($moves[$field]))
 					$copies[$field] = $this->copy($moves[$field], $source);
-				else
-					$copies[$moves[$field]] = $source[$moves[$field]];
+				else $copies[$moves[$field]] = $source[$moves[$field]];
 				return $copies;
 			},
 			[]
