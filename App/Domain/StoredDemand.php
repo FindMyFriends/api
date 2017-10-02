@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Domain;
 
+use FindMyFriends\Misc;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -38,36 +39,37 @@ final class StoredDemand implements Demand {
 				'teeth' => 'tooth',
 			]
 		))->row();
-		return new Output\FilledFormat(
+		return new Misc\MovingFormat(
 			$format,
+			$demand,
 			[
-				'id' => $demand['id'],
-				'seeker_id' => $demand['seeker_id'],
-				'created_at' => $demand['created_at'],
+				'id',
+				'seeker_id',
+				'created_at',
 				'general' => [
-					'age' => $demand['age'],
-					'firstname' => $demand['firstname'],
-					'lastname' => $demand['lastname'],
-					'gender' => $demand['gender'],
-					'race' => $demand['race'],
+					'age',
+					'firstname',
+					'lastname',
+					'gender',
+					'race',
 				],
 				'face' => [
-					'acne' => $demand['acne'],
-					'beard' => $demand['beard'],
-					'complexion' => $demand['complexion'],
-					'eyebrow' => $demand['eyebrow'],
-					'freckles' => $demand['freckles'],
-					'hair' => $demand['hair'],
-					'left_eye' => $demand['left_eye'],
-					'right_eye' => $demand['right_eye'],
-					'shape' => $demand['shape'],
-					'teeth' => $demand['teeth'],
+					'acne',
+					'beard',
+					'complexion',
+					'eyebrow',
+					'freckles',
+					'hair',
+					'left_eye',
+					'right_eye',
+					'shape',
+					'teeth',
 				],
 				'body' => [
-					'build' => $demand['build'],
-					'skin' => $demand['skin'],
-					'weight' => $demand['weight'],
-					'height' => $demand['height'],
+					'build',
+					'skin',
+					'weight',
+					'height',
 				]
 			]
 		);
