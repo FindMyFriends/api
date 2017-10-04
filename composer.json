@@ -22,7 +22,7 @@
     "klapuch/ini": "^2.0.0",
     "klapuch/iterator": "^1.1.0",
     "klapuch/log": "^1.0.0",
-    "klapuch/output": "^2.0.0",
+    "klapuch/output": "dev-master as 2.6.0",
     "klapuch/routing": "~0.0.8",
     "klapuch/storage": "dev-master as 2.0.0",
     "klapuch/uri": "^2.0.0",

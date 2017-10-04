@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Domain;
 
-use FindMyFriends\Misc;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -39,7 +38,7 @@ final class StoredDemand implements Demand {
 				'teeth' => 'tooth',
 			]
 		))->row();
-		return new Misc\MovingFormat(
+		return new Output\MovingFormat(
 			$format,
 			$demand,
 			[
