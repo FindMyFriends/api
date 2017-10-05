@@ -19,4 +19,11 @@ interface Demands {
 	 * @return \FindMyFriends\Domain\Demand[]
 	 */
 	public function all(Dataset\Selection $selection): \Traversable;
+
+	/**
+	 * Count all demands
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @return int
+	 */
+	public function count(Dataset\Selection $selection): int;
 }

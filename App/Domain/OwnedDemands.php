@@ -114,4 +114,12 @@ final class OwnedDemands implements Demands {
 		))->field();
 		return new StoredDemand($id, $this->database);
 	}
+
+	public function count(Dataset\Selection $selection): int {
+		return (new Storage\ParameterizedQuery(
+			$this->database,
+			$selection->expression('SELECT COUNT(*) FROM demands WHERE seeker_id = ?'),
+			$selection->criteria([$this->seeker->id()])
+		))->field();
+	}
 }

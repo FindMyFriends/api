@@ -54,4 +54,12 @@ final class CollectiveDemands implements Demands {
 			);
 		}
 	}
+
+	public function count(Dataset\Selection $selection): int {
+		return (new Storage\ParameterizedQuery(
+			$this->database,
+			$selection->expression('SELECT COUNT(*) FROM demands'),
+			$selection->criteria([])
+		))->field();
+	}
 }

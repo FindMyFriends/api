@@ -87,6 +87,20 @@ final class OwnedDemands extends \Tester\TestCase {
 		$demands->next();
 		Assert::null($demands->current());
 	}
+
+	public function testCounting() {
+		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => '2']))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => '3']))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
+		Assert::same(
+			2,
+			(new Domain\OwnedDemands(
+				new Access\FakeUser('1'),
+				$this->database
+			))->count(new Dataset\FakeSelection(null, []))
+		);
+	}
 }
 
 (new OwnedDemands())->run();

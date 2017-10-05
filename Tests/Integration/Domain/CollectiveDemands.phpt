@@ -34,6 +34,19 @@ final class CollectiveDemands extends \Tester\TestCase {
 		$demands->next();
 		Assert::null($demands->current());
 	}
+
+	public function testCounting() {
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		Assert::same(
+			3,
+			(new Domain\CollectiveDemands(
+				new Domain\FakeDemands(),
+				$this->database
+			))->count(new Dataset\FakeSelection(null, []))
+		);
+	}
 }
 
 (new CollectiveDemands())->run();

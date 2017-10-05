@@ -10,4 +10,7 @@ final class FakeDemands implements Demands {
 
 	public function all(Dataset\Selection $selection): \Traversable {
 	}
+
+	public function count(Dataset\Selection $selection): int {
+	}
 }
