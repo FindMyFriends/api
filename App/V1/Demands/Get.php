@@ -24,17 +24,26 @@ final class Get extends V1\Api {
 				new Domain\FakeDemands(),
 				$this->database
 			);
-			$selection = new Dataset\CombinedSelection(
-				new Dataset\SqlRestSort($_GET['sort'] ?? '', self::ALLOWED_SORTS),
-				new Dataset\SqlPaging($page, $perPage)
-			);
 			return new Application\RawTemplate(
 				new Response\HttpResponse(
 					new Response\JsonResponse(
 						new Response\JsonApiAuthentication(
 							new Response\PlainResponse(
 								new Misc\JsonPrintedObjects(
-									...iterator_to_array($demands->all($selection))
+									...iterator_to_array(
+										$demands->all(
+											new Dataset\CombinedSelection(
+												new Dataset\SqlRestSort(
+													$_GET['sort'] ?? '',
+													self::ALLOWED_SORTS
+												),
+												new Dataset\SqlPaging(
+													$page,
+													$perPage
+												)
+											)
+										)
+									)
 								)
 							),
 							$this->user,
@@ -46,7 +55,7 @@ final class Get extends V1\Api {
 						'Link' => (new UI\AttainablePagination(
 							$page,
 							$perPage,
-							$demands->count($selection)
+							$demands->count(new Dataset\EmptySelection())
 						))->print(new Http\HeaderLink($this->url))->serialization(),
 					]
 				)
