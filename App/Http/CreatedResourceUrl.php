@@ -38,6 +38,10 @@ final class CreatedResourceUrl implements Uri\Uri {
 		) . self::DELIMITER . $this->path();
 	}
 
+	public function query(): array {
+		return $this->origin->query();
+	}
+
 	/**
 	 * Placeholders extracted from parts
 	 * @param array $parts
