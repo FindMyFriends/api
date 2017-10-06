@@ -17,7 +17,7 @@ final class FormattedDemand implements Demand {
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
 			->adjusted('created_at', function(string $datetime): string {
-					return (new \DateTime($datetime))->format(\DateTime::ATOM);
+				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
 
