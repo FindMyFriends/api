@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace FindMyFriends\V1\Demands;
 
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
-use FindMyFriends\Request;
 use FindMyFriends\Response;
 use FindMyFriends\V1;
 use Klapuch\Application;
@@ -12,6 +12,8 @@ use Klapuch\Output;
 use Klapuch\Uri;
 
 final class Post extends V1\Api {
+	private const SCHEMA = __DIR__ . '/schema/post.json';
+
 	public function template(array $parameters): Output\Template {
 		try {
 			$url = new Http\CreatedResourceUrl(
@@ -20,12 +22,13 @@ final class Post extends V1\Api {
 					$this->user,
 					$this->database
 				))->ask(
-					json_decode(
-						(new Request\StructuredJsonRequest(
-							new Application\PlainRequest(),
-							new \SplFileInfo(__DIR__ . '/schema/post.json')
-						))->body()->serialization(),
-						true
+					(new Constraint\StructuredJson(
+						new \SplFileInfo(self::SCHEMA)
+					))->apply(
+						json_decode(
+							(new Application\PlainRequest())->body()->serialization(),
+							true
+						)
 					)
 				)
 			);

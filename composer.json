@@ -26,7 +26,7 @@
     "klapuch/routing": "~0.0.8",
     "klapuch/storage": "dev-master as 2.0.0",
     "klapuch/uri": "dev-master as 2.3.0",
-    "klapuch/validation": "^2.0.0",
+    "klapuch/validation": "dev-master as 2.6.0",
     "justinrainbow/json-schema": "^5.2",
     "predis/predis": "^1.1",
     "klapuch/ui": "^0.0.3"
