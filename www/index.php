@@ -20,7 +20,6 @@ $source = new Ini\CachedSource(
 		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
 	)
 );
-
 echo (new class(
 	new Application\SuitedPage(
 		$source,
