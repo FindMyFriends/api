@@ -9,7 +9,7 @@ trait TemplateDatabase {
 	/** @var \PDO */
 	protected $database;
 
-	/** @var string[] */
+	/** @var mixed[] */
 	protected $credentials;
 
 	/** @var \FindMyFriends\Misc\Databases */
@@ -17,8 +17,8 @@ trait TemplateDatabase {
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->credentials = (new Ini\TypedSource(
-			__DIR__ . '/../Configuration/.config.local.ini'
+		$this->credentials = (new Ini\ValidSource(
+			new \SplFileInfo(__DIR__ . '/../Configuration/.config.local.ini')
 		))->read();
 		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE']);
 		$this->database = $this->databases->create();

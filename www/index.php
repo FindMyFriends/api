@@ -16,16 +16,8 @@ const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 	V1_ROUTES_PATH = __DIR__ . '/../App/Configuration/Routes/v1.json';
 $source = new Ini\CachedSource(
 	new Ini\CombinedSource(
-		new Ini\ValidSource(
-			new SplFileInfo(CONFIGURATION),
-			new Ini\TypedSource(new SplFileInfo(CONFIGURATION))
-		),
-		new Ini\MutedSource(
-			new Ini\ValidSource(
-				new SplFileInfo(LOCAL_CONFIGURATION),
-				new Ini\TypedSource(new SplFileInfo(LOCAL_CONFIGURATION))
-			)
-		)
+		new Ini\ValidSource(new SplFileInfo(CONFIGURATION)),
+		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
 	)
 );
 
