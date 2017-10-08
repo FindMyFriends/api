@@ -22,12 +22,14 @@ final class Post extends V1\Api {
 					$this->user,
 					$this->database
 				))->ask(
-					(new Constraint\StructuredJson(
-						new \SplFileInfo(self::SCHEMA)
-					))->apply(
-						json_decode(
-							(new Application\PlainRequest())->body()->serialization(),
-							true
+					(new Constraint\DemandRule())->apply(
+						(new Constraint\StructuredJson(
+							new \SplFileInfo(self::SCHEMA)
+						))->apply(
+							json_decode(
+								(new Application\PlainRequest())->body()->serialization(),
+								true
+							)
 						)
 					)
 				)
