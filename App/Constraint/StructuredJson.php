@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Constraint;
 
-use Klapuch\Validation;
 use JsonSchema;
+use Klapuch\Validation;
 
 /**
  * JSON structured by schema
