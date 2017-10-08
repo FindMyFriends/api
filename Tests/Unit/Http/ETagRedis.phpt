@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 /**
  * @testCase
- * @phpVersion > 7.1
+ * @phpVersion > 7.2
  */
 namespace FindMyFriends\Unit\Http;
 
