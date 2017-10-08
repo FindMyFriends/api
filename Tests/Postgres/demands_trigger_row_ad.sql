@@ -30,7 +30,7 @@ BEGIN
 		NULL
 	);
 	INSERT INTO descriptions (general_id, body_id, face_id) VALUES (1, 1, 1);
-	INSERT INTO demands (seeker_id, description_id, created_at) VALUES (1, 1, NOW());
+	INSERT INTO demands (id, seeker_id, description_id, created_at) VALUES (1, 1, 1, NOW());
 	INSERT INTO seekers (email, password, description_id) VALUES ('whatever@email.cz', '123', 1);
 
 	DELETE FROM demands WHERE id = 1;

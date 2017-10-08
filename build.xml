@@ -3,9 +3,8 @@
 
 	<resolvepath propertyName="base_path" file="."/>
 
-	<target name="check" depends="lint, phpcpd, phpstan, phpcs, snapshots, web-tests, tests, cgi-tests"/>
-	<target name="ci" depends="check, tester-coverage, phpunit-coverage"/>
-	<target name="init" depends="lint, migrations, assets"/>
+	<target name="check" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests"/>
+	<target name="ci" depends="check, tester-coverage"/>
 
 	<target name="lint">
 		<exec executable="vendor/bin/parallel-lint" logoutput="true" passthru="true" checkreturn="true">
@@ -18,8 +17,6 @@
 
 	<target name="phpcpd">
 		<exec executable="vendor/bin/phpcpd" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="--exclude"/>
-			<arg value="Form"/>
 			<arg path="App"/>
 		</exec>
 	</target>
@@ -74,7 +71,6 @@
 			<arg path="Tests/Unit"/>
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Functional"/>
 			<arg path="Tests/Integration"/>
 		</exec>
 	</target>
@@ -91,41 +87,6 @@
 			<arg path="Tests/Unit"/>
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Functional"/>
-			<arg path="Tests/Integration"/>
-		</exec>
-	</target>
-
-	<target name="win-tests">
-		<exec executable="vendor/bin/tester" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="-o"/>
-			<arg value="console"/>
-			<arg value="-s"/>
-			<arg value="-p"/>
-			<arg value="php"/>
-			<arg value="-c"/>
-			<arg path="Tests/php.win.ini"/>
-			<arg path="Tests/Unit"/>
-			<arg path="Tests/Misc"/>
-			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Functional"/>
-			<arg path="Tests/Integration"/>
-		</exec>
-	</target>
-
-	<target name="win-cgi-tests">
-		<exec executable="vendor/bin/tester" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="-o"/>
-			<arg value="console"/>
-			<arg value="-s"/>
-			<arg value="-p"/>
-			<arg value="php-cgi"/>
-			<arg value="-c"/>
-			<arg path="Tests/php.win.ini"/>
-			<arg path="Tests/Unit"/>
-			<arg path="Tests/Misc"/>
-			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Functional"/>
 			<arg path="Tests/Integration"/>
 		</exec>
 	</target>
@@ -144,54 +105,11 @@
 			<arg path="Tests/Unit"/>
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Functional"/>
 			<arg path="Tests/Integration"/>
 			<arg value="--coverage"/>
 			<arg value="tester-coverage.xml"/>
 			<arg value="--coverage-src"/>
 			<arg path="App/"/>
-		</exec>
-	</target>
-
-	<target name="phpunit-coverage">
-		<exec executable="phpdbg" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="-qrr"/>
-			<arg value="vendor/bin/phpunit"/>
-			<arg value="--coverage-clover"/>
-			<arg value="phpunit-coverage.xml"/>
-		</exec>
-	</target>
-
-	<target name="snapshots">
-		<exec executable="vendor/bin/phpunit" logoutput="true" passthru="true" checkreturn="true"/>
-	</target>
-
-	<target name="assets">
-		<exec command="yarn install" dir="assets" logoutput="true" passthru="true" checkreturn="true"/>
-		<exec command="gulp build" dir="assets" logoutput="true" passthru="true" checkreturn="true"/>
-		<symlink target="${base_path}/assets/dist" link="${base_path}/www/dist" overwrite="true"/>
-	</target>
-
-	<target name="migrations">
-		<exec executable="vendor/bin/phinx" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="migrate"/>
-			<arg value="-e"/>
-			<arg value="production"/>
-		</exec>
-	</target>
-
-	<target name="start-server">
-		<exec command="nohup php -S localhost:8888 -t www www/index.php > phpd.log 2>&amp;1 &amp;" logoutput="true" passthru="true" checkreturn="true"/>
-	</target>
-
-	<target name="web-tests" depends="start-server">
-		<exec executable="vendor/bin/tester" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="-o"/>
-			<arg value="console"/>
-			<arg value="-s"/>
-			<arg value="-p"/>
-			<arg value="php"/>
-			<arg path="Tests/Pings.phpt"/>
 		</exec>
 	</target>
 

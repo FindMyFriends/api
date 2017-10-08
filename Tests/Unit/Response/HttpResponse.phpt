@@ -3,6 +3,7 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
+ * @httpCode any
  */
 namespace FindMyFriends\Unit\Response;
 
