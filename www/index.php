@@ -9,6 +9,7 @@ use Klapuch\Log;
 use Klapuch\Output;
 use Klapuch\Routing;
 use Klapuch\Uri;
+
 const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 	LOCAL_CONFIGURATION = __DIR__ . '/../App/Configuration/.config.local.ini',
 	LOGS = __DIR__ . '/../log',
@@ -16,13 +17,13 @@ const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 $source = new Ini\CachedSource(
 	new Ini\CombinedSource(
 		new Ini\ValidSource(
-			new \SplFileInfo(CONFIGURATION),
-			new Ini\TypedSource(new \SplFileInfo(CONFIGURATION))
+			new SplFileInfo(CONFIGURATION),
+			new Ini\TypedSource(new SplFileInfo(CONFIGURATION))
 		),
 		new Ini\MutedSource(
 			new Ini\ValidSource(
-				new \SplFileInfo(LOCAL_CONFIGURATION),
-				new Ini\TypedSource(new \SplFileInfo(LOCAL_CONFIGURATION))
+				new SplFileInfo(LOCAL_CONFIGURATION),
+				new Ini\TypedSource(new SplFileInfo(LOCAL_CONFIGURATION))
 			)
 		)
 	)
