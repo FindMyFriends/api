@@ -35,21 +35,3 @@ after_script:
 
 after_failure:
   - for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
-
-#before_deploy:
-#  - openssl aes-256-cbc -K $encrypted_c4f6e40ac2f7_key -iv $encrypted_c4f6e40ac2f7_iv -in active24.enc -out active24 -d
-#  - chmod 600 active24
-#  - mkdir -p ~/.ssh
-#  - mv active24 ~/.ssh/id_rsa
-#  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-#
-#deploy:
-#  provider: script
-#  skip_cleanup: true
-#  script: ./vendor/bin/dep deploy
-#  on:
-#    branch: master
-
-cache:
-    directories:
-      - $HOME/.composer/cache
