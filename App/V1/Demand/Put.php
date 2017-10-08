@@ -10,6 +10,7 @@ use FindMyFriends\Response;
 use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
+use Klapuch\Validation;
 
 final class Put extends V1\Api {
 	private const SCHEMA = __DIR__ . '/schema/put.json';
@@ -20,20 +21,19 @@ final class Put extends V1\Api {
 				$parameters['id'],
 				$this->database
 			))->reconsider(
-				(new Constraint\DemandRule())->apply(
-					(new Constraint\StructuredJson(
-						new \SplFileInfo(self::SCHEMA)
-					))->apply(
-						json_decode(
-							(new Request\ConcurrentlyControlledRequest(
-								new Request\CachedRequest(
-									new Application\PlainRequest()
-								),
-								$this->url,
-								new Http\ETagRedis($this->redis)
-							))->body()->serialization(),
-							true
-						)
+				(new Validation\ChainedRule(
+					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+					new Constraint\DemandRule()
+				))->apply(
+					json_decode(
+						(new Request\ConcurrentlyControlledRequest(
+							new Request\CachedRequest(
+								new Application\PlainRequest()
+							),
+							$this->url,
+							new Http\ETagRedis($this->redis)
+						))->body()->serialization(),
+						true
 					)
 				)
 			);

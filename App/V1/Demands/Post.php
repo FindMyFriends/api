@@ -10,6 +10,7 @@ use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
+use Klapuch\Validation;
 
 final class Post extends V1\Api {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -22,14 +23,13 @@ final class Post extends V1\Api {
 					$this->user,
 					$this->database
 				))->ask(
-					(new Constraint\DemandRule())->apply(
-						(new Constraint\StructuredJson(
-							new \SplFileInfo(self::SCHEMA)
-						))->apply(
-							json_decode(
-								(new Application\PlainRequest())->body()->serialization(),
-								true
-							)
+					(new Validation\ChainedRule(
+						new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+						new Constraint\DemandRule()
+					))->apply(
+						json_decode(
+							(new Application\PlainRequest())->body()->serialization(),
+							true
 						)
 					)
 				)
