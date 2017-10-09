@@ -29,7 +29,7 @@
     "klapuch/validation": "dev-master as 2.6.0",
     "justinrainbow/json-schema": "^5.2",
     "predis/predis": "^1.1",
-    "klapuch/ui": "^0.0.3"
+    "klapuch/ui": "dev-master as 0.0.3"
   },
   "require-dev": {
     "nette/tester": "^2.0",
