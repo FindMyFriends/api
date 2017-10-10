@@ -9,10 +9,10 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 /**
- * Response suited for pagination
+ * Partial response suited for pagination
  * Returning 206 status code for not last page
  */
-final class PartialResponse implements Application\Response {
+final class PaginatedResponse implements Application\Response {
 	private $origin;
 	private $page;
 	private $pagination;

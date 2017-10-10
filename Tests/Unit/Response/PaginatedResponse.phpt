@@ -16,11 +16,11 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class PartialResponse extends \Tester\TestCase {
+final class PaginatedResponse extends \Tester\TestCase {
 	public function testPriorityToNewHeader() {
 		Assert::notSame(
 			['Link' => 'xxx'],
-			(new Response\PartialResponse(
+			(new Response\PaginatedResponse(
 				new Application\FakeResponse(null, ['Link' => 'xxx']),
 				10,
 				new UI\FakePagination([]),
@@ -32,7 +32,7 @@ final class PartialResponse extends \Tester\TestCase {
 	public function testAddingOtherHeaders() {
 		Assert::contains(
 			'text/html',
-			(new Response\PartialResponse(
+			(new Response\PaginatedResponse(
 				new Application\FakeResponse(null, ['Accept' => 'text/html']),
 				10,
 				new UI\FakePagination([]),
@@ -42,7 +42,7 @@ final class PartialResponse extends \Tester\TestCase {
 	}
 
 	public function testPartialResponseForNotLastPage() {
-		(new Response\PartialResponse(
+		(new Response\PaginatedResponse(
 			new class implements Application\Response {
 				public function body(): Output\Format {
 				}
@@ -60,7 +60,7 @@ final class PartialResponse extends \Tester\TestCase {
 	}
 
 	public function testOkResponseForLastPage() {
-		(new Response\PartialResponse(
+		(new Response\PaginatedResponse(
 			new class implements Application\Response {
 				public function body(): Output\Format {
 				}
@@ -78,4 +78,4 @@ final class PartialResponse extends \Tester\TestCase {
 	}
 }
 
-(new PartialResponse())->run();
+(new PaginatedResponse())->run();

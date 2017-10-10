@@ -21,7 +21,7 @@ final class Get extends V1\Api {
 			$perPage = intval($_GET['per_page'] ?? self::DEFAULT_PER_PAGE);
 			$demands = new Domain\CollectiveDemands(new Domain\FakeDemands(), $this->database);
 			return new Application\RawTemplate(
-				new Response\PartialResponse(
+				new Response\PaginatedResponse(
 					new Response\HttpResponse(
 						new Response\JsonResponse(
 							new Response\JsonApiAuthentication(
