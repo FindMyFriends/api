@@ -39,7 +39,7 @@ final class PaginatedResponse implements Application\Response {
 			'Link' => $this->pagination->print(new Http\HeaderLink($this->uri))->serialization(),
 		] + $this->origin->headers();
 		http_response_code(
-			array_slice($this->pagination->range(), -1) === [$this->page]
+			$this->page >= current(array_slice($this->pagination->range(), -1))
 				? 200
 				: 206
 		);

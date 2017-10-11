@@ -52,7 +52,7 @@ final class PaginatedResponse extends \Tester\TestCase {
 					return [];
 				}
 			},
-			10,
+			5,
 			new UI\FakePagination([1, 9]),
 			new Uri\FakeUri()
 		))->headers();
@@ -71,6 +71,24 @@ final class PaginatedResponse extends \Tester\TestCase {
 				}
 			},
 			10,
+			new UI\FakePagination([1, 10]),
+			new Uri\FakeUri()
+		))->headers();
+		Assert::same(200, http_response_code());
+	}
+
+	public function testOkResponseForOversteppingLastPage() {
+		(new Response\PaginatedResponse(
+			new class implements Application\Response {
+				public function body(): Output\Format {
+				}
+
+				public function headers(): array {
+					http_response_code(301);
+					return ['Accept' => 'text/html'];
+				}
+			},
+			20,
 			new UI\FakePagination([1, 10]),
 			new Uri\FakeUri()
 		))->headers();
