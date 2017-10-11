@@ -19,7 +19,12 @@ final class Get extends V1\Api {
 		try {
 			$page = intval($_GET['page'] ?? 1);
 			$perPage = intval($_GET['per_page'] ?? self::DEFAULT_PER_PAGE);
-			$demands = new Domain\CollectiveDemands(new Domain\FakeDemands(), $this->database);
+			$demands = new Domain\CachedDemands(
+				new Domain\CollectiveDemands(
+					new Domain\FakeDemands(),
+					$this->database
+				)
+			);
 			return new Application\RawTemplate(
 				new Response\PaginatedResponse(
 					new Response\ResponseWithRange(
