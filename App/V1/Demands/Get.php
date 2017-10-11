@@ -22,31 +22,37 @@ final class Get extends V1\Api {
 			$demands = new Domain\CollectiveDemands(new Domain\FakeDemands(), $this->database);
 			return new Application\RawTemplate(
 				new Response\PaginatedResponse(
-					new Response\HttpResponse(
-						new Response\JsonResponse(
-							new Response\JsonApiAuthentication(
-								new Response\PlainResponse(
-									new Misc\JsonPrintedObjects(
-										...iterator_to_array(
-											$demands->all(
-												new Dataset\CombinedSelection(
-													new Dataset\SqlRestSort(
-														$_GET['sort'] ?? '',
-														self::ALLOWED_SORTS
-													),
-													new Dataset\SqlPaging(
-														$page,
-														$perPage
+					new Response\ResponseWithRange(
+						new Response\HttpResponse(
+							new Response\JsonResponse(
+								new Response\JsonApiAuthentication(
+									new Response\PlainResponse(
+										new Misc\JsonPrintedObjects(
+											...iterator_to_array(
+												$demands->all(
+													new Dataset\CombinedSelection(
+														new Dataset\SqlRestSort(
+															$_GET['sort'] ?? '',
+															self::ALLOWED_SORTS
+														),
+														new Dataset\SqlPaging(
+															$page,
+															$perPage
+														)
 													)
 												)
 											)
 										)
-									)
-								),
-								$this->user,
-								$this->url
+									),
+									$this->user,
+									$this->url
+								)
 							)
-						)
+						),
+						'demands',
+						$page,
+						$perPage,
+						$demands->count(new Dataset\EmptySelection())
 					),
 					$page,
 					new UI\AttainablePagination(
