@@ -9,7 +9,7 @@ use Klapuch\Output;
 use Klapuch\Uri;
 
 final class JsonApiAuthentication implements Application\Response {
-	private const PERMISSION = __DIR__ . '/../Configuration/Permissions/v1.xml';
+	private const PERMISSIONS = __DIR__ . '/../Configuration/Permissions/v1.xml';
 	private $origin;
 	private $user;
 	private $uri;
@@ -50,7 +50,7 @@ final class JsonApiAuthentication implements Application\Response {
 		return (new Authorization\HttpRole(
 			new Authorization\RolePermissions(
 				$user->properties()['role'] ?? 'guest',
-				new Authorization\XmlPermissions(self::PERMISSION)
+				new Authorization\XmlPermissions(self::PERMISSIONS)
 			)
 		))->allowed($uri->path());
 	}
