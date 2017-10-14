@@ -10,8 +10,8 @@ use Predis;
 
 final class ConcurrentlyControlledRequest implements Application\Request {
 	private const MATCHES = [
-		'if-match' => true,
-		'if-none-match' => false,
+		'If-Match' => true,
+		'If-None-Match' => false,
 	];
 	private $origin;
 	private $uri;

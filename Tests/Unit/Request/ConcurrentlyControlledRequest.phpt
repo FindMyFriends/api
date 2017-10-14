@@ -48,7 +48,7 @@ final class ConcurrentlyControlledRequest extends \Tester\TestCase {
 		))->body();
 		Assert::exception(function() {
 			(new Request\ConcurrentlyControlledRequest(
-				new Application\FakeRequest(new Output\FakeFormat(), ['if-match' => '"abc"']),
+				new Application\FakeRequest(new Output\FakeFormat(), ['If-Match' => '"abc"']),
 				new Uri\FakeUri(null, '/books/1'),
 				$this->redis
 			))->body();
@@ -63,7 +63,7 @@ final class ConcurrentlyControlledRequest extends \Tester\TestCase {
 				$this->redis
 			))->body();
 			(new Request\ConcurrentlyControlledRequest(
-				new Application\FakeRequest(new Output\FakeFormat(), ['if-none-match' => '"abc"']),
+				new Application\FakeRequest(new Output\FakeFormat(), ['If-None-Match' => '"abc"']),
 				new Uri\FakeUri(null, '/books/1'),
 				$this->redis
 			))->body();
@@ -94,7 +94,7 @@ final class ConcurrentlyControlledRequest extends \Tester\TestCase {
 		))->body();
 		$eTag = (new Http\ETagRedis($this->redis))->get('/books/1');
 		(new Request\ConcurrentlyControlledRequest(
-			new Application\FakeRequest(new Output\Json(['a' => 'b']), ['if-match' => $eTag]),
+			new Application\FakeRequest(new Output\Json(['a' => 'b']), ['If-Match' => $eTag]),
 			new Uri\FakeUri(null, '/books/1'),
 			new Http\ETagRedis($this->redis)
 		))->body();
