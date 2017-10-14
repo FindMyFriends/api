@@ -29,6 +29,10 @@ final class ConcurrentlyCreatedResponse implements Application\Response {
 
 	public function headers(): array {
 		$this->redis->set($this->uri->path(), new Http\ETag($this->origin->body()));
-		return $this->origin->headers();
+		return ['Location' => $this->uri->reference()] + $this->origin->headers();
+	}
+
+	public function status(): int {
+		return 201;
 	}
 }

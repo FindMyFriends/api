@@ -31,4 +31,8 @@ final class ConcurrentlyControlledResponse implements Application\Response {
 			return ['ETag' => $this->redis->get($this->uri->path())] + $this->origin->headers();
 		return $this->origin->headers();
 	}
+
+	public function status(): int {
+		return $this->origin->status();
+	}
 }

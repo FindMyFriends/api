@@ -35,14 +35,14 @@ final class PaginatedResponse implements Application\Response {
 	}
 
 	public function headers(): array {
-		$headers = [
+		return [
 			'Link' => $this->pagination->print(new Http\HeaderLink($this->uri))->serialization(),
 		] + $this->origin->headers();
-		http_response_code(
-			$this->page >= current(array_slice($this->pagination->range(), -1))
-				? 200
-				: 206
-		);
-		return $headers;
+	}
+
+	public function status(): int {
+		return $this->page >= current(array_slice($this->pagination->range(), -1))
+			? $this->origin->status()
+			: 206;
 	}
 }

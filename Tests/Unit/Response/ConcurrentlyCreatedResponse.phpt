@@ -19,7 +19,7 @@ final class ConcurrentlyCreatedResponse extends \Tester\TestCase {
 	use TestCase\Redis;
 
 	public function testCreatingHexaETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
+		$uri = new Uri\FakeUri('http://localhost', '/books/1');
 		(new Response\ConcurrentlyCreatedResponse(
 			new Application\FakeResponse(new Output\FakeFormat(), []),
 			$this->redis,
@@ -28,8 +28,30 @@ final class ConcurrentlyCreatedResponse extends \Tester\TestCase {
 		Assert::match('"%h%"', $this->redis->get($uri->path()));
 	}
 
+	public function testPrependLocationHeader() {
+		Assert::same(
+			['Location' => 'http://localhost', 'Accept' => 'text/html'],
+			(new Response\ConcurrentlyCreatedResponse(
+				new Application\FakeResponse(new Output\FakeFormat(), ['Accept' => 'text/html']),
+				$this->redis,
+				new Uri\FakeUri('http://localhost', '/books/1')
+			))->headers()
+		);
+	}
+
+	public function test201CreatedStatusCode() {
+		Assert::same(
+			201,
+			(new Response\ConcurrentlyCreatedResponse(
+				new Application\FakeResponse(),
+				$this->redis,
+				new Uri\FakeUri()
+			))->status()
+		);
+	}
+
 	public function testMultipleSameObjectsWithSameETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
+		$uri = new Uri\FakeUri('http://localhost', '/books/1');
 		(new Response\ConcurrentlyCreatedResponse(
 			new Application\FakeResponse(new Output\FakeFormat(), []),
 			$this->redis,
@@ -45,7 +67,7 @@ final class ConcurrentlyCreatedResponse extends \Tester\TestCase {
 	}
 
 	public function testMultipleDifferentObjectsWithDifferentETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
+		$uri = new Uri\FakeUri('http://localhost', '/books/1');
 		(new Response\ConcurrentlyCreatedResponse(
 			new Application\FakeResponse(new Output\Json(), []),
 			$this->redis,

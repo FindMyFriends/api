@@ -31,9 +31,13 @@ final class JsonApiAuthentication implements Application\Response {
 	}
 
 	public function headers(): array {
-		if (!$this->allowed($this->user, $this->uri))
-			http_response_code(403);
 		return $this->origin->headers();
+	}
+
+	public function status(): int {
+		if ($this->allowed($this->user, $this->uri))
+			return $this->origin->status();
+		return 403;
 	}
 
 	/**

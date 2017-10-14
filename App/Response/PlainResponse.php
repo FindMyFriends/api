@@ -6,12 +6,19 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class PlainResponse implements Application\Response {
+	private const OK = 200;
 	private $format;
 	private $headers;
+	private $status;
 
-	public function __construct(Output\Format $format, array $headers = []) {
+	public function __construct(
+		Output\Format $format,
+		array $headers = [],
+		int $status = self::OK
+	) {
 		$this->format = $format;
 		$this->headers = $headers;
+		$this->status = $status;
 	}
 
 	public function body(): Output\Format {
@@ -20,5 +27,9 @@ final class PlainResponse implements Application\Response {
 
 	public function headers(): array {
 		return $this->headers;
+	}
+
+	public function status(): int {
+		return $this->status;
 	}
 }

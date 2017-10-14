@@ -15,16 +15,16 @@ final class JsonError implements Application\Response {
 		DELEGATE = 0;
 	private $error;
 	private $headers;
-	private $code;
+	private $status;
 
 	public function __construct(
 		\Throwable $error,
 		array $headers = [],
-		int $code = self::DELEGATE
+		int $status = self::DELEGATE
 	) {
 		$this->error = $error;
 		$this->headers = $headers;
-		$this->code = $code;
+		$this->status = $status;
 	}
 
 	public function body(): Output\Format {
@@ -32,12 +32,11 @@ final class JsonError implements Application\Response {
 	}
 
 	public function headers(): array {
-		http_response_code($this->code($this->error, $this->code));
 		return self::HEADERS + array_change_key_case($this->headers);
 	}
 
-	private function code(\Throwable $error, int $code): int {
-		$choice = $error->getCode() ?: $code;
+	public function status(): int {
+		$choice = $this->error->getCode() ?: $this->status;
 		return in_array($choice, range(...self::CODES))
 			? $choice
 			: self::DEFAULT_CODE;

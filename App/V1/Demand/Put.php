@@ -37,12 +37,7 @@ final class Put extends V1\Api {
 					)
 				)
 			);
-			return new Application\RawTemplate(
-				new Response\HttpResponse(
-					new Response\EmptyResponse(),
-					204
-				)
-			);
+			return new Application\RawTemplate(new Response\EmptyResponse());
 		} catch (\UnexpectedValueException $ex) {
 			return new Application\RawTemplate(new Response\JsonError($ex));
 		}

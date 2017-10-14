@@ -3,7 +3,6 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.2
- * @httpCode any
  */
 namespace FindMyFriends\Unit\Response;
 
@@ -19,7 +18,6 @@ final class HttpResponse extends \Tester\TestCase {
 			['Accept' => 'text/plain'],
 			(new Response\HttpResponse(
 				new Application\FakeResponse(null, []),
-				200,
 				['aCCept' => 'text/plain']
 			))->headers()
 		);
@@ -30,7 +28,6 @@ final class HttpResponse extends \Tester\TestCase {
 			['Content-Type' => 'text/html'],
 			(new Response\HttpResponse(
 				new Application\FakeResponse(null, []),
-				200,
 				['content-tYpE' => 'text/html']
 			))->headers()
 		);
@@ -50,24 +47,9 @@ final class HttpResponse extends \Tester\TestCase {
 						'Accept' => 'text/xml',
 					]
 				),
-				200,
 				['Content-Type' => 'text/html']
 			))->headers()
 		);
-	}
-
-	public function testCustomResponseCode() {
-		(new Response\HttpResponse(
-			new Application\FakeResponse(
-				null,
-				[
-					'Content-Type' => 'text/plain',
-					'Accept' => 'text/xml',
-				]
-			),
-			201
-		))->headers();
-		Assert::same(201, http_response_code());
 	}
 }
 

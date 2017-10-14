@@ -13,4 +13,8 @@ final class EmptyResponse implements Application\Response {
 	public function headers(): array {
 		return [];
 	}
+
+	public function status(): int {
+		return 204;
+	}
 }

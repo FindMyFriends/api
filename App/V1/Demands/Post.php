@@ -35,14 +35,10 @@ final class Post extends V1\Api {
 				)
 			);
 			return new Application\RawTemplate(
-				new Response\HttpResponse(
-					new Response\ConcurrentlyCreatedResponse(
-						new Response\JsonResponse(new Response\EmptyResponse()),
-						new Http\ETagRedis($this->redis),
-						$url
-					),
-					201,
-					['Location' => $url->reference()]
+				new Response\ConcurrentlyCreatedResponse(
+					new Response\JsonResponse(new Response\EmptyResponse()),
+					new Http\ETagRedis($this->redis),
+					$url
 				)
 			);
 		} catch (\UnexpectedValueException $ex) {

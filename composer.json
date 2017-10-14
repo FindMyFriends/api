@@ -16,7 +16,7 @@
     "ext-dom": "*",
     "klapuch/access": "^2.17.1",
     "klapuch/authorization": "^3.0.0",
-    "klapuch/application": "@dev",
+    "klapuch/application": "2.x-dev",
     "klapuch/dataset": "@dev",
     "klapuch/http": "^1.0.0",
     "klapuch/ini": "dev-master as 2.0.0",

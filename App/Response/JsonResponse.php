@@ -23,4 +23,8 @@ final class JsonResponse implements Application\Response {
 	public function headers(): array {
 		return self::HEADERS + $this->origin->headers();
 	}
+
+	public function status(): int {
+		return $this->origin->status();
+	}
 }

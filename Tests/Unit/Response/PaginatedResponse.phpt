@@ -3,7 +3,6 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.2
- * @httpCode any
  */
 namespace FindMyFriends\Unit\Response;
 
@@ -42,57 +41,72 @@ final class PaginatedResponse extends \Tester\TestCase {
 	}
 
 	public function testPartialResponseForNotLastPage() {
-		(new Response\PaginatedResponse(
-			new class implements Application\Response {
-				public function body(): Output\Format {
-				}
+		Assert::same(
+			206,
+			(new Response\PaginatedResponse(
+				new class implements Application\Response {
+					public function body(): Output\Format {
+					}
 
-				public function headers(): array {
-					http_response_code(301);
-					return [];
-				}
-			},
-			5,
-			new UI\FakePagination([1, 9]),
-			new Uri\FakeUri()
-		))->headers();
-		Assert::same(206, http_response_code());
+					public function headers(): array {
+						return [];
+					}
+
+					public function status(): int {
+						return 301;
+					}
+				},
+				5,
+				new UI\FakePagination([1, 9]),
+				new Uri\FakeUri()
+			))->status()
+		);
 	}
 
-	public function testOkResponseForLastPage() {
-		(new Response\PaginatedResponse(
-			new class implements Application\Response {
-				public function body(): Output\Format {
-				}
+	public function testDelegatedStatusCodeForLastPage() {
+		Assert::same(
+			201,
+			(new Response\PaginatedResponse(
+				new class implements Application\Response {
+					public function body(): Output\Format {
+					}
 
-				public function headers(): array {
-					http_response_code(301);
-					return ['Accept' => 'text/html'];
-				}
-			},
-			10,
-			new UI\FakePagination([1, 10]),
-			new Uri\FakeUri()
-		))->headers();
-		Assert::same(200, http_response_code());
+					public function headers(): array {
+						return [];
+					}
+
+					public function status(): int {
+						return 201;
+					}
+				},
+				10,
+				new UI\FakePagination([1, 10]),
+				new Uri\FakeUri()
+			))->status()
+		);
 	}
 
-	public function testOkResponseForOversteppingLastPage() {
-		(new Response\PaginatedResponse(
-			new class implements Application\Response {
-				public function body(): Output\Format {
-				}
+	public function testDelegatedStatusCodeForOversteppingLastPage() {
+		Assert::same(
+			204,
+			(new Response\PaginatedResponse(
+				new class implements Application\Response {
+					public function body(): Output\Format {
+					}
 
-				public function headers(): array {
-					http_response_code(301);
-					return ['Accept' => 'text/html'];
-				}
-			},
-			20,
-			new UI\FakePagination([1, 10]),
-			new Uri\FakeUri()
-		))->headers();
-		Assert::same(200, http_response_code());
+					public function headers(): array {
+						return [];
+					}
+
+					public function status(): int {
+						return 204;
+					}
+				},
+				20,
+				new UI\FakePagination([1, 10]),
+				new Uri\FakeUri()
+			))->status()
+		);
 	}
 }
 
