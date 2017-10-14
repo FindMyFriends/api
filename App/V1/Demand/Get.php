@@ -13,30 +13,28 @@ final class Get extends V1\Api {
 	public function template(array $parameters): Output\Template {
 		try {
 			return new Application\RawTemplate(
-				new Response\HttpResponse(
-					new Response\JsonResponse(
-						new Response\ConcurrentlyControlledResponse(
-							new Response\CachedResponse(
-								new Response\JsonApiAuthentication(
-									new Response\PlainResponse(
-										(new Domain\FormattedDemand(
-											new Domain\ExistingDemand(
-												new Domain\StoredDemand(
-													$parameters['id'],
-													$this->database
-												),
+				new Response\JsonResponse(
+					new Response\ConcurrentlyControlledResponse(
+						new Response\CachedResponse(
+							new Response\JsonApiAuthentication(
+								new Response\PlainResponse(
+									(new Domain\FormattedDemand(
+										new Domain\ExistingDemand(
+											new Domain\StoredDemand(
 												$parameters['id'],
 												$this->database
-											)
-										))->print(new Output\Json)
-									),
-									$this->user,
-									$this->url
-								)
-							),
-							$this->url,
-							new Http\ETagRedis($this->redis)
-						)
+											),
+											$parameters['id'],
+											$this->database
+										)
+									))->print(new Output\Json)
+								),
+								$this->user,
+								$this->url
+							)
+						),
+						$this->url,
+						new Http\ETagRedis($this->redis)
 					)
 				)
 			);
