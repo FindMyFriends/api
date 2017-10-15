@@ -50,7 +50,8 @@ echo (new class(
 										$_SERVER['REQUEST_METHOD']
 									)
 								)
-							)
+							),
+							$uri
 						)
 					),
 					function(array $match) use ($uri): Routing\Route {
@@ -62,6 +63,7 @@ echo (new class(
 					}
 				)
 			),
+			$uri,
 			$_SERVER['REQUEST_METHOD']
 		),
 		$uri
