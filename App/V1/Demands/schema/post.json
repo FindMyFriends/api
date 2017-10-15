@@ -96,41 +96,46 @@
           ],
           "type": "object"
         },
-        "left_eye": {
-          "id": "/properties/face/properties/left_eye",
+        "eye": {
+          "id": "/properties/face/properties/eye",
           "properties": {
-            "color": {
-              "id": "/properties/face/properties/left_eye/properties/color",
-              "type": ["string", "null"]
+            "left": {
+              "id": "/properties/face/properties/eye/left",
+              "properties": {
+                "color": {
+                  "id": "/properties/face/properties/eye/left/properties/color",
+                  "type": ["string", "null"]
+                },
+                "lenses": {
+                  "id": "/properties/face/properties/eye/left/properties/lenses",
+                  "type": ["boolean", "null"]
+                }
+              },
+              "required": [
+                "lenses",
+                "color"
+              ],
+              "type": "object"
             },
-            "lenses": {
-              "id": "/properties/face/properties/left_eye/properties/lenses",
-              "type": ["boolean", "null"]
+            "right": {
+              "id": "/properties/face/properties/eye/right",
+              "properties": {
+                "color": {
+                  "id": "/properties/face/properties/eye/right/properties/color",
+                  "type": ["string", "null"]
+                },
+                "lenses": {
+                  "id": "/properties/face/properties/eye/right/properties/lenses",
+                  "type": ["boolean", "null"]
+                }
+              },
+              "required": [
+                "lenses",
+                "color"
+              ],
+              "type": "object"
             }
-          },
-          "required": [
-            "lenses",
-            "color"
-          ],
-          "type": "object"
-        },
-        "right_eye": {
-          "id": "/properties/face/properties/right_eye",
-          "properties": {
-            "color": {
-              "id": "/properties/face/properties/right_eye/properties/color",
-              "type": ["string", "null"]
-            },
-            "lenses": {
-              "id": "/properties/face/properties/right_eye/properties/lenses",
-              "type": ["boolean", "null"]
-            }
-          },
-          "required": [
-            "lenses",
-            "color"
-          ],
-          "type": "object"
+          }
         },
         "shape": {
           "id": "/properties/face/properties/shape",
@@ -160,12 +165,11 @@
         "teeth",
         "complexion",
         "shape",
-        "left_eye",
+        "eye",
         "hair",
         "eyebrow",
         "acne",
-        "freckles",
-        "right_eye"
+        "freckles"
       ],
       "type": "object",
       "default": {
@@ -182,13 +186,15 @@
           "roots": null,
           "style": null
         },
-        "left_eye": {
-          "color": null,
-          "lenses": null
-        },
-        "right_eye": {
-          "color": null,
-          "lenses": null
+        "eye": {
+          "left": {
+            "color": null,
+            "lenses": null
+          },
+          "right": {
+            "color": null,
+            "lenses": null
+          }
         },
         "shape": null,
         "teeth": {

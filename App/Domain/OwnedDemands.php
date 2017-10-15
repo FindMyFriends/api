@@ -82,8 +82,8 @@ final class OwnedDemands implements Demands {
 						:face_hair_nature
 					)::hair,
 					:face_eyebrow,
-					ROW(:face_left_eye_color, :face_left_eye_lenses)::eye,
-					ROW(:face_right_eye_color, :face_right_eye_lenses)::eye
+					ROW(:face_eye_left_color, :face_eye_left_lenses)::eye,
+					ROW(:face_eye_right_color, :face_eye_right_lenses)::eye
 				)
 				RETURNING id
 			),

@@ -38,37 +38,38 @@ final class StoredDemand implements Demand {
 				'teeth' => 'tooth',
 			]
 		))->row();
-		return new Output\MovingFormat(
+		return new Output\FilledFormat(
 			$format,
-			$demand,
 			[
-				'id',
-				'seeker_id',
-				'created_at',
+				'id' => $demand['id'],
+				'seeker_id' => $demand['seeker_id'],
+				'created_at' => $demand['created_at'],
 				'general' => [
-					'age',
-					'firstname',
-					'lastname',
-					'gender',
-					'race',
+					'age' => $demand['age'],
+					'firstname' => $demand['firstname'],
+					'lastname' => $demand['lastname'],
+					'gender' => $demand['gender'],
+					'race' => $demand['race'],
 				],
 				'face' => [
-					'acne',
-					'beard',
-					'complexion',
-					'eyebrow',
-					'freckles',
-					'hair',
-					'left_eye',
-					'right_eye',
-					'shape',
-					'teeth',
+					'acne' => $demand['acne'],
+					'beard' => $demand['beard'],
+					'complexion' => $demand['complexion'],
+					'eyebrow' => $demand['eyebrow'],
+					'freckles' => $demand['freckles'],
+					'hair' => $demand['hair'],
+					'eye' => [
+						'left' => $demand['left_eye'],
+						'right' => $demand['right_eye'],
+					],
+					'shape' => $demand['shape'],
+					'teeth' => $demand['teeth'],
 				],
 				'body' => [
-					'build',
-					'skin',
-					'weight',
-					'height',
+					'build' => $demand['build'],
+					'skin' => $demand['skin'],
+					'weight' => $demand['weight'],
+					'height' => $demand['height'],
 				],
 			]
 		);
@@ -114,8 +115,8 @@ final class StoredDemand implements Demand {
 						:hair_nature
 					)::hair,
 					eyebrow = :eyebrow,
-					left_eye = ROW(:left_eye_color, :left_eye_lenses)::eye,
-					right_eye = ROW(:right_eye_color, :right_eye_lenses)::eye
+					left_eye = ROW(:eye_left_color, :eye_left_lenses)::eye,
+					right_eye = ROW(:eye_right_color, :eye_right_lenses)::eye
 				WHERE id = :id',
 				['id' => $face] + $description['face']
 			))->execute();

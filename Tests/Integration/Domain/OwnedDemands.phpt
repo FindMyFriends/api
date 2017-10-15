@@ -48,13 +48,15 @@ final class OwnedDemands extends \Tester\TestCase {
 						'nature' => null,
 					],
 					'eyebrow' => null,
-					'left_eye' => [
-						'color' => null,
-						'lenses' => null,
-					],
-					'right_eye' => [
-						'color' => null,
-						'lenses' => null,
+					'eye' => [
+						'left' => [
+							'color' => null,
+							'lenses' => null,
+						],
+						'right' => [
+							'color' => null,
+							'lenses' => null,
+						],
 					],
 				],
 				'body' => [

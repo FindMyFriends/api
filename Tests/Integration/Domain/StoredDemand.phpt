@@ -93,8 +93,10 @@ final class StoredDemand extends \Tester\TestCase {
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],
 					'shape' => 'oval',
-					'right_eye' => ['color' => 'blue', 'lenses' => false],
-					'left_eye' => ['color' => 'blue', 'lenses' => false],
+					'eye' => [
+						'right' => ['color' => 'blue', 'lenses' => false],
+						'left' => ['color' => 'blue', 'lenses' => false],
+					],
 					'hair' => [
 						'color' => 'black',
 						'roots' => true,
@@ -161,13 +163,15 @@ final class StoredDemand extends \Tester\TestCase {
 						'nature' => false,
 					],
 					'eyebrow' => 'black',
-					'left_eye' => [
-						'color' => 'blue',
-						'lenses' => false,
-					],
-					'right_eye' => [
-						'color' => 'blue',
-						'lenses' => false,
+					'eye' => [
+						'left' => [
+							'color' => 'blue',
+							'lenses' => false,
+						],
+						'right' => [
+							'color' => 'blue',
+							'lenses' => false,
+						],
 					],
 				],
 				'body' => [
@@ -190,8 +194,10 @@ final class StoredDemand extends \Tester\TestCase {
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],
 					'shape' => 'oval',
-					'right_eye' => ['color' => 'blue', 'lenses' => false],
-					'left_eye' => ['color' => 'blue', 'lenses' => false],
+					'eye' => [
+						'left' => ['color' => 'blue', 'lenses' => false],
+						'right' => ['color' => 'blue', 'lenses' => false],
+					],
 					'hair' => [
 						'color' => 'black',
 						'roots' => true,
