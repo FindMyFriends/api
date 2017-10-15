@@ -20,22 +20,51 @@ $source = new Ini\CachedSource(
 		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
 	)
 );
+$uri = new Uri\CachedUri(
+	new Uri\BaseUrl(
+		$_SERVER['SCRIPT_NAME'],
+		$_SERVER['REQUEST_URI'],
+		$_SERVER['SERVER_NAME'],
+		$_SERVER['HTTPS'] ?? 'http'
+	)
+);
 echo (new class(
 	new Application\SuitedPage(
 		$source,
-		new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
-		new Routing\HttpRoutes(
-			json_decode(file_get_contents(V1_ROUTES_PATH), true),
+		new Log\FilesystemLogs(
+			new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))
+		),
+		new Routing\MatchingRoutes(
+			new Routing\CachedRoutes(
+				new Routing\MappedRoutes(
+					new Routing\CachedRoutes(
+						new Routing\RegexRoutes(
+							new Routing\CachedRoutes(
+								new Routing\ShortcutRoutes(
+									new Routing\HttpMethodRoutes(
+										new Routing\CachedRoutes(
+											new Routing\JsonRoutes(
+												new SplFileInfo(V1_ROUTES_PATH)
+											)
+										),
+										$_SERVER['REQUEST_METHOD']
+									)
+								)
+							)
+						)
+					),
+					function(array $match) use ($uri): Routing\Route {
+						return new Routing\HttpRoute(
+							key($match),
+							current($match),
+							$uri
+						);
+					}
+				)
+			),
 			$_SERVER['REQUEST_METHOD']
 		),
-		new Uri\CachedUri(
-			new Uri\BaseUrl(
-				$_SERVER['SCRIPT_NAME'],
-				$_SERVER['REQUEST_URI'],
-				$_SERVER['SERVER_NAME'],
-				$_SERVER['HTTPS'] ?? 'http'
-			)
-		)
+		$uri
 	),
 	$source
 ) implements Output\Template {
