@@ -38,27 +38,34 @@ echo (new class(
 			new Routing\CachedRoutes(
 				new Routing\MappedRoutes(
 					new Routing\CachedRoutes(
-						new Routing\RegexRoutes(
-							new Routing\CachedRoutes(
-								new Routing\ShortcutRoutes(
-									new Routing\HttpMethodRoutes(
-										new Routing\CachedRoutes(
-											new Routing\JsonRoutes(
-												new SplFileInfo(V1_ROUTES_PATH)
-											)
-										),
-										$_SERVER['REQUEST_METHOD']
+						new Routing\QueryRoutes(
+							new Routing\PathRoutes(
+								new Routing\CachedRoutes(
+									new Routing\ShortcutRoutes(
+										new Routing\HttpMethodRoutes(
+											new Routing\CachedRoutes(
+												new Routing\JsonRoutes(
+													new SplFileInfo(
+														V1_ROUTES_PATH
+													)
+												)
+											),
+											$_SERVER['REQUEST_METHOD']
+										)
 									)
-								)
+								),
+								$uri
 							),
 							$uri
 						)
 					),
 					function(array $match) use ($uri): Routing\Route {
-						return new Routing\HttpRoute(
-							key($match),
-							current($match),
-							$uri
+						return new Routing\TypedRoute(
+							new Routing\DefaultRoute(
+								key($match),
+								current($match),
+								$uri
+							)
 						);
 					}
 				)

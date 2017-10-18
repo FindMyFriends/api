@@ -13,12 +13,9 @@ use Klapuch\UI;
 
 final class Get extends V1\Api {
 	private const ALLOWED_SORTS = ['created_at'];
-	private const DEFAULT_PER_PAGE = 10;
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$page = intval($_GET['page'] ?? 1);
-			$perPage = intval($_GET['per_page'] ?? self::DEFAULT_PER_PAGE);
 			$demands = new Domain\CachedDemands(
 				new Domain\CollectiveDemands(
 					new Domain\FakeDemands(),
@@ -39,8 +36,8 @@ final class Get extends V1\Api {
 													self::ALLOWED_SORTS
 												),
 												new Dataset\SqlPaging(
-													$page,
-													$perPage
+													$parameters['page'],
+													$parameters['per_page']
 												)
 											)
 										)
@@ -51,10 +48,10 @@ final class Get extends V1\Api {
 							$this->url
 						)
 					),
-					$page,
+					$parameters['page'],
 					new UI\AttainablePagination(
-						$page,
-						$perPage,
+						$parameters['page'],
+						$parameters['per_page'],
 						$demands->count(new Dataset\EmptySelection())
 					),
 					$this->url
