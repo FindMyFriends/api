@@ -7,13 +7,30 @@ use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
-use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
+use Klapuch\Uri;
 use Klapuch\Validation;
+use Predis;
 
-final class Put extends V1\Api {
+final class Put implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/put.json';
+	private $request;
+	private $url;
+	private $database;
+	private $redis;
+
+	public function __construct(
+		Application\Request $request,
+		Uri\Uri $url,
+		\PDO $database,
+		Predis\ClientInterface $redis
+	) {
+		$this->request = $request;
+		$this->url = $url;
+		$this->database = $database;
+		$this->redis = $redis;
+	}
 
 	public function template(array $parameters): Output\Template {
 		try {
@@ -27,9 +44,7 @@ final class Put extends V1\Api {
 				))->apply(
 					json_decode(
 						(new Request\ConcurrentlyControlledRequest(
-							new Request\CachedRequest(
-								new Application\PlainRequest()
-							),
+							new Request\CachedRequest($this->request),
 							$this->url,
 							new Http\ETagRedis($this->redis)
 						))->body()->serialization(),

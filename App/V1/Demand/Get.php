@@ -5,11 +5,30 @@ namespace FindMyFriends\V1\Demand;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
-use FindMyFriends\V1;
+use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
+use Klapuch\Uri;
+use Predis;
 
-final class Get extends V1\Api {
+final class Get implements Application\View {
+	private $url;
+	private $database;
+	private $user;
+	private $redis;
+
+	public function __construct(
+		Uri\Uri $url,
+		\PDO $database,
+		Access\User $user,
+		Predis\ClientInterface $redis
+	) {
+		$this->url = $url;
+		$this->database = $database;
+		$this->user = $user;
+		$this->redis = $redis;
+	}
+
 	public function template(array $parameters): Output\Template {
 		try {
 			return new Application\RawTemplate(
