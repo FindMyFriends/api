@@ -58,20 +58,14 @@
 		<exclude-pattern>Tests/Unit</exclude-pattern>
 		<exclude-pattern>Tests/Integration</exclude-pattern>
 		<exclude-pattern>Tests/Postgres</exclude-pattern>
+		<exclude-pattern>Tests/Functional</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
 		<exclude-pattern>Tests/Unit</exclude-pattern>
 		<exclude-pattern>Tests/Integration</exclude-pattern>
 		<exclude-pattern>Tests/Postgres</exclude-pattern>
-	</rule>
-
-	<rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
-		<exclude-pattern>www/index.php</exclude-pattern>
-	</rule>
-
-	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-		<exclude-pattern>www/index.php</exclude-pattern>
+		<exclude-pattern>Tests/Functional</exclude-pattern>
 	</rule>
 
 </ruleset>

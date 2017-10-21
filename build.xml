@@ -3,7 +3,7 @@
 
 	<resolvepath propertyName="base_path" file="."/>
 
-	<target name="check" depends="lint, phpcpd, phpstan, tests, cgi-tests"/>
+	<target name="check" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests"/>
 	<target name="ci" depends="check, tester-coverage"/>
 
 	<target name="lint">
@@ -42,7 +42,6 @@
 			<arg value="-sp"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
-			<arg path="www"/>
 		</exec>
 	</target>
 
@@ -55,7 +54,6 @@
 			<arg value="-sp"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
-			<arg path="www"/>
 		</exec>
 	</target>
 
@@ -72,6 +70,7 @@
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
+			<arg path="Tests/Functional"/>
 		</exec>
 	</target>
 
@@ -88,6 +87,7 @@
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
+			<arg path="Tests/Functional"/>
 		</exec>
 	</target>
 
@@ -106,6 +106,7 @@
 			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
+			<arg path="Tests/Functional"/>
 			<arg value="--coverage"/>
 			<arg value="tester-coverage.xml"/>
 			<arg value="--coverage-src"/>

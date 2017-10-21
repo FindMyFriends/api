@@ -71,7 +71,7 @@
             },
             "length": {
               "id": "/properties/face/properties/hair/properties/length",
-              "type": ["string", "null"]
+              "type": ["integer", "null"]
             },
             "nature": {
               "id": "/properties/face/properties/hair/properties/nature",

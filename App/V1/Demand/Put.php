@@ -34,7 +34,11 @@ final class Put implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			(new Domain\StoredDemand(
+			(new Domain\ExistingDemand(
+				new Domain\StoredDemand(
+					$parameters['id'],
+					$this->database
+				),
 				$parameters['id'],
 				$this->database
 			))->reconsider(

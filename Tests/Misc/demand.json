@@ -1,0 +1,45 @@
+{
+  "general": {
+    "age": "[20,22)",
+    "gender": "man",
+    "race": "european",
+    "firstname": "Dominik",
+    "lastname": "Klapuch"
+  },
+  "face": {
+    "teeth": {
+      "care": "high",
+      "braces": false
+    },
+    "freckles": false,
+    "complexion": "medium",
+    "beard": "no",
+    "acne": false,
+    "shape": "oval",
+    "hair": {
+      "style": "normal",
+      "color": "black",
+      "length": 20,
+      "highlights": false,
+      "roots": true,
+      "nature": false
+    },
+    "eyebrow": "black",
+    "eye": {
+      "left": {
+        "color": "blue",
+        "lenses": false
+      },
+      "right": {
+        "color": "blue",
+        "lenses": false
+      }
+    }
+  },
+  "body": {
+    "build": "skinny",
+    "skin": "white",
+    "weight": 60,
+    "height": 181
+  }
+}
