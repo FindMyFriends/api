@@ -26,7 +26,7 @@ final class Get extends \Tester\TestCase {
 				new FakeUri('/', 'v1/demands', []),
 				$this->database,
 				new FakeUser(null, ['role' => 'guest'])
-			))->template(['page' => 1, 'per_page' => 10])->render(),
+			))->template(['page' => 1, 'per_page' => 10, 'sort' => ''])->render(),
 			true
 		);
 		Assert::count(2, $demands);
