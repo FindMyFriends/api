@@ -77,7 +77,7 @@ echo (new class(
 															$this->database
 														))->enter((new Application\PlainRequest())->headers());
 														return [
-															'v1/demands?page=(1)&per_page=(10) [GET]' => new V1\Demands\Get(
+															'v1/demands?page=(1)&per_page=(10)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 																$this->uri,
 																$this->database,
 																$user

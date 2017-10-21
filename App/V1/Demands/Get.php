@@ -42,7 +42,7 @@ final class Get implements Application\View {
 										$demands->all(
 											new Dataset\CombinedSelection(
 												new Dataset\SqlRestSort(
-													$_GET['sort'] ?? '',
+													$parameters['sort'],
 													self::ALLOWED_SORTS
 												),
 												new Dataset\SqlPaging(
