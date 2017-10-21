@@ -118,10 +118,10 @@ echo (new class(
 						/** @var \Klapuch\Application\View $destination */
 						[$source, $destination] = [key($match), current($match)];
 						return $destination->template(
-							(new Routing\TypedRoute(
-								new Routing\DefaultRoute(
-									$source,
-									$uri
+							(new Routing\TypedMask(
+								new Routing\CombinedMask(
+									new Routing\PathMask($source, $uri),
+									new Routing\QueryMask($source, $uri)
 								)
 							))->parameters()
 						);
