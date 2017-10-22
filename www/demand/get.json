@@ -189,7 +189,8 @@
         },
         "race": {
           "id": "/properties/general/properties/race",
-          "type": "string"
+          "type": "string",
+          "enum": ["european", "asian", "other"]
         }
       },
       "required": [
