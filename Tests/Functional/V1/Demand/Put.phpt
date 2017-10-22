@@ -12,7 +12,7 @@ use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri\FakeUri;
+use Klapuch\Uri;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -29,7 +29,7 @@ final class Put extends \Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../Misc/demand.json')
 					)
 				),
-				new FakeUri('/', 'v1/demands', []),
+				new Uri\FakeUri('/', 'v1/demands', []),
 				$this->database,
 				$this->redis
 			))->template(['id' => 1])->render(),
@@ -48,7 +48,7 @@ final class Put extends \Tester\TestCase {
 						'{"name":"bar"}'
 					)
 				),
-				new FakeUri('/', 'v1/demands', []),
+				new Uri\FakeUri('/', 'v1/demands', []),
 				$this->database,
 				$this->redis
 			))->template(['id' => 1])->render(),
