@@ -3,6 +3,7 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.2
+ * @httpResponse any
  */
 namespace FindMyFriends\Functional\V1\Demand;
 
@@ -34,6 +35,20 @@ final class Get extends \Tester\TestCase {
 			$demand,
 			new \SplFileInfo(__DIR__ . '/../../../../App/V1/Demand/schema/get.json')
 		))->assert();
+	}
+
+	public function test404ForNotExisting() {
+		$demand = json_decode(
+			(new V1\Demand\Get(
+				new Uri\FakeUri('/', sprintf('v1/demands/%d', 1), []),
+				$this->database,
+				new Access\FakeUser(null, ['role' => 'guest']),
+				$this->redis
+			))->template(['id' => 1])->render(),
+			true
+		);
+		Assert::same(['message' => 'Demand 1 does not exist'], $demand);
+		Assert::same(404, http_response_code());
 	}
 }
 

@@ -39,7 +39,7 @@ final class Put extends \Tester\TestCase {
 		Assert::same(204, http_response_code());
 	}
 
-	public function testErrorOnBadInput() {
+	public function test400OnBadInput() {
 		(new Misc\SampleDemand($this->database))->try();
 		$demand = json_decode(
 			(new V1\Demand\Put(
@@ -48,7 +48,7 @@ final class Put extends \Tester\TestCase {
 						'{"name":"bar"}'
 					)
 				),
-				new Uri\FakeUri('/', 'v1/demands', []),
+				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
 				$this->redis
 			))->template(['id' => 1])->render(),
@@ -56,6 +56,24 @@ final class Put extends \Tester\TestCase {
 		);
 		Assert::same(['message' => 'The property general is required'], $demand);
 		Assert::same(400, http_response_code());
+	}
+
+	public function test404OnNotExisting() {
+		$demand = json_decode(
+			(new V1\Demand\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../Misc/demand.json')
+					)
+				),
+				new Uri\FakeUri('/', 'v1/demands/1', []),
+				$this->database,
+				$this->redis
+			))->template(['id' => 1])->render(),
+			true
+		);
+		Assert::same(['message' => 'Demand 1 does not exist'], $demand);
+		Assert::same(404, http_response_code());
 	}
 }
 

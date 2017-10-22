@@ -4,6 +4,7 @@ namespace FindMyFriends\V1\Demand;
 
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
+use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
@@ -38,13 +39,16 @@ final class Get implements Application\View {
 							new Response\JsonApiAuthentication(
 								new Response\PlainResponse(
 									(new Domain\FormattedDemand(
-										new Domain\ExistingDemand(
-											new Domain\StoredDemand(
+										new Domain\HarnessedDemand(
+											new Domain\ExistingDemand(
+												new Domain\StoredDemand(
+													$parameters['id'],
+													$this->database
+												),
 												$parameters['id'],
 												$this->database
 											),
-											$parameters['id'],
-											$this->database
+											new Misc\ApiErrorCallback(404)
 										)
 									))->print(new Output\Json)
 								),

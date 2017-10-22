@@ -5,6 +5,7 @@ namespace FindMyFriends\V1\Demand;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
+use FindMyFriends\Misc;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -34,13 +35,16 @@ final class Put implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			(new Domain\ExistingDemand(
-				new Domain\StoredDemand(
+			(new Domain\HarnessedDemand(
+				new Domain\ExistingDemand(
+					new Domain\StoredDemand(
+						$parameters['id'],
+						$this->database
+					),
 					$parameters['id'],
 					$this->database
 				),
-				$parameters['id'],
-				$this->database
+				new Misc\ApiErrorCallback(404)
 			))->reconsider(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
