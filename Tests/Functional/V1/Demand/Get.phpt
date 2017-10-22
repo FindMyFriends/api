@@ -3,7 +3,7 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.2
- * @httpResponse any
+ * @httpCode any
  */
 namespace FindMyFriends\Functional\V1\Demand;
 
