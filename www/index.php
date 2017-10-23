@@ -130,8 +130,7 @@ echo (new class(
 			),
 			$uri,
 			$_SERVER['REQUEST_METHOD']
-		),
-		$uri
+		)
 	),
 	$source
 ) implements Output\Template {
