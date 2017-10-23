@@ -36,7 +36,7 @@ $uri = new Uri\CachedUri(
 
 $configuration = $source->read();
 echo (new class(
-	new Application\SuitedPage(
+	new Application\RawPage(
 		$source,
 		new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
 		new Routing\MatchingRoutes(
