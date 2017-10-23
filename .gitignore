@@ -1,3 +1,4 @@
 vendor/
 .config.local.ini
 composer.lock
+www/schema

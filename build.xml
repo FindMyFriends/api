@@ -5,6 +5,7 @@
 
 	<target name="check" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests"/>
 	<target name="ci" depends="check, tester-coverage"/>
+	<target name="init" depends="lint, move-schemas"/>
 
 	<target name="lint">
 		<exec executable="vendor/bin/parallel-lint" logoutput="true" passthru="true" checkreturn="true">
@@ -112,6 +113,13 @@
 			<arg value="--coverage-src"/>
 			<arg path="App/"/>
 		</exec>
+	</target>
+
+	<target name="move-schemas">
+		<mkdir dir="${base_path}/www/schema/v1/demand" />
+		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
 	</target>
 
 </project>
