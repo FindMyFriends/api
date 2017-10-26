@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Constraint;
 
+use Dasuos\Internal\Condition;
+use Dasuos\Internal\Iteration;
 use Klapuch\Validation;
 
 /**
@@ -10,7 +12,10 @@ use Klapuch\Validation;
 final class OpenClosedInterval implements Validation\Rule {
 	public function satisfied($subject): bool {
 		[$left, $right] = [substr($subject, 0, 1), substr($subject, -1)];
-		$ranges = array_filter(explode(',', trim($subject, $left . $right)), 'is_numeric');
+		$ranges = (new Iteration\Filtered(
+			new Iteration\Hash(explode(',', trim($subject, $left . $right))),
+			new Condition\Callback('is_numeric')
+		))->product();
 		return !array_diff([$left, $right], ['(', ')', '[', ']']) && count($ranges) === 2;
 	}
 
