@@ -38,95 +38,89 @@ $configuration = $source->read();
 echo (new class(
 	new Application\RawPage(
 		$source,
-		new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
+		new Log\FilesystemLogs(
+			new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))
+		),
 		new Routing\MatchingRoutes(
-			new Routing\CachedRoutes(
-				new Routing\MappedRoutes(
-					new Routing\CachedRoutes(
-						new Routing\QueryRoutes(
-							new Routing\PathRoutes(
-								new Routing\CachedRoutes(
-									new Routing\ShortcutRoutes(
-										new Routing\HttpMethodRoutes(
-											new Routing\CachedRoutes(
-												new class(
-													$uri,
-													new Storage\SafePDO(
-														$configuration['DATABASE']['dsn'],
-														$configuration['DATABASE']['user'],
-														$configuration['DATABASE']['password']
-													),
-													new Predis\Client($configuration['REDIS']['uri'])
-												) implements Routing\Routes {
-													private $uri;
-													private $database;
-													private $redis;
+			new Routing\MappedRoutes(
+				new Routing\QueryRoutes(
+					new Routing\PathRoutes(
+						new Routing\ShortcutRoutes(
+							new Routing\HttpMethodRoutes(
+								new class(
+									$uri,
+									new Storage\SafePDO(
+										$configuration['DATABASE']['dsn'],
+										$configuration['DATABASE']['user'],
+										$configuration['DATABASE']['password']
+									),
+									new Predis\Client($configuration['REDIS']['uri'])
+								) implements Routing\Routes {
+									private $uri;
+									private $database;
+									private $redis;
 
-													public function __construct(
-														Uri\Uri $uri,
-														\PDO $database,
-														Predis\ClientInterface $redis
-													) {
-														$this->uri = $uri;
-														$this->database = $database;
-														$this->redis = $redis;
-													}
+									public function __construct(
+										Uri\Uri $uri,
+										\PDO $database,
+										Predis\ClientInterface $redis
+									) {
+										$this->uri = $uri;
+										$this->database = $database;
+										$this->redis = $redis;
+									}
 
-													public function matches(): array {
-														$user = (new Access\ApiEntrance(
-															$this->database
-														))->enter((new Application\PlainRequest())->headers());
-														return [
-															'v1/demands?page=(1)&per_page=(10)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
-																$this->uri,
-																$this->database,
-																$user
-															),
-															'v1/demands/{id :id} [GET]' => new V1\Demand\Get(
-																$this->uri,
-																$this->database,
-																$user,
-																$this->redis
-															),
-															'v1/demands [POST]' => new V1\Demands\Post(
-																new Application\PlainRequest(),
-																$this->uri,
-																$this->database,
-																$user,
-																$this->redis
-															),
-															'v1/demands/{id :id} [PUT]' => new V1\Demand\Put(
-																new Application\PlainRequest(),
-																$this->uri,
-																$this->database,
-																$this->redis
-															),
-														];
-													}
-												}
+									public function matches(): array {
+										$user = (new Access\ApiEntrance(
+											$this->database
+										))->enter((new Application\PlainRequest())->headers());
+										return [
+											'v1/demands?page=(1)&per_page=(10)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
+												$this->uri,
+												$this->database,
+												$user
 											),
-											$_SERVER['REQUEST_METHOD']
-										)
-									)
-								),
-								$uri
-							),
-							$uri
-						)
+											'v1/demands/{id :id} [GET]' => new V1\Demand\Get(
+												$this->uri,
+												$this->database,
+												$user,
+												$this->redis
+											),
+											'v1/demands [POST]' => new V1\Demands\Post(
+												new Application\PlainRequest(),
+												$this->uri,
+												$this->database,
+												$user,
+												$this->redis
+											),
+											'v1/demands/{id :id} [PUT]' => new V1\Demand\Put(
+												new Application\PlainRequest(),
+												$this->uri,
+												$this->database,
+												$this->redis
+											),
+										];
+									}
+								},
+								$_SERVER['REQUEST_METHOD']
+							)
+						),
+						$uri
 					),
-					function(array $match) use ($uri): Output\Template {
-						/** @var \Klapuch\Application\View $destination */
-						[$source, $destination] = [key($match), current($match)];
-						return $destination->template(
-							(new Routing\TypedMask(
-								new Routing\CombinedMask(
-									new Routing\PathMask($source, $uri),
-									new Routing\QueryMask($source, $uri)
-								)
-							))->parameters()
-						);
-					}
-				)
+					$uri
+				),
+				function(array $match) use ($uri): Output\Template {
+					/** @var \Klapuch\Application\View $destination */
+					[$source, $destination] = [key($match), current($match)];
+					return $destination->template(
+						(new Routing\TypedMask(
+							new Routing\CombinedMask(
+								new Routing\PathMask($source, $uri),
+								new Routing\QueryMask($source, $uri)
+							)
+						))->parameters()
+					);
+				}
 			),
 			$uri,
 			$_SERVER['REQUEST_METHOD']
