@@ -18,13 +18,13 @@ final class SampleGeneral implements Sample {
 	public function try(): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'INSERT INTO general (gender, race, age, firstname, lastname) VALUES
+			'INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES
 			(?, ?, ?, ?, ?)
 			RETURNING id',
 			[
 				$this->general['gender'] ?? self::GENDERS[array_rand(self::GENDERS)],
 				$this->general['race'] ?? self::RACES[array_rand(self::RACES)],
-				$this->general['age'] ?? sprintf('[%d,%d)', mt_rand(0, 50), mt_rand(51, 100)),
+				$this->general['birth_year'] ?? sprintf('[%d,%d)', mt_rand(1850, 1900), mt_rand(1901, 2017)),
 				$this->general['firstname'] ?? bin2hex(random_bytes(10)),
 				$this->general['lastname'] ?? bin2hex(random_bytes(10)),
 			]

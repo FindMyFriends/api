@@ -22,7 +22,7 @@ final class StoredDemand implements Demand {
 				'SELECT demands.id, demands.seeker_id, demands.created_at,
 				bodies.build, bodies.skin, bodies.weight, bodies.height,
 				faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-				general.age, general.firstname, general.lastname, general.gender, general.race
+				general.birth_year, general.firstname, general.lastname, general.gender, general.race
 				FROM demands
 				JOIN descriptions ON descriptions.id = demands.description_id
 				JOIN bodies ON bodies.id = descriptions.body_id
@@ -45,7 +45,7 @@ final class StoredDemand implements Demand {
 				'seeker_id' => $demand['seeker_id'],
 				'created_at' => $demand['created_at'],
 				'general' => [
-					'age' => $demand['age'],
+					'birth_year' => $demand['birth_year'],
 					'firstname' => $demand['firstname'],
 					'lastname' => $demand['lastname'],
 					'gender' => $demand['gender'],
@@ -91,7 +91,7 @@ final class StoredDemand implements Demand {
 				'UPDATE general
 				SET gender = :gender,
 					race = :race,
-					age = :age,
+					birth_year = :birth_year,
 					firstname = :firstname,
 					lastname = :lastname
 				WHERE id = :id',

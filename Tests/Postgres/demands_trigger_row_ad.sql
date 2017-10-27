@@ -4,36 +4,62 @@ DECLARE
 	seekers_count INTEGER;
 	messages TEXT[];
 BEGIN
-	INSERT INTO general (gender, race, age, firstname, lastname) VALUES (
-		'man',
-		'european',
-		'[20,22)',
-		NULL,
-		NULL
-	);
-	INSERT INTO bodies (build, skin, weight, height) VALUES (
-		NULL,
-		NULL,
-		NULL,
-		NULL
-	);
-	INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL
-	);
-	INSERT INTO descriptions (general_id, body_id, face_id) VALUES (1, 1, 1);
-	INSERT INTO demands (id, seeker_id, description_id, created_at) VALUES (1, 1, 1, NOW());
-	INSERT INTO seekers (email, password, description_id) VALUES ('whatever@email.cz', '123', 1);
+	WITH inserted_general AS (
+		INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
+			'man',
+			'european',
+			'[1996,1997)',
+			NULL,
+			NULL
+		)
+		RETURNING id
+	), inserted_body AS (
+		INSERT INTO bodies (build, skin, weight, height) VALUES (
+			NULL,
+			NULL,
+			NULL,
+			NULL
+		)
+		RETURNING id
+	), inserted_face AS (
+		INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+		)
+		RETURNING  id
+	), inserted_description AS (
+		INSERT INTO descriptions (general_id, body_id, face_id) VALUES (
+			(SELECT id FROM inserted_general),
+			(SELECT id FROM inserted_body),
+			(SELECT id FROM inserted_face)
+		)
+		RETURNING id
+	), inserted_seeker AS (
+		INSERT INTO seekers (email, password, description_id) VALUES (
+			'whatever@email.cz',
+			'123',
+			(SELECT id FROM inserted_description)
+		)
+		RETURNING id
+	), inserted_demand AS (
+			INSERT INTO demands (id, seeker_id, description_id, created_at) VALUES (
+				1,
+				(SELECT id FROM inserted_seeker),
+				(SELECT id FROM inserted_description),
+				NOW()
+		)
+		RETURNING id
+	) DELETE FROM demands WHERE id = (SELECT id FROM inserted_demand);
 
-	DELETE FROM demands WHERE id = 1;
+	DELETE FROM demands;
 
 	SELECT
 	(SELECT COUNT(*) FROM general)

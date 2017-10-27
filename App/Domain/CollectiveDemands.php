@@ -28,7 +28,7 @@ final class CollectiveDemands implements Demands {
 				'SELECT demands.id, demands.seeker_id, demands.created_at,
 				bodies.build, bodies.skin, bodies.weight, bodies.height,
 				faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-				general.age, general.firstname, general.lastname, general.gender, general.race
+				general.birth_year, general.firstname, general.lastname, general.gender, general.race
 				FROM demands
 				JOIN descriptions ON descriptions.id = demands.description_id
 				JOIN bodies ON bodies.id = descriptions.body_id

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.4
--- Dumped by pg_dump version 9.6.4
+-- Dumped from database version 10.0
+-- Dumped by pg_dump version 10.0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -175,6 +175,21 @@ CREATE TYPE tooth AS (
 
 
 ALTER TYPE tooth OWNER TO postgres;
+
+--
+-- Name: birth_year_in_range(int4range); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION birth_year_in_range(range int4range) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	RETURN range <@ int4range(1850, date_part('year', CURRENT_DATE)::INTEGER);
+END
+$$;
+
+
+ALTER FUNCTION public.birth_year_in_range(range int4range) OWNER TO postgres;
 
 --
 -- Name: demands_trigger_row_ad(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -378,9 +393,10 @@ CREATE TABLE general (
     id integer NOT NULL,
     gender genders NOT NULL,
     race races NOT NULL,
-    age int4range NOT NULL,
+    birth_year int4range NOT NULL,
     firstname character varying(100),
-    lastname character varying(100)
+    lastname character varying(100),
+    CONSTRAINT check_birth_year_in_range CHECK (birth_year_in_range(birth_year))
 );
 
 

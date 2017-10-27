@@ -23,7 +23,7 @@ final class OwnedDemands extends \Tester\TestCase {
 		$demand = (new Domain\OwnedDemands(new Access\FakeUser('1'), $this->database))->ask(
 			[
 				'general' => [
-					'age' => '[20,22)',
+					'birth_year' => '[1996,1998)',
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => null,

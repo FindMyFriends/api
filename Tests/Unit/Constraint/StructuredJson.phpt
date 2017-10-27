@@ -22,7 +22,7 @@ final class StructuredJson extends \Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException The property age is required (general.age)
+	 * @throws \UnexpectedValueException The property birth_year is required (general.birth_year)
 	 */
 	public function testThrowingOnMissingNestedProperty() {
 		(new Constraint\StructuredJson(

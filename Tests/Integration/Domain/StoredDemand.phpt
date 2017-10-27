@@ -39,7 +39,7 @@ final class StoredDemand extends \Tester\TestCase {
 				'seeker' => 1,
 				'created_at' => new \DateTime('2017-09-16 00:00:00+00'),
 				'general' => [
-					'age' => '[20,22)',
+					'birth_year' => '[1996,1998)',
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => 'Dom',
@@ -88,7 +88,7 @@ final class StoredDemand extends \Tester\TestCase {
 					'gender' => 'man',
 					'lastname' => 'Klapuch',
 					'firstname' => 'Dom',
-					'age' => '[20,22)',
+					'birth_year' => '[1996,1998)',
 				],
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],
@@ -138,7 +138,7 @@ final class StoredDemand extends \Tester\TestCase {
 		$demand->reconsider(
 			[
 				'general' => [
-					'age' => '[20,22)',
+					'birth_year' => '[1996,1998)',
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => 'Dom',
@@ -189,7 +189,7 @@ final class StoredDemand extends \Tester\TestCase {
 					'gender' => 'man',
 					'lastname' => 'Klapuch',
 					'firstname' => 'Dom',
-					'age' => '[20,22)',
+					'birth_year' => '[1996,1998)',
 				],
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],

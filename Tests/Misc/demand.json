@@ -1,6 +1,6 @@
 {
   "general": {
-    "age": "[20,22)",
+    "birth_year": "[1996,1998)",
     "gender": "man",
     "race": "european",
     "firstname": "Dominik",

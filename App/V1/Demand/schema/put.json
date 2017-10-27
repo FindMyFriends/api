@@ -170,8 +170,8 @@
     "general": {
       "id": "/properties/general",
       "properties": {
-        "age": {
-          "id": "/properties/general/properties/age",
+        "birth_year": {
+          "id": "/properties/general/properties/birth_year",
           "type": "string"
         },
         "firstname": {
@@ -197,7 +197,7 @@
         "lastname",
         "firstname",
         "race",
-        "age",
+        "birth_year",
         "gender"
       ],
       "type": "object"

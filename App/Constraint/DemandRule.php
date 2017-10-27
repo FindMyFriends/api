@@ -8,18 +8,27 @@ use Klapuch\Validation;
  * Rule for demand
  */
 final class DemandRule implements Validation\Rule {
+	private $database;
+
+	public function __construct(\PDO $database) {
+		$this->database = $database;
+	}
+
 	public function satisfied($subject): bool {
-		return (new OpenClosedInterval())->satisfied($subject['general']['age']);
+		return (new OpenClosedInterval())->satisfied($subject['general']['birth_year']);
 	}
 
 	public function apply($subject): array {
 		return array_replace_recursive(
 			[
 				'general' => [
-					'age' => (new Validation\FriendlyRule(
-						new OpenClosedInterval(),
-						'For general.age is only allowed open/closed numeric interval'
-					))->apply($subject['general']['age']),
+					'birth_year' => (new Validation\ChainedRule(
+						new Validation\FriendlyRule(
+							new OpenClosedInterval(),
+							'For general.birth_year is only allowed open/closed numeric interval'
+						),
+						new BirthYearRule($this->database)
+					))->apply($subject['general']['birth_year']),
 				],
 			],
 			$subject
