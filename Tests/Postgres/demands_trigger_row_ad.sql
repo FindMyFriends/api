@@ -50,8 +50,7 @@ BEGIN
 		)
 		RETURNING id
 	), inserted_demand AS (
-			INSERT INTO demands (id, seeker_id, description_id, created_at) VALUES (
-				1,
+			INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
 				(SELECT id FROM inserted_seeker),
 				(SELECT id FROM inserted_description),
 				NOW()
