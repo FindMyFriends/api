@@ -5,7 +5,7 @@ services:
   - redis-server
 
 addons:
-  postgresql: 9.5
+  postgresql: 10
 
 language: php
 
