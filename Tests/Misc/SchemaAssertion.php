@@ -19,8 +19,20 @@ final class SchemaAssertion implements Assertion {
 	}
 
 	public function assert(): void {
-		$validator = new JsonSchema\Validator();
-		$validator->validate($this->values, $this->schema->getPathname());
-		Assert::true($validator->isValid(), implode(' & ', $validator->getErrors()));
+		if (is_array($this->values)) {
+			foreach ($this->values as $value) {
+				(new self($value, $this->schema))->assert();
+			}
+		} else {
+			$validator = new JsonSchema\Validator();
+			$validator->validate(
+				$this->values,
+				['$ref' => 'file://' . $this->schema->getRealPath()]
+			);
+			Assert::true(
+				$validator->isValid(),
+				current($validator->getErrors())['message']
+			);
+		}
 	}
 }

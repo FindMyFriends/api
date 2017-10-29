@@ -29,7 +29,6 @@ final class Get extends \Tester\TestCase {
 			))->template(['page' => 1, 'per_page' => 10, 'sort' => ''])->render()
 		);
 		Assert::count(2, $demands);
-		Assert::notSame([], $demands);
 		(new Misc\SchemaAssertion(
 			$demands,
 			new \SplFileInfo(__DIR__ . '/../../../../App/V1/Demand/schema/get.json')
