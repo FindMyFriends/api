@@ -32,6 +32,7 @@ final class IndividualEvolutions extends \Tester\TestCase {
 			$this->database
 		))->evolve(
 			[
+				'evolved_at' => '2017-01-01',
 				'general' => [
 					'gender' => 'man',
 					'race' => 'european',
