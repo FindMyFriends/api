@@ -19,7 +19,7 @@ final class SampleEvolution implements Sample {
 			'INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (?, ?, ?)
 			RETURNING id',
 			[
-				$this->evolution['seeker'] ?? $this->evolution['seeker_id'] ?? mt_rand(),
+				$this->evolution['seeker'] ?? $this->evolution['seeker_id'] ?? current((new SampleSeeker($this->database))->try()),
 				current(
 					(new SampleDescription(
 						$this->database,

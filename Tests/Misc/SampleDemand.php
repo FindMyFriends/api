@@ -20,7 +20,7 @@ final class SampleDemand implements Sample {
 			(?, ?, ?)
 			RETURNING id',
 			[
-				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? mt_rand(),
+				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new SampleSeeker($this->database))->try()),
 				current(
 					(new SampleDescription(
 						$this->database,

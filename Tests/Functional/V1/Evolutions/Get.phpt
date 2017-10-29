@@ -20,13 +20,14 @@ final class Get extends \Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
 		$demands = json_decode(
 			(new V1\Evolutions\Get(
 				new Uri\FakeUri('/', 'v1/evolutions', []),
 				$this->database,
-				new Access\FakeUser('1', ['role' => 'member'])
+				new Access\FakeUser((string) $seeker, ['role' => 'member'])
 			))->template(['page' => 1, 'per_page' => 10])->render()
 		);
 		Assert::count(2, $demands);

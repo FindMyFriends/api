@@ -7,6 +7,7 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demands;
 
+use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Klapuch\Access;
@@ -21,6 +22,7 @@ final class Post extends \Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		$demand = json_decode(
 			(new V1\Demands\Post(
 				new Application\FakeRequest(
@@ -30,7 +32,7 @@ final class Post extends \Tester\TestCase {
 				),
 				new FakeUri('/', 'v1/demands', []),
 				$this->database,
-				new Access\FakeUser('1', ['role' => 'guest']),
+				new Access\FakeUser((string) $seeker, ['role' => 'guest']),
 				$this->redis
 			))->template([])->render(),
 			true

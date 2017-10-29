@@ -21,7 +21,8 @@ final class Get extends \Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		(new Misc\SampleDemand($this->database))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => 10]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Demand\Get(
 				new Uri\FakeUri('/', sprintf('v1/demands/%d', $id), []),
@@ -30,7 +31,7 @@ final class Get extends \Tester\TestCase {
 				$this->redis
 			))->template(['id' => $id])->render()
 		);
-		Assert::same(10, $demand->seeker_id);
+		Assert::same($seeker, $demand->seeker_id);
 		(new Misc\SchemaAssertion(
 			$demand,
 			new \SplFileInfo(__DIR__ . '/../../../../App/V1/Demand/schema/get.json')

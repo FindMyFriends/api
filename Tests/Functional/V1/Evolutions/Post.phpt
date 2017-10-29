@@ -22,7 +22,8 @@ final class Post extends \Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Evolutions\Post(
 				new Application\FakeRequest(
@@ -32,7 +33,7 @@ final class Post extends \Tester\TestCase {
 				),
 				new FakeUri('/', 'v1/evolutions', []),
 				$this->database,
-				new Access\FakeUser('1', ['role' => 'member']),
+				new Access\FakeUser((string) $seeker, ['role' => 'member']),
 				$this->redis
 			))->template([])->render(),
 			true

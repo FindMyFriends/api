@@ -33,10 +33,11 @@ final class StoredDemand extends \Tester\TestCase {
 	}
 
 	public function testPrinting() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		(new Misc\SampleDemand(
 			$this->database,
 			[
-				'seeker' => 1,
+				'seeker' => $seeker,
 				'created_at' => new \DateTime('2017-09-16 00:00:00+00'),
 				'general' => [
 					'birth_year' => '[1996,1998)',
@@ -118,7 +119,7 @@ final class StoredDemand extends \Tester\TestCase {
 					'build' => 'skinny',
 				],
 				'created_at' => '2017-09-16 00:00:00+00',
-				'seeker_id' => 1,
+				'seeker_id' => $seeker,
 				'id' => 1,
 			],
 			json_decode(
@@ -129,9 +130,10 @@ final class StoredDemand extends \Tester\TestCase {
 	}
 
 	public function testReconsideringAsWholeForSpecificId() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		(new Misc\SampleDemand(
 			$this->database,
-			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => 1]
+			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
 		))->try();
 		(new Misc\SampleDemand($this->database))->try();
 		$demand = new Domain\StoredDemand(1, $this->database);
@@ -219,7 +221,7 @@ final class StoredDemand extends \Tester\TestCase {
 					'build' => 'skinny',
 				],
 				'created_at' => '2017-09-16 00:00:00+00',
-				'seeker_id' => 1,
+				'seeker_id' => $seeker,
 				'id' => 1,
 			],
 			json_decode($demand->print(new Output\Json)->serialization(), true)

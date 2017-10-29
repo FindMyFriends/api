@@ -53,7 +53,8 @@ BEGIN
 				NOW()
 		)
 		RETURNING id
-	) DELETE FROM demands WHERE id = (SELECT id FROM inserted_demand);
+	)
+	DELETE FROM demands WHERE id = (SELECT id FROM inserted_demand);
 
 	DELETE FROM demands;
 

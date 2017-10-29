@@ -20,7 +20,8 @@ final class OwnedDemands extends \Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testAskingForFirstDemand() {
-		$demand = (new Domain\OwnedDemands(new Access\FakeUser('1'), $this->database))->ask(
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		$demand = (new Domain\OwnedDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
 			[
 				'general' => [
 					'birth_year' => '[1996,1998)',
@@ -76,29 +77,34 @@ final class OwnedDemands extends \Tester\TestCase {
 	}
 
 	public function testAllForSpecifiedSeeker() {
-		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '2']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '3']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
-		$demands = (new Domain\OwnedDemands(new Access\FakeUser('1'), $this->database))->all(new Dataset\FakeSelection('', []));
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
+		$demands = (new Domain\OwnedDemands(
+			new Access\FakeUser((string) $seeker),
+			$this->database
+		))->all(new Dataset\FakeSelection('', []));
 		$demand = $demands->current();
-		Assert::contains('"seeker_id": 1', $demand->print(new Output\Json)->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json)->serialization());
 		$demands->next();
 		$demand = $demands->current();
-		Assert::contains('"seeker_id": 1', $demand->print(new Output\Json)->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json)->serialization());
 		$demands->next();
 		Assert::null($demands->current());
 	}
 
 	public function testCounting() {
-		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '2']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '3']))->try();
-		(new Misc\SampleDemand($this->database, ['seeker' => '1']))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
 		Assert::same(
 			2,
 			(new Domain\OwnedDemands(
-				new Access\FakeUser('1'),
+				new Access\FakeUser((string) $seeker),
 				$this->database
 			))->count(new Dataset\FakeSelection(null, []))
 		);

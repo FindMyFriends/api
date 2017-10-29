@@ -16,8 +16,8 @@ final class SampleSeeker implements Sample {
 	public function try(): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'INSERT INTO seekers (id, email, password, description_id) VALUES
-			(?, ?, ?, ?)
+			'INSERT INTO seekers (id, email, password) VALUES
+			(?, ?, ?)
 			RETURNING id',
 			[
 				$this->seekers['id'] ?? mt_rand(),
@@ -26,7 +26,6 @@ final class SampleSeeker implements Sample {
 					substr(uniqid('', true), -mt_rand(1, 10))
 				),
 				$this->seekers['password'] ?? password_hash(bin2hex(random_bytes(10)), PASSWORD_DEFAULT),
-				$this->seekers['description'] ?? $this->seekers['description_id'] ?? mt_rand(),
 			]
 		))->row();
 	}
