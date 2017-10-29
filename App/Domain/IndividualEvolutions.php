@@ -79,7 +79,7 @@ final class IndividualEvolutions implements Evolutions {
 			INSERT INTO evolutions (description_id, seeker_id, evolved_at) VALUES (
 				(SELECT id FROM inserted_description),
 				:seeker,
-				NOW()
+				NOW()::TIMESTAMPTZ
 			)
 			RETURNING id',
 			['seeker' => $this->seeker->id()] + $progress

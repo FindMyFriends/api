@@ -26,11 +26,9 @@ final class Get implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$demands = new Domain\CachedDemands(
-				new Domain\CollectiveDemands(
-					new Domain\FakeDemands(),
-					$this->database
-				)
+			$demands = new Domain\CollectiveDemands(
+				new Domain\FakeDemands(),
+				$this->database
 			);
 			return new Application\RawTemplate(
 				new Response\PaginatedResponse(
