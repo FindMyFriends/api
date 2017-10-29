@@ -18,7 +18,7 @@ interface Demands {
 	 * @param \Klapuch\Dataset\Selection $selection
 	 * @return \FindMyFriends\Domain\Demand[]
 	 */
-	public function all(Dataset\Selection $selection): \Traversable;
+	public function all(Dataset\Selection $selection): \Iterator;
 
 	/**
 	 * Count all demands

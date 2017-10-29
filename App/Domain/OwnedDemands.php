@@ -18,7 +18,7 @@ final class OwnedDemands implements Demands {
 		$this->database = $database;
 	}
 
-	public function all(Dataset\Selection $selection): \Traversable {
+	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\ParameterizedQuery(
 			$this->database,
 			$selection->expression(

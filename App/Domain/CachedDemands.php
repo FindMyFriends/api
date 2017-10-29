@@ -20,7 +20,7 @@ final class CachedDemands implements Demands {
 		return $this->origin->ask($description);
 	}
 
-	public function all(Dataset\Selection $selection): \Traversable {
+	public function all(Dataset\Selection $selection): \Iterator {
 		if ($this->all === null)
 			$this->all = $this->origin->all($selection);
 		return $this->all;

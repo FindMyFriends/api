@@ -8,7 +8,7 @@ final class FakeDemands implements Demands {
 	public function ask(array $description): Demand {
 	}
 
-	public function all(Dataset\Selection $selection): \Traversable {
+	public function all(Dataset\Selection $selection): \Iterator {
 	}
 
 	public function count(Dataset\Selection $selection): int {

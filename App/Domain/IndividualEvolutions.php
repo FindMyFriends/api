@@ -87,7 +87,7 @@ final class IndividualEvolutions implements Evolutions {
 		return new StoredEvolution($id, $this->database);
 	}
 
-	public function changes(Dataset\Selection $selection): \Traversable {
+	public function changes(Dataset\Selection $selection): \Iterator {
 		$evolutions = (new Storage\ParameterizedQuery(
 			$this->database,
 			$selection->expression(

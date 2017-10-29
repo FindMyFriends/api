@@ -21,7 +21,7 @@ final class CollectiveDemands implements Demands {
 		return $this->origin->ask($description);
 	}
 
-	public function all(Dataset\Selection $selection): \Traversable {
+	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\ParameterizedQuery(
 			$this->database,
 			$selection->expression(

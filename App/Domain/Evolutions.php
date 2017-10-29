@@ -18,7 +18,7 @@ interface Evolutions {
 	 * @param \Klapuch\Dataset\Selection $selection
 	 * @return \FindMyFriends\Domain\Evolution[]
 	 */
-	public function changes(Dataset\Selection $selection): \Traversable;
+	public function changes(Dataset\Selection $selection): \Iterator;
 
 	/**
 	 * Count all changes in evolution chain
