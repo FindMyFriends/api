@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.deleting_all_evidences() RETURNS TEST_RESULT AS $$
+CREATE OR REPLACE FUNCTION unit_tests.record_evolve() RETURNS TEST_RESULT AS $$
 DECLARE
 	messages TEXT[];
 BEGIN
@@ -46,30 +46,14 @@ BEGIN
 			'123'
 		)
 		RETURNING id
-	), inserted_demand AS (
-			INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
-				(SELECT id FROM inserted_seeker),
-				(SELECT id FROM inserted_description),
-				NOW()
-		)
-		RETURNING id
-	) DELETE FROM demands WHERE id = (SELECT id FROM inserted_demand);
-
-	DELETE FROM demands;
-
-	messages = messages || message FROM assert.is_equal(
-		((SELECT COUNT(*) FROM general)
-		+ (SELECT COUNT(*) FROM bodies)
-		+ (SELECT COUNT(*) FROM faces)
-		+ (SELECT COUNT(*) FROM descriptions)
-		+ (SELECT COUNT(*) FROM demands)
-		+ (SELECT COUNT(*) FROM evolutions))::INTEGER,
-		0
+	)
+	INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
+		(SELECT id FROM inserted_seeker),
+		(SELECT id FROM inserted_description),
+		NOW()
 	);
-	messages = messages || message FROM assert.is_equal(
-		(SELECT COUNT(*) FROM seekers)::INTEGER,
-		1
-	);
+
+	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM evolutions)::INTEGER, 1);
 
 	RETURN array_to_string(messages, '');
 END

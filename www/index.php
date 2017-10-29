@@ -99,6 +99,11 @@ echo (new class(
 												$this->database,
 												$this->redis
 											),
+											'v1/evolutions?page=(1)&per_page=(10) [GET]' => new V1\Evolutions\Get(
+												$this->uri,
+												$this->database,
+												$user
+											),
 										];
 									}
 								},

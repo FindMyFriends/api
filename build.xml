@@ -19,6 +19,8 @@
 	<target name="phpcpd">
 		<exec executable="vendor/bin/phpcpd" logoutput="true" passthru="true" checkreturn="true">
 			<arg path="App"/>
+			<arg value="--exclude"/>
+			<arg path="V1/"/>
 		</exec>
 	</target>
 
@@ -120,6 +122,8 @@
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Evolutions/schema/post.json" link="${base_path}/www/schema/v1/evolution/post.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Evolution/schema/get.json" link="${base_path}/www/schema/v1/evolution/get.json" overwrite="true"/>
 	</target>
 
 </project>
