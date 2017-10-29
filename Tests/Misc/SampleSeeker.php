@@ -21,10 +21,7 @@ final class SampleSeeker implements Sample {
 			RETURNING id',
 			[
 				$this->seekers['id'] ?? mt_rand(),
-				$this->seekers['email'] ?? sprintf(
-					'%s@gmail.com',
-					substr(uniqid('', true), -mt_rand(1, 10))
-				),
+				$this->seekers['email'] ?? sprintf('%s@gmail.com', bin2hex(random_bytes(10))),
 				$this->seekers['password'] ?? password_hash(bin2hex(random_bytes(10)), PASSWORD_DEFAULT),
 			]
 		))->row();
