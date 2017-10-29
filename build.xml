@@ -70,7 +70,6 @@
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
 			<arg path="Tests/Unit"/>
-			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
 			<arg path="Tests/Functional"/>
@@ -87,7 +86,6 @@
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
 			<arg path="Tests/Unit"/>
-			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
 			<arg path="Tests/Functional"/>
@@ -106,7 +104,6 @@
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
 			<arg path="Tests/Unit"/>
-			<arg path="Tests/Misc"/>
 			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
 			<arg path="Tests/Functional"/>
