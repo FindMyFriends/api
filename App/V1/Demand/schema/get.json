@@ -1,8 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "additionalProperties": false,
   "properties": {
+    "created_at": {
+      "id": "/properties/created_at",
+      "type": "string"
+    },
+    "seeker_id": {
+      "id": "/properties/seeker_id",
+      "type": "integer"
+    },
+    "id": {
+      "id": "/properties/id",
+      "type": "integer"
+    },
     "body": {
       "id": "/properties/body",
+      "additionalProperties": false,
       "properties": {
         "build": {
           "id": "/properties/body/properties/build",
@@ -31,6 +45,7 @@
     },
     "face": {
       "id": "/properties/face",
+      "additionalProperties": false,
       "properties": {
         "acne": {
           "id": "/properties/face/properties/acne",
@@ -54,6 +69,7 @@
         },
         "hair": {
           "id": "/properties/face/properties/hair",
+          "additionalProperties": false,
           "properties": {
             "color": {
               "id": "/properties/face/properties/hair/properties/color",
@@ -92,9 +108,11 @@
         },
         "eye": {
           "id": "/properties/face/properties/eye",
+          "additionalProperties": false,
           "properties": {
             "left": {
               "id": "/properties/face/properties/eye/left",
+              "additionalProperties": false,
               "properties": {
                 "color": {
                   "id": "/properties/face/properties/eye/left/properties/color",
@@ -113,6 +131,7 @@
             },
             "right": {
               "id": "/properties/face/properties/eye/right",
+              "additionalProperties": false,
               "properties": {
                 "color": {
                   "id": "/properties/face/properties/eye/right/properties/color",
@@ -137,6 +156,7 @@
         },
         "teeth": {
           "id": "/properties/face/properties/teeth",
+          "additionalProperties": false,
           "properties": {
             "braces": {
               "id": "/properties/face/properties/teeth/properties/braces",
@@ -169,6 +189,7 @@
     },
     "general": {
       "id": "/properties/general",
+      "additionalProperties": false,
       "properties": {
         "birth_year": {
           "id": "/properties/general/properties/birth_year",
