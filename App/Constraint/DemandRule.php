@@ -15,7 +15,7 @@ final class DemandRule implements Validation\Rule {
 	}
 
 	public function satisfied($subject): bool {
-		return (new OpenClosedInterval())->satisfied($subject['general']['birth_year']);
+		return false; // not used
 	}
 
 	public function apply($subject): array {

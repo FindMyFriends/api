@@ -21,14 +21,6 @@ final class DemandRule extends \Tester\TestCase {
 			(new Constraint\DemandRule($this->database))->apply(['general' => ['birth_year' => '[1996,1997]']])
 		);
 	}
-
-	public function testMatchingSatisfaction() {
-		Assert::true(
-			(new Constraint\DemandRule($this->database))->satisfied(
-				['general' => ['birth_year' => '[1996,1997]']]
-			)
-		);
-	}
 }
 
 (new DemandRule())->run();
