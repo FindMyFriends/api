@@ -19,9 +19,9 @@ final class Get extends \Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1']))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1']))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
 		$demands = json_decode(
 			(new V1\Evolutions\Get(
 				new Uri\FakeUri('/', 'v1/evolutions', []),

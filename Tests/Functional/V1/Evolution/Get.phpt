@@ -20,8 +20,8 @@ final class Get extends \Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolutions($this->database))->try();
-		['id' => $id] = (new Misc\SampleEvolutions($this->database, ['seeker_id' => 1]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => 1]))->try();
 		$evolution = json_decode(
 			(new V1\Evolution\Get(
 				new Uri\FakeUri('/', sprintf('v1/evolutions/%d', $id), []),

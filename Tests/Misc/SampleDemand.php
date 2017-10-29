@@ -22,7 +22,7 @@ final class SampleDemand implements Sample {
 			[
 				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? mt_rand(),
 				current(
-					(new SampleDescriptions(
+					(new SampleDescription(
 						$this->database,
 						[
 							'general' => current((new SampleGeneral($this->database, $this->demand['general'] ?? []))->try()),

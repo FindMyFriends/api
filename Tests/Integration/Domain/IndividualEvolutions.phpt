@@ -20,12 +20,12 @@ final class IndividualEvolutions extends \Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testCopyingBirthYearFromAncestor() {
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		$change = (new Domain\IndividualEvolutions(
 			new Access\FakeUser('1'),
 			$this->database
@@ -84,12 +84,12 @@ final class IndividualEvolutions extends \Tester\TestCase {
 	}
 
 	public function testCountingBySeeker() {
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		Assert::same(
 			2,
 			(new Domain\IndividualEvolutions(
@@ -100,12 +100,12 @@ final class IndividualEvolutions extends \Tester\TestCase {
 	}
 
 	public function testEvolutionChainBySeeker() {
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['gender' => 'man', 'birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1', 'general' => ['gender' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
-		(new Misc\SampleEvolutions($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['gender' => 'man', 'birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1', 'general' => ['gender' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		$chain = (new Domain\IndividualEvolutions(
 			new Access\FakeUser('1'),
 			$this->database

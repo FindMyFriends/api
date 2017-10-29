@@ -22,7 +22,7 @@ final class Post extends \Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolutions($this->database, ['seeker' => '1']))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => '1']))->try();
 		$demand = json_decode(
 			(new V1\Evolutions\Post(
 				new Application\FakeRequest(

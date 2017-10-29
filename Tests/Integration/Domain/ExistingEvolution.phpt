@@ -28,7 +28,7 @@ final class ExistingEvolution extends \Tester\TestCase {
 	}
 
 	public function testPassingWithExisting() {
-		(new Misc\SampleEvolutions($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		Assert::noError(function() {
 			$evolution = new Domain\ExistingEvolution(
 				new Domain\FakeEvolution(),

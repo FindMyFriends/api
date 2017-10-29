@@ -18,7 +18,7 @@ final class StoredEvolution extends \Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testPrinting() {
-		(new Misc\SampleEvolutions(
+		(new Misc\SampleEvolution(
 			$this->database,
 			[
 				'evolved_at' => new \DateTime('2017-09-16 00:00:00+00'),

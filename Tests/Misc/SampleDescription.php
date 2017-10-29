@@ -4,7 +4,7 @@ namespace FindMyFriends\Misc;
 
 use Klapuch\Storage;
 
-final class SampleDescriptions implements Sample {
+final class SampleDescription implements Sample {
 	private $description;
 	private $database;
 

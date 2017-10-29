@@ -4,7 +4,7 @@ namespace FindMyFriends\Misc;
 
 use Klapuch\Storage;
 
-final class SampleEvolutions implements Sample {
+final class SampleEvolution implements Sample {
 	private $evolution;
 	private $database;
 
@@ -21,7 +21,7 @@ final class SampleEvolutions implements Sample {
 			[
 				$this->evolution['seeker'] ?? $this->evolution['seeker_id'] ?? mt_rand(),
 				current(
-					(new SampleDescriptions(
+					(new SampleDescription(
 						$this->database,
 						[
 							'general' => current(
