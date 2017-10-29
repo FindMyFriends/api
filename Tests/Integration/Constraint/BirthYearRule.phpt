@@ -33,7 +33,7 @@ final class BirthYearRule extends \Tester\TestCase {
 				(new Constraint\BirthYearRule($this->database))->apply('[1700,1996]');
 			},
 			\UnexpectedValueException::class,
-			sprintf('Birth year must be in range from 1800 to %d', date('Y'))
+			sprintf('Birth year must be in range from 1850 to %d', date('Y'))
 		);
 	}
 
