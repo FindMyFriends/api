@@ -39,7 +39,7 @@ final class Post extends \Tester\TestCase {
 		Assert::same(201, http_response_code());
 	}
 
-	public function testErrorOnBadInput() {
+	public function test400OnBadInput() {
 		$demand = json_decode(
 			(new V1\Demands\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
