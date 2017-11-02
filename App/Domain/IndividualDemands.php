@@ -19,36 +19,35 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$demands = (new Storage\ParameterizedQuery(
+		$demands = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression(
-				'SELECT demands.id, demands.seeker_id, demands.created_at,
-				bodies.build, bodies.skin, bodies.weight, bodies.height,
-				faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-				general.birth_year, general.firstname, general.lastname, general.gender, general.race
-				FROM demands
-				JOIN descriptions ON descriptions.id = demands.description_id
-				JOIN bodies ON bodies.id = descriptions.body_id
-				JOIN faces ON faces.id = descriptions.face_id
-				JOIN general ON general.id = descriptions.general_id
-				WHERE demands.seeker_id = ?'
+			new Storage\ParameterizedQuery(
+				$this->database,
+				$selection->expression(
+					'SELECT demands.id, demands.seeker_id, demands.created_at,
+					bodies.build, bodies.skin, bodies.weight, bodies.height,
+					faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
+					general.birth_year, general.firstname, general.lastname, general.gender, general.race
+					FROM demands
+					JOIN descriptions ON descriptions.id = demands.description_id
+					JOIN bodies ON bodies.id = descriptions.body_id
+					JOIN faces ON faces.id = descriptions.face_id
+					JOIN general ON general.id = descriptions.general_id
+					WHERE demands.seeker_id = ?'
+				),
+				$selection->criteria([$this->seeker->id()])
 			),
-			$selection->criteria([$this->seeker->id()])
+			[
+				'hair' => 'hair',
+				'left_eye' => 'eye',
+				'right_eye' => 'eye',
+				'teeth' => 'tooth',
+			]
 		))->rows();
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
 				$demand['id'],
-				new Storage\MemoryPDO(
-					$this->database,
-					$demand,
-					[
-						'demands',
-						'descriptions',
-						'bodies',
-						'faces',
-						'general',
-					]
-				)
+				new Storage\MemoryPDO($this->database, $demand)
 			);
 		}
 	}
