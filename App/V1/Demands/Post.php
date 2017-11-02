@@ -39,7 +39,7 @@ final class Post implements Application\View {
 		try {
 			$url = new Http\CreatedResourceUrl(
 				new Uri\RelativeUrl($this->url, 'v1/demands/{id}'),
-				(new Domain\OwnedDemands(
+				(new Domain\IndividualDemands(
 					$this->user,
 					$this->database
 				))->ask(

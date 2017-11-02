@@ -23,7 +23,7 @@ final class CollectiveDemands extends \Tester\TestCase {
 		(new Misc\SampleDemand($this->database, ['general' => ['gender' => 'man'], 'created_at' => new \DateTime()]))->try();
 		(new Misc\SampleDemand($this->database, ['general' => ['gender' => 'woman'], 'created_at' => new \DateTime('2000-01-01')]))->try();
 		$demands = (new Domain\CollectiveDemands(
-			new Domain\OwnedDemands(new Access\FakeUser('1'), $this->database),
+			new Domain\IndividualDemands(new Access\FakeUser('1'), $this->database),
 			$this->database
 		))->all(new Dataset\FakeSelection('', []));
 		$demand = $demands->current();

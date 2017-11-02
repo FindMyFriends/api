@@ -16,12 +16,12 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class OwnedDemands extends \Tester\TestCase {
+final class IndividualDemands extends \Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testAskingForFirstDemand() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		$demand = (new Domain\OwnedDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
+		$demand = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
 			[
 				'general' => [
 					'birth_year' => '[1996,1998)',
@@ -82,7 +82,7 @@ final class OwnedDemands extends \Tester\TestCase {
 		(new Misc\SampleDemand($this->database))->try();
 		(new Misc\SampleDemand($this->database))->try();
 		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
-		$demands = (new Domain\OwnedDemands(
+		$demands = (new Domain\IndividualDemands(
 			new Access\FakeUser((string) $seeker),
 			$this->database
 		))->all(new Dataset\FakeSelection('', []));
@@ -103,7 +103,7 @@ final class OwnedDemands extends \Tester\TestCase {
 		(new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
 		Assert::same(
 			2,
-			(new Domain\OwnedDemands(
+			(new Domain\IndividualDemands(
 				new Access\FakeUser((string) $seeker),
 				$this->database
 			))->count(new Dataset\FakeSelection(null, []))
@@ -111,4 +111,4 @@ final class OwnedDemands extends \Tester\TestCase {
 	}
 }
 
-(new OwnedDemands())->run();
+(new IndividualDemands())->run();

@@ -9,7 +9,7 @@ use Klapuch\Storage;
 /**
  * Demands belonging to the seeker
  */
-final class OwnedDemands implements Demands {
+final class IndividualDemands implements Demands {
 	private $seeker;
 	private $database;
 
