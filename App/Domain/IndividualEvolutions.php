@@ -19,53 +19,42 @@ final class IndividualEvolutions implements Evolutions {
 	}
 
 	public function evolve(array $progress): Evolution {
-		$id = (new Storage\FlatParameterizedQuery(
+		['general' => $general, 'body' => $body, 'face' => $face] = $progress;
+		$id = (new Storage\ParameterizedQuery(
 			$this->database,
 			'WITH inserted_general AS (
 				INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-					:general_gender,
-					:general_race,
+					?,
+					?,
 					(
 						SELECT birth_year
 						FROM general
 						JOIN descriptions ON descriptions.general_id = general.id
 						JOIN evolutions ON evolutions.description_id = descriptions.id
-						WHERE evolutions.seeker_id = :seeker
+						WHERE evolutions.seeker_id = ?
 						LIMIT 1
 					),
-					:general_firstname,
-					:general_lastname
+					?,
+					?
 				)
 				RETURNING id
 			), inserted_face AS (
 				INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-					ROW(:face_teeth_care, :face_teeth_braces)::tooth,
-					:face_freckles,
-					:face_complexion,
-					:face_beard,
-					:face_acne,
-					:face_shape,
-					ROW(
-						:face_hair_style,
-						:face_hair_color,
-						:face_hair_length,
-						:face_hair_highlights,
-						:face_hair_roots,
-						:face_hair_nature
-					)::hair,
-					:face_eyebrow,
-					ROW(:face_eye_left_color, :face_eye_left_lenses)::eye,
-					ROW(:face_eye_right_color, :face_eye_right_lenses)::eye
+					ROW(?, ?)::tooth,
+					?,
+					?,
+					?,
+					?,
+					?,
+					ROW(?, ?, ?, ?, ?, ?)::hair,
+					?,
+					ROW(?, ?)::eye,
+					ROW(?, ?)::eye
 				)
 				RETURNING id
 			),
 			inserted_body AS (
-				INSERT INTO bodies (build, skin, weight, height) VALUES (
-					:body_build,
-					:body_skin,
-					:body_weight,
-					:body_height
-				)
+				INSERT INTO bodies (build, skin, weight, height) VALUES (?, ?, ?, ?)
 				RETURNING id
 			),
 			inserted_description AS (
@@ -78,11 +67,41 @@ final class IndividualEvolutions implements Evolutions {
 			)
 			INSERT INTO evolutions (description_id, seeker_id, evolved_at) VALUES (
 				(SELECT id FROM inserted_description),
-				:seeker,
-				:evolved_at
+				?,
+				?
 			)
 			RETURNING id',
-			['seeker' => $this->seeker->id()] + $progress
+			[
+				$general['gender'],
+				$general['race'],
+				$this->seeker->id(),
+				$general['firstname'],
+				$general['lastname'],
+				$face['teeth']['care'],
+				$face['teeth']['braces'],
+				$face['freckles'],
+				$face['complexion'],
+				$face['beard'],
+				$face['acne'],
+				$face['shape'],
+				$face['hair']['style'],
+				$face['hair']['color'],
+				$face['hair']['length'],
+				$face['hair']['highlights'],
+				$face['hair']['roots'],
+				$face['hair']['nature'],
+				$face['eyebrow'],
+				$face['eye']['left']['color'],
+				$face['eye']['left']['lenses'],
+				$face['eye']['right']['color'],
+				$face['eye']['right']['lenses'],
+				$body['build'],
+				$body['skin'],
+				$body['weight'],
+				$body['height'],
+				$this->seeker->id(),
+				$progress['evolved_at'],
+			]
 		))->field();
 		return new StoredEvolution($id, $this->database);
 	}

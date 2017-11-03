@@ -85,50 +85,80 @@ final class StoredDemand implements Demand {
 
 	public function reconsider(array $description): void {
 		(new Storage\Transaction($this->database))->start(function() use ($description): void {
-			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->description($this->id);
+			$parts = $this->parts($this->id);
+			$description['general']['id'] = $parts['general_id'];
+			$description['face']['id'] = $parts['face_id'];
+			$description['body']['id'] = $parts['body_id'];
+			['face' => $face, 'general' => $general, 'body' => $body] = $description;
 			(new Storage\ParameterizedQuery(
 				$this->database,
 				'UPDATE general
-				SET gender = :gender,
-					race = :race,
-					birth_year = :birth_year,
-					firstname = :firstname,
-					lastname = :lastname
-				WHERE id = :id',
-				['id' => $general] + $description['general']
+				SET gender = ?,
+					race = ?,
+					birth_year = ?,
+					firstname = ?,
+					lastname = ?
+				WHERE id = ?',
+				[
+					$general['gender'],
+					$general['race'],
+					$general['birth_year'],
+					$general['firstname'],
+					$general['lastname'],
+					$general['id'],
+				]
 			))->execute();
-			(new Storage\FlatParameterizedQuery(
+			(new Storage\ParameterizedQuery(
 				$this->database,
 				'UPDATE faces
-				SET teeth = ROW(:teeth_care, :teeth_braces)::tooth,
-					freckles = :freckles,
-					complexion = :complexion,
-					beard = :beard,
-					acne = :acne,
-					shape = :shape,
-					hair = ROW(
-						:hair_style,
-						:hair_color,
-						:hair_length,
-						:hair_highlights,
-						:hair_roots,
-						:hair_nature
-					)::hair,
-					eyebrow = :eyebrow,
-					left_eye = ROW(:eye_left_color, :eye_left_lenses)::eye,
-					right_eye = ROW(:eye_right_color, :eye_right_lenses)::eye
-				WHERE id = :id',
-				['id' => $face] + $description['face']
+				SET teeth = ROW(?, ?)::tooth,
+					freckles = ?,
+					complexion = ?,
+					beard = ?,
+					acne = ?,
+					shape = ?,
+					hair = ROW(?, ?, ?, ?, ?, ?)::hair,
+					eyebrow = ?,
+					left_eye = ROW(?, ?)::eye,
+					right_eye = ROW(?, ?)::eye
+				WHERE id = ?',
+				[
+					$face['teeth']['care'],
+					$face['teeth']['braces'],
+					$face['freckles'],
+					$face['complexion'],
+					$face['beard'],
+					$face['acne'],
+					$face['shape'],
+					$face['hair']['style'],
+					$face['hair']['color'],
+					$face['hair']['length'],
+					$face['hair']['highlights'],
+					$face['hair']['roots'],
+					$face['hair']['nature'],
+					$face['eyebrow'],
+					$face['eye']['left']['color'],
+					$face['eye']['left']['lenses'],
+					$face['eye']['right']['color'],
+					$face['eye']['right']['lenses'],
+					$face['id'],
+				]
 			))->execute();
 			(new Storage\ParameterizedQuery(
 				$this->database,
 				'UPDATE bodies
-				SET build = :build,
-					skin = :skin,
-					weight = :weight,
-					height = :height
-				WHERE id = :id',
-				['id' => $body] + $description['body']
+				SET build = ?,
+					skin = ?,
+					weight = ?,
+					height = ?
+				WHERE id = ?',
+				[
+					$body['build'],
+					$body['skin'],
+					$body['weight'],
+					$body['height'],
+					$body['id'],
+				]
 			))->execute();
 		});
 	}
@@ -138,7 +168,7 @@ final class StoredDemand implements Demand {
 	 * @param int $demand
 	 * @return array
 	 */
-	private function description(int $demand): array {
+	private function parts(int $demand): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
 			'SELECT general_id, body_id, face_id

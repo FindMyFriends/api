@@ -53,46 +53,29 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function ask(array $description): Demand {
-		$id = (new Storage\FlatParameterizedQuery(
+		['general' => $general, 'body' => $body, 'face' => $face] = $description;
+		$id = (new Storage\ParameterizedQuery(
 			$this->database,
 			'WITH inserted_general AS (
-				INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-					:general_gender,
-					:general_race,
-					:general_birth_year,
-					:general_firstname,
-					:general_lastname
-				)
+				INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (?, ?, ?, ?, ?)
 				RETURNING id
 			), inserted_face AS (
 				INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-					ROW(:face_teeth_care, :face_teeth_braces)::tooth,
-					:face_freckles,
-					:face_complexion,
-					:face_beard,
-					:face_acne,
-					:face_shape,
-					ROW(
-						:face_hair_style,
-						:face_hair_color,
-						:face_hair_length,
-						:face_hair_highlights,
-						:face_hair_roots,
-						:face_hair_nature
-					)::hair,
-					:face_eyebrow,
-					ROW(:face_eye_left_color, :face_eye_left_lenses)::eye,
-					ROW(:face_eye_right_color, :face_eye_right_lenses)::eye
+					ROW(?, ?)::tooth,
+					?,
+					?,
+					?,
+					?,
+					?,
+					ROW(?, ?, ?, ?, ?, ?)::hair,
+					?,
+					ROW(?, ?)::eye,
+					ROW(?, ?)::eye
 				)
 				RETURNING id
 			),
 			inserted_body AS (
-				INSERT INTO bodies (build, skin, weight, height) VALUES (
-					:body_build,
-					:body_skin,
-					:body_weight,
-					:body_height
-				)
+				INSERT INTO bodies (build, skin, weight, height) VALUES (?, ?, ?, ?)
 				RETURNING id
 			),
 			inserted_description AS (
@@ -104,12 +87,41 @@ final class IndividualDemands implements Demands {
 				RETURNING id
 			)
 			INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
-				:seeker,
+				?,
 				(SELECT id FROM inserted_description),
 				NOW()::TIMESTAMPTZ
 			)
 			RETURNING id',
-			['seeker' => $this->seeker->id()] + $description
+			[
+				$general['gender'],
+				$general['race'],
+				$general['birth_year'],
+				$general['firstname'],
+				$general['lastname'],
+				$face['teeth']['care'],
+				$face['teeth']['braces'],
+				$face['freckles'],
+				$face['complexion'],
+				$face['beard'],
+				$face['acne'],
+				$face['shape'],
+				$face['hair']['style'],
+				$face['hair']['color'],
+				$face['hair']['length'],
+				$face['hair']['highlights'],
+				$face['hair']['roots'],
+				$face['hair']['nature'],
+				$face['eyebrow'],
+				$face['eye']['left']['color'],
+				$face['eye']['left']['lenses'],
+				$face['eye']['right']['color'],
+				$face['eye']['right']['lenses'],
+				$body['build'],
+				$body['skin'],
+				$body['weight'],
+				$body['height'],
+				$this->seeker->id(),
+			]
 		))->field();
 		return new StoredDemand($id, $this->database);
 	}
