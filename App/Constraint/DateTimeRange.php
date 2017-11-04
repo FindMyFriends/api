@@ -5,7 +5,7 @@ namespace FindMyFriends\Constraint;
 use Klapuch\Validation;
 
 /**
- * Range in format as (("2017-01-01","2017-01-02")), [("2017-01-01","2017-01-02")]
+ * Range in format as ("2017-01-01","2017-01-02"), [("2017-01-01","2017-01-02")]
  */
 final class DateTimeRange implements Validation\Rule {
 	public function satisfied($subject): bool {
