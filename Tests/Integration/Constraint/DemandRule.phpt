@@ -17,8 +17,24 @@ final class DemandRule extends \Tester\TestCase {
 
 	public function testApplicationWithAllReturnedValues() {
 		Assert::same(
-			['general' => ['birth_year' => '[1996,1997]']],
-			(new Constraint\DemandRule($this->database))->apply(['general' => ['birth_year' => '[1996,1997]']])
+			[
+				'general' => [
+					'birth_year' => '[1996,1997]',
+				],
+				'location' => [
+					'met_at' => '["2017-01-01","2017-01-02")',
+				],
+			],
+			(new Constraint\DemandRule(
+				$this->database
+			))->apply(
+				[
+					'general' => ['birth_year' => '[1996,1997]'],
+					'location' => [
+						'met_at' => '["2017-01-01","2017-01-02")',
+					],
+				]
+			)
 		);
 	}
 }

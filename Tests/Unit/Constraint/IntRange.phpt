@@ -23,7 +23,7 @@ final class IntRange extends \Tester\TestCase {
 		Assert::true((new Constraint\IntRange())->satisfied('(0,20)'));
 	}
 
-	public function testPassingWithNotFull() {
+	public function testPassingAsNotFull() {
 		Assert::true((new Constraint\IntRange())->satisfied('(0,)'));
 		Assert::true((new Constraint\IntRange())->satisfied('(,0)'));
 	}

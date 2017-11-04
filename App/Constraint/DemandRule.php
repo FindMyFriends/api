@@ -34,6 +34,18 @@ final class DemandRule implements Validation\Rule {
 						new BirthYearRule($this->database)
 					))->apply($subject['general']['birth_year']),
 				],
+				'location' => [
+					'met_at' => (new Validation\ChainedRule(
+						new Validation\FriendlyRule(
+							new OpenClosedRange(),
+							'For location.met_at is only allowed open/closed range'
+						),
+						new Validation\FriendlyRule(
+							new DateTimeRange(),
+							'For location.met_at is only allowed datetime range'
+						)
+					))->apply($subject['location']['met_at']),
+				],
 			],
 			$subject
 		);
