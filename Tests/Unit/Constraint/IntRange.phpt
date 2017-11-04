@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class IntRange extends \Tester\TestCase {
+final class IntRange extends Tester\TestCase {
 	public function testPassingOnIntRange() {
 		Assert::true((new Constraint\IntRange())->satisfied('(10,20)'));
 		Assert::noError(function() {

@@ -10,11 +10,12 @@ use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Output;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class JsonApiAuthentication extends \Tester\TestCase {
+final class JsonApiAuthentication extends Tester\TestCase {
 	public function testAllowingAccess() {
 		Assert::same(
 			'allowed',

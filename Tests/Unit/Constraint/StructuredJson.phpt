@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class StructuredJson extends \Tester\TestCase {
+final class StructuredJson extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException The property bar is required
 	 */

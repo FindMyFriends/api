@@ -12,11 +12,12 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class ConcurrentlyControlledResponse extends \Tester\TestCase {
+final class ConcurrentlyControlledResponse extends Tester\TestCase {
 	use TestCase\Redis;
 
 	public function testHeaderWithExistingETag() {

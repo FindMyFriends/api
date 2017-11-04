@@ -10,11 +10,12 @@ use FindMyFriends\Domain;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class ExistingDemand extends \Tester\TestCase {
+final class ExistingDemand extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnUnknown() {

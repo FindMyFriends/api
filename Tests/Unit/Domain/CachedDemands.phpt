@@ -9,11 +9,12 @@ namespace FindMyFriends\Unit\Domain;
 use FindMyFriends\Domain;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class CachedDemands extends \Tester\TestCase {
+final class CachedDemands extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testMultipleCallsWithSingleExecution() {

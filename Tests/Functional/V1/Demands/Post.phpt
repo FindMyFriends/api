@@ -14,11 +14,12 @@ use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class Post extends \Tester\TestCase {
+final class Post extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {

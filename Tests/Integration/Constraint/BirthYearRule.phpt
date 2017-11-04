@@ -8,11 +8,12 @@ namespace FindMyFriends\Integration\Constraint;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\TestCase;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class BirthYearRule extends \Tester\TestCase {
+final class BirthYearRule extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testPassingOnAgeInRange() {

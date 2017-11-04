@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class EmptyResponse extends \Tester\TestCase {
+final class EmptyResponse extends Tester\TestCase {
 	public function testNoResponseCode() {
 		Assert::same(204, (new Response\EmptyResponse())->status());
 	}

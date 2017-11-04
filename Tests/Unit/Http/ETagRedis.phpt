@@ -8,11 +8,12 @@ namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
 use FindMyFriends\TestCase;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class ETagRedis extends \Tester\TestCase {
+final class ETagRedis extends Tester\TestCase {
 	use TestCase\Redis;
 
 	public function testSection() {

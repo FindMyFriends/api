@@ -11,11 +11,12 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class StoredDemand extends \Tester\TestCase {
+final class StoredDemand extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRemovingSingleDemand() {

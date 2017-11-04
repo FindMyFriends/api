@@ -11,11 +11,12 @@ use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\UI;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class PaginatedResponse extends \Tester\TestCase {
+final class PaginatedResponse extends Tester\TestCase {
 	public function testPriorityToNewHeader() {
 		Assert::notSame(
 			['Link' => 'xxx'],

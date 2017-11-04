@@ -8,11 +8,12 @@ namespace FindMyFriends\Postgres;
 
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class Test extends \Tester\TestCase {
+final class Test extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testPostgres() {

@@ -8,11 +8,12 @@ namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
 use Klapuch\Application;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class JsonResponse extends \Tester\TestCase {
+final class JsonResponse extends Tester\TestCase {
 	public function testAddingJsonHeader() {
 		Assert::same(
 			['Content-Type' => 'application/json; charset=utf8'],

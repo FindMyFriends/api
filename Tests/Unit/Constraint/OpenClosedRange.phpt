@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class OpenClosedRange extends \Tester\TestCase {
+final class OpenClosedRange extends Tester\TestCase {
 	public function testPassingOnFullyOpenInterval() {
 		Assert::true((new Constraint\OpenClosedRange())->satisfied('(10,20)'));
 	}

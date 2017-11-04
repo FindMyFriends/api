@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class DateTimeRange extends \Tester\TestCase {
+final class DateTimeRange extends Tester\TestCase {
 	public function testPassingOnDateTimeRange() {
 		Assert::true((new Constraint\DateTimeRange())->satisfied('("2017-01-01","2017-01-02")'));
 		Assert::noError(function() {

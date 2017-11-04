@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class ETag extends \Tester\TestCase {
+final class ETag extends Tester\TestCase {
 	public function testHexFormat() {
 		Assert::match('"%h%"', (string) new Http\ETag(new \stdClass()));
 	}

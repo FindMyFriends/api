@@ -8,11 +8,12 @@ namespace FindMyFriends\Integration\Constraint;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\TestCase;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class DemandRule extends \Tester\TestCase {
+final class DemandRule extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testApplicationWithAllReturnedValues() {

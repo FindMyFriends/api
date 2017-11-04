@@ -12,11 +12,12 @@ use FindMyFriends\TestCase;
 use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Output;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class CollectiveDemands extends \Tester\TestCase {
+final class CollectiveDemands extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testAskingForFirstDemand() {

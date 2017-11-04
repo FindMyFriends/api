@@ -9,11 +9,12 @@ namespace FindMyFriends\Unit\Request;
 use FindMyFriends\Request;
 use Klapuch\Application;
 use Klapuch\Output;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class JsonRequest extends \Tester\TestCase {
+final class JsonRequest extends Tester\TestCase {
 	public function testConversionToJson() {
 		Assert::equal(
 			new Output\Json(['foo' => 'bar']),

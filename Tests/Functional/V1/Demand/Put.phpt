@@ -13,11 +13,12 @@ use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class Put extends \Tester\TestCase {
+final class Put extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {

@@ -8,11 +8,12 @@ namespace FindMyFriends\Unit\Misc;
 
 use FindMyFriends\Misc;
 use Klapuch\Output;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class JsonPrintedObjects extends \Tester\TestCase {
+final class JsonPrintedObjects extends Tester\TestCase {
 	public function testMergingMultipleToPrettyArray() {
 		Assert::same(
 			'[

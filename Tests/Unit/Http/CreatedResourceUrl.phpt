@@ -9,11 +9,12 @@ namespace FindMyFriends\Unit\Http;
 use FindMyFriends\Http;
 use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class CreatedResourceUrl extends \Tester\TestCase {
+final class CreatedResourceUrl extends Tester\TestCase {
 	public function testPathWithoutPlaceholders() {
 		Assert::same(
 			'demands/5',

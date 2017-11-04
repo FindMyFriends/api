@@ -8,11 +8,12 @@ namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class HeaderLink extends \Tester\TestCase {
+final class HeaderLink extends Tester\TestCase {
 	public function testAddingSingleDirection() {
 		Assert::same(
 			'<https://localhost/abc?page=1>; rel="first"',

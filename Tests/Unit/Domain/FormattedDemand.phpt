@@ -8,11 +8,12 @@ namespace FindMyFriends\Unit\Domain;
 
 use FindMyFriends\Domain;
 use Klapuch\Output;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class FormattedDemand extends \Tester\TestCase {
+final class FormattedDemand extends Tester\TestCase {
 	public function testPrintingDateTimeInIso8601() {
 		Assert::equal(
 			[

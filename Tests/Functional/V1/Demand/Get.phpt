@@ -12,11 +12,12 @@ use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Uri;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class Get extends \Tester\TestCase {
+final class Get extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {

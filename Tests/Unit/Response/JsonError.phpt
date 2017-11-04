@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class JsonError extends \Tester\TestCase {
+final class JsonError extends Tester\TestCase {
 	public function testForcingJsonHeader() {
 		Assert::same(
 			['content-type' => 'application/json; charset=utf8'],

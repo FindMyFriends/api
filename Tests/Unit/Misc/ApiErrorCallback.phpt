@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Misc;
 
 use FindMyFriends\Misc;
+use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class ApiErrorCallback extends \Tester\TestCase {
+final class ApiErrorCallback extends Tester\TestCase {
 	public function testTransformingStatusCodeOnThrowing() {
 		$ex = Assert::exception(function() {
 			(new Misc\ApiErrorCallback(403))->invoke(function() {
