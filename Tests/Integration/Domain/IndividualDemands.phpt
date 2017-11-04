@@ -66,6 +66,10 @@ final class IndividualDemands extends \Tester\TestCase {
 					'weight' => null,
 					'height' => null,
 				],
+				'location' => [
+					'coordinates' => ['latitude' => 50.15, 'longitude' => 14.2],
+					'met_at' => '[2017-01-01,2017-01-02)',
+				],
 			]
 		);
 		Assert::equal(new Domain\StoredDemand(1, $this->database), $demand);

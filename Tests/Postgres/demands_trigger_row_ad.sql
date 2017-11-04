@@ -46,11 +46,19 @@ BEGIN
 			'123'
 		)
 		RETURNING id
+	), inserted_location AS (
+		INSERT INTO locations (coordinates, place, met_at) VALUES (
+			POINT(10,20),
+			NULL,
+			tstzrange(NOW(), NOW())
+		)
+		RETURNING id
 	), inserted_demand AS (
-			INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
-				(SELECT id FROM inserted_seeker),
-				(SELECT id FROM inserted_description),
-				NOW()
+		INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+			(SELECT id FROM inserted_seeker),
+			(SELECT id FROM inserted_description),
+			NOW(),
+			(SELECT id FROM inserted_location)
 		)
 		RETURNING id
 	)
@@ -64,7 +72,8 @@ BEGIN
 		+ (SELECT COUNT(*) FROM faces)
 		+ (SELECT COUNT(*) FROM descriptions)
 		+ (SELECT COUNT(*) FROM demands)
-		+ (SELECT COUNT(*) FROM evolutions))::INTEGER,
+		+ (SELECT COUNT(*) FROM evolutions)
+		+ (SELECT COUNT(*) FROM locations))::INTEGER,
 		0
 	);
 	messages = messages || message FROM assert.is_equal(

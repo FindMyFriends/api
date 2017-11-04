@@ -80,10 +80,21 @@ final class StoredDemand extends \Tester\TestCase {
 					'weight' => 60,
 					'height' => 181,
 				],
+				'location' => [
+					'coordinates' => '(50.5,50.2)',
+					'met_at' => '[2017-01-01,2017-01-02)',
+				],
 			]
 		))->try();
 		Assert::equal(
 			[
+				'location' => [
+					'coordinates' => [
+						'latitude' => 50.5,
+						'longitude' => 50.2,
+					],
+					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+				],
 				'general' => [
 					'race' => 'european',
 					'gender' => 'man',
@@ -182,10 +193,24 @@ final class StoredDemand extends \Tester\TestCase {
 					'weight' => 60,
 					'height' => 181,
 				],
+				'location' => [
+					'coordinates' => [
+						'latitude' => 50.5,
+						'longitude' => 50.2,
+					],
+					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+				],
 			]
 		);
 		Assert::equal(
 			[
+				'location' => [
+					'coordinates' => [
+						'latitude' => 50.5,
+						'longitude' => 50.2,
+					],
+					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+				],
 				'general' => [
 					'race' => 'european',
 					'gender' => 'man',

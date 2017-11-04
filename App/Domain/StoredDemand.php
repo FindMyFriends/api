@@ -22,8 +22,10 @@ final class StoredDemand implements Demand {
 				'SELECT demands.id, demands.seeker_id, demands.created_at,
 				bodies.build, bodies.skin, bodies.weight, bodies.height,
 				faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-				general.birth_year, general.firstname, general.lastname, general.gender, general.race
+				general.birth_year, general.firstname, general.lastname, general.gender, general.race,
+				locations.coordinates, locations.met_at
 				FROM demands
+				JOIN locations ON locations.id = demands.location_id
 				JOIN descriptions ON descriptions.id = demands.description_id
 				JOIN bodies ON bodies.id = descriptions.body_id
 				JOIN faces ON faces.id = descriptions.face_id
@@ -36,6 +38,7 @@ final class StoredDemand implements Demand {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
+				'coordinates' => 'point',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -71,6 +74,9 @@ final class StoredDemand implements Demand {
 					'weight' => $demand['weight'],
 					'height' => $demand['height'],
 				],
+				'location' => ['coordinates' => ['latitude' => $demand['coordinates']['x'], 'longitude' => $demand['coordinates']['y']],
+					'met_at' => $demand['met_at'],
+				],
 			]
 		);
 	}
@@ -85,7 +91,12 @@ final class StoredDemand implements Demand {
 
 	public function reconsider(array $description): void {
 		(new Storage\Transaction($this->database))->start(function() use ($description): void {
-			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->parts($this->id);
+			[
+				'general_id' => $general,
+				'body_id' => $body,
+				'face_id' => $face,
+				'location_id' => $location,
+			] = $this->parts($this->id);
 			(new Storage\ParameterizedQuery(
 				$this->database,
 				'UPDATE general
@@ -130,6 +141,14 @@ final class StoredDemand implements Demand {
 				WHERE id = :id',
 				['id' => $body] + $description['body']
 			))->execute();
+			(new Storage\FlatParameterizedQuery(
+				$this->database,
+				'UPDATE locations
+				SET coordinates = POINT(:coordinates_latitude, :coordinates_longitude),
+					met_at = :met_at
+				WHERE id = :id',
+				['id' => $location] + $description['location']
+			))->execute();
 		});
 	}
 
@@ -141,9 +160,10 @@ final class StoredDemand implements Demand {
 	private function parts(int $demand): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'SELECT general_id, body_id, face_id
+			'SELECT general_id, body_id, face_id, location_id
 			FROM descriptions
-			WHERE id = (SELECT description_id FROM demands WHERE id = ?)',
+			JOIN demands ON demands.description_id = descriptions.id
+			WHERE demands.id = ?',
 			[$demand]
 		))->row();
 	}

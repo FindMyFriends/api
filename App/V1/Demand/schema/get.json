@@ -222,12 +222,47 @@
         "gender"
       ],
       "type": "object"
+    },
+    "location": {
+      "id": "/properties/location",
+      "additionalProperties": false,
+      "properties": {
+        "coordinates": {
+          "id": "/properties/location/properties/coordinates",
+          "additionalProperties": false,
+          "properties": {
+            "latitude": {
+              "id": "/properties/location/properties/coordinates/properties/latitude",
+              "type": "number"
+            },
+            "longitude": {
+              "id": "/properties/location/properties/coordinates/properties/longitude",
+              "type": "number"
+            }
+          },
+          "required": [
+            "latitude",
+            "longitude"
+          ],
+          "type": "object"
+        },
+        "met_at": {
+          "id": "/properties/location/properties/met_at",
+          "type": "string"
+        }
+      },
+      "required": [
+        "coordinates",
+        "met_at"
+      ],
+      "type": "object"
     }
   },
   "required": [
     "general",
     "face",
-    "body"
+    "body",
+    "location"
   ],
   "type": "object"
 }

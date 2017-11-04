@@ -31,7 +31,7 @@ final class SchemaAssertion implements Assertion {
 			);
 			Assert::true(
 				$validator->isValid(),
-				current($validator->getErrors())['message']
+				sprintf('%s: %s', current($validator->getErrors())['message'], current($validator->getErrors())['property'])
 			);
 		}
 	}

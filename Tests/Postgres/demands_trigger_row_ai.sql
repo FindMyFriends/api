@@ -46,11 +46,19 @@ BEGIN
 			'123'
 		)
 		RETURNING id
+	), inserted_location AS (
+		INSERT INTO locations (coordinates, place, met_at) VALUES (
+			POINT(10,20),
+			NULL,
+			tstzrange(NOW(), NOW())
+		)
+		RETURNING id
 	)
-	INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
+	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
 		(SELECT id FROM inserted_seeker),
 		(SELECT id FROM inserted_description),
-		NOW()
+		NOW(),
+		(SELECT id FROM inserted_location)
 	);
 
 	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM evolutions)::INTEGER, 1);
