@@ -1,7 +1,7 @@
 version: '3'
 services:
     postgres:
-      image: postgres:latest
+      build: ./postgres
       container_name: find-my-friends-postgres
       environment:
         - POSTGRES_USER=postgres
