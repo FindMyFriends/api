@@ -85,7 +85,7 @@ final class StoredDemand implements Demand {
 
 	public function reconsider(array $description): void {
 		(new Storage\Transaction($this->database))->start(function() use ($description): void {
-			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->description($this->id);
+			['general_id' => $general, 'body_id' => $body, 'face_id' => $face] = $this->parts($this->id);
 			(new Storage\ParameterizedQuery(
 				$this->database,
 				'UPDATE general
@@ -134,11 +134,11 @@ final class StoredDemand implements Demand {
 	}
 
 	/**
-	 * Description belonging to the demand
+	 * Description parts belonging to the demand
 	 * @param int $demand
 	 * @return array
 	 */
-	private function description(int $demand): array {
+	private function parts(int $demand): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
 			'SELECT general_id, body_id, face_id
