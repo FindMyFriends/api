@@ -29,7 +29,7 @@ install:
 
 before_script:
   - cp -f Tests/Configuration/.config.travis.ini Tests/Configuration/.config.local.ini
-  - sudo cp -f ./docker/sendmail /usr/sbin/fake-sendmail && sudo chmod +x /usr/sbin/fake-sendmail
+  - sudo cp -f ./docker/php-fpm/sendmail /usr/sbin/fake-sendmail && sudo chmod +x /usr/sbin/fake-sendmail
   - psql -c 'CREATE DATABASE find_my_friends_test;' -U postgres
   - psql -U postgres find_my_friends_test < fixtures/schema.sql
   - wget https://raw.githubusercontent.com/klapuch/plpgunit/master/install/1.install-unit-test.sql -O Tests/fixtures/plpgunit.sql
