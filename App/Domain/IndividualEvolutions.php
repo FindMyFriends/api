@@ -93,16 +93,11 @@ final class IndividualEvolutions implements Evolutions {
 			new Storage\ParameterizedQuery(
 				$this->database,
 				$selection->expression(
-					'SELECT evolutions.id, evolutions.evolved_at,
-					bodies.build, bodies.skin, bodies.weight, bodies.height,
-					faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-					general.birth_year, general.firstname, general.lastname, general.gender, general.race
-					FROM evolutions
-					JOIN descriptions ON descriptions.id = evolutions.description_id
-					JOIN bodies ON bodies.id = descriptions.body_id
-					JOIN faces ON faces.id = descriptions.face_id
-					JOIN general ON general.id = descriptions.general_id
-					WHERE evolutions.seeker_id = ?'
+					'SELECT id, evolved_at,
+					build, skin, weight, height,
+					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
+					birth_year, firstname, lastname, gender, race
+					FROM collective_evolutions WHERE seeker_id = ?'
 				),
 				$selection->criteria([$this->seeker->id()])
 			),

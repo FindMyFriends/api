@@ -27,17 +27,13 @@ final class CollectiveDemands implements Demands {
 			new Storage\ParameterizedQuery(
 				$this->database,
 				$selection->expression(
-					'SELECT demands.id, demands.seeker_id, demands.created_at,
-					bodies.build, bodies.skin, bodies.weight, bodies.height,
-					faces.acne, faces.beard, faces.complexion, faces.eyebrow, faces.freckles, faces.hair, faces.left_eye, faces.right_eye, faces.shape, faces.teeth,
-					general.birth_year, general.firstname, general.lastname, general.gender, general.race,
-					locations.coordinates, locations.met_at
-					FROM demands
-					JOIN locations ON locations.id = demands.location_id
-					JOIN descriptions ON descriptions.id = demands.description_id
-					JOIN bodies ON bodies.id = descriptions.body_id
-					JOIN faces ON faces.id = descriptions.face_id
-					JOIN general ON general.id = descriptions.general_id'
+					'SELECT
+					id, seeker_id, created_at,
+					build, skin, weight, height,
+					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
+					birth_year, firstname, lastname, gender, race,
+					coordinates, met_at
+					FROM collective_demands'
 				),
 				$selection->criteria([])
 			),
