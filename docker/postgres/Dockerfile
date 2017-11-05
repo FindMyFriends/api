@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM postgres:alpine
 
 RUN echo 'alias db_export="PGPASSWORD=postgres;pg_dump -s -U postgres find_my_friends > /var/www/FindMyFriends/fixtures/schema.sql"' >> ~/.bashrc
 RUN echo 'alias db_import="PGPASSWORD=postgres;psql -U postgres -c \"DROP DATABASE find_my_friends\";psql -U postgres -c \"CREATE DATABASE find_my_friends\";psql -U postgres find_my_friends < /var/www/FindMyFriends/fixtures/schema.sql"' >> ~/.bashrc
