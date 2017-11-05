@@ -193,7 +193,22 @@
       "properties": {
         "birth_year": {
           "id": "/properties/general/properties/birth_year",
-          "type": "string"
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "id": "/properties/face/properties/teeth/properties/braces",
+              "type": ["integer", "null"]
+            },
+            "to": {
+              "id": "/properties/face/properties/teeth/properties/care",
+              "type": ["integer", "null"]
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ],
+          "type": "object"
         },
         "firstname": {
           "id": "/properties/general/properties/firstname",

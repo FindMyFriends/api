@@ -33,6 +33,7 @@ final class StoredDemand implements Demand {
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
+				'birth_year' => 'hstore',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -68,7 +69,11 @@ final class StoredDemand implements Demand {
 					'weight' => $demand['weight'],
 					'height' => $demand['height'],
 				],
-				'location' => ['coordinates' => ['latitude' => $demand['coordinates']['x'], 'longitude' => $demand['coordinates']['y']],
+				'location' => [
+					'coordinates' => [
+						'latitude' => $demand['coordinates']['x'],
+						'longitude' => $demand['coordinates']['y'],
+					],
 					'met_at' => $demand['met_at'],
 				],
 			]

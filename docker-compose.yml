@@ -17,6 +17,8 @@ services:
         - ./docker/postgres/postgresql.conf:/etc/postgresql.conf
         - ./:/var/www/FindMyFriends
       command: postgres -c config_file=/etc/postgresql.conf
+      ports:
+        - 5432:5432
       networks:
         - fmf
 

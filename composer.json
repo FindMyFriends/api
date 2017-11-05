@@ -20,7 +20,7 @@
     "klapuch/application": "@dev",
     "klapuch/dataset": "@dev",
     "klapuch/ini": "dev-master as 2.0.0",
-    "klapuch/iterator": "^1.1.0",
+    "klapuch/iterator": "^1.1",
     "klapuch/log": "^1.0.0",
     "klapuch/output": "dev-master as 2.6.0",
     "klapuch/routing": "dev-master as 0.0.12",

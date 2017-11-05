@@ -255,6 +255,24 @@ $$;
 
 ALTER FUNCTION public.demands_trigger_row_bu() OWNER TO postgres;
 
+--
+-- Name: range_to_hstore(anyrange); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION range_to_hstore(range anyrange) RETURNS hstore
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $$
+BEGIN
+	RETURN hstore(
+		ARRAY['from', 'to'],
+		(SELECT ARRAY[lower(range)::TEXT, upper(range)::TEXT])
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;

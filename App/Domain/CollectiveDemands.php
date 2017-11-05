@@ -43,6 +43,7 @@ final class CollectiveDemands implements Demands {
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
+				'birth_year' => 'hstore',
 			]
 		))->rows();
 		foreach ($demands as $demand) {

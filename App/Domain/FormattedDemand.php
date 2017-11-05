@@ -29,6 +29,8 @@ final class FormattedDemand implements Demand {
 						substr($location['met_at'], -1, 1)
 					),
 					] + $location;
+			})->adjusted('general', function(array $general): array {
+				return ['birth_year' => array_map('intval', $general['birth_year'])] + $general;
 			});
 	}
 
