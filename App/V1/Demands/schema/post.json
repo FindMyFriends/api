@@ -289,7 +289,22 @@
         },
         "met_at": {
           "id": "/properties/location/properties/met_at",
-          "type": "string"
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "id": "/properties/location/properties/met_at/properties/from",
+              "type": ["string", "null"]
+            },
+            "to": {
+              "id": "/properties/location/properties/met_at/properties/to",
+              "type": ["string", "null"]
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ],
+          "type": "object"
         }
       },
       "required": [

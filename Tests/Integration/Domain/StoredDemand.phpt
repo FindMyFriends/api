@@ -94,7 +94,10 @@ final class StoredDemand extends Tester\TestCase {
 						'latitude' => 50.5,
 						'longitude' => 50.2,
 					],
-					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+					'met_at' => [
+						'from' => '2017-01-01 00:00:00+00',
+						'to' => '2017-01-02 00:00:00+00',
+					],
 				],
 				'general' => [
 					'race' => 'european',
@@ -202,7 +205,10 @@ final class StoredDemand extends Tester\TestCase {
 						'latitude' => 50.5,
 						'longitude' => 50.2,
 					],
-					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+					'met_at' => [
+						'from' => '2017-01-01 00:00:00+00',
+						'to' => '2017-01-02 00:00:00+00',
+					],
 				],
 			]
 		);
@@ -213,7 +219,10 @@ final class StoredDemand extends Tester\TestCase {
 						'latitude' => 50.5,
 						'longitude' => 50.2,
 					],
-					'met_at' => '["2017-01-01 00:00:00+00","2017-01-02 00:00:00+00")',
+					'met_at' => [
+						'from' => '2017-01-01 00:00:00+00',
+						'to' => '2017-01-02 00:00:00+00',
+					],
 				],
 				'general' => [
 					'race' => 'european',

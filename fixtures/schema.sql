@@ -445,7 +445,7 @@ CREATE VIEW collective_demands AS
     general.gender,
     general.race,
     locations.coordinates,
-    locations.met_at
+    range_to_hstore(locations.met_at) AS met_at
    FROM (((((demands
      JOIN locations ON ((locations.id = demands.location_id)))
      JOIN descriptions ON ((descriptions.id = demands.description_id)))

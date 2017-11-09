@@ -19,15 +19,13 @@ final class FormattedDemand implements Demand {
 			->adjusted('created_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('location', function(array $location): array {
-				[$begin, $end] = explode(',', str_replace('"', '', trim($location['met_at'], '[()]')), 2);
 				return [
-					'met_at' => sprintf(
-						'%s"%s","%s"%s',
-						substr($location['met_at'], 0, 1),
-						(new \DateTime($begin))->format(\DateTime::ATOM),
-						(new \DateTime($end))->format(\DateTime::ATOM),
-						substr($location['met_at'], -1, 1)
-					),
+						'met_at' => array_map(
+							function(string $range): string {
+								return (new \DateTime($range))->format(\DateTime::ATOM);
+							},
+							$location['met_at']
+						),
 					] + $location;
 			})->adjusted('general', function(array $general): array {
 				return ['birth_year' => array_map('intval', $general['birth_year'])] + $general;

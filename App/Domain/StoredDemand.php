@@ -34,6 +34,7 @@ final class StoredDemand implements Demand {
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
 				'birth_year' => 'hstore',
+				'met_at' => 'hstore',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -144,7 +145,7 @@ final class StoredDemand implements Demand {
 				$this->database,
 				'UPDATE locations
 				SET coordinates = POINT(:coordinates_latitude, :coordinates_longitude),
-					met_at = :met_at
+					met_at = to_range(:met_at_from::TIMESTAMPTZ, :met_at_to::TIMESTAMPTZ) 
 				WHERE id = :id',
 				['id' => $location] + $description['location']
 			))->execute();

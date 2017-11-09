@@ -72,7 +72,10 @@ final class IndividualDemands extends Tester\TestCase {
 				],
 				'location' => [
 					'coordinates' => ['latitude' => 50.15, 'longitude' => 14.2],
-					'met_at' => '[2017-01-01,2017-01-02)',
+					'met_at' => [
+						'from' => '2017-01-01',
+						'to' => '2017-01-02',
+					],
 				],
 			]
 		);

@@ -104,7 +104,7 @@ final class IndividualDemands implements Demands {
 			inserted_location AS (
 				INSERT INTO locations (coordinates, met_at) VALUES (
 					POINT(:location_coordinates_latitude, :location_coordinates_longitude),
-					:location_met_at
+					to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ)
 				)
 				RETURNING id
 			)
