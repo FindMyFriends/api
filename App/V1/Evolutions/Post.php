@@ -10,6 +10,7 @@ use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
+use Klapuch\Validation;
 use Predis;
 
 final class Post implements Application\View {
@@ -42,8 +43,9 @@ final class Post implements Application\View {
 					$this->user,
 					$this->database
 				))->evolve(
-					(new Constraint\StructuredJson(
-						new \SplFileInfo(self::SCHEMA)
+					(new Validation\ChainedRule(
+						new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+						new Constraint\EvolutionRule()
 					))->apply(json_decode($this->request->body()->serialization(), true))
 				)
 			);
