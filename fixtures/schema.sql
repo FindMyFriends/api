@@ -273,6 +273,36 @@ $$;
 
 ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
 
+--
+-- Name: to_range(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION to_range(integer, integer) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $_$
+BEGIN
+	RETURN int4range($1, $2);
+END
+$_$;
+
+
+ALTER FUNCTION public.to_range(integer, integer) OWNER TO postgres;
+
+--
+-- Name: to_range(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION to_range(timestamp with time zone, timestamp with time zone) RETURNS tstzrange
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $_$
+BEGIN
+	RETURN tstzrange($1, $2);
+END
+$_$;
+
+
+ALTER FUNCTION public.to_range(timestamp with time zone, timestamp with time zone) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -462,7 +492,7 @@ CREATE VIEW collective_evolutions AS
     faces.right_eye,
     faces.shape,
     faces.teeth,
-    general.birth_year,
+    range_to_hstore(general.birth_year) AS birth_year,
     general.firstname,
     general.lastname,
     general.gender,

@@ -181,7 +181,22 @@
       "properties": {
         "birth_year": {
           "id": "/properties/general/properties/birth_year",
-          "type": "string"
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "id": "/properties/general/properties/birth_year/properties/from",
+              "type": ["integer", "null"]
+            },
+            "to": {
+              "id": "/properties/general/properties/birth_year/properties/to",
+              "type": ["integer", "null"]
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ],
+          "type": "object"
         },
         "firstname": {
           "id": "/properties/general/properties/firstname",

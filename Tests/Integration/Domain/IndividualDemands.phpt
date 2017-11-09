@@ -25,7 +25,10 @@ final class IndividualDemands extends Tester\TestCase {
 		$demand = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
 			[
 				'general' => [
-					'birth_year' => '[1996,1998)',
+					'birth_year' => [
+						'from' => 1996,
+						'to' => 1998,
+					],
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => null,

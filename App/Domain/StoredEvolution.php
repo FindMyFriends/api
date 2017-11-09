@@ -34,6 +34,7 @@ final class StoredEvolution implements Evolution {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
+				'birth_year' => 'hstore',
 			]
 		))->row();
 		return new Output\FilledFormat(

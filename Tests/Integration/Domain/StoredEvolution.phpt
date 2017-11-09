@@ -73,7 +73,7 @@ final class StoredEvolution extends Tester\TestCase {
 					'gender' => 'man',
 					'lastname' => 'Klapuch',
 					'firstname' => 'Dom',
-					'birth_year' => '[1996,1998)',
+					'birth_year' => ['to' => '1998', 'from' => '1996'],
 				],
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],

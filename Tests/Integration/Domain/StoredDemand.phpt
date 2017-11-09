@@ -152,7 +152,10 @@ final class StoredDemand extends Tester\TestCase {
 		$demand->reconsider(
 			[
 				'general' => [
-					'birth_year' => '[1996,1998)',
+					'birth_year' => [
+						'from' => 1996,
+						'to' => 1998,
+					],
 					'gender' => 'man',
 					'race' => 'european',
 					'firstname' => 'Dom',

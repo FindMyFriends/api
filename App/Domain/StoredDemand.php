@@ -96,12 +96,12 @@ final class StoredDemand implements Demand {
 				'face_id' => $face,
 				'location_id' => $location,
 			] = $this->parts($this->id);
-			(new Storage\ParameterizedQuery(
+			(new Storage\FlatParameterizedQuery(
 				$this->database,
 				'UPDATE general
 				SET gender = :gender,
 					race = :race,
-					birth_year = :birth_year,
+					birth_year = to_range(:birth_year_from::INTEGER, :birth_year_to::INTEGER),
 					firstname = :firstname,
 					lastname = :lastname
 				WHERE id = :id',

@@ -20,7 +20,10 @@ final class DemandRule extends Tester\TestCase {
 		Assert::same(
 			[
 				'general' => [
-					'birth_year' => '[1996,1997]',
+					'birth_year' => [
+						'from' => 1996,
+						'to' => 1996,
+					],
 				],
 				'location' => [
 					'met_at' => '["2017-01-01","2017-01-02")',
@@ -30,7 +33,12 @@ final class DemandRule extends Tester\TestCase {
 				$this->database
 			))->apply(
 				[
-					'general' => ['birth_year' => '[1996,1997]'],
+					'general' => [
+						'birth_year' => [
+							'from' => 1996,
+							'to' => 1996,
+						],
+					],
 					'location' => [
 						'met_at' => '["2017-01-01","2017-01-02")',
 					],

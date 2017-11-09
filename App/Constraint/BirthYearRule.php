@@ -18,12 +18,12 @@ final class BirthYearRule implements Validation\Rule {
 	public function satisfied($subject): bool {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'SELECT birth_year_in_range(?)',
-			[$subject]
+			'SELECT birth_year_in_range(int4range(:from, :to))',
+			$subject
 		))->field();
 	}
 
-	public function apply($subject): string {
+	public function apply($subject): array {
 		if ($this->satisfied($subject))
 			return $subject;
 		throw new \UnexpectedValueException(

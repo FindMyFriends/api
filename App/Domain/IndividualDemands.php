@@ -57,7 +57,7 @@ final class IndividualDemands implements Demands {
 				INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
 					:general_gender,
 					:general_race,
-					:general_birth_year,
+					to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
 					:general_firstname,
 					:general_lastname
 				)

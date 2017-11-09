@@ -8,6 +8,7 @@ use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Iterator;
 use Klapuch\Output;
 use Klapuch\UI;
 use Klapuch\Uri;
@@ -36,13 +37,18 @@ final class Get implements Application\View {
 							new Response\PlainResponse(
 								new Misc\JsonPrintedObjects(
 									...iterator_to_array(
-										$evolution->changes(
-											new Dataset\CombinedSelection(
-												new Dataset\SqlPaging(
-													$parameters['page'],
-													$parameters['per_page']
+										new Iterator\MappedIterator(
+											$evolution->changes(
+												new Dataset\CombinedSelection(
+													new Dataset\SqlPaging(
+														$parameters['page'],
+														$parameters['per_page']
+													)
 												)
-											)
+											),
+											function(Domain\Evolution $evolution): Domain\Evolution {
+														return new Domain\FormattedEvolution($evolution);
+											}
 										)
 									)
 								)

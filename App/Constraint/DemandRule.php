@@ -22,16 +22,8 @@ final class DemandRule implements Validation\Rule {
 		return array_replace_recursive(
 			[
 				'general' => [
-					'birth_year' => (new Validation\ChainedRule(
-						new Validation\FriendlyRule(
-							new OpenClosedRange(),
-							'For general.birth_year is only allowed open/closed range'
-						),
-						new Validation\FriendlyRule(
-							new IntRange(),
-							'For general.birth_year is only allowed numeric range'
-						),
-						new BirthYearRule($this->database)
+					'birth_year' => (new BirthYearRule(
+						$this->database
 					))->apply($subject['general']['birth_year']),
 				],
 				'location' => [

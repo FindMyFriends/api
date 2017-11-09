@@ -78,7 +78,7 @@ final class IndividualEvolutions extends Tester\TestCase {
 				],
 			]
 		);
-		Assert::contains('"birth_year": "[1999,2000)"', $change->print(new Output\Json())->serialization());
+		Assert::contains('"birth_year": "\"to\"=>\"2000\", \"from\"=>\"1999\""', $change->print(new Output\Json())->serialization());
 		(new Misc\TableCount($this->database, 'evolutions', 7))->assert();
 		(new Misc\TableCount($this->database, 'descriptions', 7))->assert();
 		(new Misc\TableCount($this->database, 'bodies', 7))->assert();

@@ -14,7 +14,7 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class FormattedDemand extends Tester\TestCase {
-	public function testPrintingDateTimeInIso8601() {
+	public function testFormatting() {
 		Assert::equal(
 			[
 				'created_at' => '2017-09-17T13:58:10+00:00',

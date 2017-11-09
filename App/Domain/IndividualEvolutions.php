@@ -106,6 +106,7 @@ final class IndividualEvolutions implements Evolutions {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
+				'birth_year' => 'hstore',
 			]
 		))->rows();
 		foreach ($evolutions as $change) {
