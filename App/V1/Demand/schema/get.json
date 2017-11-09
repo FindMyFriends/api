@@ -196,11 +196,11 @@
           "additionalProperties": false,
           "properties": {
             "from": {
-              "id": "/properties/face/properties/teeth/properties/braces",
+              "id": "/properties/general/properties/birth_year/properties/from",
               "type": ["integer", "null"]
             },
             "to": {
-              "id": "/properties/face/properties/teeth/properties/care",
+              "id": "/properties/general/properties/birth_year/properties/to",
               "type": ["integer", "null"]
             }
           },
