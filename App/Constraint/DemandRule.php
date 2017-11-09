@@ -26,6 +26,18 @@ final class DemandRule implements Validation\Rule {
 						$this->database
 					))->apply($subject['general']['birth_year']),
 				],
+				'location' => [
+					'met_at' => [
+						'from' => (new Validation\FriendlyRule(
+							new DateTimeRule(),
+							'location.met_at.from must be in ISO8601'
+						))->apply($subject['location']['met_at']['from']),
+						'to' => (new Validation\FriendlyRule(
+							new DateTimeRule(),
+							'location.met_at.to must be in ISO8601'
+						))->apply($subject['location']['met_at']['to']),
+					],
+				],
 			],
 			$subject
 		);

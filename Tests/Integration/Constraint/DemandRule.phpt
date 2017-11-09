@@ -25,6 +25,12 @@ final class DemandRule extends Tester\TestCase {
 						'to' => 1996,
 					],
 				],
+				'location' => [
+					'met_at' => [
+						'from' => '2017-09-17T13:58:10+00:00',
+						'to' => '2017-10-17T13:58:10+00:00',
+					],
+				],
 			],
 			(new Constraint\DemandRule(
 				$this->database
@@ -34,6 +40,12 @@ final class DemandRule extends Tester\TestCase {
 						'birth_year' => [
 							'from' => 1996,
 							'to' => 1996,
+						],
+					],
+					'location' => [
+						'met_at' => [
+							'from' => '2017-09-17T13:58:10+00:00',
+							'to' => '2017-10-17T13:58:10+00:00',
 						],
 					],
 				]
