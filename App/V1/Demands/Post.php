@@ -45,7 +45,7 @@ final class Post implements Application\View {
 				))->ask(
 					(new Validation\ChainedRule(
 						new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-						new Constraint\DemandRule($this->database)
+						new Constraint\DemandRule()
 					))->apply(json_decode($this->request->body()->serialization(), true))
 				)
 			);

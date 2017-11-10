@@ -48,7 +48,7 @@ final class Put implements Application\View {
 			))->reconsider(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-					new Constraint\DemandRule($this->database)
+					new Constraint\DemandRule()
 				))->apply(
 					json_decode(
 						(new Request\ConcurrentlyControlledRequest(

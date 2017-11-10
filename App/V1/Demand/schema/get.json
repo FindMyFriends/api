@@ -197,11 +197,15 @@
           "properties": {
             "from": {
               "id": "/properties/general/properties/birth_year/properties/from",
-              "type": ["integer", "null"]
+              "type": ["integer", "null"],
+              "minimum": 1850,
+              "maximum": 2017
             },
             "to": {
               "id": "/properties/general/properties/birth_year/properties/to",
-              "type": ["integer", "null"]
+              "type": ["integer", "null"],
+              "minimum": 1850,
+              "maximum": 2017
             }
           },
           "required": [

@@ -8,12 +8,6 @@ use Klapuch\Validation;
  * Rule for demand
  */
 final class DemandRule implements Validation\Rule {
-	private $database;
-
-	public function __construct(\PDO $database) {
-		$this->database = $database;
-	}
-
 	public function satisfied($subject): bool {
 		return false; // not used
 	}
@@ -21,11 +15,6 @@ final class DemandRule implements Validation\Rule {
 	public function apply($subject): array {
 		return array_replace_recursive(
 			[
-				'general' => [
-					'birth_year' => (new BirthYearRule(
-						$this->database
-					))->apply($subject['general']['birth_year']),
-				],
 				'location' => [
 					'met_at' => [
 						'from' => (new Validation\FriendlyRule(
