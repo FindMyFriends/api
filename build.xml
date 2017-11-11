@@ -3,7 +3,7 @@
 
 	<resolvepath propertyName="base_path" file="."/>
 
-	<target name="check" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests"/>
+	<target name="check" depends="lint, phpcpd, phpstan, phpcs, generate-schemas, tests, cgi-tests"/>
 	<target name="ci" depends="check, tester-coverage"/>
 	<target name="init" depends="lint, move-schemas"/>
 
