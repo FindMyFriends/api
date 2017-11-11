@@ -20,7 +20,7 @@ final class FormattedDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		return new Iterator\MappedIterator(
+		return new Iterator\Mapped(
 			$this->origin->all($selection),
 			function(Demand $demand): Demand {
 				return new FormattedDemand($demand);

@@ -20,7 +20,7 @@ final class FormattedEvolutions implements Evolutions {
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
-		return new Iterator\MappedIterator(
+		return new Iterator\Mapped(
 			$this->origin->changes($selection),
 			function(Evolution $demand): Evolution {
 				return new FormattedEvolution($demand);
