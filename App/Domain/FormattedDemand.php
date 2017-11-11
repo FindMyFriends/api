@@ -28,7 +28,7 @@ final class FormattedDemand implements Demand {
 						),
 					] + $location;
 			})->adjusted('general', function(array $general): array {
-				return ['birth_year' => array_map('intval', $general['birth_year'])] + $general;
+				return ['age' => array_map('intval', $general['age'])] + $general;
 			});
 	}
 

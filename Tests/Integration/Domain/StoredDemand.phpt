@@ -104,7 +104,7 @@ final class StoredDemand extends Tester\TestCase {
 					'gender' => 'man',
 					'lastname' => 'Klapuch',
 					'firstname' => 'Dom',
-					'birth_year' => ['to' => '1998', 'from' => '1996'],
+					'age' => ['to' => '21', 'from' => '19'],
 				],
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],
@@ -229,7 +229,7 @@ final class StoredDemand extends Tester\TestCase {
 					'gender' => 'man',
 					'lastname' => 'Klapuch',
 					'firstname' => 'Dom',
-					'birth_year' => ['to' => '1998', 'from' => '1996'],
+					'age' => ['from' => '19', 'to' => '21'],
 				],
 				'face' => [
 					'teeth' => ['care' => 'high', 'braces' => false],

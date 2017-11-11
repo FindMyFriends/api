@@ -24,7 +24,7 @@ final class SampleGeneral implements Sample {
 			[
 				$this->general['gender'] ?? self::GENDERS[array_rand(self::GENDERS)],
 				$this->general['race'] ?? self::RACES[array_rand(self::RACES)],
-				$this->general['birth_year'] ?? sprintf('[%d,%d)', mt_rand(1850, 1900), mt_rand(1901, 2017)),
+				$this->general['birth_year'] ?? sprintf('[%d,%d)', mt_rand(date('Y') - 120, date('Y') - 50), mt_rand(date('Y') - 49, date('Y') - 16)),
 				$this->general['firstname'] ?? bin2hex(random_bytes(10)),
 				$this->general['lastname'] ?? bin2hex(random_bytes(10)),
 			]

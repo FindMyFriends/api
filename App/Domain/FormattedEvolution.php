@@ -19,7 +19,7 @@ final class FormattedEvolution implements Evolution {
 			->adjusted('evolved_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('general', function(array $general): array {
-				return ['birth_year' => array_map('intval', $general['birth_year'])] + $general;
+				return ['age' => array_map('intval', $general['age'])] + $general;
 			});
 	}
 }

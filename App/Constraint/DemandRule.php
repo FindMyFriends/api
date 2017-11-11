@@ -13,6 +13,11 @@ final class DemandRule implements Validation\Rule {
 	}
 
 	public function apply($subject): array {
+		$subject['general']['birth_year'] = [
+			'from' => (new \DateTime($subject['location']['met_at']['from']))->format('Y') - $subject['general']['age']['to'],
+			'to' => (new \DateTime($subject['location']['met_at']['from']))->format('Y') - $subject['general']['age']['from'],
+		];
+		unset($subject['general']['age']);
 		return array_replace_recursive(
 			[
 				'location' => [

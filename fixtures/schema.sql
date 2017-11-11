@@ -15,42 +15,42 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -303,6 +303,42 @@ $_$;
 
 ALTER FUNCTION public.to_range(timestamp with time zone, timestamp with time zone) OWNER TO postgres;
 
+--
+-- Name: year_to_age(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $$
+BEGIN
+	RETURN int4range(
+		(SELECT extract('year' from now) - upper(year))::INTEGER,
+		(SELECT extract('year' from now) - lower(year))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.year_to_age(year int4range, now timestamp with time zone) OWNER TO postgres;
+
+--
+-- Name: year_to_age(int4range, tstzrange); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION year_to_age(year int4range, now tstzrange) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $$
+BEGIN
+	RETURN int4range(
+		(SELECT extract('year' from lower(now)) - upper(year))::INTEGER,
+		(SELECT extract('year' from lower(now)) - lower(year))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.year_to_age(year int4range, now tstzrange) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -439,7 +475,7 @@ CREATE VIEW collective_demands AS
     faces.right_eye,
     faces.shape,
     faces.teeth,
-    range_to_hstore(general.birth_year) AS birth_year,
+    range_to_hstore(year_to_age(general.birth_year, locations.met_at)) AS age,
     general.firstname,
     general.lastname,
     general.gender,
@@ -492,7 +528,7 @@ CREATE VIEW collective_evolutions AS
     faces.right_eye,
     faces.shape,
     faces.teeth,
-    range_to_hstore(general.birth_year) AS birth_year,
+    range_to_hstore(year_to_age(general.birth_year, evolutions.evolved_at)) AS age,
     general.firstname,
     general.lastname,
     general.gender,

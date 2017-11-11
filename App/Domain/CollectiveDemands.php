@@ -31,7 +31,7 @@ final class CollectiveDemands implements Demands {
 					id, seeker_id, created_at,
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-					birth_year, firstname, lastname, gender, race,
+					age, firstname, lastname, gender, race,
 					coordinates, met_at
 					FROM collective_demands'
 				),
@@ -43,7 +43,7 @@ final class CollectiveDemands implements Demands {
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
-				'birth_year' => 'hstore',
+				'age' => 'hstore',
 				'met_at' => 'hstore',
 			]
 		))->rows();

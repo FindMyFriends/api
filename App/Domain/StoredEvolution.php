@@ -25,8 +25,9 @@ final class StoredEvolution implements Evolution {
 				'SELECT id, evolved_at,
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-					birth_year, firstname, lastname, gender, race
-					FROM collective_evolutions WHERE id = ?',
+					age, firstname, lastname, gender, race
+					FROM collective_evolutions
+					WHERE id = ?',
 				[$this->id]
 			),
 			[
@@ -34,7 +35,7 @@ final class StoredEvolution implements Evolution {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
-				'birth_year' => 'hstore',
+				'age' => 'hstore',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -43,7 +44,7 @@ final class StoredEvolution implements Evolution {
 				'id' => $evolution['id'],
 				'evolved_at' => $evolution['evolved_at'],
 				'general' => [
-					'birth_year' => $evolution['birth_year'],
+					'age' => $evolution['age'],
 					'firstname' => $evolution['firstname'],
 					'lastname' => $evolution['lastname'],
 					'gender' => $evolution['gender'],

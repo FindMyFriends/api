@@ -191,21 +191,21 @@
       "id": "/properties/general",
       "additionalProperties": false,
       "properties": {
-        "birth_year": {
-          "id": "/properties/general/properties/birth_year",
+        "age": {
+          "id": "/properties/general/properties/age",
           "additionalProperties": false,
           "properties": {
             "from": {
-              "id": "/properties/general/properties/birth_year/properties/from",
+              "id": "/properties/general/properties/age/properties/from",
               "type": ["integer", "null"],
-              "minimum": 1850,
-              "maximum": 2017
+              "minimum": 15,
+              "maximum": 130
             },
             "to": {
-              "id": "/properties/general/properties/birth_year/properties/to",
+              "id": "/properties/general/properties/age/properties/to",
               "type": ["integer", "null"],
-              "minimum": 1850,
-              "maximum": 2017
+              "minimum": 15,
+              "maximum": 130
             }
           },
           "required": [
@@ -237,7 +237,7 @@
         "lastname",
         "firstname",
         "race",
-        "birth_year",
+        "age",
         "gender"
       ],
       "type": "object"

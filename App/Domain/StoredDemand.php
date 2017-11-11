@@ -22,7 +22,7 @@ final class StoredDemand implements Demand {
 				'SELECT id, seeker_id, created_at,
 				build, skin, weight, height,
 				acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-				birth_year, firstname, lastname, gender, race,
+				age, firstname, lastname, gender, race,
 				coordinates, met_at
 				FROM collective_demands WHERE id = ?',
 				[$this->id]
@@ -33,7 +33,7 @@ final class StoredDemand implements Demand {
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
-				'birth_year' => 'hstore',
+				'age' => 'hstore',
 				'met_at' => 'hstore',
 			]
 		))->row();
@@ -44,7 +44,7 @@ final class StoredDemand implements Demand {
 				'seeker_id' => $demand['seeker_id'],
 				'created_at' => $demand['created_at'],
 				'general' => [
-					'birth_year' => $demand['birth_year'],
+					'age' => $demand['age'],
 					'firstname' => $demand['firstname'],
 					'lastname' => $demand['lastname'],
 					'gender' => $demand['gender'],

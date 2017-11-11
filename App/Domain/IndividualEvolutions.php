@@ -96,8 +96,9 @@ final class IndividualEvolutions implements Evolutions {
 					'SELECT id, evolved_at,
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-					birth_year, firstname, lastname, gender, race
-					FROM collective_evolutions WHERE seeker_id = ?'
+					age, firstname, lastname, gender, race
+					FROM collective_evolutions
+					WHERE seeker_id = ?'
 				),
 				$selection->criteria([$this->seeker->id()])
 			),
@@ -106,7 +107,7 @@ final class IndividualEvolutions implements Evolutions {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
-				'birth_year' => 'hstore',
+				'age' => 'hstore',
 			]
 		))->rows();
 		foreach ($evolutions as $change) {

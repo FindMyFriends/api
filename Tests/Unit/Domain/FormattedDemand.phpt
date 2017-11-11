@@ -25,7 +25,7 @@ final class FormattedDemand extends Tester\TestCase {
 					],
 				],
 				'general' => [
-					'birth_year' => ['from' => 20, 'to' => 25],
+					'age' => ['from' => 20, 'to' => 25],
 				],
 			],
 			json_decode(
@@ -42,7 +42,7 @@ final class FormattedDemand extends Tester\TestCase {
 								],
 							],
 							'general' => [
-								'birth_year' => ['from' => '20', 'to' => '25'],
+								'age' => ['from' => '20', 'to' => '25'],
 							],
 						]
 					)
