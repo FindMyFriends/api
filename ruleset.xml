@@ -49,7 +49,7 @@
 
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
 		<properties>
-			<property name="rootNamespaces" type="array" value="App=>FindMyFriends,Tests=>FindMyFriends"/>
+			<property name="rootNamespaces" type="array" value="App=>FindMyFriends,Tests=>FindMyFriends,Commands=>FindMyFriends\Commands"/>
 			<property name="extensions" type="array" value="php,phpt"/>
 		</properties>
 	</rule>

@@ -13,6 +13,7 @@
 			<arg value="php,phpt"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
+			<arg path="Commands"/>
 		</exec>
 	</target>
 
@@ -33,6 +34,7 @@
 			<arg path="phpstan.neon"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
+			<arg path="Commands"/>
 		</exec>
 	</target>
 
@@ -45,6 +47,7 @@
 			<arg value="-sp"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
+			<arg path="Commands"/>
 		</exec>
 	</target>
 
@@ -57,6 +60,7 @@
 			<arg value="-sp"/>
 			<arg path="App"/>
 			<arg path="Tests"/>
+			<arg path="Commands"/>
 		</exec>
 	</target>
 
@@ -114,7 +118,7 @@
 		</exec>
 	</target>
 
-	<target name="move-schemas">
+	<target name="move-schemas" depends="generate-schemas">
 		<mkdir dir="${base_path}/www/schema/v1/demand" />
 		<mkdir dir="${base_path}/www/schema/v1/evolution" />
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
@@ -122,6 +126,12 @@
 		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolutions/schema/post.json" link="${base_path}/www/schema/v1/evolution/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolution/schema/get.json" link="${base_path}/www/schema/v1/evolution/get.json" overwrite="true"/>
+	</target>
+
+	<target name="generate-schemas">
+		<exec executable="php" logoutput="true" passthru="true" checkreturn="true">
+			<arg path="Commands/schema.php"/>
+		</exec>
 	</target>
 
 </project>

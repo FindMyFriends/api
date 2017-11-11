@@ -6,10 +6,6 @@
             "id": "/properties/created_at",
             "type": "string"
         },
-        "id": {
-            "id": "/properties/id",
-            "type": "integer"
-        },
         "body": {
             "id": "/properties/body",
             "additionalProperties": false,
@@ -253,35 +249,6 @@
             "id": "/properties/general",
             "additionalProperties": false,
             "properties": {
-                "age": {
-                    "id": "/properties/general/properties/age",
-                    "additionalProperties": false,
-                    "properties": {
-                        "from": {
-                            "id": "/properties/general/properties/age/properties/from",
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 15,
-                            "maximum": 130
-                        },
-                        "to": {
-                            "id": "/properties/general/properties/age/properties/to",
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 15,
-                            "maximum": 130
-                        }
-                    },
-                    "required": [
-                        "from",
-                        "to"
-                    ],
-                    "type": "object"
-                },
                 "firstname": {
                     "id": "/properties/general/properties/firstname",
                     "type": [
@@ -314,13 +281,12 @@
                     ]
                 }
             },
-            "required": [
-                "lastname",
-                "firstname",
-                "race",
-                "age",
-                "gender"
-            ],
+            "required": {
+                "0": "lastname",
+                "1": "firstname",
+                "2": "race",
+                "4": "gender"
+            },
             "type": "object"
         }
     },
