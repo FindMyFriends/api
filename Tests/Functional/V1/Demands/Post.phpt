@@ -28,7 +28,7 @@ final class Post extends Tester\TestCase {
 			(new V1\Demands\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../Misc/demand.json')
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/post.json')
 					)
 				),
 				new FakeUri('/', 'v1/demands', []),

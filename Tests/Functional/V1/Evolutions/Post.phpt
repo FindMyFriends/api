@@ -29,7 +29,7 @@ final class Post extends Tester\TestCase {
 			(new V1\Evolutions\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../Misc/evolution.json')
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/post.json')
 					)
 				),
 				new FakeUri('/', 'v1/evolutions', []),

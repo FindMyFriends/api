@@ -27,7 +27,7 @@ final class Put extends Tester\TestCase {
 			(new V1\Demand\Put(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../Misc/demand.json')
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
 					)
 				),
 				new Uri\FakeUri('/', 'v1/demands', []),
@@ -64,7 +64,7 @@ final class Put extends Tester\TestCase {
 			(new V1\Demand\Put(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../Misc/demand.json')
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
 					)
 				),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
