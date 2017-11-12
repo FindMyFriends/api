@@ -27,10 +27,8 @@ final class IndividualEvolutions implements Evolutions {
 					:general_race,
 					(
 						SELECT birth_year
-						FROM general
-						JOIN descriptions ON descriptions.general_id = general.id
-						JOIN evolutions ON evolutions.description_id = descriptions.id
-						WHERE evolutions.seeker_id = :seeker
+						FROM root_evolution
+						WHERE seeker_id = :seeker
 						LIMIT 1
 					),
 					:general_firstname,
