@@ -11,4 +11,12 @@ interface Evolution {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format;
+
+	/**
+	 * Apply change to piece of the evolution
+	 * @param array $changes
+	 * @throws \UnexpectedValueException
+	 * @return void
+	 */
+	public function change(array $changes): void;
 }

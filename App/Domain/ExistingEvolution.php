@@ -19,6 +19,12 @@ final class ExistingEvolution implements Evolution {
 		$this->database = $database;
 	}
 
+	public function change(array $changes): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
+		$this->origin->change($changes);
+	}
+
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))
 			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));

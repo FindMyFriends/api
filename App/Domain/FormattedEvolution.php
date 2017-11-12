@@ -14,6 +14,10 @@ final class FormattedEvolution implements Evolution {
 		$this->origin = $origin;
 	}
 
+	public function change(array $changes): void {
+		$this->origin->change($changes);
+	}
+
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
 			->adjusted('evolved_at', function(string $datetime): string {

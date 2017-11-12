@@ -8,6 +8,9 @@ use Klapuch\Output;
  * Fake
  */
 final class FakeEvolution implements Evolution {
+	public function change(array $changes): void {
+	}
+
 	public function print(Output\Format $format): Output\Format {
 		return $format;
 	}

@@ -16,32 +16,18 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class StoredDemand extends Tester\TestCase {
+final class StoredEvolution extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testRemovingSingleDemand() {
-		(new Misc\SampleDemand($this->database))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		(new Domain\StoredDemand(1, $this->database))->retract();
-		(new Misc\TableCount($this->database, 'demands', 1))->assert();
-		Assert::same(
-			2,
-			(new Storage\ParameterizedQuery(
-				$this->database,
-				'SELECT id FROM demands'
-			))->field()
-		);
-	}
-
-	public function testReconsideringAsWholeForSpecificId() {
+	public function testChangingAsWholeForSpecificId() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		(new Misc\SampleDemand(
+		(new Misc\SampleEvolution(
 			$this->database,
-			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
+			['evolved_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
 		))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		$demand = new Domain\StoredDemand(1, $this->database);
-		$demand->reconsider(
+		(new Misc\SampleEvolution($this->database))->try();
+		$evolution = new Domain\StoredEvolution(1, $this->database);
+		$evolution->change(
 			[
 				'general' => [
 					'birth_year' => [
@@ -89,30 +75,10 @@ final class StoredDemand extends Tester\TestCase {
 					'weight' => 60,
 					'height' => 181,
 				],
-				'location' => [
-					'coordinates' => [
-						'latitude' => 50.5,
-						'longitude' => 50.2,
-					],
-					'met_at' => [
-						'from' => '2017-01-01 00:00:00+00',
-						'to' => '2017-01-02 00:00:00+00',
-					],
-				],
 			]
 		);
 		Assert::equal(
 			[
-				'location' => [
-					'coordinates' => [
-						'latitude' => 50.5,
-						'longitude' => 50.2,
-					],
-					'met_at' => [
-						'from' => '2017-01-01 00:00:00+00',
-						'to' => '2017-01-02 00:00:00+00',
-					],
-				],
 				'general' => [
 					'race' => 'european',
 					'gender' => 'man',
@@ -147,13 +113,84 @@ final class StoredDemand extends Tester\TestCase {
 					'skin' => 'white',
 					'build' => 'skinny',
 				],
-				'created_at' => '2017-09-16 00:00:00+00',
-				'seeker_id' => $seeker,
+				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,
 			],
-			json_decode($demand->print(new Output\Json)->serialization(), true)
+			json_decode($evolution->print(new Output\Json)->serialization(), true)
+		);
+	}
+
+	public function testChangingAllRelatedBirthYears() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleEvolution(
+			$this->database,
+			['evolved_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
+		))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database, ['general' => ['birth_year' => '[1990,1993)']]))->try();
+		$evolution = new Domain\StoredEvolution(1, $this->database);
+		$evolution->change(
+			[
+				'general' => [
+					'birth_year' => [
+						'from' => 1996,
+						'to' => 1998,
+					],
+					'gender' => 'man',
+					'race' => 'european',
+					'firstname' => 'Dom',
+					'lastname' => 'Klapuch',
+				],
+				'face' => [
+					'teeth' => [
+						'care' => 'high',
+						'braces' => false,
+					],
+					'freckles' => false,
+					'complexion' => 'medium',
+					'beard' => 'no',
+					'acne' => false,
+					'shape' => 'oval',
+					'hair' => [
+						'style' => 'normal',
+						'color' => 'black',
+						'length' => 20,
+						'highlights' => false,
+						'roots' => true,
+						'nature' => false,
+					],
+					'eyebrow' => 'black',
+					'eye' => [
+						'left' => [
+							'color' => 'blue',
+							'lenses' => false,
+						],
+						'right' => [
+							'color' => 'blue',
+							'lenses' => false,
+						],
+					],
+				],
+				'body' => [
+					'build' => 'skinny',
+					'skin' => 'white',
+					'weight' => 60,
+					'height' => 181,
+				],
+			]
+		);
+		Assert::same(
+			[
+				['birth_year' => '[1990,1993)'],
+				['birth_year' => '[1996,1998)'],
+				['birth_year' => '[1996,1998)'],
+			],
+			(new Storage\ParameterizedQuery(
+				$this->database,
+				'SELECT birth_year FROM general'
+			))->rows()
 		);
 	}
 }
 
-(new StoredDemand())->run();
+(new StoredEvolution())->run();

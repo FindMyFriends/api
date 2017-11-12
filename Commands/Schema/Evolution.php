@@ -427,14 +427,14 @@ final class Evolution {
 
 	public function put(): array {
 		$schema = $this->get();
-		unset($schema['properties']['general']['properties']['age']);
-		unset($schema['properties']['general']['required'][array_search('age', $schema['properties']['general']['required'])]);
 		unset($schema['properties']['id']);
 		return $schema;
 	}
 
 	public function post(): array {
 		$schema = $this->put();
+		unset($schema['properties']['general']['properties']['age']);
+		unset($schema['properties']['general']['required'][array_search('age', $schema['properties']['general']['required'])]);
 		$schema['body']['default'] = [
 			'build' => null,
 			'height' => null,
