@@ -16,6 +16,5 @@ final class FakeChange implements Change {
 	}
 
 	public function revert(): void {
-
 	}
 }

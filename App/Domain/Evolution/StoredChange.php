@@ -146,7 +146,7 @@ final class StoredChange implements Change {
 				'DELETE FROM evolutions WHERE id = ?',
 				[$this->id]
 			))->execute();
-		} catch(\PDOException $ex) {
+		} catch (\PDOException $ex) {
 			throw new \UnexpectedValueException('Base evolution can not be reverted', 0, $ex);
 		}
 	}
