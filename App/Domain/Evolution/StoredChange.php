@@ -41,7 +41,7 @@ final class StoredChange implements Change {
 				SET birth_year = (SELECT birth_year FROM updated_general)
 				WHERE id IN (
 					SELECT general_id
-					FROM root_evolution
+					FROM base_evolution
 					WHERE seeker_id = :seeker_id
 				)',
 				['id' => $general, 'seeker_id' => $seeker] + $changes['general']

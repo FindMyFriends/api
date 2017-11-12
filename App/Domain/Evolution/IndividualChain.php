@@ -27,7 +27,7 @@ final class IndividualChain implements Chain {
 					:general_race,
 					(
 						SELECT birth_year
-						FROM root_evolution
+						FROM base_evolution
 						WHERE seeker_id = :seeker
 						LIMIT 1
 					),
