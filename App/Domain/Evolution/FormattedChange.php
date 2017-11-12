@@ -26,4 +26,8 @@ final class FormattedChange implements Change {
 				return ['age' => array_map('intval', $general['age'])] + $general;
 			});
 	}
+
+	public function revert(): void {
+		$this->origin->revert();
+	}
 }

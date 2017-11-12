@@ -31,6 +31,12 @@ final class ExistingChange implements Change {
 		return $this->origin->print($format);
 	}
 
+	public function revert(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
+		$this->origin->revert();
+	}
+
 	private function exists(int $id): bool {
 		return (bool) (new Storage\ParameterizedQuery(
 			$this->database,

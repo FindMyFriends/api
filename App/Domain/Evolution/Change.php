@@ -19,4 +19,11 @@ interface Change {
 	 * @return void
 	 */
 	public function affect(array $changes): void;
+
+	/**
+	 * Revert the current change
+	 * @throws \UnexpectedValueException
+	 * @return void
+	 */
+	public function revert(): void;
 }

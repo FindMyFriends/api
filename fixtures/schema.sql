@@ -205,7 +205,6 @@ BEGIN
 	WHERE id = old.description_id
 	RETURNING face_id, general_id, body_id
 		INTO description;
-	DELETE FROM evolutions WHERE description_id = old.description_id;
 	DELETE FROM faces WHERE id = description.face_id;
 	DELETE FROM general WHERE id = description.general_id;
 	DELETE FROM bodies WHERE id = description.body_id;
@@ -216,26 +215,6 @@ $$;
 
 
 ALTER FUNCTION public.demands_trigger_row_ad() OWNER TO postgres;
-
---
--- Name: demands_trigger_row_ai(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION demands_trigger_row_ai() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
-		new.seeker_id,
-		new.description_id,
-		NOW()
-	);
-	RETURN new;
-END;
-$$;
-
-
-ALTER FUNCTION public.demands_trigger_row_ai() OWNER TO postgres;
 
 --
 -- Name: demands_trigger_row_bu(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -254,6 +233,48 @@ $$;
 
 
 ALTER FUNCTION public.demands_trigger_row_bu() OWNER TO postgres;
+
+--
+-- Name: evolutions_trigger_row_ad(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION evolutions_trigger_row_ad() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	description RECORD;
+BEGIN
+	DELETE FROM descriptions
+	WHERE id = old.description_id
+	RETURNING face_id, general_id, body_id
+		INTO description;
+	DELETE FROM faces WHERE id = description.face_id;
+	DELETE FROM general WHERE id = description.general_id;
+	DELETE FROM bodies WHERE id = description.body_id;
+	RETURN old;
+END;
+$$;
+
+
+ALTER FUNCTION public.evolutions_trigger_row_ad() OWNER TO postgres;
+
+--
+-- Name: evolutions_trigger_row_bd(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION evolutions_trigger_row_bd() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	IF (SELECT (COUNT(*) = 1) FROM evolutions WHERE seeker_id = old.seeker_id LIMIT 2) THEN
+		RAISE EXCEPTION 'Base evolution can not be reverted';
+	END IF;
+	RETURN old;
+END;
+$$;
+
+
+ALTER FUNCTION public.evolutions_trigger_row_bd() OWNER TO postgres;
 
 --
 -- Name: range_to_hstore(anyrange); Type: FUNCTION; Schema: public; Owner: postgres
@@ -344,6 +365,66 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: descriptions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE descriptions (
+    id integer NOT NULL,
+    general_id integer NOT NULL,
+    body_id integer NOT NULL,
+    face_id integer NOT NULL
+);
+
+
+ALTER TABLE descriptions OWNER TO postgres;
+
+--
+-- Name: evolutions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE evolutions (
+    id integer NOT NULL,
+    seeker_id integer NOT NULL,
+    description_id integer NOT NULL,
+    evolved_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE evolutions OWNER TO postgres;
+
+--
+-- Name: general; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE general (
+    id integer NOT NULL,
+    gender genders NOT NULL,
+    race races NOT NULL,
+    birth_year int4range NOT NULL,
+    firstname character varying(100),
+    lastname character varying(100),
+    CONSTRAINT check_birth_year_in_range CHECK (birth_year_in_range(birth_year))
+);
+
+
+ALTER TABLE general OWNER TO postgres;
+
+--
+-- Name: base_evolution; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW base_evolution AS
+ SELECT general.birth_year,
+    general.id AS general_id,
+    evolutions.seeker_id
+   FROM ((general
+     JOIN descriptions ON ((descriptions.general_id = general.id)))
+     JOIN evolutions ON ((evolutions.description_id = descriptions.id)));
+
+
+ALTER TABLE base_evolution OWNER TO postgres;
+
+--
 -- Name: bodies; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -388,20 +469,6 @@ CREATE TABLE demands (
 ALTER TABLE demands OWNER TO postgres;
 
 --
--- Name: descriptions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE descriptions (
-    id integer NOT NULL,
-    general_id integer NOT NULL,
-    body_id integer NOT NULL,
-    face_id integer NOT NULL
-);
-
-
-ALTER TABLE descriptions OWNER TO postgres;
-
---
 -- Name: faces; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -421,23 +488,6 @@ CREATE TABLE faces (
 
 
 ALTER TABLE faces OWNER TO postgres;
-
---
--- Name: general; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE general (
-    id integer NOT NULL,
-    gender genders NOT NULL,
-    race races NOT NULL,
-    birth_year int4range NOT NULL,
-    firstname character varying(100),
-    lastname character varying(100),
-    CONSTRAINT check_birth_year_in_range CHECK (birth_year_in_range(birth_year))
-);
-
-
-ALTER TABLE general OWNER TO postgres;
 
 --
 -- Name: locations; Type: TABLE; Schema: public; Owner: postgres
@@ -491,20 +541,6 @@ CREATE VIEW collective_demands AS
 
 
 ALTER TABLE collective_demands OWNER TO postgres;
-
---
--- Name: evolutions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE evolutions (
-    id integer NOT NULL,
-    seeker_id integer NOT NULL,
-    description_id integer NOT NULL,
-    evolved_at timestamp with time zone NOT NULL
-);
-
-
-ALTER TABLE evolutions OWNER TO postgres;
 
 --
 -- Name: collective_evolutions; Type: VIEW; Schema: public; Owner: postgres
@@ -796,17 +832,24 @@ CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECU
 
 
 --
--- Name: demands demands_row_ai_trigger; Type: TRIGGER; Schema: public; Owner: postgres
---
-
-CREATE TRIGGER demands_row_ai_trigger AFTER INSERT ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_ai();
-
-
---
 -- Name: demands demands_row_bu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
 CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
+
+
+--
+-- Name: evolutions evolutions_row_ad_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_ad();
+
+
+--
+-- Name: evolutions evolutions_row_bd_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
 
 
 --

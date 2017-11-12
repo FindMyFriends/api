@@ -33,6 +33,13 @@ final class ExistingChange extends Tester\TestCase {
 				$this->database
 			))->affect([]);
 		}, \UnexpectedValueException::class, 'Evolution 1 does not exist');
+		Assert::exception(function() {
+			(new Evolution\ExistingChange(
+				new Evolution\FakeChange(),
+				1,
+				$this->database
+			))->revert();
+		}, \UnexpectedValueException::class, 'Evolution 1 does not exist');
 	}
 
 	public function testPassingWithExisting() {
@@ -52,6 +59,14 @@ final class ExistingChange extends Tester\TestCase {
 				$this->database
 			);
 			$evolution->affect([]);
+		});
+		Assert::noError(function() {
+			$evolution = new Evolution\ExistingChange(
+				new Evolution\FakeChange(),
+				1,
+				$this->database
+			);
+			$evolution->revert();
 		});
 	}
 }

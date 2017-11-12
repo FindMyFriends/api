@@ -191,6 +191,24 @@ final class StoredChange extends Tester\TestCase {
 			))->rows()
 		);
 	}
+
+	public function testReverting() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		(new Evolution\StoredChange($id, $this->database))->revert();
+		(new Misc\TableCount($this->database, 'evolutions', 1))->assert();
+	}
+
+	/**
+	 * @throws \UnexpectedValueException Base evolution can not be reverted
+	 */
+	public function testThrowingOnRevertingBase() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Evolution\StoredChange($id, $this->database))->revert();
+	}
 }
 
 (new StoredChange())->run();

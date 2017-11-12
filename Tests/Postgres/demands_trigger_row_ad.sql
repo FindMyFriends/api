@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION unit_tests.deleting_all_evidences() RETURNS TEST_RESULT AS $$
 DECLARE
 	messages TEXT[];
+	inserted_demand_id demands.id%TYPE;
 BEGIN
 	WITH inserted_general AS (
 		INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
@@ -53,18 +54,16 @@ BEGIN
 			tstzrange(NOW(), NOW())
 		)
 		RETURNING id
-	), inserted_demand AS (
-		INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
-			(SELECT id FROM inserted_seeker),
-			(SELECT id FROM inserted_description),
-			NOW(),
-			(SELECT id FROM inserted_location)
-		)
-		RETURNING id
 	)
-	DELETE FROM demands WHERE id = (SELECT id FROM inserted_demand);
+	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+		(SELECT id FROM inserted_seeker),
+		(SELECT id FROM inserted_description),
+		NOW(),
+		(SELECT id FROM inserted_location)
+	)
+	RETURNING id INTO inserted_demand_id;
 
-	DELETE FROM demands;
+	DELETE FROM demands WHERE id = inserted_demand_id;
 
 	messages = messages || message FROM assert.is_equal(
 		((SELECT COUNT(*) FROM general)
@@ -72,7 +71,6 @@ BEGIN
 		+ (SELECT COUNT(*) FROM faces)
 		+ (SELECT COUNT(*) FROM descriptions)
 		+ (SELECT COUNT(*) FROM demands)
-		+ (SELECT COUNT(*) FROM evolutions)
 		+ (SELECT COUNT(*) FROM locations))::INTEGER,
 		0
 	);

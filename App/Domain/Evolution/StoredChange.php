@@ -139,6 +139,17 @@ final class StoredChange implements Change {
 		);
 	}
 
+	public function revert(): void {
+		try {
+			(new Storage\ParameterizedQuery(
+				$this->database,
+				'DELETE FROM evolutions WHERE id = ?',
+				[$this->id]
+			))->execute();
+		} catch(\PDOException $ex) {
+			throw new \UnexpectedValueException('Base evolution can not be reverted', 0, $ex);
+		}
+	}
 
 	/**
 	 * Description parts belonging to the evolution
