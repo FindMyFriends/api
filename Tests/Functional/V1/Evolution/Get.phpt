@@ -49,7 +49,7 @@ final class Get extends Tester\TestCase {
 			))->template(['id' => 1])->render(),
 			true
 		);
-		Assert::same(['message' => 'Evolution 1 does not exist'], $evolution);
+		Assert::same(['message' => 'Evolution change 1 does not exist'], $evolution);
 		Assert::same(404, http_response_code());
 	}
 }

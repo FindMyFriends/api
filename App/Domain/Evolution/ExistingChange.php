@@ -21,19 +21,19 @@ final class ExistingChange implements Change {
 
 	public function affect(array $changes): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
+			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
 		$this->origin->affect($changes);
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
+			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
 		return $this->origin->print($format);
 	}
 
 	public function revert(): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
+			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
 		$this->origin->revert();
 	}
 
