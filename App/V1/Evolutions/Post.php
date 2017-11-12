@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolutions;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Klapuch\Access;
@@ -39,10 +39,10 @@ final class Post implements Application\View {
 		try {
 			$url = new Http\CreatedResourceUrl(
 				new Uri\RelativeUrl($this->url, 'v1/evolutions/{id}'),
-				(new Domain\IndividualEvolutions(
+				(new Evolution\IndividualChain(
 					$this->user,
 					$this->database
-				))->evolve(
+				))->extend(
 					(new Validation\ChainedRule(
 						new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 						new Constraint\EvolutionRule()

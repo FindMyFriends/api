@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolutions;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Access;
@@ -25,8 +25,8 @@ final class Get implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$evolution = new Domain\FormattedEvolutions(
-				new Domain\IndividualEvolutions(
+			$evolution = new Evolution\FormattedChain(
+				new Evolution\IndividualChain(
 					$this->user,
 					$this->database
 				)

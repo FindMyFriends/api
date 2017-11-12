@@ -1,28 +1,28 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Always existing evolution
+ * Change which belongs always to some chain
  */
-final class ExistingEvolution implements Evolution {
+final class ExistingChange implements Change {
 	private $origin;
 	private $id;
 	private $database;
 
-	public function __construct(Evolution $origin, int $id, \PDO $database) {
+	public function __construct(Change $origin, int $id, \PDO $database) {
 		$this->origin = $origin;
 		$this->id = $id;
 		$this->database = $database;
 	}
 
-	public function change(array $changes): void {
+	public function affect(array $changes): void {
 		if (!$this->exists($this->id))
 			throw new \UnexpectedValueException(sprintf('Evolution %d does not exist', $this->id));
-		$this->origin->change($changes);
+		$this->origin->affect($changes);
 	}
 
 	public function print(Output\Format $format): Output\Format {

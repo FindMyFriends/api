@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Change in evolution chain
+ * Stored change
  */
-final class StoredEvolution implements Evolution {
+final class StoredChange implements Change {
 	private $id;
 	private $database;
 
@@ -17,7 +17,7 @@ final class StoredEvolution implements Evolution {
 		$this->database = $database;
 	}
 
-	public function change(array $changes): void {
+	public function affect(array $changes): void {
 		(new Storage\Transaction($this->database))->start(function() use ($changes): void {
 			[
 				'general_id' => $general,

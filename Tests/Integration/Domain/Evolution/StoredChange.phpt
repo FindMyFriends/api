@@ -4,9 +4,9 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
-namespace FindMyFriends\Integration\Domain;
+namespace FindMyFriends\Integration\Domain\Evolution;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
@@ -14,20 +14,20 @@ use Klapuch\Storage;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
-final class StoredEvolution extends Tester\TestCase {
+final class StoredChange extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testChangingAsWholeForSpecificId() {
+	public function testAffectingWholeForSpecificId() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		(new Misc\SampleEvolution(
 			$this->database,
 			['evolved_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
 		))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		$evolution = new Domain\StoredEvolution(1, $this->database);
-		$evolution->change(
+		$evolution = new Evolution\StoredChange(1, $this->database);
+		$evolution->affect(
 			[
 				'general' => [
 					'birth_year' => [
@@ -120,7 +120,7 @@ final class StoredEvolution extends Tester\TestCase {
 		);
 	}
 
-	public function testChangingAllRelatedBirthYears() {
+	public function testAffectingAllRelatedBirthYears() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		(new Misc\SampleEvolution(
 			$this->database,
@@ -128,8 +128,8 @@ final class StoredEvolution extends Tester\TestCase {
 		))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
 		(new Misc\SampleEvolution($this->database, ['general' => ['birth_year' => '[1990,1993)']]))->try();
-		$evolution = new Domain\StoredEvolution(1, $this->database);
-		$evolution->change(
+		$evolution = new Evolution\StoredChange(1, $this->database);
+		$evolution->affect(
 			[
 				'general' => [
 					'birth_year' => [
@@ -193,4 +193,4 @@ final class StoredEvolution extends Tester\TestCase {
 	}
 }
 
-(new StoredEvolution())->run();
+(new StoredChange())->run();

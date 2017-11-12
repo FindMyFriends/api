@@ -1,15 +1,15 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Storage;
 
 /**
- * Evolutions chain for one particular seeker
+ * Chain for one particular seeker
  */
-final class IndividualEvolutions implements Evolutions {
+final class IndividualChain implements Chain {
 	private $seeker;
 	private $database;
 
@@ -18,7 +18,7 @@ final class IndividualEvolutions implements Evolutions {
 		$this->database = $database;
 	}
 
-	public function evolve(array $progress): Evolution {
+	public function extend(array $progress): Change {
 		$id = (new Storage\FlatParameterizedQuery(
 			$this->database,
 			'WITH inserted_general AS (
@@ -82,7 +82,7 @@ final class IndividualEvolutions implements Evolutions {
 			RETURNING id',
 			['seeker' => $this->seeker->id()] + $progress
 		))->field();
-		return new StoredEvolution($id, $this->database);
+		return new StoredChange($id, $this->database);
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
@@ -109,7 +109,7 @@ final class IndividualEvolutions implements Evolutions {
 			]
 		))->rows();
 		foreach ($evolutions as $change) {
-			yield new StoredEvolution(
+			yield new StoredChange(
 				$change['id'],
 				new Storage\MemoryPDO($this->database, $change)
 			);

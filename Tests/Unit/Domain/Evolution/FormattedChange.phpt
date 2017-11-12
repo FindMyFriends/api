@@ -4,16 +4,16 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
-namespace FindMyFriends\Unit\Domain;
+namespace FindMyFriends\Unit\Domain\Evolution;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use Klapuch\Output;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
-final class FormattedEvolution extends Tester\TestCase {
+final class FormattedChange extends Tester\TestCase {
 	public function testFormatting() {
 		Assert::equal(
 			[
@@ -23,8 +23,8 @@ final class FormattedEvolution extends Tester\TestCase {
 				],
 			],
 			json_decode(
-				(new Domain\FormattedEvolution(
-					new Domain\FakeEvolution()
+				(new Evolution\FormattedChange(
+					new Evolution\FakeChange()
 				))->print(
 					new Output\Json(
 						[
@@ -41,4 +41,4 @@ final class FormattedEvolution extends Tester\TestCase {
 	}
 }
 
-(new FormattedEvolution())->run();
+(new FormattedChange())->run();

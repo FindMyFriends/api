@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Output;
 
 /**
  * Fake
  */
-final class FakeEvolution implements Evolution {
-	public function change(array $changes): void {
+final class FakeChange implements Change {
+	public function affect(array $changes): void {
 	}
 
 	public function print(Output\Format $format): Output\Format {

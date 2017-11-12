@@ -4,9 +4,9 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
-namespace FindMyFriends\Integration\Domain;
+namespace FindMyFriends\Integration\Domain\Evolution;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Access;
@@ -15,9 +15,9 @@ use Klapuch\Output;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
-final class IndividualEvolutions extends Tester\TestCase {
+final class IndividualChain extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testCopyingBirthYearFromAncestor() {
@@ -28,10 +28,10 @@ final class IndividualEvolutions extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		$change = (new Domain\IndividualEvolutions(
+		$change = (new Evolution\IndividualChain(
 			new Access\FakeUser((string) $seeker),
 			$this->database
-		))->evolve(
+		))->extend(
 			[
 				'evolved_at' => '2015-01-01',
 				'general' => [
@@ -96,7 +96,7 @@ final class IndividualEvolutions extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		Assert::same(
 			2,
-			(new Domain\IndividualEvolutions(
+			(new Evolution\IndividualChain(
 				new Access\FakeUser((string) $seeker),
 				$this->database
 			))->count(new Dataset\EmptySelection())
@@ -111,7 +111,7 @@ final class IndividualEvolutions extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker, 'general' => ['gender' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		$chain = (new Domain\IndividualEvolutions(
+		$chain = (new Evolution\IndividualChain(
 			new Access\FakeUser((string) $seeker),
 			$this->database
 		))->changes(new Dataset\EmptySelection());
@@ -123,4 +123,4 @@ final class IndividualEvolutions extends Tester\TestCase {
 	}
 }
 
-(new IndividualEvolutions())->run();
+(new IndividualChain())->run();

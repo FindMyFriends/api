@@ -1,29 +1,29 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Dataset;
 use Klapuch\Iterator;
 
 /**
- * Evolutions formatted to be used for input/output
+ * Chain formatted to be used for input/output
  */
-final class FormattedEvolutions implements Evolutions {
+final class FormattedChain implements Chain {
 	private $origin;
 
-	public function __construct(Evolutions $origin) {
+	public function __construct(Chain $origin) {
 		$this->origin = $origin;
 	}
 
-	public function evolve(array $progress): Evolution {
-		return $this->origin->evolve($progress);
+	public function extend(array $progress): Change {
+		return $this->origin->extend($progress);
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->changes($selection),
-			function(Evolution $demand): Evolution {
-				return new FormattedEvolution($demand);
+			function(Change $demand): Change {
+				return new FormattedChange($demand);
 			}
 		);
 	}

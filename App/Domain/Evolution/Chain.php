@@ -1,22 +1,22 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Dataset;
 
-interface Evolutions {
+interface Chain {
 	/**
-	 * Add a new change to evolution chain
+	 * Extend chain with a new change
 	 * @param mixed[] $progress
 	 * @throws \UnexpectedValueException
-	 * @return \FindMyFriends\Domain\Evolution
+	 * @return \FindMyFriends\Domain\Evolution\Change
 	 */
-	public function evolve(array $progress): Evolution;
+	public function extend(array $progress): Change;
 
 	/**
-	 * All realized changes in evolution chain
+	 * The whole history in evolution chain
 	 * @param \Klapuch\Dataset\Selection $selection
-	 * @return \FindMyFriends\Domain\Evolution[]
+	 * @return \FindMyFriends\Domain\Evolution\Change[]
 	 */
 	public function changes(Dataset\Selection $selection): \Iterator;
 

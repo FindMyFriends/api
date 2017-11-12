@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Output;
 
-interface Evolution {
+interface Change {
 	/**
 	 * Print the evolution change to specified format
 	 * @param \Klapuch\Output\Format $format
@@ -13,10 +13,10 @@ interface Evolution {
 	public function print(Output\Format $format): Output\Format;
 
 	/**
-	 * Apply change to piece of the evolution
+	 * Affect the history
 	 * @param array $changes
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
-	public function change(array $changes): void;
+	public function affect(array $changes): void;
 }

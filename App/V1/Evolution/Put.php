@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolution;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Request;
@@ -35,9 +35,9 @@ final class Put implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			(new Domain\HarnessedEvolution(
-				new Domain\ExistingEvolution(
-					new Domain\StoredEvolution(
+			(new Evolution\HarnessedChange(
+				new Evolution\ExistingChange(
+					new Evolution\StoredChange(
 						$parameters['id'],
 						$this->database
 					),
@@ -45,7 +45,7 @@ final class Put implements Application\View {
 					$this->database
 				),
 				new Misc\ApiErrorCallback(404)
-			))->change(
+			))->affect(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 					new Constraint\EvolutionRule()

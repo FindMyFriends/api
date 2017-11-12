@@ -1,21 +1,21 @@
 <?php
 declare(strict_types = 1);
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Evolution;
 
 use Klapuch\Output;
 
 /**
- * Evolution formatted to be used in output
+ * Change formatted to be used in output
  */
-final class FormattedEvolution implements Evolution {
+final class FormattedChange implements Change {
 	private $origin;
 
-	public function __construct(Evolution $origin) {
+	public function __construct(Change $origin) {
 		$this->origin = $origin;
 	}
 
-	public function change(array $changes): void {
-		$this->origin->change($changes);
+	public function affect(array $changes): void {
+		$this->origin->affect($changes);
 	}
 
 	public function print(Output\Format $format): Output\Format {

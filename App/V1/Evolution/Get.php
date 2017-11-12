@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolution;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -38,10 +38,10 @@ final class Get implements Application\View {
 						new Response\CachedResponse(
 							new Response\JsonApiAuthentication(
 								new Response\PlainResponse(
-									(new Domain\FormattedEvolution(
-										new Domain\HarnessedEvolution(
-											new Domain\ExistingEvolution(
-												new Domain\StoredEvolution(
+									(new Evolution\FormattedChange(
+										new Evolution\HarnessedChange(
+											new Evolution\ExistingChange(
+												new Evolution\StoredChange(
 													$parameters['id'],
 													$this->database
 												),
