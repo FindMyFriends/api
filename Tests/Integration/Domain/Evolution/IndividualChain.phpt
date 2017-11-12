@@ -103,7 +103,7 @@ final class IndividualChain extends Tester\TestCase {
 		);
 	}
 
-	public function testEvolutionChainBySeeker() {
+	public function testChainBySeeker() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
