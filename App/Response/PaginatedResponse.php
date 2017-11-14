@@ -43,6 +43,6 @@ final class PaginatedResponse implements Application\Response {
 	public function status(): int {
 		return $this->page >= current(array_slice($this->pagination->range(), -1))
 			? $this->origin->status()
-			: 206;
+			: HTTP_PARTIAL_CONTENT;
 	}
 }

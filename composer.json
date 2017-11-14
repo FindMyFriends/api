@@ -45,7 +45,10 @@
       "FindMyFriends\\": [
         "App/"
       ]
-    }
+    },
+    "files": [
+      "App/Http/statuses.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

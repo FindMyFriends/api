@@ -43,7 +43,7 @@ final class PaginatedResponse extends Tester\TestCase {
 
 	public function testPartialResponseForNotLastPage() {
 		Assert::same(
-			206,
+			HTTP_PARTIAL_CONTENT,
 			(new Response\PaginatedResponse(
 				new class implements Application\Response {
 					public function body(): Output\Format {
@@ -66,7 +66,7 @@ final class PaginatedResponse extends Tester\TestCase {
 
 	public function testDelegatedStatusCodeForLastPage() {
 		Assert::same(
-			201,
+			HTTP_CREATED,
 			(new Response\PaginatedResponse(
 				new class implements Application\Response {
 					public function body(): Output\Format {
@@ -77,7 +77,7 @@ final class PaginatedResponse extends Tester\TestCase {
 					}
 
 					public function status(): int {
-						return 201;
+						return HTTP_CREATED;
 					}
 				},
 				10,
@@ -89,7 +89,7 @@ final class PaginatedResponse extends Tester\TestCase {
 
 	public function testDelegatedStatusCodeForOversteppingLastPage() {
 		Assert::same(
-			204,
+			HTTP_NO_CONTENT,
 			(new Response\PaginatedResponse(
 				new class implements Application\Response {
 					public function body(): Output\Format {
@@ -100,7 +100,7 @@ final class PaginatedResponse extends Tester\TestCase {
 					}
 
 					public function status(): int {
-						return 204;
+						return HTTP_NO_CONTENT;
 					}
 				},
 				20,

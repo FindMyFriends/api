@@ -15,6 +15,6 @@ final class EmptyResponse implements Application\Response {
 	}
 
 	public function status(): int {
-		return 204;
+		return HTTP_NO_CONTENT;
 	}
 }

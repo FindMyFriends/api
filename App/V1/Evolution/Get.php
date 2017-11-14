@@ -48,7 +48,7 @@ final class Get implements Application\View {
 												$parameters['id'],
 												$this->database
 											),
-											new Misc\ApiErrorCallback(404)
+											new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 										)
 									))->print(new Output\Json)
 								),

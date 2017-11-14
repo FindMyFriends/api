@@ -6,7 +6,6 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class PlainResponse implements Application\Response {
-	private const OK = 200;
 	private $format;
 	private $headers;
 	private $status;
@@ -14,7 +13,7 @@ final class PlainResponse implements Application\Response {
 	public function __construct(
 		Output\Format $format,
 		array $headers = [],
-		int $status = self::OK
+		int $status = HTTP_OK
 	) {
 		$this->format = $format;
 		$this->headers = $headers;

@@ -42,7 +42,7 @@ final class ConcurrentlyCreatedResponse extends Tester\TestCase {
 
 	public function test201CreatedStatusCode() {
 		Assert::same(
-			201,
+			HTTP_CREATED,
 			(new Response\ConcurrentlyCreatedResponse(
 				new Application\FakeResponse(),
 				$this->redis,

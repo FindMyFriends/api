@@ -44,7 +44,7 @@ final class Put implements Application\View {
 					$parameters['id'],
 					$this->database
 				),
-				new Misc\ApiErrorCallback(404)
+				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			))->reconsider(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

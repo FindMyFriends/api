@@ -14,7 +14,7 @@ require __DIR__ . '/../../bootstrap.php';
 
 final class EmptyResponse extends Tester\TestCase {
 	public function testNoResponseCode() {
-		Assert::same(204, (new Response\EmptyResponse())->status());
+		Assert::same(HTTP_NO_CONTENT, (new Response\EmptyResponse())->status());
 	}
 }
 

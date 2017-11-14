@@ -36,43 +36,43 @@ final class JsonError extends Tester\TestCase {
 
 	public function testTakingStatusCodeFromException() {
 		Assert::same(
-			400,
-			(new Response\JsonError(new \Exception('', 400)))->status()
+			HTTP_BAD_REQUEST,
+			(new Response\JsonError(new \Exception('', HTTP_BAD_REQUEST)))->status()
 		);
 	}
 
 	public function testStatusCodeFromParameterOnUnknownOneFromException() {
 		Assert::same(
-			403,
-			(new Response\JsonError(new \Exception(), [], 403))->status()
+			HTTP_FORBIDDEN,
+			(new Response\JsonError(new \Exception(), [], HTTP_FORBIDDEN))->status()
 		);
 	}
 
 	public function testDefaultStatusCodeAsBadRequest() {
 		Assert::same(
-			400,
+			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception()))->status()
 		);
 	}
 
 	public function testLowerStatusCodeForClientOrServerErrorOnly() {
 		Assert::same(
-			400,
-			(new Response\JsonError(new \Exception('', 200)))->status()
+			HTTP_BAD_REQUEST,
+			(new Response\JsonError(new \Exception('', HTTP_OK)))->status()
 		);
 		Assert::same(
-			400,
-			(new Response\JsonError(new \Exception(), [], 200))->status()
+			HTTP_BAD_REQUEST,
+			(new Response\JsonError(new \Exception(), [], HTTP_OK))->status()
 		);
 	}
 
 	public function testHigherStatusCodeForClientOrServerErrorOnly() {
 		Assert::same(
-			400,
+			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception('', 600)))->status()
 		);
 		Assert::same(
-			400,
+			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception(), [], 600))->status()
 		);
 	}

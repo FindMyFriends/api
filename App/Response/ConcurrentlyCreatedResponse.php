@@ -33,6 +33,6 @@ final class ConcurrentlyCreatedResponse implements Application\Response {
 	}
 
 	public function status(): int {
-		return 201;
+		return HTTP_CREATED;
 	}
 }

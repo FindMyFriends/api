@@ -15,17 +15,17 @@ require __DIR__ . '/../../bootstrap.php';
 final class ApiErrorCallback extends Tester\TestCase {
 	public function testTransformingStatusCodeOnThrowing() {
 		$ex = Assert::exception(function() {
-			(new Misc\ApiErrorCallback(403))->invoke(function() {
+			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
 				throw new \DomainException('ABC', 100);
 			});
-		}, new \DomainException, 'ABC', 403);
+		}, new \DomainException, 'ABC', HTTP_FORBIDDEN);
 		Assert::type(\DomainException::class, $ex->getPrevious());
 	}
 
 	public function testNoExceptionWithoutThrowing() {
 		Assert::noError(function() {
 			(new Misc\ApiErrorCallback(
-				403
+				HTTP_FORBIDDEN
 			))->invoke('strlen', ['abc']);
 		});
 	}
@@ -34,7 +34,7 @@ final class ApiErrorCallback extends Tester\TestCase {
 		Assert::same(
 			3,
 			(new Misc\ApiErrorCallback(
-				403
+				HTTP_FORBIDDEN
 			))->invoke('strlen', ['abc'])
 		);
 	}

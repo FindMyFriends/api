@@ -11,7 +11,6 @@ use Klapuch\Output;
 final class JsonError implements Application\Response {
 	private const HEADERS = ['content-type' => 'application/json; charset=utf8'];
 	private const CODES = [400, 599],
-		DEFAULT_CODE = 400,
 		DELEGATE = 0;
 	private $error;
 	private $headers;
@@ -39,7 +38,7 @@ final class JsonError implements Application\Response {
 		$choice = $this->error->getCode() ?: $this->status;
 		return in_array($choice, range(...self::CODES))
 			? $choice
-			: self::DEFAULT_CODE;
+			: HTTP_BAD_REQUEST;
 	}
 
 	private function text(\Throwable $error): string {

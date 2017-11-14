@@ -37,7 +37,7 @@ final class Put extends Tester\TestCase {
 			true
 		);
 		Assert::null($demand);
-		Assert::same(204, http_response_code());
+		Assert::same(HTTP_NO_CONTENT, http_response_code());
 	}
 
 	public function test400OnBadInput() {
@@ -56,7 +56,7 @@ final class Put extends Tester\TestCase {
 			true
 		);
 		Assert::same(['message' => 'The property general is required'], $demand);
-		Assert::same(400, http_response_code());
+		Assert::same(HTTP_BAD_REQUEST, http_response_code());
 	}
 
 	public function test404OnNotExisting() {

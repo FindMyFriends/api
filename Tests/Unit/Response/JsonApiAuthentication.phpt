@@ -40,7 +40,7 @@ final class JsonApiAuthentication extends Tester\TestCase {
 
 	public function testForbiddenStatusCodeForDeniedAccess() {
 		Assert::same(
-			403,
+			HTTP_FORBIDDEN,
 			(new Response\JsonApiAuthentication(
 				new Response\PlainResponse(new Output\FakeFormat('foo'), ['foo' => 'bar']),
 				new Access\FakeUser('1', ['role' => 'guest']),

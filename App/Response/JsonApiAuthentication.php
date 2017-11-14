@@ -37,7 +37,7 @@ final class JsonApiAuthentication implements Application\Response {
 	public function status(): int {
 		if ($this->allowed($this->user, $this->uri))
 			return $this->origin->status();
-		return 403;
+		return HTTP_FORBIDDEN;
 	}
 
 	/**
