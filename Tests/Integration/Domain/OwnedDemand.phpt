@@ -28,7 +28,7 @@ final class OwnedDemand extends Tester\TestCase {
 				new Access\FakeUser('1'),
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, sprintf('You are not owner of demand %d', $id));
+		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
 		Assert::exception(function() use ($id) {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
@@ -36,7 +36,7 @@ final class OwnedDemand extends Tester\TestCase {
 				new Access\FakeUser('1'),
 				$this->database
 			))->retract();
-		}, \UnexpectedValueException::class, sprintf('You are not owner of demand %d', $id));
+		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
 		Assert::exception(function() use ($id) {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
@@ -44,7 +44,7 @@ final class OwnedDemand extends Tester\TestCase {
 				new Access\FakeUser('1'),
 				$this->database
 			))->reconsider([]);
-		}, \UnexpectedValueException::class, sprintf('You are not owner of demand %d', $id));
+		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
 	}
 
 	public function testPassingWithOwned() {
