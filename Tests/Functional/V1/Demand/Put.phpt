@@ -30,7 +30,7 @@ final class Put extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
 					)
 				),
-				new Uri\FakeUri('/', 'v1/demands', []),
+				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
 				$this->redis
 			))->template(['id' => 1])->render(),

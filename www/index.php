@@ -96,10 +96,16 @@ echo (new Application\RawPage(
 											$this->database,
 											$this->redis
 										),
+										'v1/demands/{id :id} [DELETE]' => new V1\Demand\Delete(
+											$this->database
+										),
 										'v1/evolutions?page=(1)&per_page=(10) [GET]' => new V1\Evolutions\Get(
 											$this->uri,
 											$this->database,
 											$user
+										),
+										'v1/evolutions/{id :id} [DELETE]' => new V1\Evolution\Delete(
+											$this->database
 										),
 									];
 								}
