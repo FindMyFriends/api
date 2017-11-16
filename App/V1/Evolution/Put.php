@@ -65,7 +65,7 @@ final class Put implements Application\View {
 				))->apply(
 					json_decode(
 						(new Request\ConcurrentlyControlledRequest(
-							new Request\CachedRequest($this->request),
+							$this->request,
 							$this->url,
 							new Http\ETagRedis($this->redis)
 						))->body()->serialization(),

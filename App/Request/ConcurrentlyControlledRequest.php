@@ -22,7 +22,7 @@ final class ConcurrentlyControlledRequest implements Application\Request {
 		Uri\Uri $uri,
 		Predis\ClientInterface $redis
 	) {
-		$this->origin = $origin;
+		$this->origin = new CachedRequest($origin);
 		$this->uri = $uri;
 		$this->redis = $redis;
 	}
