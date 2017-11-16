@@ -57,10 +57,7 @@ final class Put implements Application\View {
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 				),
-				new Domain\StoredDemand(
-					$parameters['id'],
-					$this->database
-				)
+				new Domain\StoredDemand($parameters['id'], $this->database)
 			))->reconsider(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
