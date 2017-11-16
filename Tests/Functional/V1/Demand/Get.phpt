@@ -26,7 +26,7 @@ final class Get extends Tester\TestCase {
 		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Demand\Get(
-				new Uri\FakeUri('/', sprintf('v1/demands/%d', $id), []),
+				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
 				new Access\FakeUser(null, ['role' => 'guest']),
 				$this->redis
@@ -42,7 +42,7 @@ final class Get extends Tester\TestCase {
 	public function test404ForNotExisting() {
 		$demand = json_decode(
 			(new V1\Demand\Get(
-				new Uri\FakeUri('/', sprintf('v1/demands/%d', 1), []),
+				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
 				new Access\FakeUser(null, ['role' => 'guest']),
 				$this->redis
@@ -50,7 +50,7 @@ final class Get extends Tester\TestCase {
 			true
 		);
 		Assert::same(['message' => 'Demand 1 does not exist'], $demand);
-		Assert::same(404, http_response_code());
+		Assert::same(HTTP_NOT_FOUND, http_response_code());
 	}
 }
 

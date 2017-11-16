@@ -8,6 +8,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
+use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -20,31 +21,46 @@ final class Put implements Application\View {
 	private $url;
 	private $database;
 	private $redis;
+	private $user;
 
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
 		\PDO $database,
+		Access\User $user,
 		Predis\ClientInterface $redis
 	) {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
 		$this->redis = $redis;
+		$this->user = $user;
 	}
 
 	public function template(array $parameters): Output\Template {
 		try {
-			(new Domain\HarnessedDemand(
-				new Domain\ExistingDemand(
-					new Domain\StoredDemand(
+			(new Domain\ChainedDemand(
+				new Domain\HarnessedDemand(
+					new Domain\ExistingDemand(
+						new Domain\FakeDemand(),
 						$parameters['id'],
 						$this->database
 					),
+					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+				),
+				new Domain\HarnessedDemand(
+					new Domain\OwnedDemand(
+						new Domain\FakeDemand(),
+						$parameters['id'],
+						$this->user,
+						$this->database
+					),
+					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+				),
+				new Domain\StoredDemand(
 					$parameters['id'],
 					$this->database
-				),
-				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+				)
 			))->reconsider(
 				(new Validation\ChainedRule(
 					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

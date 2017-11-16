@@ -26,7 +26,7 @@ final class Get extends Tester\TestCase {
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$evolution = json_decode(
 			(new V1\Evolution\Get(
-				new Uri\FakeUri('/', sprintf('v1/evolutions/%d', $id), []),
+				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
 				new Access\FakeUser(null, ['role' => 'member']),
 				$this->redis
@@ -42,7 +42,7 @@ final class Get extends Tester\TestCase {
 	public function test404ForNotExisting() {
 		$evolution = json_decode(
 			(new V1\Evolution\Get(
-				new Uri\FakeUri('/', sprintf('v1/evolutions/%d', 1), []),
+				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
 				new Access\FakeUser(null, ['role' => 'member']),
 				$this->redis
@@ -50,7 +50,7 @@ final class Get extends Tester\TestCase {
 			true
 		);
 		Assert::same(['message' => 'Evolution change 1 does not exist'], $evolution);
-		Assert::same(404, http_response_code());
+		Assert::same(HTTP_NOT_FOUND, http_response_code());
 	}
 }
 

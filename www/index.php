@@ -94,10 +94,12 @@ echo (new Application\RawPage(
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
+											$user,
 											$this->redis
 										),
 										'v1/demands/{id :id} [DELETE]' => new V1\Demand\Delete(
-											$this->database
+											$this->database,
+											$user
 										),
 										'v1/evolutions?page=(1)&per_page=(10) [GET]' => new V1\Evolutions\Get(
 											$this->uri,
@@ -105,7 +107,8 @@ echo (new Application\RawPage(
 											$user
 										),
 										'v1/evolutions/{id :id} [DELETE]' => new V1\Evolution\Delete(
-											$this->database
+											$this->database,
+											$user
 										),
 									];
 								}

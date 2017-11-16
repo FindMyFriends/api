@@ -10,6 +10,7 @@ namespace FindMyFriends\Functional\V1\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -23,6 +24,8 @@ final class Put extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$evolution = json_decode(
 			(new V1\Evolution\Put(
 				new Application\FakeRequest(
@@ -30,10 +33,11 @@ final class Put extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
 					)
 				),
-				new Uri\FakeUri('/', 'v1/evolutions', []),
+				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				new Access\FakeUser((string) $seeker),
 				$this->redis
-			))->template(['id' => 1])->render(),
+			))->template(['id' => $id])->render(),
 			true
 		);
 		Assert::null($evolution);
@@ -44,13 +48,10 @@ final class Put extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		$evolution = json_decode(
 			(new V1\Evolution\Put(
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						'{"name":"bar"}'
-					)
-				),
+				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				new Access\FakeUser(),
 				$this->redis
 			))->template(['id' => 1])->render(),
 			true
@@ -69,12 +70,34 @@ final class Put extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				new Access\FakeUser(),
 				$this->redis
 			))->template(['id' => 1])->render(),
 			true
 		);
 		Assert::same(['message' => 'Evolution change 1 does not exist'], $evolution);
-		Assert::same(404, http_response_code());
+		Assert::same(HTTP_NOT_FOUND, http_response_code());
+	}
+
+	public function test403OnForeign() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
+		$evolution = json_decode(
+			(new V1\Evolution\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
+					)
+				),
+				new Uri\FakeUri('/', 'v1/evolutions/1', []),
+				$this->database,
+				new Access\FakeUser((string) $seeker),
+				$this->redis
+			))->template(['id' => $id])->render(),
+			true
+		);
+		Assert::same(['message' => sprintf('%d is not your evolution change', $id)], $evolution);
+		Assert::same(HTTP_FORBIDDEN, http_response_code());
 	}
 }
 
