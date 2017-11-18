@@ -54,12 +54,9 @@ BEGIN
 	)
 	RETURNING id INTO inserted_evolution_id;
 
-	RETURN (
-		SELECT message
-		FROM assert.throws(
-			format('DELETE FROM evolutions WHERE id = %L', inserted_evolution_id),
-			ROW('Base evolution can not be reverted', 'P0001')::error
-		)
+	RETURN message FROM assert.throws(
+		format('DELETE FROM evolutions WHERE id = %L', inserted_evolution_id),
+		ROW('Base evolution can not be reverted', 'P0001')::error
 	);
 END
 $$

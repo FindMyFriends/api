@@ -103,13 +103,10 @@ BEGIN
 
 	DELETE FROM evolutions WHERE id = inserted_evolution_id;
 
-	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM general)::INTEGER, 1);
-	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM bodies)::INTEGER, 1);
-	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM faces)::INTEGER, 1);
-	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM descriptions)::INTEGER, 1);
-	messages = messages || message FROM assert.is_equal((SELECT COUNT(*) FROM evolutions)::INTEGER, 1);
-
-	RETURN array_to_string(messages, '');
+	RETURN message FROM assert.is_equal(
+		'',
+		(SELECT test_utils.tables_not_matching_count('general=>1,bodies=>1,faces=>1,descriptions=>1,evolutions=>1,seekers=>1'))
+	);
 END
 $$
 LANGUAGE plpgsql;

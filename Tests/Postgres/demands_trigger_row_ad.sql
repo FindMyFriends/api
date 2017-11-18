@@ -1,6 +1,5 @@
 CREATE OR REPLACE FUNCTION unit_tests.deleting_all_evidences() RETURNS TEST_RESULT AS $$
 DECLARE
-	messages TEXT[];
 	inserted_demand_id demands.id%TYPE;
 BEGIN
 	WITH inserted_general AS (
@@ -65,21 +64,10 @@ BEGIN
 
 	DELETE FROM demands WHERE id = inserted_demand_id;
 
-	messages = messages || message FROM assert.is_equal(
-		((SELECT COUNT(*) FROM general)
-		+ (SELECT COUNT(*) FROM bodies)
-		+ (SELECT COUNT(*) FROM faces)
-		+ (SELECT COUNT(*) FROM descriptions)
-		+ (SELECT COUNT(*) FROM demands)
-		+ (SELECT COUNT(*) FROM locations))::INTEGER,
-		0
+	RETURN message FROM assert.is_equal(
+		'',
+		(SELECT test_utils.tables_not_matching_count('seekers=>1'))
 	);
-	messages = messages || message FROM assert.is_equal(
-		(SELECT COUNT(*) FROM seekers)::INTEGER,
-		1
-	);
-
-	RETURN array_to_string(messages, '');
 END
 $$
 LANGUAGE plpgsql;

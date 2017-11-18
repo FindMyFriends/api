@@ -59,12 +59,9 @@ BEGIN
 		(SELECT id FROM inserted_location)
 	);
 
-	RETURN (
-		SELECT message
-		FROM assert.throws(
-			'UPDATE demands SET created_at = NOW()',
-			ROW('Column created_at is read only', 'P0001')::error
-		)
+	RETURN message FROM assert.throws(
+		'UPDATE demands SET created_at = NOW()',
+		ROW('Column created_at is read only', 'P0001')::error
 	);
 END
 $$

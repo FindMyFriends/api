@@ -80,11 +80,18 @@ final class IndividualDemands extends Tester\TestCase {
 			]
 		);
 		Assert::equal(new Domain\StoredDemand(1, $this->database), $demand);
-		(new Misc\TableCount($this->database, 'demands', 1))->assert();
-		(new Misc\TableCount($this->database, 'descriptions', 1))->assert();
-		(new Misc\TableCount($this->database, 'bodies', 1))->assert();
-		(new Misc\TableCount($this->database, 'faces', 1))->assert();
-		(new Misc\TableCount($this->database, 'general', 1))->assert();
+		(new Misc\TableCounts(
+			$this->database,
+			[
+				'seekers' => 1,
+				'locations' => 1,
+				'descriptions' => 1,
+				'demands' => 1,
+				'bodies' => 1,
+				'general' => 1,
+				'faces' => 1,
+			]
+		))->assert();
 	}
 
 	public function testAllForSpecifiedSeeker() {

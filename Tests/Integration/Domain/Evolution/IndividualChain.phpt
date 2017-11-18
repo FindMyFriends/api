@@ -79,11 +79,17 @@ final class IndividualChain extends Tester\TestCase {
 			]
 		);
 		Assert::contains('"age": "\"to\"=>\"16\", \"from\"=>\"15\""', $change->print(new Output\Json())->serialization());
-		(new Misc\TableCount($this->database, 'evolutions', 7))->assert();
-		(new Misc\TableCount($this->database, 'descriptions', 7))->assert();
-		(new Misc\TableCount($this->database, 'bodies', 7))->assert();
-		(new Misc\TableCount($this->database, 'faces', 7))->assert();
-		(new Misc\TableCount($this->database, 'general', 7))->assert();
+		(new Misc\TableCounts(
+			$this->database,
+			[
+				'evolutions' => 7,
+				'descriptions' => 7,
+				'bodies' => 7,
+				'faces' => 7,
+				'general' => 7,
+				'seekers' => 5,
+			]
+		))->assert();
 	}
 
 	public function testCountingBySeeker() {
