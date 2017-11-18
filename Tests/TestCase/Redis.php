@@ -15,7 +15,7 @@ trait Redis {
 
 	protected function setUp(): void {
 		parent::setUp();
-		Tester\Environment::lock('redis', __DIR__ . '/../Temporary');
+		Tester\Environment::lock('redis', __DIR__ . '/../temp');
 		$this->credentials = (new Ini\ValidSource(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.config.local.ini')
 		))->read();
