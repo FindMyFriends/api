@@ -6,7 +6,6 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -15,18 +14,18 @@ use Predis;
 final class Get implements Application\View {
 	private $url;
 	private $database;
-	private $user;
+	private $role;
 	private $redis;
 
 	public function __construct(
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $user,
+		Http\Role $role,
 		Predis\ClientInterface $redis
 	) {
 		$this->url = $url;
 		$this->database = $database;
-		$this->user = $user;
+		$this->role = $role;
 		$this->redis = $redis;
 	}
 
@@ -52,8 +51,7 @@ final class Get implements Application\View {
 										)
 									))->print(new Output\Json)
 								),
-								$this->user,
-								$this->url
+								$this->role
 							)
 						),
 						$this->url,

@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 require __DIR__ . '/../vendor/autoload.php';
 
+use FindMyFriends\Http;
 use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Application;
@@ -75,12 +76,12 @@ echo (new Application\RawPage(
 										'v1/demands?page=(1)&per_page=(10)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 											$this->uri,
 											$this->database,
-											$user
+											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/demands/{id :id} [GET]' => new V1\Demand\Get(
 											$this->uri,
 											$this->database,
-											$user,
+											new Http\ChosenRole($user, ['member', 'guest']),
 											$this->redis
 										),
 										'v1/demands [POST]' => new V1\Demands\Post(
@@ -104,7 +105,8 @@ echo (new Application\RawPage(
 										'v1/evolutions?page=(1)&per_page=(10) [GET]' => new V1\Evolutions\Get(
 											$this->uri,
 											$this->database,
-											$user
+											$user,
+											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/evolutions/{id :id} [DELETE]' => new V1\Evolution\Delete(
 											$this->database,

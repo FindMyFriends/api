@@ -16,7 +16,6 @@
     "ext-dom": "*",
     "dasuos/internal": "dev-master",
     "klapuch/access": "^2.17.1",
-    "klapuch/authorization": "^3.0.0",
     "klapuch/application": "@dev",
     "klapuch/dataset": "@dev",
     "klapuch/ini": "dev-master as 2.0.0",

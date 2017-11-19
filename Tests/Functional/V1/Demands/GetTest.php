@@ -6,10 +6,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demands;
 
+use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -26,7 +26,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Demands\Get(
 				new Uri\FakeUri('/', 'v1/demands', []),
 				$this->database,
-				new Access\FakeUser(null, ['role' => 'guest'])
+				new Http\FakeRole(true)
 			))->template(['page' => 1, 'per_page' => 10, 'sort' => ''])->render()
 		);
 		Assert::count(2, $demands);

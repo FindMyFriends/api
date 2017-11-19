@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolutions;
 
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Access;
@@ -16,11 +17,13 @@ final class Get implements Application\View {
 	private $url;
 	private $database;
 	private $user;
+	private $role;
 
-	public function __construct(Uri\Uri $url, \PDO $database, Access\User $user) {
+	public function __construct(Uri\Uri $url, \PDO $database, Access\User $user, Http\Role $role) {
 		$this->url = $url;
 		$this->database = $database;
 		$this->user = $user;
+		$this->role = $role;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -49,8 +52,7 @@ final class Get implements Application\View {
 									)
 								)
 							),
-							$this->user,
-							$this->url
+							$this->role
 						)
 					),
 					$parameters['page'],

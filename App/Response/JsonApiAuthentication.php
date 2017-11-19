@@ -2,30 +2,21 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Response;
 
-use Klapuch\Access;
+use FindMyFriends\Http;
 use Klapuch\Application;
-use Klapuch\Authorization;
 use Klapuch\Output;
-use Klapuch\Uri;
 
 final class JsonApiAuthentication implements Application\Response {
-	private const PERMISSIONS = __DIR__ . '/../Configuration/Permissions/v1.xml';
 	private $origin;
-	private $user;
-	private $uri;
+	private $role;
 
-	public function __construct(
-		Application\Response $origin,
-		Access\User $user,
-		Uri\Uri $uri
-	) {
+	public function __construct(Application\Response $origin, Http\Role $role) {
 		$this->origin = $origin;
-		$this->user = $user;
-		$this->uri = $uri;
+		$this->role = $role;
 	}
 
 	public function body(): Output\Format {
-		if ($this->allowed($this->user, $this->uri))
+		if ($this->role->allowed())
 			return $this->origin->body();
 		return new Output\Json(['message' => 'You are not allowed to see the response.']);
 	}
@@ -35,23 +26,8 @@ final class JsonApiAuthentication implements Application\Response {
 	}
 
 	public function status(): int {
-		if ($this->allowed($this->user, $this->uri))
+		if ($this->role->allowed())
 			return $this->origin->status();
 		return HTTP_FORBIDDEN;
-	}
-
-	/**
-	 * Does the user have access to the URI?
-	 * @param \Klapuch\Access\User $user
-	 * @param \Klapuch\Uri\Uri $uri
-	 * @return bool
-	 */
-	private function allowed(Access\User $user, Uri\Uri $uri): bool {
-		return (new Authorization\HttpRole(
-			new Authorization\RolePermissions(
-				$user->properties()['role'] ?? 'guest',
-				new Authorization\XmlPermissions(self::PERMISSIONS)
-			)
-		))->allowed($uri->path());
 	}
 }

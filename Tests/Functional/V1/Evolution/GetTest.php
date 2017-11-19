@@ -7,10 +7,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Evolution;
 
+use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -28,7 +28,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Evolution\Get(
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
-				new Access\FakeUser(null, ['role' => 'member']),
+				new Http\FakeRole(true),
 				$this->redis
 			))->template(['id' => $id])->render()
 		);
@@ -44,7 +44,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Evolution\Get(
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
-				new Access\FakeUser(null, ['role' => 'member']),
+				new Http\FakeRole(true),
 				$this->redis
 			))->template(['id' => 1])->render(),
 			true

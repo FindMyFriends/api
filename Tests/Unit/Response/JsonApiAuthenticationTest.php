@@ -6,10 +6,9 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Response;
 
+use FindMyFriends\Http;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Output;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -21,19 +20,7 @@ final class JsonApiAuthenticationTest extends Tester\TestCase {
 			'allowed',
 			(new Response\JsonApiAuthentication(
 				new Response\PlainResponse(new Output\FakeFormat('allowed')),
-				new Access\FakeUser('1', ['role' => 'guest']),
-				new Uri\FakeUri(null, '/v1/demands')
-			))->body()->serialization()
-		);
-	}
-
-	public function testProvidingDefaultRole() {
-		Assert::same(
-			'allowed',
-			(new Response\JsonApiAuthentication(
-				new Response\PlainResponse(new Output\FakeFormat('allowed'), ['foo' => 'bar']),
-				new Access\FakeUser('1', []),
-				new Uri\FakeUri(null, '/v1/demands')
+				new Http\FakeRole(true)
 			))->body()->serialization()
 		);
 	}
@@ -43,8 +30,7 @@ final class JsonApiAuthenticationTest extends Tester\TestCase {
 			HTTP_FORBIDDEN,
 			(new Response\JsonApiAuthentication(
 				new Response\PlainResponse(new Output\FakeFormat('foo'), ['foo' => 'bar']),
-				new Access\FakeUser('1', ['role' => 'guest']),
-				new Uri\FakeUri(null, 'foo')
+				new Http\FakeRole(false)
 			))->status()
 		);
 	}
@@ -58,8 +44,7 @@ final class JsonApiAuthenticationTest extends Tester\TestCase {
 						new Output\FakeFormat('foo'),
 						['foo' => 'bar']
 					),
-					new Access\FakeUser('1', ['role' => 'guest']),
-					new Uri\FakeUri(null, 'foo')
+					new Http\FakeRole(false)
 				))->body()->serialization(),
 				true
 			)

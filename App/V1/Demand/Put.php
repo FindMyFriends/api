@@ -20,8 +20,8 @@ final class Put implements Application\View {
 	private $request;
 	private $url;
 	private $database;
-	private $redis;
 	private $user;
+	private $redis;
 
 	public function __construct(
 		Application\Request $request,
@@ -33,8 +33,8 @@ final class Put implements Application\View {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
-		$this->redis = $redis;
 		$this->user = $user;
+		$this->redis = $redis;
 	}
 
 	public function template(array $parameters): Output\Template {

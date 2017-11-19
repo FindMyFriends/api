@@ -3,9 +3,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Demands;
 
 use FindMyFriends\Domain;
+use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Output;
@@ -16,12 +16,12 @@ final class Get implements Application\View {
 	private const ALLOWED_SORTS = ['created_at'];
 	private $url;
 	private $database;
-	private $user;
+	private $role;
 
-	public function __construct(Uri\Uri $url, \PDO $database, Access\User $user) {
+	public function __construct(Uri\Uri $url, \PDO $database, Http\Role $role) {
 		$this->url = $url;
 		$this->database = $database;
-		$this->user = $user;
+		$this->role = $role;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -54,8 +54,7 @@ final class Get implements Application\View {
 									)
 								)
 							),
-							$this->user,
-							$this->url
+							$this->role
 						)
 					),
 					$parameters['page'],
