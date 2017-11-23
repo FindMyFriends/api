@@ -16,7 +16,7 @@ interface Chain {
 	/**
 	 * The whole history in evolution chain
 	 * @param \Klapuch\Dataset\Selection $selection
-	 * @return \FindMyFriends\Domain\Evolution\Change[]
+	 * @return \Iterator
 	 */
 	public function changes(Dataset\Selection $selection): \Iterator;
 

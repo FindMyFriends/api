@@ -16,7 +16,7 @@ interface Demands {
 	/**
 	 * Go through all the demands
 	 * @param \Klapuch\Dataset\Selection $selection
-	 * @return \FindMyFriends\Domain\Demand[]
+	 * @return \Iterator
 	 */
 	public function all(Dataset\Selection $selection): \Iterator;
 

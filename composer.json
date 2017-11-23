@@ -37,6 +37,7 @@
     "phing/phing": "^2.16",
     "consistence/coding-standard": "^2.2",
     "phpstan/phpstan": "dev-master",
+    "phpstan/phpdoc-parser": "dev-master",
     "mockery/mockery": "^1.0.0"
   },
   "autoload": {
