@@ -4,8 +4,8 @@ declare(strict_types = 1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use FindMyFriends\Commands\Schema;
-use Klapuch\Storage;
 use Klapuch\Ini;
+use Klapuch\Storage;
 
 $schemas = new class {
 	public function save(array $json, SplFileInfo $file): void {
