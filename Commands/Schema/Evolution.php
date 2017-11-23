@@ -3,6 +3,12 @@ declare(strict_types = 1);
 namespace FindMyFriends\Commands\Schema;
 
 final class Evolution {
+	private $database;
+
+	public function __construct(\PDO $database) {
+		$this->database = $database;
+	}
+
 	public function get(): array {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
@@ -377,11 +383,7 @@ final class Evolution {
 										[
 											'id' => '/properties/general/properties/gender',
 											'type' => 'string',
-											'enum' =>
-												[
-													'man',
-													'woman',
-												],
+											'enum' => (new PostgresEnum('genders', $this->database))->values(),
 										],
 									'lastname' =>
 										[
@@ -396,12 +398,7 @@ final class Evolution {
 										[
 											'id' => '/properties/general/properties/race',
 											'type' => 'string',
-											'enum' =>
-												[
-													'european',
-													'asian',
-													'other',
-												],
+											'enum' => (new PostgresEnum('races', $this->database))->values(),
 										],
 								],
 							'required' =>
