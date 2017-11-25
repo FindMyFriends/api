@@ -27,12 +27,11 @@ final class CollectiveDemands implements Demands {
 			new Storage\ParameterizedQuery(
 				$this->database,
 				$selection->expression(
-					'SELECT
-					id, seeker_id, created_at,
-					build, skin, weight, height,
-					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
+					'SELECT id, seeker_id, created_at,
+					body_build, skin, weight, height,
+					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
 					age, firstname, lastname, gender, race,
-					coordinates, met_at,
+					location_coordinates, met_at,
 					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_demands'
 				),
@@ -43,7 +42,7 @@ final class CollectiveDemands implements Demands {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
-				'coordinates' => 'point',
+				'location_coordinates' => 'point',
 				'age' => 'hstore',
 				'met_at' => 'hstore',
 				'nails' => 'nail',

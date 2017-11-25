@@ -20,12 +20,12 @@ final class StoredDemand implements Demand {
 			new Storage\ParameterizedQuery(
 				$this->database,
 				'SELECT id, seeker_id, created_at,
-				build, skin, weight, height,
-				acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-				age, firstname, lastname, gender, race,
-				coordinates, met_at,
-				nails, hands_care, hands_veins, hands_joint, hands_hair
-				FROM collective_demands
+					body_build, skin, weight, height,
+					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
+					age, firstname, lastname, gender, race,
+					location_coordinates, met_at,
+					nails, hands_care, hands_veins, hands_joint, hands_hair
+					FROM collective_demands
 				WHERE id = ?',
 				[$this->id]
 			),
@@ -34,7 +34,7 @@ final class StoredDemand implements Demand {
 				'left_eye' => 'eye',
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
-				'coordinates' => 'point',
+				'location_coordinates' => 'point',
 				'age' => 'hstore',
 				'met_at' => 'hstore',
 				'nails' => 'nail',
@@ -56,27 +56,27 @@ final class StoredDemand implements Demand {
 				'face' => [
 					'acne' => $demand['acne'],
 					'beard' => $demand['beard'],
-					'complexion' => $demand['complexion'],
+					'complexion' => $demand['face_complexion'],
 					'eyebrow' => $demand['eyebrow'],
-					'freckles' => $demand['freckles'],
+					'freckles' => $demand['face_freckles'],
 					'hair' => $demand['hair'],
 					'eye' => [
 						'left' => $demand['left_eye'],
 						'right' => $demand['right_eye'],
 					],
-					'shape' => $demand['shape'],
+					'shape' => $demand['face_shape'],
 					'teeth' => $demand['teeth'],
 				],
 				'body' => [
-					'build' => $demand['build'],
+					'build' => $demand['body_build'],
 					'skin' => $demand['skin'],
 					'weight' => $demand['weight'],
 					'height' => $demand['height'],
 				],
 				'location' => [
 					'coordinates' => [
-						'latitude' => $demand['coordinates']['x'],
-						'longitude' => $demand['coordinates']['y'],
+						'latitude' => $demand['location_coordinates']['x'],
+						'longitude' => $demand['location_coordinates']['y'],
 					],
 					'met_at' => $demand['met_at'],
 				],
