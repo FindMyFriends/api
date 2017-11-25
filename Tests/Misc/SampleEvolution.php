@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Misc;
 
+use FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SampleEvolution implements Sample {
@@ -19,32 +20,36 @@ final class SampleEvolution implements Sample {
 			'INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (?, ?, ?)
 			RETURNING id',
 			[
-				$this->evolution['seeker'] ?? $this->evolution['seeker_id'] ?? current((new SampleSeeker($this->database))->try()),
+				$this->evolution['seeker_id'] ?? current((new Misc\SamplePostgresData($this->database, 'seeker'))->try()),
 				current(
 					(new SampleDescription(
 						$this->database,
 						[
-							'general' => current(
-								(new SampleGeneral(
+							'general_id' => current(
+								(new SamplePostgresData(
 									$this->database,
+									'general',
 									$this->evolution['general'] ?? []
 								))->try()
 							),
-							'body' => current(
-								(new SampleBody(
+							'body_id' => current(
+								(new SamplePostgresData(
 									$this->database,
+									'body',
 									$this->evolution['body'] ?? []
 								))->try()
 							),
-							'face' => current(
-								(new SampleFace(
+							'face_id' => current(
+								(new SamplePostgresData(
 									$this->database,
+									'face',
 									$this->evolution['face'] ?? []
 								))->try()
 							),
-							'hand' => current(
-								(new SampleHand(
+							'hands_id' => current(
+								(new SamplePostgresData(
 									$this->database,
+									'hand',
 									$this->evolution['hand'] ?? []
 								))->try()
 							),

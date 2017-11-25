@@ -23,8 +23,8 @@ final class PutTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Demand\Put(
 				new Application\FakeRequest(
@@ -79,7 +79,7 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
 		$demand = json_decode(
 			(new V1\Demand\Put(

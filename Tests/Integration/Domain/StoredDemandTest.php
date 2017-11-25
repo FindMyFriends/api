@@ -34,10 +34,10 @@ final class StoredDemandTest extends Tester\TestCase {
 	}
 
 	public function testReconsideringAsWholeForSpecificId() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleDemand(
 			$this->database,
-			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker' => $seeker]
+			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
 		(new Misc\SampleDemand($this->database))->try();
 		$demand = new Domain\StoredDemand(1, $this->database);

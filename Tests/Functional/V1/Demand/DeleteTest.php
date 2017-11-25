@@ -21,7 +21,7 @@ final class DeleteTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		(new Misc\SampleDemand($this->database))->try();
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Demand\Delete(
@@ -47,7 +47,7 @@ final class DeleteTest extends Tester\TestCase {
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
 		$demand = json_decode(
 			(new V1\Demand\Delete(

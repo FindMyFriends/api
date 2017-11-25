@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Misc;
 
+use FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SampleDemand implements Sample {
@@ -20,20 +21,20 @@ final class SampleDemand implements Sample {
 			(?, ?, ?, ?)
 			RETURNING id',
 			[
-				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new SampleSeeker($this->database))->try()),
+				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new Misc\SamplePostgresData($this->database, 'seeker'))->try()),
 				current(
 					(new SampleDescription(
 						$this->database,
 						[
-							'general' => current((new SampleGeneral($this->database, $this->demand['general'] ?? []))->try()),
-							'body' => current((new SampleBody($this->database, $this->demand['body'] ?? []))->try()),
-							'face' => current((new SampleFace($this->database, $this->demand['face'] ?? []))->try()),
-							'hand' => current((new SampleHand($this->database, $this->demand['hand'] ?? []))->try()),
+							'general_id' => current((new SamplePostgresData($this->database, 'general', $this->demand['general'] ?? []))->try()),
+							'body_id' => current((new SamplePostgresData($this->database, 'body', $this->demand['body'] ?? []))->try()),
+							'face_id' => current((new SamplePostgresData($this->database, 'face', $this->demand['face'] ?? []))->try()),
+							'hands_id' => current((new SamplePostgresData($this->database, 'hand', $this->demand['hand'] ?? []))->try()),
 						]
 					))->try()
 				),
 				isset($this->demand['created_at']) ? $this->demand['created_at']->format('Y-m-d') : (new \DateTime())->format('Y-m-d'),
-				current((new SampleLocation($this->database, $this->demand['location'] ?? []))->try()),
+				current((new SamplePostgresData($this->database, 'location', $this->demand['location'] ?? []))->try()),
 			]
 		))->row();
 	}

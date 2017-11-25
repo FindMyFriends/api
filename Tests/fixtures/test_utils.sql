@@ -18,3 +18,21 @@ BEGIN
 	RETURN (counts - table_counts) - zero_counts;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION test_utils.json_to_hstore(json JSONB) RETURNS HSTORE
+LANGUAGE SQL
+AS $$
+	SELECT hstore(array_agg(key), array_agg(value)) FROM jsonb_each_text(json);
+$$;
+
+CREATE OR REPLACE FUNCTION test_utils.random_enum(enum TEXT) RETURNS TEXT
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_output TEXT;
+BEGIN
+	EXECUTE(format('SELECT enum FROM unnest(enum_range(NULL::%I)) enum ORDER BY random() LIMIT 1', enum)) INTO v_output;
+	RETURN v_output;
+END;
+$$;
+

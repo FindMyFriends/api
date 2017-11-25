@@ -20,10 +20,10 @@ final class SampleDescription implements Sample {
 			(?, ?, ?, ?)
 			RETURNING id',
 			[
-				$this->description['general'] ?? $this->description['general_id'] ?? mt_rand(),
-				$this->description['body'] ?? $this->description['body_id'] ?? mt_rand(),
-				$this->description['face'] ?? $this->description['face_id'] ?? mt_rand(),
-				$this->description['hand'] ?? $this->description['hand_id'] ?? mt_rand(),
+				$this->description['general_id'],
+				$this->description['body_id'],
+				$this->description['face_id'],
+				$this->description['hands_id'],
 			]
 		))->row();
 	}

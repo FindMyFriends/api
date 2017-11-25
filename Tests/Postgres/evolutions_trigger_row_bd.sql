@@ -2,63 +2,17 @@ CREATE OR REPLACE FUNCTION unit_tests.throwing_on_deleting_base() RETURNS TEST_R
 DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 BEGIN
-	WITH inserted_general AS (
-		INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-			'man',
-			'european',
-			'[1996,1997)',
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_body AS (
-		INSERT INTO bodies (build, skin, weight, height) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_face AS (
-		INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_hand AS (
-		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_description AS (
+	WITH inserted_description AS (
 		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
-			(SELECT id FROM inserted_general),
-			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face),
-			(SELECT id FROM inserted_hand)
-		)
-		RETURNING id
-	), inserted_seeker AS (
-		INSERT INTO seekers (email, password) VALUES (
-			'whatever@email.cz',
-			'123'
+			(SELECT general FROM samples.general()),
+			(SELECT body FROM samples.body()),
+			(SELECT face FROM samples.face()),
+			(SELECT hand FROM samples.hand())
 		)
 		RETURNING id
 	)
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
-		(SELECT id FROM inserted_seeker),
+		(SELECT seeker FROM samples.seeker()),
 		(SELECT id FROM inserted_description),
 		NOW()
 	)
@@ -77,120 +31,18 @@ DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 	inserted_seeker_id seekers.id%TYPE;
 BEGIN
-	INSERT INTO seekers (email, password) VALUES (
-	'whatever2@email.cz',
-	'123'
-	)
-	RETURNING id INTO inserted_seeker_id;
+	SELECT seeker FROM samples.seeker() INTO inserted_seeker_id;
 
-	WITH inserted_general AS (
-		INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-			'man',
-			'european',
-			'[1996,1997)',
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_body AS (
-		INSERT INTO bodies (build, skin, weight, height) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_face AS (
-		INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_hand AS (
-		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_description AS (
-		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
-			(SELECT id FROM inserted_general),
-			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face),
-			(SELECT id FROM inserted_hand)
-		)
-		RETURNING id
-	)
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
 		inserted_seeker_id,
-		(SELECT id FROM inserted_description),
+		(SELECT description FROM samples.description()),
 		NOW()
 	)
 	RETURNING id INTO inserted_evolution_id;
 
-	WITH inserted_general AS (
-		INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-			'man',
-			'european',
-			'[1996,1997)',
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_body AS (
-		INSERT INTO bodies (build, skin, weight, height) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING id
-	), inserted_face AS (
-		INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_hand AS (
-		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-		)
-		RETURNING  id
-	), inserted_description AS (
-		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
-			(SELECT id FROM inserted_general),
-			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face),
-			(SELECT id FROM inserted_hand)
-		)
-		RETURNING id
-	)
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
 		inserted_seeker_id,
-		(SELECT id FROM inserted_description),
+		(SELECT description FROM samples.description()),
 		NOW()
 	);
 

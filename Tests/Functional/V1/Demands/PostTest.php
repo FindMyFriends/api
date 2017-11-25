@@ -23,7 +23,7 @@ final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		$demand = json_decode(
 			(new V1\Demands\Post(
 				new Application\FakeRequest(

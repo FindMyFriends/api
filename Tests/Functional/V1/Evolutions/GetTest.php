@@ -22,9 +22,9 @@ final class GetTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		(new Misc\SampleEvolution($this->database))->try();
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$demands = json_decode(
 			(new V1\Evolutions\Get(
 				new Uri\FakeUri('/', 'v1/evolutions', []),

@@ -48,8 +48,8 @@ final class OwnedDemandTest extends Tester\TestCase {
 	}
 
 	public function testPassingWithOwned() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($id, $seeker) {
 			$demand = new Domain\OwnedDemand(
 				new Domain\FakeDemand(),

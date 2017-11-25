@@ -48,8 +48,8 @@ final class OwnedChangeTest extends Tester\TestCase {
 	}
 
 	public function testPassingWithOwned() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($seeker, $id) {
 			$evolution = new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
