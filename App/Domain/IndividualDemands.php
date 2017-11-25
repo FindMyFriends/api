@@ -29,7 +29,8 @@ final class IndividualDemands implements Demands {
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
 					age, firstname, lastname, gender, race,
-					coordinates, met_at
+					coordinates, met_at,
+					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_demands WHERE seeker_id = ?'
 				),
 				$selection->criteria([$this->seeker->id()])
@@ -41,6 +42,7 @@ final class IndividualDemands implements Demands {
 				'teeth' => 'tooth',
 				'coordinates' => 'point',
 				'age' => 'hstore',
+				'nails' => 'nail',
 			]
 		))->rows();
 		foreach ($demands as $demand) {
@@ -94,11 +96,22 @@ final class IndividualDemands implements Demands {
 				)
 				RETURNING id
 			),
+			inserted_hand AS (
+				INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
+					ROW(:hands_nails_color, :hands_nails_length, :hands_nails_care)::nail,
+					:hands_care,
+					:hands_veins,
+					:hands_joint,
+					:hands_hair
+				)
+				RETURNING id
+			),
 			inserted_description AS (
-				INSERT INTO descriptions (general_id, body_id, face_id) VALUES (
+				INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
 					(SELECT id FROM inserted_general),
 					(SELECT id FROM inserted_body),
-					(SELECT id FROM inserted_face)
+					(SELECT id FROM inserted_face),
+					(SELECT id FROM inserted_hand)
 				)
 				RETURNING id
 			),

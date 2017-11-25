@@ -23,6 +23,7 @@ final class StoredChange implements Change {
 				'general_id' => $general,
 				'body_id' => $body,
 				'face_id' => $face,
+				'hands_id' => $hands,
 				'seeker_id' => $seeker,
 			] = $this->parts($this->id);
 			(new Storage\FlatParameterizedQuery(
@@ -79,6 +80,17 @@ final class StoredChange implements Change {
 				WHERE id = :id',
 				['id' => $body] + $changes['body']
 			))->execute();
+			(new Storage\FlatParameterizedQuery(
+				$this->database,
+				'UPDATE hands
+				SET nails = ROW(:nails_color, :nails_length, :nails_care)::nail,
+					care = :care,
+					veins = :veins,
+					joint = :joint,
+					hair = :hair
+				WHERE id = :id',
+				['id' => $hands] + $changes['hands']
+			))->execute();
 		});
 	}
 
@@ -90,7 +102,8 @@ final class StoredChange implements Change {
 				'SELECT id, evolved_at,
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
-					age, firstname, lastname, gender, race
+					age, firstname, lastname, gender, race,
+					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_evolutions
 					WHERE id = ?',
 				[$this->id]
@@ -101,6 +114,7 @@ final class StoredChange implements Change {
 				'right_eye' => 'eye',
 				'teeth' => 'tooth',
 				'age' => 'hstore',
+				'nails' => 'nail',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -135,6 +149,17 @@ final class StoredChange implements Change {
 					'weight' => $evolution['weight'],
 					'height' => $evolution['height'],
 				],
+				'hands' => [
+					'nails' => [
+						'length' => $evolution['nails']['length'],
+						'care' => $evolution['nails']['care'],
+						'color' => $evolution['nails']['color'],
+					],
+					'veins' => $evolution['hands_veins'],
+					'joint' => $evolution['hands_joint'],
+					'care' => $evolution['hands_care'],
+					'hair' => $evolution['hands_hair'],
+				],
 			]
 		);
 	}
@@ -157,7 +182,7 @@ final class StoredChange implements Change {
 	private function parts(int $evolution): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'SELECT general_id, body_id, face_id, seeker_id
+			'SELECT general_id, body_id, face_id, seeker_id, hands_id
 			FROM descriptions
 			JOIN evolutions ON evolutions.description_id = descriptions.id
 			WHERE evolutions.id = ?',

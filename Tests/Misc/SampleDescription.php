@@ -16,13 +16,14 @@ final class SampleDescription implements Sample {
 	public function try(): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'INSERT INTO descriptions (general_id, body_id, face_id) VALUES 
-			(?, ?, ?)
+			'INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES 
+			(?, ?, ?, ?)
 			RETURNING id',
 			[
 				$this->description['general'] ?? $this->description['general_id'] ?? mt_rand(),
 				$this->description['body'] ?? $this->description['body_id'] ?? mt_rand(),
 				$this->description['face'] ?? $this->description['face_id'] ?? mt_rand(),
+				$this->description['hand'] ?? $this->description['hand_id'] ?? mt_rand(),
 			]
 		))->row();
 	}

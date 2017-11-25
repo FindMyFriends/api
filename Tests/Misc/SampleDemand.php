@@ -28,6 +28,7 @@ final class SampleDemand implements Sample {
 							'general' => current((new SampleGeneral($this->database, $this->demand['general'] ?? []))->try()),
 							'body' => current((new SampleBody($this->database, $this->demand['body'] ?? []))->try()),
 							'face' => current((new SampleFace($this->database, $this->demand['face'] ?? []))->try()),
+							'hand' => current((new SampleHand($this->database, $this->demand['hand'] ?? []))->try()),
 						]
 					))->try()
 				),

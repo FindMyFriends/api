@@ -54,5 +54,16 @@
       "from": "2017-01-01T13:58:10+00:00",
       "to": "2017-01-02T13:58:10+00:00"
     }
+  },
+  "hands": {
+    "nails": {
+      "color": null,
+      "length": null,
+      "care": null
+    },
+    "care": "normal",
+    "veins": "visible",
+    "joint": "visible",
+    "hair": "few"
   }
 }

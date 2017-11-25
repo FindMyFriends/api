@@ -32,7 +32,8 @@ final class CollectiveDemands implements Demands {
 					build, skin, weight, height,
 					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
 					age, firstname, lastname, gender, race,
-					coordinates, met_at
+					coordinates, met_at,
+					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_demands'
 				),
 				$selection->criteria([])
@@ -45,6 +46,7 @@ final class CollectiveDemands implements Demands {
 				'coordinates' => 'point',
 				'age' => 'hstore',
 				'met_at' => 'hstore',
+				'nails' => 'nail',
 			]
 		))->rows();
 		foreach ($demands as $demand) {

@@ -99,6 +99,17 @@ final class StoredDemandTest extends Tester\TestCase {
 						'to' => '2017-01-02 00:00:00+00',
 					],
 				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
+				],
 			]
 		);
 		Assert::equal(
@@ -146,6 +157,17 @@ final class StoredDemandTest extends Tester\TestCase {
 					'weight' => 60,
 					'skin' => 'white',
 					'build' => 'skinny',
+				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
 				],
 				'created_at' => '2017-09-16 00:00:00+00',
 				'seeker_id' => $seeker,

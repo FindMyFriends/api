@@ -76,9 +76,22 @@ final class IndividualChainTest extends Tester\TestCase {
 					'weight' => null,
 					'height' => null,
 				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
+				],
 			]
 		);
-		Assert::contains('"age": "\"to\"=>\"16\", \"from\"=>\"15\""', $change->print(new Output\Json())->serialization());
+		$change = json_decode($change->print(new Output\Json())->serialization(), true);
+		Assert::same('15', $change['general']['age']['from']);
+		Assert::same('16', $change['general']['age']['to']);
 		(new Misc\TableCounts(
 			$this->database,
 			[
@@ -88,6 +101,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				'faces' => 7,
 				'general' => 7,
 				'seekers' => 5,
+				'hands' => 7,
 			]
 		))->assert();
 	}

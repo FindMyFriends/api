@@ -383,7 +383,10 @@ final class Evolution {
 										[
 											'id' => '/properties/general/properties/gender',
 											'type' => 'string',
-											'enum' => (new PostgresEnum('genders', $this->database))->values(),
+											'enum' => (new PostgresEnum(
+												'genders',
+												$this->database
+											))->values(),
 										],
 									'lastname' =>
 										[
@@ -398,7 +401,10 @@ final class Evolution {
 										[
 											'id' => '/properties/general/properties/race',
 											'type' => 'string',
-											'enum' => (new PostgresEnum('races', $this->database))->values(),
+											'enum' => (new PostgresEnum(
+												'races',
+												$this->database
+											))->values(),
 										],
 								],
 							'required' =>
@@ -411,12 +417,111 @@ final class Evolution {
 								],
 							'type' => 'object',
 						],
+					'hands' => [
+						'id' => '/properties/hands',
+						'additionalProperties' => false,
+						'properties' => [
+							'nails' => [
+								'id' => '/properties/hands/nails',
+								'additionalProperties' => false,
+								'properties' => [
+									'color' =>
+										[
+											'id' => '/properties/hands/properties/nails/properties/color',
+											'type' => ['string', 'null'],
+											'enum' => array_merge(
+												[null],
+												(new PostgresEnum(
+													'colors',
+													$this->database
+												))->values()
+											),
+										],
+									'length' =>
+										[
+											'id' => '/properties/hands/properties/nails/properties/length',
+											'type' => ['integer', 'null'],
+										],
+									'care' =>
+										[
+											'id' => '/properties/hands/properties/nails/properties/care',
+											'type' => ['string', 'null'],
+											'enum' => array_merge(
+												[null],
+												(new PostgresEnum(
+													'care',
+													$this->database
+												))->values()
+											),
+										],
+								],
+								'required' =>
+									[
+										'color',
+										'length',
+										'care',
+									],
+								'type' => 'object',
+							],
+							'care' => [
+								'id' => '/properties/hands/care',
+								'type' => ['string', 'null'],
+								'enum' => array_merge(
+									[null],
+									(new PostgresEnum(
+										'hand_care',
+										$this->database
+									))->values()
+								),
+							],
+							'veins' => [
+								'id' => '/properties/hands/veins',
+								'type' => ['string', 'null'],
+								'enum' => array_merge(
+									[null],
+									(new PostgresEnum(
+										'vein_visibility',
+										$this->database
+									))->values()
+								),
+							],
+							'joint' => [
+								'id' => '/properties/hands/joint',
+								'type' => ['string', 'null'],
+								'enum' => array_merge(
+									[null],
+									(new PostgresEnum(
+										'joint_visibility',
+										$this->database
+									))->values()
+								),
+							],
+							'hair' => [
+								'id' => '/properties/hands/hair',
+								'type' => ['string', 'null'],
+								'enum' => (new PostgresEnum(
+									'hand_hair',
+									$this->database
+								))->values(),
+							],
+						],
+						'required' =>
+							[
+								'nails',
+								'care',
+								'veins',
+								'joint',
+								'hair',
+							],
+						'type' => 'object',
+					],
 				],
 			'required' =>
 				[
 					'general',
 					'face',
 					'body',
+					'hands',
 				],
 			'type' => 'object',
 		];
@@ -431,7 +536,12 @@ final class Evolution {
 	public function post(): array {
 		$schema = $this->put();
 		unset($schema['properties']['general']['properties']['age']);
-		unset($schema['properties']['general']['required'][array_search('age', $schema['properties']['general']['required'])]);
+		unset(
+			$schema['properties']['general']['required'][array_search(
+				'age',
+				$schema['properties']['general']['required']
+			)]
+		);
 		$schema['body']['default'] = [
 			'build' => null,
 			'height' => null,
@@ -467,6 +577,17 @@ final class Evolution {
 				'braces' => null,
 				'care' => null,
 			],
+		];
+		$schema['hands']['default'] = [
+			'nails' => [
+				'color' => null,
+				'length' => null,
+				'care' => null,
+			],
+			'care' => null,
+			'veins' => null,
+			'joint' => null,
+			'hair' => null,
 		];
 		$schema['general']['firstname']['default'] = null;
 		$schema['general']['lastname']['default'] = null;

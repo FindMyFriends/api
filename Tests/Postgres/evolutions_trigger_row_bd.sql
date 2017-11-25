@@ -33,11 +33,21 @@ BEGIN
 			NULL
 		)
 		RETURNING  id
+	), inserted_hand AS (
+		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+		)
+		RETURNING  id
 	), inserted_description AS (
-		INSERT INTO descriptions (general_id, body_id, face_id) VALUES (
+		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
 			(SELECT id FROM inserted_general),
 			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face)
+			(SELECT id FROM inserted_face),
+			(SELECT id FROM inserted_hand)
 		)
 		RETURNING id
 	), inserted_seeker AS (
@@ -104,11 +114,21 @@ BEGIN
 			NULL
 		)
 		RETURNING  id
+	), inserted_hand AS (
+		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+		)
+		RETURNING  id
 	), inserted_description AS (
-		INSERT INTO descriptions (general_id, body_id, face_id) VALUES (
+		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
 			(SELECT id FROM inserted_general),
 			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face)
+			(SELECT id FROM inserted_face),
+			(SELECT id FROM inserted_hand)
 		)
 		RETURNING id
 	)
@@ -150,11 +170,21 @@ BEGIN
 			NULL
 		)
 		RETURNING  id
+	), inserted_hand AS (
+		INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+		)
+		RETURNING  id
 	), inserted_description AS (
-		INSERT INTO descriptions (general_id, body_id, face_id) VALUES (
+		INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
 			(SELECT id FROM inserted_general),
 			(SELECT id FROM inserted_body),
-			(SELECT id FROM inserted_face)
+			(SELECT id FROM inserted_face),
+			(SELECT id FROM inserted_hand)
 		)
 		RETURNING id
 	)

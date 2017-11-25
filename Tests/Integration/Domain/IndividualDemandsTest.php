@@ -77,6 +77,17 @@ final class IndividualDemandsTest extends Tester\TestCase {
 						'to' => '2017-01-02',
 					],
 				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
+				],
 			]
 		);
 		Assert::equal(new Domain\StoredDemand(1, $this->database), $demand);
@@ -90,6 +101,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				'bodies' => 1,
 				'general' => 1,
 				'faces' => 1,
+				'hands' => 1,
 			]
 		))->assert();
 	}

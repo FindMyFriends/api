@@ -75,6 +75,17 @@ final class StoredChangeTest extends Tester\TestCase {
 					'weight' => 60,
 					'height' => 181,
 				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
+				],
 			]
 		);
 		Assert::equal(
@@ -112,6 +123,17 @@ final class StoredChangeTest extends Tester\TestCase {
 					'weight' => 60,
 					'skin' => 'white',
 					'build' => 'skinny',
+				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
 				],
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,
@@ -176,6 +198,17 @@ final class StoredChangeTest extends Tester\TestCase {
 					'skin' => 'white',
 					'weight' => 60,
 					'height' => 181,
+				],
+				'hands' => [
+					'nails' => [
+						'length' => null,
+						'care' => null,
+						'color' => null,
+					],
+					'veins' => null,
+					'joint' => null,
+					'care' => null,
+					'hair' => null,
 				],
 			]
 		);

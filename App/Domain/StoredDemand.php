@@ -23,8 +23,10 @@ final class StoredDemand implements Demand {
 				build, skin, weight, height,
 				acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
 				age, firstname, lastname, gender, race,
-				coordinates, met_at
-				FROM collective_demands WHERE id = ?',
+				coordinates, met_at,
+				nails, hands_care, hands_veins, hands_joint, hands_hair
+				FROM collective_demands
+				WHERE id = ?',
 				[$this->id]
 			),
 			[
@@ -35,6 +37,7 @@ final class StoredDemand implements Demand {
 				'coordinates' => 'point',
 				'age' => 'hstore',
 				'met_at' => 'hstore',
+				'nails' => 'nail',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -77,6 +80,17 @@ final class StoredDemand implements Demand {
 					],
 					'met_at' => $demand['met_at'],
 				],
+				'hands' => [
+					'nails' => [
+						'length' => $demand['nails']['length'],
+						'care' => $demand['nails']['care'],
+						'color' => $demand['nails']['color'],
+					],
+					'veins' => $demand['hands_veins'],
+					'joint' => $demand['hands_joint'],
+					'care' => $demand['hands_care'],
+					'hair' => $demand['hands_hair'],
+				],
 			]
 		);
 	}
@@ -96,6 +110,7 @@ final class StoredDemand implements Demand {
 				'body_id' => $body,
 				'face_id' => $face,
 				'location_id' => $location,
+				'hands_id' => $hands,
 			] = $this->parts($this->id);
 			(new Storage\FlatParameterizedQuery(
 				$this->database,
@@ -149,6 +164,17 @@ final class StoredDemand implements Demand {
 				WHERE id = :id',
 				['id' => $location] + $description['location']
 			))->execute();
+			(new Storage\FlatParameterizedQuery(
+				$this->database,
+				'UPDATE hands
+				SET nails = ROW(:nails_color, :nails_length, :nails_care)::nail,
+					care = :care,
+					veins = :veins,
+					joint = :joint,
+					hair = :hair
+				WHERE id = :id',
+				['id' => $hands] + $description['hands']
+			))->execute();
 		});
 	}
 
@@ -160,7 +186,7 @@ final class StoredDemand implements Demand {
 	private function parts(int $demand): array {
 		return (new Storage\ParameterizedQuery(
 			$this->database,
-			'SELECT general_id, body_id, face_id, location_id
+			'SELECT general_id, body_id, face_id, location_id, hands_id
 			FROM descriptions
 			JOIN demands ON demands.description_id = descriptions.id
 			WHERE demands.id = ?',

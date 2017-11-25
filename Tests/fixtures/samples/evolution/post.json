@@ -41,5 +41,16 @@
     "skin": "white",
     "weight": 60,
     "height": 181
+  },
+  "hands": {
+    "nails": {
+      "color": null,
+      "length": null,
+      "care": null
+    },
+    "care": "normal",
+    "veins": "visible",
+    "joint": "visible",
+    "hair": "few"
   }
 }

@@ -15,42 +15,42 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -139,6 +139,56 @@ CREATE TYPE hair AS (
 ALTER TYPE hair OWNER TO postgres;
 
 --
+-- Name: hand_care; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE hand_care AS ENUM (
+    'dry',
+    'greasy',
+    'normal'
+);
+
+
+ALTER TYPE hand_care OWNER TO postgres;
+
+--
+-- Name: hand_hair; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE hand_hair AS ENUM (
+    'few',
+    'a lot'
+);
+
+
+ALTER TYPE hand_hair OWNER TO postgres;
+
+--
+-- Name: joint_visibility; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE joint_visibility AS ENUM (
+    'visible',
+    'invisible'
+);
+
+
+ALTER TYPE joint_visibility OWNER TO postgres;
+
+--
+-- Name: nail; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE nail AS (
+	color colors,
+	length integer,
+	care care
+);
+
+
+ALTER TYPE nail OWNER TO postgres;
+
+--
 -- Name: piercing; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -177,6 +227,18 @@ CREATE TYPE tooth AS (
 ALTER TYPE tooth OWNER TO postgres;
 
 --
+-- Name: vein_visibility; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE vein_visibility AS ENUM (
+    'visible',
+    'invisible'
+);
+
+
+ALTER TYPE vein_visibility OWNER TO postgres;
+
+--
 -- Name: birth_year_in_range(int4range); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -203,12 +265,13 @@ DECLARE
 BEGIN
 	DELETE FROM descriptions
 	WHERE id = old.description_id
-	RETURNING face_id, general_id, body_id
+	RETURNING face_id, general_id, body_id, hands_id
 		INTO description;
 	DELETE FROM faces WHERE id = description.face_id;
 	DELETE FROM general WHERE id = description.general_id;
 	DELETE FROM bodies WHERE id = description.body_id;
 	DELETE FROM locations WHERE id = old.location_id;
+	DELETE FROM hands WHERE id = description.hands_id;
 	RETURN old;
 END;
 $$;
@@ -246,11 +309,12 @@ DECLARE
 BEGIN
 	DELETE FROM descriptions
 	WHERE id = old.description_id
-	RETURNING face_id, general_id, body_id
+	RETURNING face_id, general_id, body_id, hands_id
 		INTO description;
 	DELETE FROM faces WHERE id = description.face_id;
 	DELETE FROM general WHERE id = description.general_id;
 	DELETE FROM bodies WHERE id = description.body_id;
+	DELETE FROM hands WHERE id = description.hands_id;
 	RETURN old;
 END;
 $$;
@@ -372,7 +436,8 @@ CREATE TABLE descriptions (
     id integer NOT NULL,
     general_id integer NOT NULL,
     body_id integer NOT NULL,
-    face_id integer NOT NULL
+    face_id integer NOT NULL,
+    hands_id integer NOT NULL
 );
 
 
@@ -490,6 +555,22 @@ CREATE TABLE faces (
 ALTER TABLE faces OWNER TO postgres;
 
 --
+-- Name: hands; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE hands (
+    id integer NOT NULL,
+    nails nail,
+    care hand_care,
+    veins vein_visibility,
+    joint joint_visibility,
+    hair hand_hair
+);
+
+
+ALTER TABLE hands OWNER TO postgres;
+
+--
 -- Name: locations; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -531,13 +612,19 @@ CREATE VIEW collective_demands AS
     general.gender,
     general.race,
     locations.coordinates,
-    range_to_hstore(locations.met_at) AS met_at
-   FROM (((((demands
+    range_to_hstore(locations.met_at) AS met_at,
+    hands.nails,
+    hands.care AS hands_care,
+    hands.veins AS hands_veins,
+    hands.joint AS hands_joint,
+    hands.hair AS hands_hair
+   FROM ((((((demands
      JOIN locations ON ((locations.id = demands.location_id)))
      JOIN descriptions ON ((descriptions.id = demands.description_id)))
      JOIN bodies ON ((bodies.id = descriptions.body_id)))
      JOIN faces ON ((faces.id = descriptions.face_id)))
-     JOIN general ON ((general.id = descriptions.general_id)));
+     JOIN general ON ((general.id = descriptions.general_id)))
+     JOIN hands ON ((hands.id = descriptions.hands_id)));
 
 
 ALTER TABLE collective_demands OWNER TO postgres;
@@ -568,12 +655,18 @@ CREATE VIEW collective_evolutions AS
     general.firstname,
     general.lastname,
     general.gender,
-    general.race
-   FROM ((((evolutions
+    general.race,
+    hands.nails,
+    hands.care AS hands_care,
+    hands.veins AS hands_veins,
+    hands.joint AS hands_joint,
+    hands.hair AS hands_hair
+   FROM (((((evolutions
      JOIN descriptions ON ((descriptions.id = evolutions.description_id)))
      JOIN bodies ON ((bodies.id = descriptions.body_id)))
      JOIN faces ON ((faces.id = descriptions.face_id)))
-     JOIN general ON ((general.id = descriptions.general_id)));
+     JOIN general ON ((general.id = descriptions.general_id)))
+     JOIN hands ON ((hands.id = descriptions.hands_id)));
 
 
 ALTER TABLE collective_evolutions OWNER TO postgres;
@@ -649,6 +742,20 @@ ALTER TABLE general ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 
 --
+-- Name: hands_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE hands ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME hands_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: locations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -661,21 +768,6 @@ ALTER TABLE locations ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     CACHE 1
 );
 
-
---
--- Name: base_evolution; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW base_evolution AS
- SELECT general.birth_year,
-    general.id AS general_id,
-    evolutions.seeker_id
-   FROM ((general
-     JOIN descriptions ON ((descriptions.general_id = general.id)))
-     JOIN evolutions ON ((evolutions.description_id = descriptions.id)));
-
-
-ALTER TABLE base_evolution OWNER TO postgres;
 
 --
 -- Name: seekers; Type: TABLE; Schema: public; Owner: postgres
@@ -753,6 +845,14 @@ ALTER TABLE ONLY general
 
 
 --
+-- Name: hands hands_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hands
+    ADD CONSTRAINT hands_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: locations locations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -804,6 +904,13 @@ CREATE UNIQUE INDEX descriptions_general_id_uindex ON descriptions USING btree (
 
 
 --
+-- Name: descriptions_hands_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_hands_id_uindex ON descriptions USING btree (hands_id);
+
+
+--
 -- Name: evolutions_description_id_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -815,6 +922,13 @@ CREATE INDEX evolutions_description_id_index ON evolutions USING btree (descript
 --
 
 CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
+
+
+--
+-- Name: hands_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX hands_id_uindex ON hands USING btree (id);
 
 
 --
@@ -890,6 +1004,14 @@ ALTER TABLE ONLY descriptions
 
 ALTER TABLE ONLY descriptions
     ADD CONSTRAINT descriptions_general_id_fk FOREIGN KEY (general_id) REFERENCES general(id) ON DELETE CASCADE;
+
+
+--
+-- Name: descriptions descriptions_hands_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hands_id) REFERENCES hands(id) ON DELETE CASCADE;
 
 
 --

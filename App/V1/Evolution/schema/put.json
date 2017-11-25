@@ -318,12 +318,119 @@
                 "gender"
             ],
             "type": "object"
+        },
+        "hands": {
+            "id": "/properties/hands",
+            "additionalProperties": false,
+            "properties": {
+                "nails": {
+                    "id": "/properties/hands/nails",
+                    "additionalProperties": false,
+                    "properties": {
+                        "color": {
+                            "id": "/properties/hands/properties/nails/properties/color",
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "blue",
+                                "black"
+                            ]
+                        },
+                        "length": {
+                            "id": "/properties/hands/properties/nails/properties/length",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "care": {
+                            "id": "/properties/hands/properties/nails/properties/care",
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "low",
+                                "medium",
+                                "high"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "color",
+                        "length",
+                        "care"
+                    ],
+                    "type": "object"
+                },
+                "care": {
+                    "id": "/properties/hands/care",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "dry",
+                        "greasy",
+                        "normal"
+                    ]
+                },
+                "veins": {
+                    "id": "/properties/hands/veins",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "visible",
+                        "invisible"
+                    ]
+                },
+                "joint": {
+                    "id": "/properties/hands/joint",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "visible",
+                        "invisible"
+                    ]
+                },
+                "hair": {
+                    "id": "/properties/hands/hair",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "few",
+                        "a lot"
+                    ]
+                }
+            },
+            "required": [
+                "nails",
+                "care",
+                "veins",
+                "joint",
+                "hair"
+            ],
+            "type": "object"
         }
     },
     "required": [
         "general",
         "face",
-        "body"
+        "body",
+        "hands"
     ],
     "type": "object"
 }

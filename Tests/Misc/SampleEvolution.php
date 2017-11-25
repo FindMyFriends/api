@@ -42,6 +42,12 @@ final class SampleEvolution implements Sample {
 									$this->evolution['face'] ?? []
 								))->try()
 							),
+							'hand' => current(
+								(new SampleHand(
+									$this->database,
+									$this->evolution['hand'] ?? []
+								))->try()
+							),
 						]
 					))->try()
 				),
