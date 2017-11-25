@@ -100,12 +100,12 @@ final class StoredChange implements Change {
 			new Storage\ParameterizedQuery(
 				$this->database,
 				'SELECT id, evolved_at,
-					build, skin, weight, height,
-					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
+					body_build, skin, weight, height,
+					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
 					age, firstname, lastname, gender, race,
 					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_evolutions
-					WHERE id = ?',
+				WHERE id = ?',
 				[$this->id]
 			),
 			[
@@ -132,19 +132,19 @@ final class StoredChange implements Change {
 				'face' => [
 					'acne' => $evolution['acne'],
 					'beard' => $evolution['beard'],
-					'complexion' => $evolution['complexion'],
+					'complexion' => $evolution['face_complexion'],
 					'eyebrow' => $evolution['eyebrow'],
-					'freckles' => $evolution['freckles'],
+					'freckles' => $evolution['face_freckles'],
 					'hair' => $evolution['hair'],
 					'eye' => [
 						'left' => $evolution['left_eye'],
 						'right' => $evolution['right_eye'],
 					],
-					'shape' => $evolution['shape'],
+					'shape' => $evolution['face_shape'],
 					'teeth' => $evolution['teeth'],
 				],
 				'body' => [
-					'build' => $evolution['build'],
+					'build' => $evolution['body_build'],
 					'skin' => $evolution['skin'],
 					'weight' => $evolution['weight'],
 					'height' => $evolution['height'],

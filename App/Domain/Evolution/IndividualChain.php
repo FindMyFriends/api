@@ -103,8 +103,8 @@ final class IndividualChain implements Chain {
 				$this->database,
 				$selection->expression(
 					'SELECT id, evolved_at,
-					build, skin, weight, height,
-					acne, beard, complexion, eyebrow, freckles, hair, left_eye, right_eye, shape, teeth,
+					body_build, skin, weight, height,
+					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
 					age, firstname, lastname, gender, race,
 					nails, hands_care, hands_veins, hands_joint, hands_hair
 					FROM collective_evolutions
