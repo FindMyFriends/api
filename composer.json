@@ -14,7 +14,6 @@
     "php": ">=7.2",
     "ext-mbstring": "*",
     "ext-dom": "*",
-    "dasuos/internal": "dev-master",
     "klapuch/access": "^2.17.1",
     "klapuch/application": "@dev",
     "klapuch/dataset": "@dev",

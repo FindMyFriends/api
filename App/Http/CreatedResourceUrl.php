@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Http;
 
-use Dasuos\Internal\Condition;
-use Dasuos\Internal\Iteration;
 use Klapuch\Output;
 use Klapuch\Uri;
 
@@ -83,12 +81,12 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 * @return array
 	 */
 	private function lost(array $placeholders, array $parameters): array {
-		return (new Iteration\Filtered(
-			new Iteration\Hash($placeholders),
-			new Condition\Callback(function(string $placeholder) use ($parameters): bool {
+		return array_filter(
+			$placeholders,
+			function(string $placeholder) use ($parameters): bool {
 				return !isset($parameters[$placeholder]);
-			})
-		))->product();
+			}
+		);
 	}
 
 	/**
