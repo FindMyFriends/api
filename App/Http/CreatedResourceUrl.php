@@ -66,7 +66,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 */
 	private function replacements(array $placeholders, array $parameters): array {
 		$lost = $this->lost($placeholders, $parameters);
-		if ($lost)
+		if (!empty($lost))
 			throw new \UnexpectedValueException($this->format($lost));
 		return array_map(
 			function(string $placeholder) use ($parameters) {

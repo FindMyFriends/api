@@ -36,7 +36,7 @@ final class JsonError implements Application\Response {
 
 	public function status(): int {
 		$choice = $this->error->getCode() ?: $this->status;
-		return in_array($choice, range(...self::CODES))
+		return in_array($choice, range(...self::CODES), true)
 			? $choice
 			: HTTP_BAD_REQUEST;
 	}

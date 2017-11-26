@@ -539,7 +539,8 @@ final class Evolution {
 		unset(
 			$schema['properties']['general']['required'][array_search(
 				'age',
-				$schema['properties']['general']['required']
+				$schema['properties']['general']['required'],
+				true
 			)]
 		);
 		$schema['body']['default'] = [
