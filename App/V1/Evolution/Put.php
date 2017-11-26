@@ -13,28 +13,24 @@ use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
 use Klapuch\Validation;
-use Predis;
 
 final class Put implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/put.json';
 	private $request;
 	private $url;
 	private $database;
-	private $redis;
 	private $user;
 
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $user,
-		Predis\ClientInterface $redis
+		Access\User $user
 	) {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
 		$this->user = $user;
-		$this->redis = $redis;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -66,8 +62,7 @@ final class Put implements Application\View {
 					json_decode(
 						(new Request\ConcurrentlyControlledRequest(
 							$this->request,
-							$this->url,
-							new Http\ETagRedis($this->redis)
+							new Http\PostgresETag($this->database, $this->url)
 						))->body()->serialization(),
 						true
 					)

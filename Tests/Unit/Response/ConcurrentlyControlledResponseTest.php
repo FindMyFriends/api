@@ -6,33 +6,22 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Response;
 
-use FindMyFriends\Request;
+use FindMyFriends\Http;
 use FindMyFriends\Response;
-use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
 final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
-	use TestCase\Redis;
-
 	public function testHeaderWithExistingETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
-		(new Request\ConcurrentlyControlledRequest(
-			new Application\FakeRequest(new Output\FakeFormat()),
-			$uri,
-			$this->redis
-		))->body();
-		Assert::match(
-			'"%h%"',
+		Assert::same(
+			'abc',
 			(new Response\ConcurrentlyControlledResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), []),
-				$uri,
-				$this->redis
+				new Http\FakeETag(true, 'abc')
 			))->headers()['ETag']
 		);
 	}
@@ -42,42 +31,27 @@ final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
 			['accept' => 'text/plain'],
 			(new Response\ConcurrentlyControlledResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), ['accept' => 'text/plain']),
-				new Uri\FakeUri(null, '/books/1'),
-				$this->redis
+				new Http\FakeETag(false)
 			))->headers()
 		);
 	}
 
 	public function testRestOfHeadersWithinGeneratedETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
-		(new Request\ConcurrentlyControlledRequest(
-			new Application\FakeRequest(new Output\FakeFormat()),
-			$uri,
-			$this->redis
-		))->body();
-		Assert::count(
-			2,
+		Assert::same(
+			['ETag' => 'abc', 'accept' => 'text/plain'],
 			(new Response\ConcurrentlyControlledResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), ['accept' => 'text/plain']),
-				$uri,
-				$this->redis
+				new Http\FakeETag(true, 'abc')
 			))->headers()
 		);
 	}
 
 	public function testPrecedenceForGeneratedETag() {
-		$uri = new Uri\FakeUri(null, '/books/1');
-		(new Request\ConcurrentlyControlledRequest(
-			new Application\FakeRequest(new Output\FakeFormat()),
-			$uri,
-			$this->redis
-		))->body();
-		Assert::notSame(
-			'"abc"',
+		Assert::same(
+			'foo',
 			(new Response\ConcurrentlyControlledResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), ['ETag' => '"abc"']),
-				$uri,
-				$this->redis
+				new Http\FakeETag(true, 'foo')
 			))->headers()['ETag']
 		);
 	}

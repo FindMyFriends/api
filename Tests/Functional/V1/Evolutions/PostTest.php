@@ -34,8 +34,7 @@ final class PostTest extends Tester\TestCase {
 				),
 				new FakeUri('/', 'v1/evolutions', []),
 				$this->database,
-				new Access\FakeUser((string) $seeker, ['role' => 'member']),
-				$this->redis
+				new Access\FakeUser((string) $seeker, ['role' => 'member'])
 			))->template([])->render(),
 			true
 		);
@@ -49,8 +48,7 @@ final class PostTest extends Tester\TestCase {
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'v1/evolutions', []),
 				$this->database,
-				new Access\FakeUser('1', ['role' => 'member']),
-				$this->redis
+				new Access\FakeUser('1', ['role' => 'member'])
 			))->template([])->render(),
 			true
 		);

@@ -33,8 +33,7 @@ final class PostTest extends Tester\TestCase {
 				),
 				new FakeUri('/', 'v1/demands', []),
 				$this->database,
-				new Access\FakeUser((string) $seeker, ['role' => 'guest']),
-				$this->redis
+				new Access\FakeUser((string) $seeker, ['role' => 'guest'])
 			))->template([])->render(),
 			true
 		);
@@ -48,8 +47,7 @@ final class PostTest extends Tester\TestCase {
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'v1/demands', []),
 				$this->database,
-				new Access\FakeUser('1', ['role' => 'guest']),
-				$this->redis
+				new Access\FakeUser('1', ['role' => 'guest'])
 			))->template([])->render(),
 			true
 		);

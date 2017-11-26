@@ -68,4 +68,8 @@
 		<exclude-pattern>Tests/Functional</exclude-pattern>
 	</rule>
 
+	<rule ref="Squiz.Commenting.FunctionComment.InvalidTypeHint">
+		<exclude-pattern>App/Http/ETag.php</exclude-pattern>
+	</rule>
+
 </ruleset>

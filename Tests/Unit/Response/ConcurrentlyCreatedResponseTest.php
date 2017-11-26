@@ -6,6 +6,7 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Unit\Response;
 
+use FindMyFriends\Http;
 use FindMyFriends\Response;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
@@ -17,16 +18,19 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class ConcurrentlyCreatedResponseTest extends Tester\TestCase {
-	use TestCase\Redis;
+	use TestCase\Mockery;
 
-	public function testCreatingHexaETag() {
-		$uri = new Uri\FakeUri('http://localhost', '/books/1');
-		(new Response\ConcurrentlyCreatedResponse(
-			new Application\FakeResponse(new Output\FakeFormat(), []),
-			$this->redis,
-			$uri
-		))->headers();
-		Assert::match('"%h%"', $this->redis->get($uri->path()));
+	public function testStoredETag() {
+		$eTag = $this->mock(Http\ETag::class);
+		$eTag->shouldReceive('set')->once();
+		Assert::same(
+			['Location' => 'http://localhost', 'Accept' => 'text/html'],
+			(new Response\ConcurrentlyCreatedResponse(
+				new Application\FakeResponse(new Output\FakeFormat(), ['Accept' => 'text/html']),
+				$eTag,
+				new Uri\FakeUri('http://localhost', '/books/1')
+			))->headers()
+		);
 	}
 
 	public function testPrependLocationHeader() {
@@ -34,7 +38,7 @@ final class ConcurrentlyCreatedResponseTest extends Tester\TestCase {
 			['Location' => 'http://localhost', 'Accept' => 'text/html'],
 			(new Response\ConcurrentlyCreatedResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), ['Accept' => 'text/html']),
-				$this->redis,
+				new Http\FakeETag(),
 				new Uri\FakeUri('http://localhost', '/books/1')
 			))->headers()
 		);
@@ -45,42 +49,10 @@ final class ConcurrentlyCreatedResponseTest extends Tester\TestCase {
 			HTTP_CREATED,
 			(new Response\ConcurrentlyCreatedResponse(
 				new Application\FakeResponse(),
-				$this->redis,
+				new Http\FakeETag(),
 				new Uri\FakeUri()
 			))->status()
 		);
-	}
-
-	public function testMultipleSameObjectsWithSameETag() {
-		$uri = new Uri\FakeUri('http://localhost', '/books/1');
-		(new Response\ConcurrentlyCreatedResponse(
-			new Application\FakeResponse(new Output\FakeFormat(), []),
-			$this->redis,
-			$uri
-		))->headers();
-		$first = $this->redis->get($uri->path());
-		(new Response\ConcurrentlyCreatedResponse(
-			new Application\FakeResponse(new Output\FakeFormat(), []),
-			$this->redis,
-			$uri
-		))->headers();
-		Assert::same($first, $this->redis->get($uri->path()));
-	}
-
-	public function testMultipleDifferentObjectsWithDifferentETag() {
-		$uri = new Uri\FakeUri('http://localhost', '/books/1');
-		(new Response\ConcurrentlyCreatedResponse(
-			new Application\FakeResponse(new Output\Json(), []),
-			$this->redis,
-			$uri
-		))->headers();
-		$first = $this->redis->get($uri->path());
-		(new Response\ConcurrentlyCreatedResponse(
-			new Application\FakeResponse(new Output\FakeFormat(), []),
-			$this->redis,
-			$uri
-		))->headers();
-		Assert::notSame($first, $this->redis->get($uri->path()));
 	}
 }
 

@@ -5,8 +5,6 @@ namespace FindMyFriends\Request;
 use FindMyFriends\Http;
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri;
-use Predis;
 
 final class ConcurrentlyControlledRequest implements Application\Request {
 	private const MATCHES = [
@@ -14,23 +12,17 @@ final class ConcurrentlyControlledRequest implements Application\Request {
 		'If-None-Match' => false,
 	];
 	private $origin;
-	private $uri;
-	private $redis;
+	private $eTag;
 
-	public function __construct(
-		Application\Request $origin,
-		Uri\Uri $uri,
-		Predis\ClientInterface $redis
-	) {
+	public function __construct(Application\Request $origin, Http\ETag $eTag) {
 		$this->origin = new CachedRequest($origin);
-		$this->uri = $uri;
-		$this->redis = $redis;
+		$this->eTag = $eTag;
 	}
 
 	public function body(): Output\Format {
-		if ($this->redis->exists($this->uri->path()) && !$this->matches($this->redis->get($this->uri->path()), $this->headers()))
-			throw new \UnexpectedValueException('ETag does not match your preferences');
-		$this->redis->set($this->uri->path(), new Http\ETag($this->origin->body()));
+		if ($this->eTag->exists() && !$this->matches($this->eTag->get(), $this->headers()))
+			throw new \UnexpectedValueException('ETag does not match your preferences', HTTP_PRECONDITION_FAILED);
+		$this->eTag->set($this->origin->body());
 		return $this->origin->body();
 	}
 

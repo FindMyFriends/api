@@ -2,21 +2,23 @@
 declare(strict_types = 1);
 namespace FindMyFriends\Http;
 
-final class ETag {
-	private $entity;
+interface ETag {
+	/**
+	 * Does the tag exists?
+	 * @return bool
+	 */
+	public function exists(): bool;
 
-	public function __construct(object $entity) {
-		$this->entity = $entity;
-	}
+	/**
+	 * Get the tag
+	 * @return string
+	 */
+	public function get(): string;
 
-	public function __toString(): string {
-		return sprintf(
-			'"%s"',
-			md5(
-				(new \ReflectionClass($this->entity))->isAnonymous()
-					? spl_object_hash($this->entity)
-					: serialize($this->entity)
-			)
-		);
-	}
+	/**
+	 * Set a new tag for the entity
+	 * @param object $entity
+	 * @return \FindMyFriends\Http\ETag
+	 */
+	public function set(object $entity): self;
 }

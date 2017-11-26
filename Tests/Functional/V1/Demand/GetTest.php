@@ -28,8 +28,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Demand\Get(
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Http\FakeRole(true),
-				$this->redis
+				new Http\FakeRole(true)
 			))->template(['id' => $id])->render()
 		);
 		Assert::same($seeker, $demand->seeker_id);
@@ -44,8 +43,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Demand\Get(
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Http\FakeRole(true),
-				$this->redis
+				new Http\FakeRole(true)
 			))->template(['id' => 1])->render(),
 			true
 		);

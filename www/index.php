@@ -51,8 +51,7 @@ echo (new Application\RawPage(
 									$configuration['DATABASE']['dsn'],
 									$configuration['DATABASE']['user'],
 									$configuration['DATABASE']['password']
-								),
-								new Predis\Client($configuration['REDIS']['uri'])
+								)
 							) implements Routing\Routes {
 								private $uri;
 								private $database;
@@ -60,12 +59,10 @@ echo (new Application\RawPage(
 
 								public function __construct(
 									Uri\Uri $uri,
-									\PDO $database,
-									Predis\ClientInterface $redis
+									\PDO $database
 								) {
 									$this->uri = $uri;
 									$this->database = $database;
-									$this->redis = $redis;
 								}
 
 								public function matches(): array {
@@ -81,22 +78,19 @@ echo (new Application\RawPage(
 										'v1/demands/{id :id} [GET]' => new V1\Demand\Get(
 											$this->uri,
 											$this->database,
-											new Http\ChosenRole($user, ['member', 'guest']),
-											$this->redis
+											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/demands [POST]' => new V1\Demands\Post(
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
-											$user,
-											$this->redis
+											$user
 										),
 										'v1/demands/{id :id} [PUT]' => new V1\Demand\Put(
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
-											$user,
-											$this->redis
+											$user
 										),
 										'v1/demands/{id :id} [DELETE]' => new V1\Demand\Delete(
 											$this->database,

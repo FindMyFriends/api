@@ -28,8 +28,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Evolution\Get(
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
-				new Http\FakeRole(true),
-				$this->redis
+				new Http\FakeRole(true)
 			))->template(['id' => $id])->render()
 		);
 		Assert::same($id, $evolution->id);
@@ -44,8 +43,7 @@ final class GetTest extends Tester\TestCase {
 			(new V1\Evolution\Get(
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
-				new Http\FakeRole(true),
-				$this->redis
+				new Http\FakeRole(true)
 			))->template(['id' => 1])->render(),
 			true
 		);

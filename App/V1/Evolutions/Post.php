@@ -11,7 +11,6 @@ use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
 use Klapuch\Validation;
-use Predis;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -19,20 +18,17 @@ final class Post implements Application\View {
 	private $url;
 	private $database;
 	private $user;
-	private $redis;
 
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $user,
-		Predis\ClientInterface $redis
+		Access\User $user
 	) {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
 		$this->user = $user;
-		$this->redis = $redis;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -52,7 +48,7 @@ final class Post implements Application\View {
 			return new Application\RawTemplate(
 				new Response\ConcurrentlyCreatedResponse(
 					new Response\JsonResponse(new Response\EmptyResponse()),
-					new Http\ETagRedis($this->redis),
+					new Http\PostgresETag($this->database, $this->url),
 					$url
 				)
 			);

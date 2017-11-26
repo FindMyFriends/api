@@ -9,24 +9,20 @@ use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
-use Predis;
 
 final class Get implements Application\View {
 	private $url;
 	private $database;
 	private $role;
-	private $redis;
 
 	public function __construct(
 		Uri\Uri $url,
 		\PDO $database,
-		Http\Role $role,
-		Predis\ClientInterface $redis
+		Http\Role $role
 	) {
 		$this->url = $url;
 		$this->database = $database;
 		$this->role = $role;
-		$this->redis = $redis;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -54,8 +50,7 @@ final class Get implements Application\View {
 								$this->role
 							)
 						),
-						$this->url,
-						new Http\ETagRedis($this->redis)
+						new Http\PostgresETag($this->database, $this->url)
 					)
 				)
 			);

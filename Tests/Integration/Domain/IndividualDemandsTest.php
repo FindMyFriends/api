@@ -108,9 +108,10 @@ final class IndividualDemandsTest extends Tester\TestCase {
 
 	public function testAllForSpecifiedSeeker() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demands = (new Domain\IndividualDemands(
 			new Access\FakeUser((string) $seeker),
@@ -127,9 +128,10 @@ final class IndividualDemandsTest extends Tester\TestCase {
 
 	public function testCounting() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		Assert::same(
 			2,

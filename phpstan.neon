@@ -5,4 +5,5 @@ parameters:
         - '~Call to an undefined method object::print\(\)~'
         - '~Parameter \$object of anonymous function has invalid typehint type object~'
         - '~Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::once\(\)~'
-        - '~Parameter #1 \$origin of class .+ constructor expects .+, Mockery\\MockInterface given~'
+        - '~Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::andReturn\(\)~'
+        - '~.+Mockery\\MockInterface given~'

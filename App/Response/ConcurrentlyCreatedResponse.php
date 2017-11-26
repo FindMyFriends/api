@@ -6,20 +6,19 @@ use FindMyFriends\Http;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
-use Predis;
 
 final class ConcurrentlyCreatedResponse implements Application\Response {
 	private $origin;
-	private $redis;
+	private $eTag;
 	private $uri;
 
 	public function __construct(
 		Application\Response $origin,
-		Predis\ClientInterface $redis,
+		Http\ETag $eTag,
 		Uri\Uri $uri
 	) {
 		$this->origin = $origin;
-		$this->redis = $redis;
+		$this->eTag = $eTag;
 		$this->uri = $uri;
 	}
 
@@ -28,7 +27,7 @@ final class ConcurrentlyCreatedResponse implements Application\Response {
 	}
 
 	public function headers(): array {
-		$this->redis->set($this->uri->path(), new Http\ETag($this->origin->body()));
+		$this->eTag->set($this->origin->body());
 		return ['Location' => $this->uri->reference()] + $this->origin->headers();
 	}
 

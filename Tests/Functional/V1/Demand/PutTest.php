@@ -34,8 +34,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Access\FakeUser((string) $seeker),
-				$this->redis
+				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true
 		);
@@ -50,8 +49,7 @@ final class PutTest extends Tester\TestCase {
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Access\FakeUser(),
-				$this->redis
+				new Access\FakeUser()
 			))->template(['id' => $id])->render(),
 			true
 		);
@@ -69,8 +67,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Access\FakeUser(),
-				$this->redis
+				new Access\FakeUser()
 			))->template(['id' => 1])->render(),
 			true
 		);
@@ -90,8 +87,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Access\FakeUser((string) $seeker),
-				$this->redis
+				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true
 		);
