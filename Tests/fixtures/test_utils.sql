@@ -36,3 +36,9 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION test_utils.better_random(low INT = 1 ,high INT = 2147483647) RETURNS INT
+AS $$
+BEGIN
+	RETURN floor(random()* (high-low + 1) + low);
+END;
+$$ language plpgsql STRICT;

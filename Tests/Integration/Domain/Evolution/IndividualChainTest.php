@@ -108,13 +108,12 @@ final class IndividualChainTest extends Tester\TestCase {
 
 	public function testCountingBySeeker() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		Assert::same(
 			2,
 			(new Evolution\IndividualChain(
@@ -126,13 +125,12 @@ final class IndividualChainTest extends Tester\TestCase {
 
 	public function testChainBySeeker() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['gender' => 'man', 'birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['gender' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->database))->try();
 		$chain = (new Evolution\IndividualChain(
 			new Access\FakeUser((string) $seeker),
 			$this->database

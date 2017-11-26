@@ -9,8 +9,8 @@ BEGIN
 	INSERT INTO bodies (build, skin, weight, height) VALUES (
 		COALESCE(replacement -> 'build', md5(random()::text)),
 		COALESCE(replacement -> 'skin', md5(random()::text)),
-		COALESCE(CAST(replacement -> 'weight' AS INTEGER), random() * 1000),
-		COALESCE(CAST(replacement -> 'height' AS INTEGER), random() * 1000)
+		COALESCE(CAST(replacement -> 'weight' AS INTEGER), test_utils.better_random()),
+		COALESCE(CAST(replacement -> 'height' AS INTEGER), test_utils.better_random())
 	)
 	RETURNING id
 	INTO v_id;
@@ -25,7 +25,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO seekers (id, email, password) VALUES (
-		COALESCE(CAST(replacement -> 'id' AS INTEGER), random() * 1000),
+		COALESCE(CAST(replacement -> 'id' AS INTEGER), test_utils.better_random()),
 		COALESCE(replacement -> 'email', md5(random()::text)),
 		COALESCE(replacement -> 'password', md5(random()::text))
 	)
@@ -109,7 +109,7 @@ BEGIN
 		ROW(
 			md5(random()::TEXT),
 			test_utils.random_enum('colors')::colors,
-			random() * 1000,
+			test_utils.better_random(),
 			random() > 0.5,
 			random() > 0.5,
 			random() > 0.5
