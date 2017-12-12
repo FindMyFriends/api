@@ -25,7 +25,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
@@ -33,7 +33,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->retract();
 		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
@@ -41,7 +41,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->reconsider([]);
 		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));

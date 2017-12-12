@@ -19,31 +19,12 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$demands = (new Storage\TypedQuery(
+		$demands = (new Query(
 			$this->database,
-			new Storage\ParameterizedQuery(
-				$this->database,
-				$selection->expression(
-					'SELECT id, seeker_id, created_at,
-					body_build, skin, weight, height,
-					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
-					age, firstname, lastname, gender, race,
-					location_coordinates, met_at,
-					nails, hands_care, hands_veins, hands_joint, hands_hair
-					FROM collective_demands
-					WHERE seeker_id = ?'
-				),
-				$selection->criteria([$this->seeker->id()])
+			$selection->expression(
+				'SELECT * FROM collective_demands WHERE seeker_id = ?'
 			),
-			[
-				'hair' => 'hair',
-				'left_eye' => 'eye',
-				'right_eye' => 'eye',
-				'teeth' => 'tooth',
-				'location_coordinates' => 'point',
-				'age' => 'hstore',
-				'nails' => 'nail',
-			]
+			$selection->criteria([$this->seeker->id()])
 		))->rows();
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
@@ -56,77 +37,64 @@ final class IndividualDemands implements Demands {
 	public function ask(array $description): Demand {
 		$id = (new Storage\FlatParameterizedQuery(
 			$this->database,
-			'WITH inserted_general AS (
-				INSERT INTO general (gender, race, birth_year, firstname, lastname) VALUES (
-					:general_gender,
-					:general_race,
-					to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
-					:general_firstname,
-					:general_lastname
-				)
-				RETURNING id
-			), inserted_face AS (
-				INSERT INTO faces (teeth, freckles, complexion, beard, acne, shape, hair, eyebrow, left_eye, right_eye) VALUES (
-					ROW(:face_teeth_care, :face_teeth_braces)::tooth,
-					:face_freckles,
-					:face_complexion,
-					:face_beard,
-					:face_acne,
-					:face_shape,
-					ROW(
-						:face_hair_style,
-						:face_hair_color,
-						:face_hair_length,
-						:face_hair_highlights,
-						:face_hair_roots,
-						:face_hair_nature
-					)::hair,
-					:face_eyebrow,
-					ROW(:face_eye_left_color, :face_eye_left_lenses)::eye,
-					ROW(:face_eye_right_color, :face_eye_right_lenses)::eye
-				)
-				RETURNING id
-			),
-			inserted_body AS (
-				INSERT INTO bodies (build, skin, weight, height) VALUES (
-					:body_build,
-					:body_skin,
-					:body_weight,
-					:body_height
-				)
-				RETURNING id
-			),
-			inserted_hand AS (
-				INSERT INTO hands (nails, care, veins, joint, hair) VALUES (
-					ROW(:hands_nails_color, :hands_nails_length, :hands_nails_care)::nail,
-					:hands_care,
-					:hands_veins,
-					:hands_joint,
-					:hands_hair
-				)
-				RETURNING id
-			),
-			inserted_description AS (
-				INSERT INTO descriptions (general_id, body_id, face_id, hands_id) VALUES (
-					(SELECT id FROM inserted_general),
-					(SELECT id FROM inserted_body),
-					(SELECT id FROM inserted_face),
-					(SELECT id FROM inserted_hand)
-				)
-				RETURNING id
-			),
-			inserted_location AS (
-				INSERT INTO locations (coordinates, met_at) VALUES (
-					POINT(:location_coordinates_latitude, :location_coordinates_longitude),
-					to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ)
-				)
-				RETURNING id
-			)
-			INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+			'INSERT INTO collective_demands (
+				location_met_at,
+				general_birth_year,
+				seeker_id,
+				general_race_id,
+				general_firstname,
+				general_lastname,
+				general_gender,
+				body,
+				hands_nails,
+				location_coordinates,
+				face_freckles,
+				face_care,
+				face_beard,
+				face_eyebrow,
+				face_shape,
+				face_tooth,
+				face_left_eye,
+				face_right_eye,
+				hands_vein_visibility,
+				hands_joint_visibility,
+				hands_care,
+				hands_hair,
+				hair_color_id,
+				hair_style,
+				hair_length,
+				hair_highlights,
+				hair_roots,
+				hair_nature
+			) VALUES (
+				to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
 				:seeker,
-				(SELECT id FROM inserted_description),
-				NOW()::TIMESTAMPTZ,
-				(SELECT id FROM inserted_location)
+				:general_race_id,
+				:general_firstname,
+				:general_lastname,
+				:general_gender,
+				ROW(NULL, :body_build_id, :body_skin_color_id, :body_weight, :body_height)::bodies,
+				ROW(NULL, :hands_nails_color_id, :hands_nails_length, :hands_nails_care)::nails,
+				POINT(:location_coordinates_latitude, :location_coordinates_longitude),
+				:face_freckles,
+				:face_care,
+				ROW(NULL, :face_beard_color_id, :face_beard_length, :face_beard_style)::beards,
+				ROW(NULL, :face_eyebrow_color_id, :face_eyebrow_care)::eyebrows,
+				:face_shape,
+				ROW(NULL, :face_teeth_care, :face_teeth_braces)::teeth,
+				ROW(NULL, :face_eye_left_color_id, :face_eye_left_lenses)::eyes,
+				ROW(NULL, :face_eye_right_color_id, :face_eye_right_lenses)::eyes,
+				:hands_vein_visibility,
+				:hands_joint_visibility,
+				:hands_care,
+				ROW(NULL, :hands_hair_color_id, :hands_hair_amount)::hand_hair,
+				:hair_color_id,
+				:hair_style,
+				:hair_length,
+				:hair_highlights,
+				:hair_roots,
+				:hair_nature
 			)
 			RETURNING id',
 			['seeker' => $this->seeker->id()] + $description

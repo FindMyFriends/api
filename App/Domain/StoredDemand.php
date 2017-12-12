@@ -15,30 +15,11 @@ final class StoredDemand implements Demand {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$demand = (new Storage\TypedQuery(
+		$demand = (new Query(
 			$this->database,
-			new Storage\ParameterizedQuery(
-				$this->database,
-				'SELECT id, seeker_id, created_at,
-					body_build, skin, weight, height,
-					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
-					age, firstname, lastname, gender, race,
-					location_coordinates, met_at,
-					nails, hands_care, hands_veins, hands_joint, hands_hair
-					FROM collective_demands
+			'SELECT * FROM collective_demands
 				WHERE id = ?',
-				[$this->id]
-			),
-			[
-				'hair' => 'hair',
-				'left_eye' => 'eye',
-				'right_eye' => 'eye',
-				'teeth' => 'tooth',
-				'location_coordinates' => 'point',
-				'age' => 'hstore',
-				'met_at' => 'hstore',
-				'nails' => 'nail',
-			]
+			[$this->id]
 		))->row();
 		return new Output\FilledFormat(
 			$format,
@@ -48,30 +29,53 @@ final class StoredDemand implements Demand {
 				'created_at' => $demand['created_at'],
 				'general' => [
 					'age' => $demand['age'],
-					'firstname' => $demand['firstname'],
-					'lastname' => $demand['lastname'],
-					'gender' => $demand['gender'],
-					'race' => $demand['race'],
+					'firstname' => $demand['general_firstname'],
+					'lastname' => $demand['general_lastname'],
+					'gender' => $demand['general_gender'],
+					'race' => $demand['general_race'],
+				],
+				'hair' => [
+					'style' => $demand['hair_style'],
+					'color' => $demand['hair_color'],
+					'length' => $demand['hair_length'],
+					'highlights' => $demand['hair_highlights'],
+					'roots' => $demand['hair_roots'],
+					'nature' => $demand['hair_nature'],
 				],
 				'face' => [
-					'acne' => $demand['acne'],
-					'beard' => $demand['beard'],
-					'complexion' => $demand['face_complexion'],
-					'eyebrow' => $demand['eyebrow'],
+					'care' => $demand['face_care'],
+					'beard' => [
+						'id' => $demand['face_beard']['id'],
+						'length' => $demand['face_beard']['length'],
+						'style' => $demand['face_beard']['style'],
+						'color' => $demand['face_beard_color'],
+					],
+					'eyebrow' => [
+						'id' => $demand['face_eyebrow']['id'],
+						'care' => $demand['face_eyebrow']['care'],
+						'color' => $demand['face_eyebrow_color'],
+					],
 					'freckles' => $demand['face_freckles'],
-					'hair' => $demand['hair'],
 					'eye' => [
-						'left' => $demand['left_eye'],
-						'right' => $demand['right_eye'],
+						'left' => [
+							'id' => $demand['face_left_eye']['id'],
+							'color' => $demand['face_left_eye_color'],
+							'lenses' => $demand['face_left_eye']['lenses'],
+						],
+						'right' => [
+							'id' => $demand['face_right_eye']['id'],
+							'color' => $demand['face_right_eye_color'],
+							'lenses' => $demand['face_right_eye']['lenses'],
+						],
 					],
 					'shape' => $demand['face_shape'],
-					'teeth' => $demand['teeth'],
+					'teeth' => $demand['face_tooth'],
 				],
 				'body' => [
 					'build' => $demand['body_build'],
-					'skin' => $demand['skin'],
-					'weight' => $demand['weight'],
-					'height' => $demand['height'],
+					'skin_color' => $demand['body_skin_color'],
+					'weight' => $demand['body']['weight'],
+					'height' => $demand['body']['height'],
 				],
 				'location' => [
 					'coordinates' => [
@@ -82,14 +86,17 @@ final class StoredDemand implements Demand {
 				],
 				'hands' => [
 					'nails' => [
-						'length' => $demand['nails']['length'],
-						'care' => $demand['nails']['care'],
-						'color' => $demand['nails']['color'],
+						'length' => $demand['hands_nails']['length'],
+						'care' => $demand['hands_nails']['care'],
+						'color' => $demand['hand_nail_color'],
 					],
-					'veins' => $demand['hands_veins'],
-					'joint' => $demand['hands_joint'],
+					'vein_visibility' => $demand['hands_vein_visibility'],
+					'joint_visibility' => $demand['hands_joint_visibility'],
 					'care' => $demand['hands_care'],
-					'hair' => $demand['hands_hair'],
+					'hair' => [
+						'color' => $demand['hand_hair_color'],
+						'amount' => $demand['hand_hair_amount'],
+					],
 				],
 			]
 		);
@@ -104,93 +111,38 @@ final class StoredDemand implements Demand {
 	}
 
 	public function reconsider(array $description): void {
-		(new Storage\Transaction($this->database))->start(function() use ($description): void {
-			[
-				'general_id' => $general,
-				'body_id' => $body,
-				'face_id' => $face,
-				'location_id' => $location,
-				'hands_id' => $hands,
-			] = $this->parts($this->id);
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE general
-				SET gender = :gender,
-					race = :race,
-					birth_year = to_range(:birth_year_from::INTEGER, :birth_year_to::INTEGER),
-					firstname = :firstname,
-					lastname = :lastname
-				WHERE id = :id',
-				['id' => $general] + $description['general']
-			))->execute();
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE faces
-				SET teeth = ROW(:teeth_care, :teeth_braces)::tooth,
-					freckles = :freckles,
-					complexion = :complexion,
-					beard = :beard,
-					acne = :acne,
-					shape = :shape,
-					hair = ROW(
-						:hair_style,
-						:hair_color,
-						:hair_length,
-						:hair_highlights,
-						:hair_roots,
-						:hair_nature
-					)::hair,
-					eyebrow = :eyebrow,
-					left_eye = ROW(:eye_left_color, :eye_left_lenses)::eye,
-					right_eye = ROW(:eye_right_color, :eye_right_lenses)::eye
-				WHERE id = :id',
-				['id' => $face] + $description['face']
-			))->execute();
-			(new Storage\ParameterizedQuery(
-				$this->database,
-				'UPDATE bodies
-				SET build = :build,
-					skin = :skin,
-					weight = :weight,
-					height = :height
-				WHERE id = :id',
-				['id' => $body] + $description['body']
-			))->execute();
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE locations
-				SET coordinates = POINT(:coordinates_latitude, :coordinates_longitude),
-					met_at = to_range(:met_at_from::TIMESTAMPTZ, :met_at_to::TIMESTAMPTZ) 
-				WHERE id = :id',
-				['id' => $location] + $description['location']
-			))->execute();
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE hands
-				SET nails = ROW(:nails_color, :nails_length, :nails_care)::nail,
-					care = :care,
-					veins = :veins,
-					joint = :joint,
-					hair = :hair
-				WHERE id = :id',
-				['id' => $hands] + $description['hands']
-			))->execute();
-		});
-	}
-
-	/**
-	 * Description parts belonging to the demand
-	 * @param int $demand
-	 * @return array
-	 */
-	private function parts(int $demand): array {
-		return (new Storage\ParameterizedQuery(
+		(new Storage\FlatParameterizedQuery(
 			$this->database,
-			'SELECT general_id, body_id, face_id, location_id, hands_id
-			FROM descriptions
-			JOIN demands ON demands.description_id = descriptions.id
-			WHERE demands.id = ?',
-			[$demand]
-		))->row();
+			'UPDATE collective_demands
+			SET general_gender = :general_gender,
+				general_race_id = :general_race_id,
+				general_birth_year = to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
+				general_firstname = :general_firstname,
+				general_lastname = :general_lastname,
+				hair_style = :hair_style,
+				hair_color_id = :hair_color_id,
+				hair_length = :hair_length,
+				hair_highlights = :hair_highlights,
+				hair_roots = :hair_roots,
+				hair_nature = :hair_nature,
+				face_freckles = :face_freckles,
+				face_care = :face_care,
+				face_shape = :face_shape,
+				body = ROW(NULL, :body_build_id, :body_skin_color_id, :body_weight, :body_height)::bodies,
+				face_left_eye = ROW(NULL, :face_eye_left_color_id, :face_eye_left_lenses)::eyes,
+				face_right_eye = ROW(NULL, :face_eye_right_color_id, :face_eye_right_lenses)::eyes,
+				face_eyebrow = ROW(NULL, :face_eyebrow_color_id, :face_eyebrow_care)::eyebrows,
+				face_beard = ROW(NULL, :face_beard_color_id, :face_beard_length, :face_beard_style)::beards,
+				face_tooth = ROW(NULL, :face_teeth_care, :face_teeth_braces)::teeth,
+				location_coordinates = POINT(:location_coordinates_latitude, :location_coordinates_longitude),
+				location_met_at = to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				hands_nails = ROW(NULL, :hands_nails_color_id, :hands_nails_length, :hands_nails_care)::nails,
+				hands_vein_visibility = :hands_vein_visibility,
+				hands_joint_visibility = :hands_joint_visibility,
+				hands_care = :hands_care,
+				hands_hair = ROW(NULL, :hands_hair_color_id, :hands_hair_amount)::hand_hair
+			WHERE id = :id',
+			['id' => $this->id] + $description
+		))->execute();
 	}
 }

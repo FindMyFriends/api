@@ -7,9 +7,16 @@ DECLARE
 	v_table_name TEXT;
 	counts hstore DEFAULT '';
 	zero_counts hstore DEFAULT '';
+	table_enums TEXT[] DEFAULT ARRAY['colors', 'races', 'body_builds'];
 	count INTEGER;
 BEGIN
-	FOR v_table_name IN SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+	FOR v_table_name IN (
+		SELECT table_name
+		FROM information_schema.tables
+		WHERE table_schema = 'public'
+		AND table_type = 'BASE TABLE'
+		AND NOT (table_name = ANY(table_enums))
+	)
 	LOOP
 		EXECUTE format('SELECT COUNT(*) FROM %I', v_table_name) INTO count;
 		counts = counts || hstore(v_table_name, count::TEXT);
@@ -36,9 +43,18 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION test_utils.better_random(low INT = 1 ,high INT = 2147483647) RETURNS INT
+CREATE OR REPLACE FUNCTION test_utils.better_random(low INT = 1 ,high BIGINT = 2147483647) RETURNS INT
 AS $$
 BEGIN
-	RETURN floor(random()* (high-low + 1) + low);
+	RETURN floor(random()* (high - low + 1) + low);
+END;
+$$ language plpgsql STRICT;
+
+CREATE OR REPLACE FUNCTION test_utils.better_random(type TEXT) RETURNS INT
+AS $$
+DECLARE
+	types CONSTANT hstore DEFAULT 'smallint=>32767,integer=>2147483647,bigint=>9223372036854775807'::hstore ;
+BEGIN
+	RETURN test_utils.better_random(1, CAST(types -> lower(type) AS BIGINT));
 END;
 $$ language plpgsql STRICT;

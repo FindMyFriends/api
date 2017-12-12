@@ -22,7 +22,12 @@ BEGIN
 
 	RETURN message FROM assert.is_equal(
 		'',
-		(SELECT test_utils.tables_not_matching_count('general=>1,bodies=>1,faces=>1,descriptions=>1,evolutions=>1,seekers=>1,hands=>1'))
+		(SELECT test_utils.tables_not_matching_count(
+			hstore(
+				ARRAY['hair', 'nails', 'faces', 'teeth', 'hands', 'beards', 'bodies', 'general', 'evolutions', 'descriptions', 'hand_hair', 'seekers', 'eyebrows', 'eyes'],
+				ARRAY[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]::TEXT[]
+			)
+		))
 	);
 END
 $$

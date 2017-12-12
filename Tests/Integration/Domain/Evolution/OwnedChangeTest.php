@@ -25,7 +25,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));
@@ -33,7 +33,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->affect([]);
 		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));
@@ -41,7 +41,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1'),
+				new Access\FakeUser('1000'),
 				$this->database
 			))->revert();
 		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));

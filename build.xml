@@ -33,7 +33,8 @@
 			<arg value="-c"/>
 			<arg path="phpstan.neon"/>
 			<arg path="App"/>
-			<arg path="Tests"/>
+			<arg path="Tests/Misc"/>
+			<arg path="Tests/TestCase"/>
 			<arg path="Commands"/>
 		</exec>
 	</target>

@@ -46,10 +46,17 @@ final class SampleEvolution implements Sample {
 									$this->evolution['face'] ?? []
 								))->try()
 							),
-							'hands_id' => current(
+							'hand_id' => current(
 								(new SamplePostgresData(
 									$this->database,
 									'hand',
+									$this->evolution['hand'] ?? []
+								))->try()
+							),
+							'hair_id' => current(
+								(new SamplePostgresData(
+									$this->database,
+									'hair',
 									$this->evolution['hand'] ?? []
 								))->try()
 							),

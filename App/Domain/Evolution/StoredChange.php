@@ -18,80 +18,37 @@ final class StoredChange implements Change {
 	}
 
 	public function affect(array $changes): void {
-		(new Storage\Transaction($this->database))->start(function() use ($changes): void {
-			[
-				'general_id' => $general,
-				'body_id' => $body,
-				'face_id' => $face,
-				'hands_id' => $hands,
-				'seeker_id' => $seeker,
-			] = $this->parts($this->id);
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'WITH updated_general AS (
-					UPDATE general
-					SET gender = :gender,
-						race = :race,
-						birth_year = to_range(:birth_year_from::INTEGER, :birth_year_to::INTEGER),
-						firstname = :firstname,
-						lastname = :lastname
-					WHERE id = :id
-					RETURNING birth_year
-				)
-				UPDATE general
-				SET birth_year = (SELECT birth_year FROM updated_general)
-				WHERE id IN (
-					SELECT general_id
-					FROM base_evolution
-					WHERE seeker_id = :seeker_id
-				)',
-				['id' => $general, 'seeker_id' => $seeker] + $changes['general']
-			))->execute();
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE faces
-				SET teeth = ROW(:teeth_care, :teeth_braces)::tooth,
-					freckles = :freckles,
-					complexion = :complexion,
-					beard = :beard,
-					acne = :acne,
-					shape = :shape,
-					hair = ROW(
-						:hair_style,
-						:hair_color,
-						:hair_length,
-						:hair_highlights,
-						:hair_roots,
-						:hair_nature
-					)::hair,
-					eyebrow = :eyebrow,
-					left_eye = ROW(:eye_left_color, :eye_left_lenses)::eye,
-					right_eye = ROW(:eye_right_color, :eye_right_lenses)::eye
-				WHERE id = :id',
-				['id' => $face] + $changes['face']
-			))->execute();
-			(new Storage\ParameterizedQuery(
-				$this->database,
-				'UPDATE bodies
-				SET build = :build,
-					skin = :skin,
-					weight = :weight,
-					height = :height
-				WHERE id = :id',
-				['id' => $body] + $changes['body']
-			))->execute();
-			(new Storage\FlatParameterizedQuery(
-				$this->database,
-				'UPDATE hands
-				SET nails = ROW(:nails_color, :nails_length, :nails_care)::nail,
-					care = :care,
-					veins = :veins,
-					joint = :joint,
-					hair = :hair
-				WHERE id = :id',
-				['id' => $hands] + $changes['hands']
-			))->execute();
-		});
+		(new Storage\FlatParameterizedQuery(
+			$this->database,
+			'UPDATE collective_evolutions
+			SET general_gender = :general_gender,
+				general_race_id = :general_race_id,
+				general_firstname = :general_firstname,
+				general_lastname = :general_lastname,
+				hair_style = :hair_style,
+				hair_color_id = :hair_color_id,
+				hair_length = :hair_length,
+				hair_highlights = :hair_highlights,
+				hair_roots = :hair_roots,
+				hair_nature = :hair_nature,
+				face_freckles = :face_freckles,
+				face_care = :face_care,
+				face_shape = :face_shape,
+				body = ROW(NULL, :body_build_id, :body_skin_color_id, :body_weight, :body_height)::bodies,
+				face_left_eye = ROW(NULL, :face_eye_left_color_id, :face_eye_left_lenses)::eyes,
+				face_right_eye = ROW(NULL, :face_eye_right_color_id, :face_eye_right_lenses)::eyes,
+				face_eyebrow = ROW(NULL, :face_eyebrow_color_id, :face_eyebrow_care)::eyebrows,
+				face_beard = ROW(NULL, :face_beard_color_id, :face_beard_length, :face_beard_style)::beards,
+				face_tooth = ROW(NULL, :face_teeth_care, :face_teeth_braces)::teeth,
+				hands_nails = ROW(NULL, :hands_nails_color_id, :hands_nails_length, :hands_nails_care)::nails,
+				hands_vein_visibility = :hands_vein_visibility,
+				hands_joint_visibility = :hands_joint_visibility,
+				hands_care = :hands_care,
+				hands_hair = ROW(NULL, :hands_hair_color_id, :hands_hair_amount)::hand_hair,
+				evolved_at = :evolved_at
+			WHERE id = :id',
+			['id' => $this->id] + $changes
+		))->execute();
 	}
 
 	public function print(Output\Format $format): Output\Format {
@@ -99,22 +56,28 @@ final class StoredChange implements Change {
 			$this->database,
 			new Storage\ParameterizedQuery(
 				$this->database,
-				'SELECT id, evolved_at,
-					body_build, skin, weight, height,
-					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
-					age, firstname, lastname, gender, race,
-					nails, hands_care, hands_veins, hands_joint, hands_hair
-					FROM collective_evolutions
-				WHERE id = ?',
+				'SELECT * FROM collective_evolutions WHERE id = ?',
 				[$this->id]
 			),
 			[
-				'hair' => 'hair',
-				'left_eye' => 'eye',
-				'right_eye' => 'eye',
-				'teeth' => 'tooth',
+				'face_eyebrow' => 'eyebrows',
 				'age' => 'hstore',
-				'nails' => 'nail',
+				'body' => 'bodies',
+				'body_build' => 'body_builds',
+				'body_skin_color' => 'colors',
+				'face_beard' => 'beards',
+				'face_left_eye' => 'eyes',
+				'face_right_eye' => 'eyes',
+				'face_tooth' => 'teeth',
+				'hand_nail_color' => 'colors',
+				'face_right_eye_color' => 'colors',
+				'face_left_eye_color' => 'colors',
+				'hand_hair_color' => 'colors',
+				'face_beard_color' => 'colors',
+				'face_eyebrow_color' => 'colors',
+				'hair_color' => 'colors',
+				'general_race' => 'races',
+				'hands_nails' => 'nails',
 			]
 		))->row();
 		return new Output\FilledFormat(
@@ -124,41 +87,67 @@ final class StoredChange implements Change {
 				'evolved_at' => $evolution['evolved_at'],
 				'general' => [
 					'age' => $evolution['age'],
-					'firstname' => $evolution['firstname'],
-					'lastname' => $evolution['lastname'],
-					'gender' => $evolution['gender'],
-					'race' => $evolution['race'],
+					'firstname' => $evolution['general_firstname'],
+					'lastname' => $evolution['general_lastname'],
+					'gender' => $evolution['general_gender'],
+					'race' => $evolution['general_race'],
+				],
+				'hair' => [
+					'style' => $evolution['hair_style'],
+					'color' => $evolution['hair_color'],
+					'length' => $evolution['hair_length'],
+					'highlights' => $evolution['hair_highlights'],
+					'roots' => $evolution['hair_roots'],
+					'nature' => $evolution['hair_nature'],
 				],
 				'face' => [
-					'acne' => $evolution['acne'],
-					'beard' => $evolution['beard'],
-					'complexion' => $evolution['face_complexion'],
-					'eyebrow' => $evolution['eyebrow'],
+					'care' => $evolution['face_care'],
+					'beard' => [
+						'id' => $evolution['face_beard']['id'],
+						'length' => $evolution['face_beard']['length'],
+						'style' => $evolution['face_beard']['style'],
+						'color' => $evolution['face_beard_color'],
+					],
+					'eyebrow' => [
+						'id' => $evolution['face_eyebrow']['id'],
+						'care' => $evolution['face_eyebrow']['care'],
+						'color' => $evolution['face_eyebrow_color'],
+					],
 					'freckles' => $evolution['face_freckles'],
-					'hair' => $evolution['hair'],
 					'eye' => [
-						'left' => $evolution['left_eye'],
-						'right' => $evolution['right_eye'],
+						'left' => [
+							'id' => $evolution['face_left_eye']['id'],
+							'color' => $evolution['face_left_eye_color'],
+							'lenses' => $evolution['face_left_eye']['lenses'],
+						],
+						'right' => [
+							'id' => $evolution['face_right_eye']['id'],
+							'color' => $evolution['face_right_eye_color'],
+							'lenses' => $evolution['face_right_eye']['lenses'],
+						],
 					],
 					'shape' => $evolution['face_shape'],
-					'teeth' => $evolution['teeth'],
+					'teeth' => $evolution['face_tooth'],
 				],
 				'body' => [
 					'build' => $evolution['body_build'],
-					'skin' => $evolution['skin'],
-					'weight' => $evolution['weight'],
-					'height' => $evolution['height'],
+					'skin_color' => $evolution['body_skin_color'],
+					'weight' => $evolution['body']['weight'],
+					'height' => $evolution['body']['height'],
 				],
 				'hands' => [
 					'nails' => [
-						'length' => $evolution['nails']['length'],
-						'care' => $evolution['nails']['care'],
-						'color' => $evolution['nails']['color'],
+						'length' => $evolution['hands_nails']['length'],
+						'care' => $evolution['hands_nails']['care'],
+						'color' => $evolution['hand_nail_color'],
 					],
-					'veins' => $evolution['hands_veins'],
-					'joint' => $evolution['hands_joint'],
+					'vein_visibility' => $evolution['hands_vein_visibility'],
+					'joint_visibility' => $evolution['hands_joint_visibility'],
 					'care' => $evolution['hands_care'],
-					'hair' => $evolution['hands_hair'],
+					'hair' => [
+						'color' => $evolution['hand_hair_color'],
+						'amount' => $evolution['hand_hair_amount'],
+					],
 				],
 			]
 		);
@@ -172,21 +161,5 @@ final class StoredChange implements Change {
 				[$this->id]
 			)
 		))->execute();
-	}
-
-	/**
-	 * Description parts belonging to the evolution
-	 * @param int $evolution
-	 * @return array
-	 */
-	private function parts(int $evolution): array {
-		return (new Storage\ParameterizedQuery(
-			$this->database,
-			'SELECT general_id, body_id, face_id, seeker_id, hands_id
-			FROM descriptions
-			JOIN evolutions ON evolutions.description_id = descriptions.id
-			WHERE evolutions.id = ?',
-			[$evolution]
-		))->row();
 	}
 }

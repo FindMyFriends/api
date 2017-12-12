@@ -36,6 +36,7 @@ before_script:
   - psql -U postgres find_my_friends_test < Tests/fixtures/plpgunit.sql
   - psql -U postgres find_my_friends_test < Tests/fixtures/test_utils.sql
   - psql -U postgres find_my_friends_test < Tests/fixtures/samples.sql
+  - for file in fixtures/dumps/*.sql; do psql -U postgres find_my_friends_test < $file; done;
 
 script:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then vendor/bin/phing ci; else vendor/bin/phing; fi # Code coverage test

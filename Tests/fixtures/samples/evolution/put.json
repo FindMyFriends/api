@@ -1,60 +1,65 @@
 {
   "evolved_at": "2017-01-01T13:58:10+00:00",
   "general": {
-    "age": {
-      "from": 20,
-      "to": 25
-    },
     "gender": "man",
-    "race": "european",
+    "race_id": 2,
     "firstname": "Dominik",
     "lastname": "Klapuch"
   },
+  "hair": {
+    "style": "normal",
+    "color_id": 20,
+    "length": 20,
+    "highlights": false,
+    "roots": true,
+    "nature": false
+  },
   "face": {
     "teeth": {
-      "care": "high",
+      "care": 5,
       "braces": false
     },
     "freckles": false,
-    "complexion": "medium",
-    "beard": "no",
-    "acne": false,
-    "shape": "oval",
-    "hair": {
-      "style": "normal",
-      "color": "black",
-      "length": 20,
-      "highlights": false,
-      "roots": true,
-      "nature": false
+    "beard": {
+      "color_id": 12,
+      "length": 2,
+      "style": "none"
     },
-    "eyebrow": "black",
+    "shape": "oval",
+    "care": 10,
+    "eyebrow": {
+      "color_id": 12,
+      "care": 2
+    },
     "eye": {
       "left": {
-        "color": "blue",
+        "color_id": 20,
         "lenses": false
       },
       "right": {
-        "color": "blue",
+        "color_id": 20,
         "lenses": false
       }
     }
   },
   "body": {
-    "build": "skinny",
-    "skin": "white",
+    "build_id": 1,
+    "skin_color_id": 22,
     "weight": 60,
     "height": 181
   },
   "hands": {
     "nails": {
-      "color": null,
+      "color_id": null,
       "length": null,
       "care": null
     },
-    "care": "normal",
-    "veins": "visible",
-    "joint": "visible",
-    "hair": "few"
+    "care": 10,
+    "vein_visibility": 5,
+    "joint_visibility": 1,
+    "hair": {
+      "color_id": 66,
+      "amount": 5
+    }
   }
 }

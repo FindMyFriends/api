@@ -29,64 +29,76 @@ final class IndividualDemandsTest extends Tester\TestCase {
 						'from' => 1996,
 						'to' => 1998,
 					],
-					'gender' => 'man',
-					'race' => 'european',
 					'firstname' => null,
 					'lastname' => null,
+					'gender' => 'man',
+					'race_id' => 1,
+				],
+				'hair' => [
+					'style' => null,
+					'color_id' => 1,
+					'length' => null,
+					'highlights' => null,
+					'roots' => null,
+					'nature' => null,
 				],
 				'face' => [
-					'teeth' => [
-						'care' => null,
-						'braces' => null,
-					],
-					'freckles' => false,
-					'complexion' => null,
-					'beard' => null,
-					'acne' => false,
-					'shape' => null,
-					'hair' => [
+					'care' => null,
+					'beard' => [
+						'color_id' => 2,
+						'length' => 1,
 						'style' => null,
-						'color' => null,
-						'length' => null,
-						'highlights' => null,
-						'roots' => null,
-						'nature' => null,
 					],
-					'eyebrow' => null,
+					'eyebrow' => [
+						'color_id' => 3,
+						'care' => 5,
+					],
+					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'color' => null,
-							'lenses' => null,
+							'color_id' => 4,
+							'lenses' => false,
 						],
 						'right' => [
-							'color' => null,
-							'lenses' => null,
+							'color_id' => 4,
+							'lenses' => false,
 						],
+					],
+					'shape' => null,
+					'teeth' => [
+						'care' => 10,
+						'braces' => true,
 					],
 				],
 				'body' => [
-					'build' => null,
-					'skin' => null,
-					'weight' => null,
-					'height' => null,
+					'build_id' => 1,
+					'skin_color_id' => 6,
+					'weight' => 120,
+					'height' => 130,
 				],
 				'location' => [
-					'coordinates' => ['latitude' => 50.15, 'longitude' => 14.2],
+					'coordinates' => [
+						'latitude' => 10.4,
+						'longitude' => 50.4,
+					],
 					'met_at' => [
-						'from' => '2017-01-01',
-						'to' => '2017-01-02',
+						'from' => '2017-01-01 00:00:00+00',
+						'to' => '2017-01-02 00:00:00+00',
 					],
 				],
 				'hands' => [
 					'nails' => [
 						'length' => null,
 						'care' => null,
-						'color' => null,
+						'color_id' => 2,
 					],
-					'veins' => null,
-					'joint' => null,
+					'vein_visibility' => null,
+					'joint_visibility' => null,
 					'care' => null,
-					'hair' => null,
+					'hair' => [
+						'color_id' => 3,
+						'amount' => null,
+					],
 				],
 			]
 		);
@@ -102,6 +114,13 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				'general' => 1,
 				'faces' => 1,
 				'hands' => 1,
+				'eyes' => 2,
+				'hair' => 1,
+				'nails' => 1,
+				'teeth' => 1,
+				'beards' => 1,
+				'eyebrows' => 1,
+				'hand_hair' => 1,
 			]
 		))->assert();
 	}

@@ -17,213 +17,331 @@ final class Evolution {
 				[
 					'evolved_at' =>
 						[
-							'id' => '/properties/created_at',
 							'type' => 'string',
 						],
 					'id' =>
 						[
-							'id' => '/properties/id',
 							'type' => 'integer',
 						],
 					'body' =>
 						[
-							'id' => '/properties/body',
 							'additionalProperties' => false,
 							'properties' =>
 								[
 									'build' =>
 										[
-											'id' => '/properties/body/properties/build',
+											'additionalProperties' => false,
+											'properties' => [
+												'id' => [
+													'type' => 'integer',
+												],
+												'value' => [
+													'type' => 'string',
+												],
+											],
+											'required' => [
+												'id',
+												'value',
+											],
+											'type' => 'object',
+										],
+									'weight' =>
+										[
 											'type' =>
 												[
-													'string',
+													'integer',
 													'null',
 												],
 										],
 									'height' =>
 										[
-											'id' => '/properties/body/properties/height',
 											'type' =>
 												[
 													'integer',
 													'null',
 												],
 										],
-									'skin' =>
+									'skin_color' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'id' => [
+												'type' => ['integer', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'name' => [
+												'type' => 'string',
+											],
+											'hex' => [
+												'type' => 'string',
+											],
+										],
+										'required' => [
+											'id',
+											'name',
+											'hex',
+										],
+										'type' => 'object',
+									],
+								],
+							'required' =>
+								[
+									'build',
+									'skin_color',
+									'weight',
+									'height',
+								],
+							'type' => 'object',
+						],
+					'hair' =>
+						[
+							'additionalProperties' => false,
+							'properties' =>
+								[
+									'color' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'id' => [
+												'type' => ['integer', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'name' => [
+												'type' => 'string',
+											],
+											'hex' => [
+												'type' => 'string',
+											],
+										],
+										'required' => [
+											'id',
+											'name',
+											'hex',
+										],
+										'type' => 'object',
+									],
+									'highlights' =>
 										[
-											'id' => '/properties/body/properties/skin',
+											'type' =>
+												[
+													'boolean',
+													'null',
+												],
+										],
+									'length' =>
+										[
+											'type' =>
+												[
+													'integer',
+													'null',
+												],
+										],
+									'nature' =>
+										[
+											'type' =>
+												[
+													'boolean',
+													'null',
+												],
+										],
+									'roots' =>
+										[
+											'type' =>
+												[
+													'boolean',
+													'null',
+												],
+										],
+									'style' =>
+										[
 											'type' =>
 												[
 													'string',
-													'null',
-												],
-										],
-									'weight' =>
-										[
-											'id' => '/properties/body/properties/weight',
-											'type' =>
-												[
-													'integer',
 													'null',
 												],
 										],
 								],
 							'required' =>
 								[
-									'skin',
-									'weight',
-									'build',
-									'height',
+									'roots',
+									'length',
+									'highlights',
+									'color',
+									'nature',
+									'style',
 								],
 							'type' => 'object',
 						],
 					'face' =>
 						[
-							'id' => '/properties/face',
 							'additionalProperties' => false,
 							'properties' =>
 								[
-									'acne' =>
-										[
-											'id' => '/properties/face/properties/acne',
-											'type' =>
-												[
-													'boolean',
-													'null',
-												],
-										],
 									'beard' =>
 										[
-											'id' => '/properties/face/properties/beard',
-											'type' =>
-												[
-													'string',
-													'null',
+											'additionalProperties' => false,
+											'properties' => [
+												'id' => [
+													'type' => 'integer',
 												],
+												'color' => [
+													'additionalProperties' => false,
+													'properties' => [
+														'id' => [
+															'type' => ['integer', 'null'],
+															'enum' => array_merge(
+																[null],
+																(new PostgresTableEnum(
+																	'colors',
+																	$this->database
+																))->values()
+															),
+														],
+														'name' => [
+															'type' => 'string',
+														],
+														'hex' => [
+															'type' => 'string',
+														],
+													],
+													'required' => [
+														'id',
+														'name',
+														'hex',
+													],
+													'type' => 'object',
+												],
+												'length' => [
+													'additionalProperties' => false,
+													'type' => ['integer', 'null'],
+												],
+												'style' => [
+													'additionalProperties' => false,
+													'type' => ['string', 'null'],
+												],
+											],
+											'type' => 'object',
+											'required' => [
+												'id',
+												'color',
+												'length',
+												'style',
+											],
 										],
-									'complexion' =>
+									'care' =>
 										[
-											'id' => '/properties/face/properties/complexion',
-											'type' =>
+											'type' => ['integer', 'null'],
+											'minimum' => 0,
+											'maximum' => 10,
+										],
+									'eyebrow' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'id' => [
+												'type' => 'integer',
+											],
+											'color' => [
+												'additionalProperties' => false,
+												'properties' => [
+													'id' => [
+														'type' => ['integer', 'null'],
+														'enum' => array_merge(
+															[null],
+															(new PostgresTableEnum(
+																'colors',
+																$this->database
+															))->values()
+														),
+													],
+													'name' => [
+														'type' => 'string',
+													],
+													'hex' => [
+														'type' => 'string',
+													],
+												],
+												'required' => [
+													'id',
+													'name',
+													'hex',
+												],
+												'type' => 'object',
+											],
+											'care' =>
 												[
-													'string',
-													'null',
+													'type' => ['integer', 'null'],
+													'minimum' => 0,
+													'maximum' => 10,
 												],
 										],
-									'eyebrow' =>
-										[
-											'id' => '/properties/face/properties/eyebrow',
-											'type' =>
-												[
-													'string',
-													'null',
-												],
-										],
+										'required' =>
+											[
+												'color',
+												'care',
+											],
+										'type' => 'object',
+									],
 									'freckles' =>
 										[
-											'id' => '/properties/face/properties/freckles',
 											'type' =>
 												[
 													'boolean',
 													'null',
 												],
-										],
-									'hair' =>
-										[
-											'id' => '/properties/face/properties/hair',
-											'additionalProperties' => false,
-											'properties' =>
-												[
-													'color' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/color',
-															'type' =>
-																[
-																	'string',
-																	'null',
-																],
-														],
-													'highlights' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/highlights',
-															'type' =>
-																[
-																	'boolean',
-																	'null',
-																],
-														],
-													'length' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/length',
-															'type' =>
-																[
-																	'integer',
-																	'null',
-																],
-														],
-													'nature' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/nature',
-															'type' =>
-																[
-																	'boolean',
-																	'null',
-																],
-														],
-													'roots' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/roots',
-															'type' =>
-																[
-																	'boolean',
-																	'null',
-																],
-														],
-													'style' =>
-														[
-															'id' => '/properties/face/properties/hair/properties/style',
-															'type' =>
-																[
-																	'string',
-																	'null',
-																],
-														],
-												],
-											'required' =>
-												[
-													'roots',
-													'length',
-													'highlights',
-													'color',
-													'nature',
-													'style',
-												],
-											'type' => 'object',
 										],
 									'eye' =>
 										[
-											'id' => '/properties/face/properties/eye',
 											'additionalProperties' => false,
 											'properties' =>
 												[
 													'left' =>
 														[
-															'id' => '/properties/face/properties/eye/left',
 															'additionalProperties' => false,
 															'properties' =>
 																[
+																	'id' => [
+																		'type' => 'integer',
+																	],
 																	'color' =>
 																		[
-																			'id' => '/properties/face/properties/eye/left/properties/color',
-																			'type' =>
-																				[
-																					'string',
-																					'null',
+																			'additionalProperties' => false,
+																			'properties' => [
+																				'id' => [
+																					'type' => ['integer', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
 																				],
+																				'name' => [
+																					'type' => 'string',
+																				],
+																				'hex' => [
+																					'type' => 'string',
+																				],
+																			],
+																			'required' => [
+																				'id',
+																				'name',
+																				'hex',
+																			],
+																			'type' => 'object',
 																		],
 																	'lenses' =>
 																		[
-																			'id' => '/properties/face/properties/eye/left/properties/lenses',
 																			'type' =>
 																				[
 																					'boolean',
@@ -240,22 +358,42 @@ final class Evolution {
 														],
 													'right' =>
 														[
-															'id' => '/properties/face/properties/eye/right',
 															'additionalProperties' => false,
 															'properties' =>
 																[
+																	'id' => [
+																		'type' => 'integer',
+																	],
 																	'color' =>
 																		[
-																			'id' => '/properties/face/properties/eye/right/properties/color',
-																			'type' =>
-																				[
-																					'string',
-																					'null',
+																			'additionalProperties' => false,
+																			'properties' => [
+																				'id' => [
+																					'type' => ['integer', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
 																				],
+																				'name' => [
+																					'type' => 'string',
+																				],
+																				'hex' => [
+																					'type' => 'string',
+																				],
+																			],
+																			'required' => [
+																				'id',
+																				'name',
+																				'hex',
+																			],
+																			'type' => 'object',
 																		],
 																	'lenses' =>
 																		[
-																			'id' => '/properties/face/properties/eye/right/properties/lenses',
 																			'type' =>
 																				[
 																					'boolean',
@@ -274,7 +412,6 @@ final class Evolution {
 										],
 									'shape' =>
 										[
-											'id' => '/properties/face/properties/shape',
 											'type' =>
 												[
 													'string',
@@ -283,13 +420,14 @@ final class Evolution {
 										],
 									'teeth' =>
 										[
-											'id' => '/properties/face/properties/teeth',
 											'additionalProperties' => false,
 											'properties' =>
 												[
+													'id' => [
+														'type' => 'integer',
+													],
 													'braces' =>
 														[
-															'id' => '/properties/face/properties/teeth/properties/braces',
 															'type' =>
 																[
 																	'boolean',
@@ -298,12 +436,9 @@ final class Evolution {
 														],
 													'care' =>
 														[
-															'id' => '/properties/face/properties/teeth/properties/care',
-															'type' =>
-																[
-																	'string',
-																	'null',
-																],
+															'type' => ['integer', 'null'],
+															'minimum' => 0,
+															'maximum' => 10,
 														],
 												],
 											'required' =>
@@ -318,31 +453,26 @@ final class Evolution {
 								[
 									'beard',
 									'teeth',
-									'complexion',
 									'shape',
+									'care',
 									'eye',
-									'hair',
 									'eyebrow',
-									'acne',
 									'freckles',
 								],
 							'type' => 'object',
 						],
 					'general' =>
 						[
-							'id' => '/properties/general',
 							'additionalProperties' => false,
 							'properties' =>
 								[
 									'age' =>
 										[
-											'id' => '/properties/general/properties/age',
 											'additionalProperties' => false,
 											'properties' =>
 												[
 													'from' =>
 														[
-															'id' => '/properties/general/properties/age/properties/from',
 															'type' =>
 																[
 																	'integer',
@@ -353,7 +483,6 @@ final class Evolution {
 														],
 													'to' =>
 														[
-															'id' => '/properties/general/properties/age/properties/to',
 															'type' =>
 																[
 																	'integer',
@@ -372,7 +501,6 @@ final class Evolution {
 										],
 									'firstname' =>
 										[
-											'id' => '/properties/general/properties/firstname',
 											'type' =>
 												[
 													'string',
@@ -381,7 +509,6 @@ final class Evolution {
 										],
 									'gender' =>
 										[
-											'id' => '/properties/general/properties/gender',
 											'type' => 'string',
 											'enum' => (new PostgresEnum(
 												'genders',
@@ -390,7 +517,6 @@ final class Evolution {
 										],
 									'lastname' =>
 										[
-											'id' => '/properties/general/properties/lastname',
 											'type' =>
 												[
 													'string',
@@ -399,12 +525,24 @@ final class Evolution {
 										],
 									'race' =>
 										[
-											'id' => '/properties/general/properties/race',
-											'type' => 'string',
-											'enum' => (new PostgresEnum(
-												'races',
-												$this->database
-											))->values(),
+											'type' => 'object',
+											'required' => [
+												'id',
+												'value',
+											],
+											'additionalProperties' => false,
+											'properties' => [
+												'id' => [
+													'type' => 'integer',
+													'enum' => (new PostgresTableEnum(
+														'races',
+														$this->database
+													))->values(),
+												],
+												'value' => [
+													'type' => 'string',
+												],
+											],
 										],
 								],
 							'required' =>
@@ -418,41 +556,48 @@ final class Evolution {
 							'type' => 'object',
 						],
 					'hands' => [
-						'id' => '/properties/hands',
 						'additionalProperties' => false,
 						'properties' => [
 							'nails' => [
-								'id' => '/properties/hands/nails',
 								'additionalProperties' => false,
 								'properties' => [
 									'color' =>
 										[
-											'id' => '/properties/hands/properties/nails/properties/color',
-											'type' => ['string', 'null'],
-											'enum' => array_merge(
-												[null],
-												(new PostgresEnum(
-													'colors',
-													$this->database
-												))->values()
-											),
+											'additionalProperties' => false,
+											'properties' => [
+												'id' => [
+													'type' => ['integer', 'null'],
+													'enum' => array_merge(
+														[null],
+														(new PostgresTableEnum(
+															'colors',
+															$this->database
+														))->values()
+													),
+												],
+												'name' => [
+													'type' => 'string',
+												],
+												'hex' => [
+													'type' => 'string',
+												],
+											],
+											'required' => [
+												'id',
+												'name',
+												'hex',
+											],
+											'type' => 'object',
 										],
 									'length' =>
 										[
-											'id' => '/properties/hands/properties/nails/properties/length',
 											'type' => ['integer', 'null'],
 										],
 									'care' =>
 										[
-											'id' => '/properties/hands/properties/nails/properties/care',
-											'type' => ['string', 'null'],
-											'enum' => array_merge(
-												[null],
-												(new PostgresEnum(
-													'care',
-													$this->database
-												))->values()
-											),
+											'type' => ['integer', 'null'],
+											'minimum' => 0,
+											'maximum' => 10,
 										],
 								],
 								'required' =>
@@ -464,53 +609,68 @@ final class Evolution {
 								'type' => 'object',
 							],
 							'care' => [
-								'id' => '/properties/hands/care',
-								'type' => ['string', 'null'],
-								'enum' => array_merge(
-									[null],
-									(new PostgresEnum(
-										'hand_care',
-										$this->database
-									))->values()
-								),
+								'type' => ['integer', 'null'],
+								'minimum' => 0,
+								'maximum' => 10,
 							],
-							'veins' => [
-								'id' => '/properties/hands/veins',
-								'type' => ['string', 'null'],
-								'enum' => array_merge(
-									[null],
-									(new PostgresEnum(
-										'vein_visibility',
-										$this->database
-									))->values()
-								),
+							'vein_visibility' => [
+								'type' => ['integer', 'null'],
+								'minimum' => 0,
+								'maximum' => 10,
 							],
-							'joint' => [
-								'id' => '/properties/hands/joint',
-								'type' => ['string', 'null'],
-								'enum' => array_merge(
-									[null],
-									(new PostgresEnum(
-										'joint_visibility',
-										$this->database
-									))->values()
-								),
+							'joint_visibility' => [
+								'type' => ['integer', 'null'],
+								'minimum' => 0,
+								'maximum' => 10,
 							],
 							'hair' => [
-								'id' => '/properties/hands/hair',
-								'type' => ['string', 'null'],
-								'enum' => (new PostgresEnum(
-									'hand_hair',
-									$this->database
-								))->values(),
+								'additionalProperties' => false,
+								'properties' => [
+									'color' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'id' => [
+												'type' => ['integer', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'name' => [
+												'type' => 'string',
+											],
+											'hex' => [
+												'type' => 'string',
+											],
+										],
+										'required' => [
+											'id',
+											'name',
+											'hex',
+										],
+										'type' => 'object',
+									],
+									'amount' => [
+										'additionalProperties' => false,
+										'type' => ['integer', 'null'],
+									],
+								],
+								'required' => [
+									'color',
+									'amount',
+								],
+								'type' => 'object',
 							],
 						],
 						'required' =>
 							[
 								'nails',
 								'care',
-								'veins',
-								'joint',
+								'vein_visibility',
+								'joint_visibility',
 								'hair',
 							],
 						'type' => 'object',
@@ -520,6 +680,7 @@ final class Evolution {
 				[
 					'general',
 					'face',
+					'hair',
 					'body',
 					'hands',
 				],
@@ -529,69 +690,29 @@ final class Evolution {
 
 	public function put(): array {
 		$schema = $this->get();
-		unset($schema['properties']['id']);
+		$colors = new PostgresTableEnum('colors', $this->database);
+		$races = new PostgresTableEnum('races', $this->database);
+		$builds = new PostgresTableEnum('body_builds', $this->database);
+		$properties = &$schema['properties'];
+		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
+		$properties['body'] = (new JsonEnum($colors, $properties['body'], 'skin_color', 'skin_color_id'))->values();
+		$properties['hair'] = (new JsonEnum($colors, $properties['hair'], 'color', 'color_id'))->values();
+		$properties['face']['properties']['beard'] = (new JsonEnum($colors, $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
+		$properties['face']['properties']['beard'] = (new JsonEnum($colors, $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
+		$properties['face']['properties']['eyebrow'] = (new JsonEnum($colors, $properties['face']['properties']['eyebrow'], 'color', 'color_id'))->values();
+		$properties['face']['properties']['eye']['properties']['left'] = (new JsonEnum($colors, $properties['face']['properties']['eye']['properties']['left'], 'color', 'color_id'))->values();
+		$properties['face']['properties']['eye']['properties']['right'] = (new JsonEnum($colors, $properties['face']['properties']['eye']['properties']['right'], 'color', 'color_id'))->values();
+		$properties['general'] = (new JsonEnum($races, $properties['general'], 'race', 'race_id'))->values();
+		$properties['hands']['properties']['nails'] = (new JsonEnum($colors, $properties['hands']['properties']['nails'], 'color', 'color_id'))->values();
+		$properties['hands']['properties']['hair'] = (new JsonEnum($colors, $properties['hands']['properties']['hair'], 'color', 'color_id'))->values();
+		unset($properties['seeker_id']);
+		unset($properties['general']['properties']['age']);
+		unset($properties['general']['required'][array_search('age', $properties['general']['required'], true)]);
 		return $schema;
 	}
 
 	public function post(): array {
 		$schema = $this->put();
-		unset($schema['properties']['general']['properties']['age']);
-		unset(
-			$schema['properties']['general']['required'][array_search(
-				'age',
-				$schema['properties']['general']['required'],
-				true
-			)]
-		);
-		$schema['body']['default'] = [
-			'build' => null,
-			'height' => null,
-			'skin' => null,
-			'weight' => null,
-		];
-		$schema['face']['default'] = [
-			'acne' => null,
-			'beard' => null,
-			'complexion' => null,
-			'eyebrow' => null,
-			'freckles' => null,
-			'hair' => [
-				'color' => null,
-				'highlights' => null,
-				'length' => null,
-				'nature' => null,
-				'roots' => null,
-				'style' => null,
-			],
-			'eye' => [
-				'left' => [
-					'color' => null,
-					'lenses' => null,
-				],
-				'right' => [
-					'color' => null,
-					'lenses' => null,
-				],
-			],
-			'shape' => null,
-			'teeth' => [
-				'braces' => null,
-				'care' => null,
-			],
-		];
-		$schema['hands']['default'] = [
-			'nails' => [
-				'color' => null,
-				'length' => null,
-				'care' => null,
-			],
-			'care' => null,
-			'veins' => null,
-			'joint' => null,
-			'hair' => null,
-		];
-		$schema['general']['firstname']['default'] = null;
-		$schema['general']['lastname']['default'] = null;
 		return $schema;
 	}
 }

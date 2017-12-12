@@ -29,111 +29,136 @@ final class StoredChangeTest extends Tester\TestCase {
 		$evolution = new Evolution\StoredChange(1, $this->database);
 		$evolution->affect(
 			[
+				'evolved_at' => '2017-09-16 00:00:00+00',
 				'general' => [
-					'birth_year' => [
-						'from' => 1996,
-						'to' => 1998,
-					],
+					'firstname' => null,
+					'lastname' => null,
 					'gender' => 'man',
-					'race' => 'european',
-					'firstname' => 'Dom',
-					'lastname' => 'Klapuch',
+					'race_id' => 1,
+				],
+				'hair' => [
+					'style' => null,
+					'color_id' => 1,
+					'length' => null,
+					'highlights' => null,
+					'roots' => null,
+					'nature' => null,
 				],
 				'face' => [
-					'teeth' => [
-						'care' => 'high',
-						'braces' => false,
+					'care' => null,
+					'beard' => [
+						'color_id' => 2,
+						'length' => 1,
+						'style' => null,
 					],
-					'freckles' => false,
-					'complexion' => 'medium',
-					'beard' => 'no',
-					'acne' => false,
-					'shape' => 'oval',
-					'hair' => [
-						'style' => 'normal',
-						'color' => 'black',
-						'length' => 20,
-						'highlights' => false,
-						'roots' => true,
-						'nature' => false,
+					'eyebrow' => [
+						'color_id' => 3,
+						'care' => 5,
 					],
-					'eyebrow' => 'black',
+					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'color' => 'blue',
+							'color_id' => 4,
 							'lenses' => false,
 						],
 						'right' => [
-							'color' => 'blue',
+							'color_id' => 4,
 							'lenses' => false,
 						],
 					],
+					'shape' => null,
+					'teeth' => [
+						'care' => 10,
+						'braces' => true,
+					],
 				],
 				'body' => [
-					'build' => 'skinny',
-					'skin' => 'white',
-					'weight' => 60,
-					'height' => 181,
+					'build_id' => 1,
+					'skin_color_id' => 6,
+					'weight' => 120,
+					'height' => 130,
 				],
 				'hands' => [
 					'nails' => [
 						'length' => null,
 						'care' => null,
-						'color' => null,
+						'color_id' => 2,
 					],
-					'veins' => null,
-					'joint' => null,
+					'vein_visibility' => null,
+					'joint_visibility' => null,
 					'care' => null,
-					'hair' => null,
+					'hair' => [
+						'color_id' => 3,
+						'amount' => null,
+					],
 				],
 			]
 		);
 		Assert::equal(
 			[
-				'general' => [
-					'race' => 'european',
-					'gender' => 'man',
-					'lastname' => 'Klapuch',
-					'firstname' => 'Dom',
-					'age' => ['from' => '19', 'to' => '21'],
-				],
-				'face' => [
-					'teeth' => ['care' => 'high', 'braces' => false],
-					'shape' => 'oval',
-					'eye' => [
-						'left' => ['color' => 'blue', 'lenses' => false],
-						'right' => ['color' => 'blue', 'lenses' => false],
-					],
-					'hair' => [
-						'color' => 'black',
-						'roots' => true,
-						'style' => 'normal',
-						'length' => 20,
-						'nature' => false,
-						'highlights' => false,
-					],
-					'freckles' => false,
-					'eyebrow' => 'black',
-					'complexion' => 'medium',
-					'beard' => 'no',
-					'acne' => false,
-				],
-				'body' => [
-					'height' => 181,
-					'weight' => 60,
-					'skin' => 'white',
-					'build' => 'skinny',
-				],
 				'hands' => [
 					'nails' => [
 						'length' => null,
 						'care' => null,
-						'color' => null,
+						'color' => ['id' => 2, 'hex' => 'faebd7', 'name' => 'AntiqueWhite'],
 					],
-					'veins' => null,
-					'joint' => null,
+					'vein_visibility' => null,
+					'joint_visibility' => null,
 					'care' => null,
-					'hair' => null,
+					'hair' => [
+						'color' => ['id' => 3, 'hex' => '00ffff', 'name' => 'Aqua'],
+						'amount' => null,
+					],
+				],
+				'body' => [
+					'build' => ['id' => 1, 'value' => 'skinny'],
+					'skin_color' => ['id' => 6, 'hex' => 'f5f5dc', 'name' => 'Beige'],
+					'weight' => 120,
+					'height' => 130,
+				],
+				'face' => [
+					'care' => null,
+					'beard' => [
+						'id' => 3,
+						'length' => 1,
+						'style' => null,
+						'color' => ['id' => 2, 'hex' => 'faebd7', 'name' => 'AntiqueWhite'],
+					],
+					'eyebrow' => [
+						'id' => 3,
+						'care' => 5,
+						'color' => ['id' => 3, 'hex' => '00ffff', 'name' => 'Aqua'],
+					],
+					'freckles' => null,
+					'eye' => [
+						'left' => [
+							'id' => 5,
+							'lenses' => false,
+							'color' => ['id' => 4, 'hex' => '7fffd4', 'name' => 'Aquamarine'],
+						],
+						'right' => [
+							'id' => 6,
+							'lenses' => false,
+							'color' => ['id' => 4, 'hex' => '7fffd4', 'name' => 'Aquamarine'],
+						],
+					],
+					'shape' => null,
+					'teeth' => ['id' => 3, 'care' => 10, 'braces' => true],
+				],
+				'hair' => [
+					'style' => null,
+					'color' => ['id' => 1, 'hex' => 'f0f8ff', 'name' => 'AliceBlue'],
+					'length' => null,
+					'highlights' => null,
+					'roots' => null,
+					'nature' => null,
+				],
+				'general' => [
+					'age' => ['to' => '21', 'from' => '19'],
+					'firstname' => null,
+					'lastname' => null,
+					'gender' => 'man',
+					'race' => ['id' => 1, 'value' => 'asian'],
 				],
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,
@@ -153,62 +178,68 @@ final class StoredChangeTest extends Tester\TestCase {
 		$evolution = new Evolution\StoredChange(1, $this->database);
 		$evolution->affect(
 			[
+				'evolved_at' => '2017-09-16 00:00:00+00',
 				'general' => [
-					'birth_year' => [
-						'from' => 1996,
-						'to' => 1998,
-					],
+					'firstname' => null,
+					'lastname' => null,
 					'gender' => 'man',
-					'race' => 'european',
-					'firstname' => 'Dom',
-					'lastname' => 'Klapuch',
+					'race_id' => 1,
+				],
+				'hair' => [
+					'style' => null,
+					'color_id' => 1,
+					'length' => null,
+					'highlights' => null,
+					'roots' => null,
+					'nature' => null,
 				],
 				'face' => [
-					'teeth' => [
-						'care' => 'high',
-						'braces' => false,
+					'care' => null,
+					'beard' => [
+						'color_id' => 2,
+						'length' => 1,
+						'style' => null,
 					],
-					'freckles' => false,
-					'complexion' => 'medium',
-					'beard' => 'no',
-					'acne' => false,
-					'shape' => 'oval',
-					'hair' => [
-						'style' => 'normal',
-						'color' => 'black',
-						'length' => 20,
-						'highlights' => false,
-						'roots' => true,
-						'nature' => false,
+					'eyebrow' => [
+						'color_id' => 3,
+						'care' => 5,
 					],
-					'eyebrow' => 'black',
+					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'color' => 'blue',
+							'color_id' => 4,
 							'lenses' => false,
 						],
 						'right' => [
-							'color' => 'blue',
+							'color_id' => 4,
 							'lenses' => false,
 						],
 					],
+					'shape' => null,
+					'teeth' => [
+						'care' => 10,
+						'braces' => true,
+					],
 				],
 				'body' => [
-					'build' => 'skinny',
-					'skin' => 'white',
-					'weight' => 60,
-					'height' => 181,
+					'build_id' => 1,
+					'skin_color_id' => 6,
+					'weight' => 120,
+					'height' => 130,
 				],
 				'hands' => [
 					'nails' => [
 						'length' => null,
 						'care' => null,
-						'color' => null,
+						'color_id' => 2,
 					],
-					'veins' => null,
-					'joint' => null,
+					'vein_visibility' => null,
+					'joint_visibility' => null,
 					'care' => null,
-					'hair' => null,
+					'hair' => [
+						'color_id' => 3,
+						'amount' => null,
+					],
 				],
 			]
 		);

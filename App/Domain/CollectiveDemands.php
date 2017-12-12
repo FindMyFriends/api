@@ -22,31 +22,10 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$demands = (new Storage\TypedQuery(
+		$demands = (new Query(
 			$this->database,
-			new Storage\ParameterizedQuery(
-				$this->database,
-				$selection->expression(
-					'SELECT id, seeker_id, created_at,
-					body_build, skin, weight, height,
-					acne, beard, face_complexion, eyebrow, face_freckles, hair, left_eye, right_eye, face_shape, teeth,
-					age, firstname, lastname, gender, race,
-					location_coordinates, met_at,
-					nails, hands_care, hands_veins, hands_joint, hands_hair
-					FROM collective_demands'
-				),
-				$selection->criteria([])
-			),
-			[
-				'hair' => 'hair',
-				'left_eye' => 'eye',
-				'right_eye' => 'eye',
-				'teeth' => 'tooth',
-				'location_coordinates' => 'point',
-				'age' => 'hstore',
-				'met_at' => 'hstore',
-				'nails' => 'nail',
-			]
+			$selection->expression('SELECT * FROM collective_demands'),
+			$selection->criteria([])
 		))->rows();
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
