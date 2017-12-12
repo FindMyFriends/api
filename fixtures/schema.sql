@@ -462,9 +462,7 @@ CREATE FUNCTION demands_trigger_row_bu() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (old.created_at <> new.created_at) THEN
-		RAISE EXCEPTION 'Column created_at is read only';
-	END IF;
+	RAISE EXCEPTION 'Column created_at is read only';
 	RETURN new;
 END;
 $$;
@@ -2060,7 +2058,7 @@ CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECU
 -- Name: demands demands_row_bu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
+CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
 
 --
