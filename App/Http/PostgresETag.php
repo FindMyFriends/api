@@ -36,10 +36,10 @@ final class PostgresETag implements ETag {
 	public function set(object $entity): ETag {
 		(new Storage\ParameterizedQuery(
 			$this->database,
-			'INSERT INTO http.etags (entity, tag, created_at) VALUES (:entity, :tag, NOW())
+			'INSERT INTO http.etags (entity, tag, created_at) VALUES (?, ?, NOW())
 			ON CONFLICT (LOWER(entity)) DO UPDATE
-				SET tag = :tag, created_at = NOW()',
-			['entity' => $this->uri->path(), 'tag' => $this->tag($entity)]
+			SET tag = EXCLUDED.tag, created_at = EXCLUDED.created_at',
+			[$this->uri->path(), $this->tag($entity)]
 		))->execute();
 		return new self($this->database, $this->uri);
 	}

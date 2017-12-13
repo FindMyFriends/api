@@ -51,14 +51,13 @@ final class PostgresETagTest extends Tester\TestCase {
 		))->field();
 		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
 		$eTag->set(new \SplQueue());
-		Assert::notContains(
-			'2010',
-			(new Storage\ParameterizedQuery(
-				$this->database,
-				'SELECT created_at FROM http.etags WHERE id = ?',
-				[$id]
-			))->field()
-		);
+		$current = (new Storage\ParameterizedQuery(
+			$this->database,
+			'SELECT date_part(\'year\', created_at) AS created_at, tag FROM http.etags WHERE id = ?',
+			[$id]
+		))->row();
+		Assert::notSame('2010', $current['created_at']);
+		Assert::notSame('123', $current['tag']);
 	}
 
 
