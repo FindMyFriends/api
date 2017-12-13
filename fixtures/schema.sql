@@ -985,7 +985,7 @@ ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
 --
 
 CREATE FUNCTION to_range(integer, integer) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE STRICT
+    LANGUAGE plpgsql IMMUTABLE
     AS $_$
 BEGIN
 	RETURN int4range($1, $2);
@@ -1000,7 +1000,7 @@ ALTER FUNCTION public.to_range(integer, integer) OWNER TO postgres;
 --
 
 CREATE FUNCTION to_range(timestamp with time zone, timestamp with time zone) RETURNS tstzrange
-    LANGUAGE plpgsql IMMUTABLE STRICT
+    LANGUAGE plpgsql IMMUTABLE
     AS $_$
 BEGIN
 	RETURN tstzrange($1, $2);
@@ -1211,7 +1211,7 @@ ALTER FUNCTION public.updated_description(description complete_descriptions) OWN
 --
 
 CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE STRICT
+    LANGUAGE plpgsql IMMUTABLE
     AS $$
 BEGIN
 	RETURN int4range(
@@ -1229,7 +1229,7 @@ ALTER FUNCTION public.year_to_age(year int4range, now timestamp with time zone) 
 --
 
 CREATE FUNCTION year_to_age(year int4range, now tstzrange) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE STRICT
+    LANGUAGE plpgsql IMMUTABLE
     AS $$
 BEGIN
 	RETURN int4range(
