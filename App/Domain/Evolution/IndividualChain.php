@@ -83,35 +83,10 @@ final class IndividualChain implements Chain {
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
-		$evolutions = (new Storage\TypedQuery(
+		$evolutions = (new Query(
 			$this->database,
-			new Storage\ParameterizedQuery(
-				$this->database,
-				$selection->expression(
-					'SELECT * FROM collective_evolutions WHERE seeker_id = ?'
-				),
-				$selection->criteria([$this->seeker->id()])
-			),
-			[
-				'face_eyebrow' => 'eyebrows',
-				'age' => 'hstore',
-				'body' => 'bodies',
-				'body_build' => 'body_builds',
-				'body_skin_color' => 'colors',
-				'face_beard' => 'beards',
-				'face_left_eye' => 'eyes',
-				'face_right_eye' => 'eyes',
-				'face_tooth' => 'teeth',
-				'hand_nail_color' => 'colors',
-				'face_right_eye_color' => 'colors',
-				'face_left_eye_color' => 'colors',
-				'hand_hair_color' => 'colors',
-				'face_beard_color' => 'colors',
-				'face_eyebrow_color' => 'colors',
-				'hair_color' => 'colors',
-				'general_race' => 'races',
-				'hands_nails' => 'nails',
-			]
+			$selection->expression('SELECT * FROM collective_evolutions WHERE seeker_id = ?'),
+			$selection->criteria([$this->seeker->id()])
 		))->rows();
 		foreach ($evolutions as $change) {
 			yield new StoredChange(

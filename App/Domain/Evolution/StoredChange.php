@@ -52,33 +52,10 @@ final class StoredChange implements Change {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$evolution = (new Storage\TypedQuery(
+		$evolution = (new Query(
 			$this->database,
-			new Storage\ParameterizedQuery(
-				$this->database,
-				'SELECT * FROM collective_evolutions WHERE id = ?',
-				[$this->id]
-			),
-			[
-				'face_eyebrow' => 'eyebrows',
-				'age' => 'hstore',
-				'body' => 'bodies',
-				'body_build' => 'body_builds',
-				'body_skin_color' => 'colors',
-				'face_beard' => 'beards',
-				'face_left_eye' => 'eyes',
-				'face_right_eye' => 'eyes',
-				'face_tooth' => 'teeth',
-				'hand_nail_color' => 'colors',
-				'face_right_eye_color' => 'colors',
-				'face_left_eye_color' => 'colors',
-				'hand_hair_color' => 'colors',
-				'face_beard_color' => 'colors',
-				'face_eyebrow_color' => 'colors',
-				'hair_color' => 'colors',
-				'general_race' => 'races',
-				'hands_nails' => 'nails',
-			]
+			'SELECT * FROM collective_evolutions WHERE id = ?',
+			[$this->id]
 		))->row();
 		return new Output\FilledFormat(
 			$format,
