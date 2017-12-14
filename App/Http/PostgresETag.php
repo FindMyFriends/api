@@ -18,7 +18,7 @@ final class PostgresETag implements ETag {
 	}
 
 	public function exists(): bool {
-		return (bool) (new Storage\ParameterizedQuery(
+		return (bool) (new Storage\NativeQuery(
 			$this->database,
 			'SELECT 1 FROM http.etags WHERE entity = LOWER(?)',
 			[$this->uri->path()]
@@ -26,7 +26,7 @@ final class PostgresETag implements ETag {
 	}
 
 	public function get(): string {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			'SELECT tag FROM http.etags WHERE entity = LOWER(?)',
 			[$this->uri->path()]
@@ -34,7 +34,7 @@ final class PostgresETag implements ETag {
 	}
 
 	public function set(object $entity): ETag {
-		(new Storage\ParameterizedQuery(
+		(new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO http.etags (entity, tag, created_at) VALUES (?, ?, NOW())
 			ON CONFLICT (LOWER(entity)) DO UPDATE

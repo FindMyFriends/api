@@ -15,7 +15,7 @@ final class SampleEvolution implements Sample {
 	}
 
 	public function try(): array {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (?, ?, ?)
 			RETURNING id',

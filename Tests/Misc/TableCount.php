@@ -19,7 +19,7 @@ final class TableCount implements Assertion {
 	public function assert(): void {
 		Assert::same(
 			$this->count,
-			(new Storage\ParameterizedQuery(
+			(new Storage\NativeQuery(
 				$this->database,
 				sprintf('SELECT COUNT(*) FROM %s', $this->table)
 			))->field(),

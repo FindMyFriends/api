@@ -15,7 +15,7 @@ final class SampleDemand implements Sample {
 	}
 
 	public function try(): array {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES
 			(?, ?, ?, ?)

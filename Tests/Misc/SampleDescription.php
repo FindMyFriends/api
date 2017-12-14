@@ -14,7 +14,7 @@ final class SampleDescription implements Sample {
 	}
 
 	public function try(): array {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id) VALUES 
 			(?, ?, ?, ?, ?)

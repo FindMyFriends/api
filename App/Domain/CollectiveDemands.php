@@ -22,7 +22,7 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$demands = (new Query(
+		$demands = (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression('SELECT * FROM collective_demands'),
 			$selection->criteria([])
@@ -36,7 +36,7 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			$selection->expression('SELECT COUNT(*) FROM demands'),
 			$selection->criteria([])

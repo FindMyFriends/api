@@ -18,7 +18,7 @@ final class StoredChange implements Change {
 	}
 
 	public function affect(array $changes): void {
-		(new Storage\FlatParameterizedQuery(
+		(new Storage\FlatQuery(
 			$this->database,
 			'UPDATE collective_evolutions
 			SET general_gender = :general_gender,
@@ -52,7 +52,7 @@ final class StoredChange implements Change {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$evolution = (new Query(
+		$evolution = (new Storage\TypedQuery(
 			$this->database,
 			'SELECT * FROM collective_evolutions WHERE id = ?',
 			[$this->id]
@@ -132,7 +132,7 @@ final class StoredChange implements Change {
 
 	public function revert(): void {
 		(new Storage\ApplicationQuery(
-			new Storage\ParameterizedQuery(
+			new Storage\NativeQuery(
 				$this->database,
 				'DELETE FROM evolutions WHERE id = ?',
 				[$this->id]

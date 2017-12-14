@@ -15,7 +15,7 @@ final class PostgresEnum implements Enum {
 
 	public function values(): array {
 		return array_column(
-			(new Storage\ParameterizedQuery(
+			(new Storage\NativeQuery(
 				$this->database,
 				sprintf('SELECT unnest(enum_range(NULL::%s)) AS values', $this->name)
 			))->rows(),

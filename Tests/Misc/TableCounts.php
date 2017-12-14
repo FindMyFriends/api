@@ -19,12 +19,8 @@ final class TableCounts implements Assertion {
 			[],
 			(new Storage\TypedQuery(
 				$this->database,
-				new Storage\ParameterizedQuery(
-					$this->database,
-					'SELECT test_utils.tables_not_matching_count(test_utils.json_to_hstore(?)) AS counts',
-					[json_encode($this->counts)]
-				),
-				['counts' => 'hstore']
+				'SELECT test_utils.tables_not_matching_count(test_utils.json_to_hstore(?))',
+				[json_encode($this->counts)]
 			))->field()
 		);
 	}

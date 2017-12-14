@@ -15,7 +15,7 @@ final class StoredDemand implements Demand {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$demand = (new Query(
+		$demand = (new Storage\TypedQuery(
 			$this->database,
 			'SELECT * FROM collective_demands
 				WHERE id = ?',
@@ -103,7 +103,7 @@ final class StoredDemand implements Demand {
 	}
 
 	public function retract(): void {
-		(new Storage\ParameterizedQuery(
+		(new Storage\NativeQuery(
 			$this->database,
 			'DELETE FROM demands WHERE id = ?',
 			[$this->id]
@@ -111,7 +111,7 @@ final class StoredDemand implements Demand {
 	}
 
 	public function reconsider(array $description): void {
-		(new Storage\FlatParameterizedQuery(
+		(new Storage\FlatQuery(
 			$this->database,
 			'UPDATE collective_demands
 			SET general_gender = :general_gender,

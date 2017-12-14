@@ -19,7 +19,7 @@ final class IndividualChain implements Chain {
 	}
 
 	public function extend(array $progress): Change {
-		$id = (new Storage\FlatParameterizedQuery(
+		$id = (new Storage\FlatQuery(
 			$this->database,
 			'INSERT INTO collective_evolutions (
 				evolved_at,
@@ -83,7 +83,7 @@ final class IndividualChain implements Chain {
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
-		$evolutions = (new Query(
+		$evolutions = (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression('SELECT * FROM collective_evolutions WHERE seeker_id = ?'),
 			$selection->criteria([$this->seeker->id()])
@@ -97,7 +97,7 @@ final class IndividualChain implements Chain {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			$selection->expression('SELECT COUNT(*) FROM evolutions WHERE seeker_id = ?'),
 			$selection->criteria([$this->seeker->id()])

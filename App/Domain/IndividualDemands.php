@@ -19,7 +19,7 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$demands = (new Query(
+		$demands = (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression(
 				'SELECT * FROM collective_demands WHERE seeker_id = ?'
@@ -35,7 +35,7 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function ask(array $description): Demand {
-		$id = (new Storage\FlatParameterizedQuery(
+		$id = (new Storage\FlatQuery(
 			$this->database,
 			'INSERT INTO collective_demands (
 				location_met_at,
@@ -103,7 +103,7 @@ final class IndividualDemands implements Demands {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			$selection->expression('SELECT COUNT(*) FROM demands WHERE seeker_id = ?'),
 			$selection->criteria([$this->seeker->id()])

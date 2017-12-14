@@ -26,7 +26,7 @@ final class StoredDemandTest extends Tester\TestCase {
 		(new Misc\TableCount($this->database, 'demands', 1))->assert();
 		Assert::same(
 			2,
-			(new Storage\ParameterizedQuery(
+			(new Storage\NativeQuery(
 				$this->database,
 				'SELECT id FROM demands'
 			))->field()

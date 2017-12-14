@@ -43,7 +43,7 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testUpdatingWithRecordedDatetime() {
-		$id = (new Storage\ParameterizedQuery(
+		$id = (new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO http.etags (entity, tag, created_at) VALUES (?, ?, ?)
 			RETURNING id',
@@ -51,7 +51,7 @@ final class PostgresETagTest extends Tester\TestCase {
 		))->field();
 		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
 		$eTag->set(new \SplQueue());
-		$current = (new Storage\ParameterizedQuery(
+		$current = (new Storage\NativeQuery(
 			$this->database,
 			'SELECT date_part(\'year\', created_at) AS created_at, tag FROM http.etags WHERE id = ?',
 			[$id]

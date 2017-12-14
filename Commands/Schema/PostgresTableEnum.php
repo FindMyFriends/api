@@ -15,7 +15,7 @@ final class PostgresTableEnum implements Enum {
 
 	public function values(): array {
 		return array_column(
-			(new Storage\ParameterizedQuery(
+			(new Storage\NativeQuery(
 				$this->database,
 				sprintf('SELECT id FROM %s', $this->table)
 			))->rows(),

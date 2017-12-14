@@ -46,7 +46,7 @@ final class OwnedDemand implements Demand {
 	}
 
 	private function owned(int $id): bool {
-		return (bool) (new Storage\ParameterizedQuery(
+		return (bool) (new Storage\NativeQuery(
 			$this->database,
 			'SELECT 1
 			FROM demands

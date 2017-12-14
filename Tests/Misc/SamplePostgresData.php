@@ -16,7 +16,7 @@ final class SamplePostgresData implements Sample {
 	}
 
 	public function try(): array {
-		return (new Storage\ParameterizedQuery(
+		return (new Storage\NativeQuery(
 			$this->database,
 			sprintf(
 				'SELECT %1$s AS id FROM samples.%1$s(test_utils.json_to_hstore(?))',

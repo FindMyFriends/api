@@ -35,7 +35,7 @@ final class ExistingDemand implements Demand {
 	}
 
 	private function exists(int $id): bool {
-		return (bool) (new Storage\ParameterizedQuery(
+		return (bool) (new Storage\NativeQuery(
 			$this->database,
 			'SELECT 1 FROM demands WHERE id = ?',
 			[$id]

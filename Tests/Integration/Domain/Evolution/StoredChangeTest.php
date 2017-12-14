@@ -249,7 +249,7 @@ final class StoredChangeTest extends Tester\TestCase {
 				['birth_year' => '[1996,1998)'],
 				['birth_year' => '[1996,1998)'],
 			],
-			(new Storage\ParameterizedQuery(
+			(new Storage\NativeQuery(
 				$this->database,
 				'SELECT birth_year FROM general'
 			))->rows()
