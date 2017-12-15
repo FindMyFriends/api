@@ -20,13 +20,13 @@ final class FormattedDemand implements Demand {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('location', function(array $location): array {
 				return [
-						'met_at' => array_map(
-							function(string $range): string {
+					'met_at' => array_map(
+						function(string $range): string {
 								return (new \DateTime($range))->format(\DateTime::ATOM);
-							},
-							$location['met_at']
-						),
-					] + $location;
+						},
+						$location['met_at']
+					),
+				] + $location;
 			})->adjusted('general', function(array $general): array {
 				return ['age' => array_map('intval', $general['age'])] + $general;
 			});

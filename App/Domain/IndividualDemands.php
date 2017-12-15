@@ -21,9 +21,7 @@ final class IndividualDemands implements Demands {
 	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression(
-				'SELECT * FROM collective_demands WHERE seeker_id = ?'
-			),
+			$selection->expression('SELECT * FROM collective_demands WHERE seeker_id = ?'),
 			$selection->criteria([$this->seeker->id()])
 		))->rows();
 		foreach ($demands as $demand) {
