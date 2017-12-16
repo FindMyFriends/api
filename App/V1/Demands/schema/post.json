@@ -1711,11 +1711,11 @@
         }
     },
     "required": [
+        "location",
         "general",
         "face",
         "hair",
         "body",
-        "location",
         "hands"
     ],
     "type": "object"

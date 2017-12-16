@@ -11,6 +11,54 @@
         "id": {
             "type": "integer"
         },
+        "location": {
+            "additionalProperties": false,
+            "properties": {
+                "coordinates": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "latitude": {
+                            "type": "number"
+                        },
+                        "longitude": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "latitude",
+                        "longitude"
+                    ],
+                    "type": "object"
+                },
+                "met_at": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "from": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "to": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "from",
+                        "to"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "coordinates",
+                "met_at"
+            ],
+            "type": "object"
+        },
         "body": {
             "additionalProperties": false,
             "properties": {
@@ -1799,62 +1847,14 @@
                 "hair"
             ],
             "type": "object"
-        },
-        "location": {
-            "additionalProperties": false,
-            "properties": {
-                "coordinates": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "latitude": {
-                            "type": "number"
-                        },
-                        "longitude": {
-                            "type": "number"
-                        }
-                    },
-                    "required": [
-                        "latitude",
-                        "longitude"
-                    ],
-                    "type": "object"
-                },
-                "met_at": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "from": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        },
-                        "to": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "from",
-                        "to"
-                    ],
-                    "type": "object"
-                }
-            },
-            "required": [
-                "coordinates",
-                "met_at"
-            ],
-            "type": "object"
         }
     },
     "required": [
+        "location",
         "general",
         "face",
         "hair",
         "body",
-        "location",
         "hands"
     ],
     "type": "object"

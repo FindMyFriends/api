@@ -2,12 +2,6 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false,
     "properties": {
-        "evolved_at": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
         "body": {
             "additionalProperties": false,
             "properties": {
@@ -1639,6 +1633,12 @@
                 "hair"
             ],
             "type": "object"
+        },
+        "evolved_at": {
+            "type": "string"
+        },
+        "id": {
+            "type": "integer"
         }
     },
     "required": [
