@@ -5,10 +5,12 @@ namespace FindMyFriends\Commands\Schema;
 use Klapuch\Storage;
 
 final class PostgresTableEnum implements Enum {
+	private $column;
 	private $table;
 	private $database;
 
-	public function __construct(string $table, \PDO $database) {
+	public function __construct(string $column, string $table, \PDO $database) {
+		$this->column = $column;
 		$this->table = $table;
 		$this->database = $database;
 	}
@@ -17,9 +19,9 @@ final class PostgresTableEnum implements Enum {
 		return array_column(
 			(new Storage\NativeQuery(
 				$this->database,
-				sprintf('SELECT id FROM %s', $this->table)
+				sprintf('SELECT %s FROM %s', $this->column, $this->table)
 			))->rows(),
-			'id'
+			$this->column
 		);
 	}
 }

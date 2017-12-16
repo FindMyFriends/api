@@ -42,13 +42,34 @@ final class Description {
 												'enum' => array_merge(
 													[null],
 													(new PostgresTableEnum(
+														'id',
 														'colors',
 														$this->database
 													))->values()
 												),
 											],
-											'name' => ['type' => 'string'],
-											'hex' => ['type' => 'string'],
+											'name' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'name',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'hex' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'hex',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
 										],
 										'required' => [
 											'id',
@@ -79,13 +100,34 @@ final class Description {
 												'enum' => array_merge(
 													[null],
 													(new PostgresTableEnum(
+														'id',
 														'colors',
 														$this->database
 													))->values()
 												),
 											],
-											'name' => ['type' => 'string'],
-											'hex' => ['type' => 'string'],
+											'name' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'name',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'hex' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'hex',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
 										],
 										'required' => [
 											'id',
@@ -128,13 +170,34 @@ final class Description {
 															'enum' => array_merge(
 																[null],
 																(new PostgresTableEnum(
+																	'id',
 																	'colors',
 																	$this->database
 																))->values()
 															),
 														],
-														'name' => ['type' => 'string'],
-														'hex' => ['type' => 'string'],
+														'name' => [
+															'type' => ['string', 'null'],
+															'enum' => array_merge(
+																[null],
+																(new PostgresTableEnum(
+																	'name',
+																	'colors',
+																	$this->database
+																))->values()
+															),
+														],
+														'hex' => [
+															'type' => ['string', 'null'],
+															'enum' => array_merge(
+																[null],
+																(new PostgresTableEnum(
+																	'hex',
+																	'colors',
+																	$this->database
+																))->values()
+															),
+														],
 													],
 													'required' => [
 														'id',
@@ -180,13 +243,34 @@ final class Description {
 														'enum' => array_merge(
 															[null],
 															(new PostgresTableEnum(
+																'id',
 																'colors',
 																$this->database
 															))->values()
 														),
 													],
-													'name' => ['type' => 'string'],
-													'hex' => ['type' => 'string'],
+													'name' => [
+														'type' => ['string', 'null'],
+														'enum' => array_merge(
+															[null],
+															(new PostgresTableEnum(
+																'name',
+																'colors',
+																$this->database
+															))->values()
+														),
+													],
+													'hex' => [
+														'type' => ['string', 'null'],
+														'enum' => array_merge(
+															[null],
+															(new PostgresTableEnum(
+																'hex',
+																'colors',
+																$this->database
+															))->values()
+														),
+													],
 												],
 												'required' => [
 													'id',
@@ -230,13 +314,34 @@ final class Description {
 																					'enum' => array_merge(
 																						[null],
 																						(new PostgresTableEnum(
+																							'id',
 																							'colors',
 																							$this->database
 																						))->values()
 																					),
 																				],
-																				'name' => ['type' => 'string'],
-																				'hex' => ['type' => 'string'],
+																				'name' => [
+																					'type' => ['string', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'name',
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
+																				],
+																				'hex' => [
+																					'type' => ['string', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'hex',
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
+																				],
 																			],
 																			'required' => [
 																				'id',
@@ -269,13 +374,34 @@ final class Description {
 																					'enum' => array_merge(
 																						[null],
 																						(new PostgresTableEnum(
+																							'id',
 																							'colors',
 																							$this->database
 																						))->values()
 																					),
 																				],
-																				'name' => ['type' => 'string'],
-																				'hex' => ['type' => 'string'],
+																				'name' => [
+																					'type' => ['string', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'name',
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
+																				],
+																				'hex' => [
+																					'type' => ['string', 'null'],
+																					'enum' => array_merge(
+																						[null],
+																						(new PostgresTableEnum(
+																							'hex',
+																							'colors',
+																							$this->database
+																						))->values()
+																					),
+																				],
 																			],
 																			'required' => [
 																				'id',
@@ -355,10 +481,7 @@ final class Description {
 											'required' => ['from', 'to'],
 											'type' => 'object',
 										],
-									'firstname' =>
-										[
-											'type' => ['string', 'null'],
-										],
+									'firstname' => ['type' => ['string', 'null']],
 									'gender' =>
 										[
 											'type' => 'string',
@@ -380,11 +503,19 @@ final class Description {
 												'id' => [
 													'type' => 'integer',
 													'enum' => (new PostgresTableEnum(
+														'id',
 														'races',
 														$this->database
 													))->values(),
 												],
-												'value' => ['type' => 'string'],
+												'value' => [
+													'type' => 'string',
+													'enum' => (new PostgresTableEnum(
+														'value',
+														'races',
+														$this->database
+													))->values(),
+												],
 											],
 										],
 								],
@@ -413,13 +544,34 @@ final class Description {
 													'enum' => array_merge(
 														[null],
 														(new PostgresTableEnum(
+															'id',
 															'colors',
 															$this->database
 														))->values()
 													),
 												],
-												'name' => ['type' => 'string'],
-												'hex' => ['type' => 'string'],
+												'name' => [
+													'type' => ['string', 'null'],
+													'enum' => array_merge(
+														[null],
+														(new PostgresTableEnum(
+															'name',
+															'colors',
+															$this->database
+														))->values()
+													),
+												],
+												'hex' => [
+													'type' => ['string', 'null'],
+													'enum' => array_merge(
+														[null],
+														(new PostgresTableEnum(
+															'hex',
+															'colors',
+															$this->database
+														))->values()
+													),
+												],
 											],
 											'required' => [
 												'id',
@@ -473,13 +625,34 @@ final class Description {
 												'enum' => array_merge(
 													[null],
 													(new PostgresTableEnum(
+														'id',
 														'colors',
 														$this->database
 													))->values()
 												),
 											],
-											'name' => ['type' => 'string'],
-											'hex' => ['type' => 'string'],
+											'name' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'name',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
+											'hex' => [
+												'type' => ['string', 'null'],
+												'enum' => array_merge(
+													[null],
+													(new PostgresTableEnum(
+														'hex',
+														'colors',
+														$this->database
+													))->values()
+												),
+											],
 										],
 										'required' => [
 											'id',
@@ -525,9 +698,9 @@ final class Description {
 
 	public function put(): array {
 		$schema = $this->get();
-		$colors = new PostgresTableEnum('colors', $this->database);
-		$races = new PostgresTableEnum('races', $this->database);
-		$builds = new PostgresTableEnum('body_builds', $this->database);
+		$colors = new PostgresTableEnum('id', 'colors', $this->database);
+		$races = new PostgresTableEnum('id', 'races', $this->database);
+		$builds = new PostgresTableEnum('id', 'body_builds', $this->database);
 		$properties = &$schema['properties'];
 		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
 		$properties['body'] = (new JsonEnum($colors, $properties['body'], 'skin_color', 'skin_color_id'))->values();
