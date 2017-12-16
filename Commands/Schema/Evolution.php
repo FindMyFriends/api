@@ -17,7 +17,7 @@ final class Evolution {
 			'properties' =>
 				[
 					'evolved_at' => ['type' => 'string'],
-					'id' => ['type' => 'integer']
+					'id' => ['type' => 'integer'],
 				] + $description['properties'],
 			'required' => $description['required'],
 			'type' => 'object',

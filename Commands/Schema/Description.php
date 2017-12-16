@@ -16,19 +16,15 @@ final class Description {
 			'properties' =>
 				[
 					'body' => [
-							'additionalProperties' => false,
-							'properties' =>
+						'additionalProperties' => false,
+						'properties' =>
 								[
 									'build' =>
 										[
 											'additionalProperties' => false,
 											'properties' => [
-												'id' => [
-													'type' => 'integer',
-												],
-												'value' => [
-													'type' => 'string',
-												],
+												'id' => ['type' => 'integer'],
+												'value' => ['type' => 'string'],
 											],
 											'required' => [
 												'id',
@@ -36,22 +32,8 @@ final class Description {
 											],
 											'type' => 'object',
 										],
-									'weight' =>
-										[
-											'type' =>
-												[
-													'integer',
-													'null',
-												],
-										],
-									'height' =>
-										[
-											'type' =>
-												[
-													'integer',
-													'null',
-												],
-										],
+									'weight' => ['type' => ['integer', 'null']],
+									'height' => ['type' => ['integer', 'null']],
 									'skin_color' => [
 										'additionalProperties' => false,
 										'properties' => [
@@ -65,12 +47,8 @@ final class Description {
 													))->values()
 												),
 											],
-											'name' => [
-												'type' => 'string',
-											],
-											'hex' => [
-												'type' => 'string',
-											],
+											'name' => ['type' => 'string'],
+											'hex' => ['type' => 'string'],
 										],
 										'required' => [
 											'id',
@@ -80,18 +58,18 @@ final class Description {
 										'type' => 'object',
 									],
 								],
-							'required' =>
+						'required' =>
 								[
 									'build',
 									'skin_color',
 									'weight',
 									'height',
 								],
-							'type' => 'object',
-						],
+						'type' => 'object',
+					],
 					'hair' => [
-							'additionalProperties' => false,
-							'properties' =>
+						'additionalProperties' => false,
+						'properties' =>
 								[
 									'color' => [
 										'additionalProperties' => false,
@@ -106,12 +84,8 @@ final class Description {
 													))->values()
 												),
 											],
-											'name' => [
-												'type' => 'string',
-											],
-											'hex' => [
-												'type' => 'string',
-											],
+											'name' => ['type' => 'string'],
+											'hex' => ['type' => 'string'],
 										],
 										'required' => [
 											'id',
@@ -120,48 +94,13 @@ final class Description {
 										],
 										'type' => 'object',
 									],
-									'highlights' =>
-										[
-											'type' =>
-												[
-													'boolean',
-													'null',
-												],
-										],
-									'length' =>
-										[
-											'type' =>
-												[
-													'integer',
-													'null',
-												],
-										],
-									'nature' =>
-										[
-											'type' =>
-												[
-													'boolean',
-													'null',
-												],
-										],
-									'roots' =>
-										[
-											'type' =>
-												[
-													'boolean',
-													'null',
-												],
-										],
-									'style' =>
-										[
-											'type' =>
-												[
-													'string',
-													'null',
-												],
-										],
+									'highlights' => ['type' => ['boolean', 'null']],
+									'length' => ['type' => ['integer', 'null']],
+									'nature' => ['type' => ['boolean', 'null']],
+									'roots' => ['type' => ['boolean', 'null']],
+									'style' => ['type' => ['string', 'null']],
 								],
-							'required' =>
+						'required' =>
 								[
 									'roots',
 									'length',
@@ -170,19 +109,17 @@ final class Description {
 									'nature',
 									'style',
 								],
-							'type' => 'object',
-						],
+						'type' => 'object',
+					],
 					'face' => [
-							'additionalProperties' => false,
-							'properties' =>
+						'additionalProperties' => false,
+						'properties' =>
 								[
 									'beard' =>
 										[
 											'additionalProperties' => false,
 											'properties' => [
-												'id' => [
-													'type' => 'integer',
-												],
+												'id' => ['type' => 'integer'],
 												'color' => [
 													'additionalProperties' => false,
 													'properties' => [
@@ -196,12 +133,8 @@ final class Description {
 																))->values()
 															),
 														],
-														'name' => [
-															'type' => 'string',
-														],
-														'hex' => [
-															'type' => 'string',
-														],
+														'name' => ['type' => 'string'],
+														'hex' => ['type' => 'string'],
 													],
 													'required' => [
 														'id',
@@ -252,12 +185,8 @@ final class Description {
 															))->values()
 														),
 													],
-													'name' => [
-														'type' => 'string',
-													],
-													'hex' => [
-														'type' => 'string',
-													],
+													'name' => ['type' => 'string'],
+													'hex' => ['type' => 'string'],
 												],
 												'required' => [
 													'id',
@@ -280,14 +209,7 @@ final class Description {
 											],
 										'type' => 'object',
 									],
-									'freckles' =>
-										[
-											'type' =>
-												[
-													'boolean',
-													'null',
-												],
-										],
+									'freckles' => ['type' => ['boolean', 'null']],
 									'eye' =>
 										[
 											'additionalProperties' => false,
@@ -298,9 +220,7 @@ final class Description {
 															'additionalProperties' => false,
 															'properties' =>
 																[
-																	'id' => [
-																		'type' => 'integer',
-																	],
+																	'id' => ['type' => 'integer'],
 																	'color' =>
 																		[
 																			'additionalProperties' => false,
@@ -315,12 +235,8 @@ final class Description {
 																						))->values()
 																					),
 																				],
-																				'name' => [
-																					'type' => 'string',
-																				],
-																				'hex' => [
-																					'type' => 'string',
-																				],
+																				'name' => ['type' => 'string'],
+																				'hex' => ['type' => 'string'],
 																			],
 																			'required' => [
 																				'id',
@@ -329,14 +245,7 @@ final class Description {
 																			],
 																			'type' => 'object',
 																		],
-																	'lenses' =>
-																		[
-																			'type' =>
-																				[
-																					'boolean',
-																					'null',
-																				],
-																		],
+																	'lenses' => ['type' => ['boolean', 'null']],
 																],
 															'required' =>
 																[
@@ -350,9 +259,7 @@ final class Description {
 															'additionalProperties' => false,
 															'properties' =>
 																[
-																	'id' => [
-																		'type' => 'integer',
-																	],
+																	'id' => ['type' => 'integer'],
 																	'color' =>
 																		[
 																			'additionalProperties' => false,
@@ -367,12 +274,8 @@ final class Description {
 																						))->values()
 																					),
 																				],
-																				'name' => [
-																					'type' => 'string',
-																				],
-																				'hex' => [
-																					'type' => 'string',
-																				],
+																				'name' => ['type' => 'string'],
+																				'hex' => ['type' => 'string'],
 																			],
 																			'required' => [
 																				'id',
@@ -381,14 +284,7 @@ final class Description {
 																			],
 																			'type' => 'object',
 																		],
-																	'lenses' =>
-																		[
-																			'type' =>
-																				[
-																					'boolean',
-																					'null',
-																				],
-																		],
+																	'lenses' => ['type' => ['boolean', 'null']],
 																],
 															'required' =>
 																[
@@ -399,30 +295,14 @@ final class Description {
 														],
 												],
 										],
-									'shape' =>
-										[
-											'type' =>
-												[
-													'string',
-													'null',
-												],
-										],
+									'shape' => ['type' => ['string', 'null']],
 									'teeth' =>
 										[
 											'additionalProperties' => false,
 											'properties' =>
 												[
-													'id' => [
-														'type' => 'integer',
-													],
-													'braces' =>
-														[
-															'type' =>
-																[
-																	'boolean',
-																	'null',
-																],
-														],
+													'id' => ['type' => 'integer'],
+													'braces' => ['type' => ['boolean', 'null']],
 													'care' =>
 														[
 															'type' => ['integer', 'null'],
@@ -438,7 +318,7 @@ final class Description {
 											'type' => 'object',
 										],
 								],
-							'required' =>
+						'required' =>
 								[
 									'beard',
 									'teeth',
@@ -448,11 +328,11 @@ final class Description {
 									'eyebrow',
 									'freckles',
 								],
-							'type' => 'object',
-						],
+						'type' => 'object',
+					],
 					'general' => [
-							'additionalProperties' => false,
-							'properties' =>
+						'additionalProperties' => false,
+						'properties' =>
 								[
 									'age' =>
 										[
@@ -461,39 +341,23 @@ final class Description {
 												[
 													'from' =>
 														[
-															'type' =>
-																[
-																	'integer',
-																	'null',
-																],
+															'type' => ['integer', 'null'],
 															'minimum' => 15,
 															'maximum' => 130,
 														],
 													'to' =>
 														[
-															'type' =>
-																[
-																	'integer',
-																	'null',
-																],
+															'type' => ['integer', 'null'],
 															'minimum' => 15,
 															'maximum' => 130,
 														],
 												],
-											'required' =>
-												[
-													'from',
-													'to',
-												],
+											'required' => ['from', 'to'],
 											'type' => 'object',
 										],
 									'firstname' =>
 										[
-											'type' =>
-												[
-													'string',
-													'null',
-												],
+											'type' => ['string', 'null'],
 										],
 									'gender' =>
 										[
@@ -503,14 +367,7 @@ final class Description {
 												$this->database
 											))->values(),
 										],
-									'lastname' =>
-										[
-											'type' =>
-												[
-													'string',
-													'null',
-												],
-										],
+									'lastname' => ['type' => ['string', 'null']],
 									'race' =>
 										[
 											'type' => 'object',
@@ -527,13 +384,11 @@ final class Description {
 														$this->database
 													))->values(),
 												],
-												'value' => [
-													'type' => 'string',
-												],
+												'value' => ['type' => 'string'],
 											],
 										],
 								],
-							'required' =>
+						'required' =>
 								[
 									'lastname',
 									'firstname',
@@ -541,8 +396,8 @@ final class Description {
 									'age',
 									'gender',
 								],
-							'type' => 'object',
-						],
+						'type' => 'object',
+					],
 					'hands' => [
 						'additionalProperties' => false,
 						'properties' => [
@@ -563,12 +418,8 @@ final class Description {
 														))->values()
 													),
 												],
-												'name' => [
-													'type' => 'string',
-												],
-												'hex' => [
-													'type' => 'string',
-												],
+												'name' => ['type' => 'string'],
+												'hex' => ['type' => 'string'],
 											],
 											'required' => [
 												'id',
@@ -627,12 +478,8 @@ final class Description {
 													))->values()
 												),
 											],
-											'name' => [
-												'type' => 'string',
-											],
-											'hex' => [
-												'type' => 'string',
-											],
+											'name' => ['type' => 'string'],
+											'hex' => ['type' => 'string'],
 										],
 										'required' => [
 											'id',
