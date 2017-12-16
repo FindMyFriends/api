@@ -53,7 +53,7 @@ final class PutTest extends Tester\TestCase {
 			))->template(['id' => $id])->render(),
 			true
 		);
-		Assert::same(['message' => 'The property general is required'], $demand);
+		Assert::same(['message' => 'The property location is required'], $demand);
 		Assert::same(HTTP_BAD_REQUEST, http_response_code());
 	}
 
