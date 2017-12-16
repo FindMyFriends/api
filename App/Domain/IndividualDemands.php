@@ -37,7 +37,7 @@ final class IndividualDemands implements Demands {
 			$this->database,
 			'INSERT INTO collective_demands (
 				location_met_at,
-				general_birth_year,
+				general_age,
 				seeker_id,
 				general_race_id,
 				general_firstname,
@@ -65,8 +65,8 @@ final class IndividualDemands implements Demands {
 				hair_roots,
 				hair_nature
 			) VALUES (
-				to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
-				to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
+				tstzrange(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				int4range(:general_age_from::INTEGER, :general_age_to::INTEGER),
 				:seeker,
 				:general_race_id,
 				:general_firstname,

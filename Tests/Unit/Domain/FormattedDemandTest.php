@@ -24,9 +24,6 @@ final class FormattedDemandTest extends Tester\TestCase {
 						'to' => '2016-10-17T13:58:10+00:00',
 					],
 				],
-				'general' => [
-					'age' => ['from' => 20, 'to' => 25],
-				],
 			],
 			json_decode(
 				(new Domain\FormattedDemand(
@@ -40,9 +37,6 @@ final class FormattedDemandTest extends Tester\TestCase {
 									'from' => '2016-09-17 13:58:10.531097+00',
 									'to' => '2016-10-17 13:58:10.531097+00',
 								],
-							],
-							'general' => [
-								'age' => ['from' => '20', 'to' => '25'],
 							],
 						]
 					)

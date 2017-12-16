@@ -22,15 +22,9 @@ final class DemandRuleTest extends Tester\TestCase {
 						'to' => '2017-10-17T13:58:10+00:00',
 					],
 				],
-				'general' => [
-					'birth_year' => ['from' => 1990, 'to' => 1996],
-				],
 			],
 			(new Constraint\DemandRule())->apply(
 				[
-					'general' => [
-						'age' => ['from' => 19, 'to' => 25],
-					],
 					'location' => [
 						'met_at' => [
 							'from' => '2015-09-17T13:58:10+00:00',

@@ -80,6 +80,42 @@ CREATE TYPE genders AS ENUM (
 ALTER TYPE genders OWNER TO postgres;
 
 --
+-- Name: age_to_year(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION age_to_year(age int4range, now timestamp with time zone) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+	RETURN int4range(
+		(EXTRACT('year' FROM now) - upper(age))::INTEGER,
+		(EXTRACT('year' FROM now) - lower(age))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.age_to_year(age int4range, now timestamp with time zone) OWNER TO postgres;
+
+--
+-- Name: age_to_year(int4range, tstzrange); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION age_to_year(age int4range, now tstzrange) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+	RETURN int4range(
+		(EXTRACT('year' FROM lower(now)) - upper(age))::INTEGER,
+		(EXTRACT('year' FROM lower(now)) - lower(age))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.age_to_year(age int4range, now tstzrange) OWNER TO postgres;
+
+--
 -- Name: birth_year_in_range(int4range); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -106,9 +142,9 @@ DECLARE
 	v_description_id INTEGER;
 BEGIN
 	v_description_id = inserted_description(
-		ROW(
+			ROW(
 			NULL,
-			new.general_birth_year,
+			age_to_year(new.general_age, new.location_met_at),
 			new.general_race_id,
 			new.general_firstname,
 			new.general_lastname,
@@ -154,7 +190,7 @@ BEGIN
 		new.location_met_at
 	)
 	RETURNING id
-	INTO v_location_id;
+		INTO v_location_id;
 
 	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
 		new.seeker_id,
@@ -196,7 +232,7 @@ BEGIN
 	PERFORM updated_description(
 			ROW(
 			v_description_id,
-			new.general_birth_year,
+			age_to_year(new.general_age, new.location_met_at),
 			new.general_race_id,
 			new.general_firstname,
 			new.general_lastname,
@@ -981,36 +1017,6 @@ $$;
 ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
 
 --
--- Name: to_range(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION to_range(integer, integer) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE
-    AS $_$
-BEGIN
-	RETURN int4range($1, $2);
-END
-$_$;
-
-
-ALTER FUNCTION public.to_range(integer, integer) OWNER TO postgres;
-
---
--- Name: to_range(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION to_range(timestamp with time zone, timestamp with time zone) RETURNS tstzrange
-    LANGUAGE plpgsql IMMUTABLE
-    AS $_$
-BEGIN
-	RETURN tstzrange($1, $2);
-END
-$_$;
-
-
-ALTER FUNCTION public.to_range(timestamp with time zone, timestamp with time zone) OWNER TO postgres;
-
---
 -- Name: updated_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1215,8 +1221,8 @@ CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURN
     AS $$
 BEGIN
 	RETURN int4range(
-		(SELECT extract('year' from now) - upper(year))::INTEGER,
-		(SELECT extract('year' from now) - lower(year))::INTEGER
+		(EXTRACT('year' from now) - upper(year))::INTEGER,
+		(EXTRACT('year' from now) - lower(year))::INTEGER
 	);
 END
 $$;
@@ -1419,8 +1425,7 @@ CREATE VIEW collective_demands AS
     complete_description.hair_nature,
     location.met_at AS location_met_at,
     location.coordinates AS location_coordinates,
-    range_to_hstore(year_to_age(complete_description.general_birth_year, location.met_at)) AS age,
-    range_to_hstore(location.met_at) AS met_at,
+    year_to_age(complete_description.general_birth_year, location.met_at) AS general_age,
     demand.id,
     demand.seeker_id,
     demand.created_at
@@ -1477,7 +1482,7 @@ CREATE VIEW collective_evolutions AS
     complete_description.hair_highlights,
     complete_description.hair_roots,
     complete_description.hair_nature,
-    range_to_hstore(year_to_age(complete_description.general_birth_year, evolution.evolved_at)) AS age
+    year_to_age(complete_description.general_birth_year, evolution.evolved_at) AS general_age
    FROM (evolutions evolution
      JOIN complete_descriptions complete_description ON ((evolution.description_id = complete_description.id)));
 

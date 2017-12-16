@@ -27,8 +27,6 @@ final class FormattedDemand implements Demand {
 						$location['met_at']
 					),
 				] + $location;
-			})->adjusted('general', function(array $general): array {
-				return ['age' => array_map('intval', $general['age'])] + $general;
 			});
 	}
 

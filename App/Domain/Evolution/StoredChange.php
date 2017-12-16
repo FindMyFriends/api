@@ -63,7 +63,10 @@ final class StoredChange implements Change {
 				'id' => $evolution['id'],
 				'evolved_at' => $evolution['evolved_at'],
 				'general' => [
-					'age' => $evolution['age'],
+					'age' => [
+						'from' => $evolution['general_age'][0],
+						'to' => $evolution['general_age'][1],
+					],
 					'firstname' => $evolution['general_firstname'],
 					'lastname' => $evolution['general_lastname'],
 					'gender' => $evolution['general_gender'],

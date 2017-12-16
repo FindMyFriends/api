@@ -17,8 +17,7 @@ final class StoredDemand implements Demand {
 	public function print(Output\Format $format): Output\Format {
 		$demand = (new Storage\TypedQuery(
 			$this->database,
-			'SELECT * FROM collective_demands
-				WHERE id = ?',
+			'SELECT * FROM collective_demands WHERE id = ?',
 			[$this->id]
 		))->row();
 		return new Output\FilledFormat(
@@ -28,7 +27,10 @@ final class StoredDemand implements Demand {
 				'seeker_id' => $demand['seeker_id'],
 				'created_at' => $demand['created_at'],
 				'general' => [
-					'age' => $demand['age'],
+					'age' => [
+						'from' => $demand['general_age'][0],
+						'to' => $demand['general_age'][1],
+					],
 					'firstname' => $demand['general_firstname'],
 					'lastname' => $demand['general_lastname'],
 					'gender' => $demand['general_gender'],
@@ -82,7 +84,10 @@ final class StoredDemand implements Demand {
 						'latitude' => $demand['location_coordinates']['x'],
 						'longitude' => $demand['location_coordinates']['y'],
 					],
-					'met_at' => $demand['met_at'],
+					'met_at' => [
+						'from' => $demand['location_met_at'][0],
+						'to' => $demand['location_met_at'][1],
+					],
 				],
 				'hands' => [
 					'nails' => [
@@ -116,7 +121,7 @@ final class StoredDemand implements Demand {
 			'UPDATE collective_demands
 			SET general_gender = :general_gender,
 				general_race_id = :general_race_id,
-				general_birth_year = to_range(:general_birth_year_from::INTEGER, :general_birth_year_to::INTEGER),
+				general_age = int4range(:general_age_from::INTEGER, :general_age_to::INTEGER),
 				general_firstname = :general_firstname,
 				general_lastname = :general_lastname,
 				hair_style = :hair_style,
@@ -135,7 +140,7 @@ final class StoredDemand implements Demand {
 				face_beard = ROW(NULL, :face_beard_color_id, :face_beard_length, :face_beard_style)::beards,
 				face_tooth = ROW(NULL, :face_teeth_care, :face_teeth_braces)::teeth,
 				location_coordinates = POINT(:location_coordinates_latitude, :location_coordinates_longitude),
-				location_met_at = to_range(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				location_met_at = tstzrange(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
 				hands_nails = ROW(NULL, :hands_nails_color_id, :hands_nails_length, :hands_nails_care)::nails,
 				hands_vein_visibility = :hands_vein_visibility,
 				hands_joint_visibility = :hands_joint_visibility,

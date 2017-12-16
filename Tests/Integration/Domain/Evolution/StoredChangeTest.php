@@ -154,7 +154,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nature' => null,
 				],
 				'general' => [
-					'age' => ['to' => '21', 'from' => '19'],
+					'age' => ['to' => 21, 'from' => 19],
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',

@@ -44,9 +44,9 @@ final class StoredDemandTest extends Tester\TestCase {
 		$demand->reconsider(
 			[
 				'general' => [
-					'birth_year' => [
-						'from' => 1996,
-						'to' => 1998,
+					'age' => [
+						'from' => 19,
+						'to' => 21,
 					],
 					'firstname' => null,
 					'lastname' => null,
@@ -139,7 +139,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				],
 				'location' => [
 					'coordinates' => ['latitude' => 10.4, 'longitude' => 50.4],
-					'met_at' => ['to' => '2017-01-02 00:00:00+00', 'from' => '2017-01-01 00:00:00+00'],
+					'met_at' => ['to' => '2017-01-02 00:00:00.000000+0000', 'from' => '2017-01-01 00:00:00.000000+0000'],
 				],
 				'body' => [
 					'build' => ['id' => 1, 'value' => 'skinny'],
@@ -185,7 +185,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'nature' => null,
 				],
 				'general' => [
-					'age' => ['to' => '21', 'from' => '19'],
+					'age' => ['to' => 21, 'from' => 19],
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',

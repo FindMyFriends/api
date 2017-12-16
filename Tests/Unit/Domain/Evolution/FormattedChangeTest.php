@@ -18,9 +18,6 @@ final class FormattedChangeTest extends Tester\TestCase {
 		Assert::equal(
 			[
 				'evolved_at' => '2017-09-17T13:58:10+00:00',
-				'general' => [
-					'age' => ['from' => 20, 'to' => 25],
-				],
 			],
 			json_decode(
 				(new Evolution\FormattedChange(
@@ -29,9 +26,6 @@ final class FormattedChangeTest extends Tester\TestCase {
 					new Output\Json(
 						[
 							'evolved_at' => '2017-09-17 13:58:10.531097+00',
-							'general' => [
-								'age' => ['from' => '20', 'to' => '25'],
-							],
 						]
 					)
 				)->serialization(),

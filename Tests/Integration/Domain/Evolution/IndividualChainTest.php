@@ -99,8 +99,8 @@ final class IndividualChainTest extends Tester\TestCase {
 			]
 		);
 		$change = json_decode($change->print(new Output\Json())->serialization(), true);
-		Assert::same('15', $change['general']['age']['from']);
-		Assert::same('16', $change['general']['age']['to']);
+		Assert::same(15, $change['general']['age']['from']);
+		Assert::same(16, $change['general']['age']['to']);
 		(new Misc\TableCounts(
 			$this->database,
 			[
