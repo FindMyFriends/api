@@ -23,8 +23,28 @@ final class Description {
 										[
 											'additionalProperties' => false,
 											'properties' => [
-												'id' => ['type' => 'integer'],
-												'value' => ['type' => 'string'],
+												'id' => [
+													'type' => ['integer', 'null'],
+													'enum' => array_merge(
+														[null],
+														(new PostgresTableEnum(
+															'id',
+															'body_builds',
+															$this->database
+														))->values()
+													),
+												],
+												'value' => [
+													'type' => ['string', 'null'],
+													'enum' => array_merge(
+														[null],
+														(new PostgresTableEnum(
+															'value',
+															'body_builds',
+															$this->database
+														))->values()
+													),
+												],
 											],
 											'required' => [
 												'id',

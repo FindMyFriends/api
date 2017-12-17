@@ -66,10 +66,26 @@
                     "additionalProperties": false,
                     "properties": {
                         "id": {
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                1,
+                                2
+                            ]
                         },
                         "value": {
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "skinny",
+                                "muscular"
+                            ]
                         }
                     },
                     "required": [
