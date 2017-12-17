@@ -59,36 +59,15 @@ final class Description {
 										'properties' => [
 											'id' => [
 												'type' => ['integer', 'null'],
-												'enum' => array_merge(
-													[null],
-													(new PostgresTableEnum(
-														'id',
-														'colors',
-														$this->database
-													))->values()
-												),
+												'enum' => [null, 8, 145],
 											],
 											'name' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge(
-													[null],
-													(new PostgresTableEnum(
-														'name',
-														'colors',
-														$this->database
-													))->values()
-												),
+												'enum' => [null, 'black', 'white'],
 											],
 											'hex' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge(
-													[null],
-													(new PostgresTableEnum(
-														'hex',
-														'colors',
-														$this->database
-													))->values()
-												),
+												'enum' => [null, '000000', 'ffffff'],
 											],
 										],
 										'required' => [
