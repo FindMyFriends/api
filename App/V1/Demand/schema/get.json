@@ -268,7 +268,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        8,
+                                        12
                                     ]
                                 },
                                 "name": {
@@ -277,7 +279,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "Black",
+                                        "Brown"
                                     ]
                                 },
                                 "hex": {
@@ -286,7 +290,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "000000",
+                                        "a52a2a"
                                     ]
                                 }
                             },
@@ -343,7 +349,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        8,
+                                        12
                                     ]
                                 },
                                 "name": {
@@ -352,7 +360,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "Black",
+                                        "Brown"
                                     ]
                                 },
                                 "hex": {
@@ -361,7 +371,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "000000",
+                                        "a52a2a"
                                     ]
                                 }
                             },
@@ -412,6 +424,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                8,
+                                                10,
                                                 12
                                             ]
                                         },
@@ -422,6 +436,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                "Black",
+                                                "Blue",
                                                 "Brown"
                                             ]
                                         },
@@ -432,6 +448,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                "000000",
+                                                "0000ff",
                                                 "a52a2a"
                                             ]
                                         }
@@ -472,6 +490,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                8,
+                                                10,
                                                 12
                                             ]
                                         },
@@ -482,6 +502,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                "Black",
+                                                "Blue",
                                                 "Brown"
                                             ]
                                         },
@@ -492,6 +514,8 @@
                                             ],
                                             "enum": [
                                                 null,
+                                                "000000",
+                                                "0000ff",
                                                 "a52a2a"
                                             ]
                                         }
@@ -662,7 +686,11 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        8,
+                                        10,
+                                        12,
+                                        145
                                     ]
                                 },
                                 "name": {
@@ -671,7 +699,11 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "Black",
+                                        "Blue",
+                                        "Brown",
+                                        "White"
                                     ]
                                 },
                                 "hex": {
@@ -680,7 +712,11 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "000000",
+                                        "0000ff",
+                                        "a52a2a",
+                                        "ffffff"
                                     ]
                                 }
                             },
@@ -749,7 +785,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        8,
+                                        12
                                     ]
                                 },
                                 "name": {
@@ -758,7 +796,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "Black",
+                                        "Brown"
                                     ]
                                 },
                                 "hex": {
@@ -767,7 +807,9 @@
                                         "null"
                                     ],
                                     "enum": [
-                                        null
+                                        null,
+                                        "000000",
+                                        "a52a2a"
                                     ]
                                 }
                             },

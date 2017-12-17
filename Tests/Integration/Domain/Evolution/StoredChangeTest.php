@@ -52,17 +52,17 @@ final class StoredChangeTest extends Tester\TestCase {
 						'style' => null,
 					],
 					'eyebrow' => [
-						'color_id' => 3,
+						'color_id' => 1,
 						'care' => 5,
 					],
 					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'color_id' => 4,
+							'color_id' => 1,
 							'lenses' => false,
 						],
 						'right' => [
-							'color_id' => 4,
+							'color_id' => 1,
 							'lenses' => false,
 						],
 					],
@@ -74,7 +74,7 @@ final class StoredChangeTest extends Tester\TestCase {
 				],
 				'body' => [
 					'build_id' => 1,
-					'skin_color_id' => 6,
+					'skin_color_id' => 1,
 					'weight' => 120,
 					'height' => 130,
 				],
@@ -82,13 +82,13 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nails' => [
 						'length' => null,
 						'care' => null,
-						'color_id' => 2,
+						'color_id' => 1,
 					],
 					'vein_visibility' => null,
 					'joint_visibility' => null,
 					'care' => null,
 					'hair' => [
-						'color_id' => 3,
+						'color_id' => 1,
 						'amount' => null,
 					],
 				],

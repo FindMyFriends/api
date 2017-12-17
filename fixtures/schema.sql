@@ -2327,27 +2327,11 @@ ALTER TABLE ONLY beard_colors
 
 
 --
--- Name: beards beards_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY beards
-    ADD CONSTRAINT beards_colors_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(id);
-
-
---
 -- Name: bodies bodies_body_builds_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY bodies
     ADD CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id);
-
-
---
--- Name: bodies bodies_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY bodies
-    ADD CONSTRAINT bodies_colors_id_fk FOREIGN KEY (skin_color_id) REFERENCES skin_colors(id);
 
 
 --
@@ -2439,22 +2423,6 @@ ALTER TABLE ONLY eyebrow_colors
 
 
 --
--- Name: eyebrows eyebrows_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY eyebrows
-    ADD CONSTRAINT eyebrows_colors_id_fk FOREIGN KEY (color_id) REFERENCES eyebrow_colors(id);
-
-
---
--- Name: eyes eyes_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY eyes
-    ADD CONSTRAINT eyes_colors_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(id);
-
-
---
 -- Name: faces faces_beards_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2503,27 +2471,11 @@ ALTER TABLE ONLY hair_colors
 
 
 --
--- Name: hair hair_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY hair
-    ADD CONSTRAINT hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(id);
-
-
---
 -- Name: hand_hair_colors hand_hair_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY hand_hair_colors
     ADD CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
-
-
---
--- Name: hand_hair hand_hair_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY hand_hair
-    ADD CONSTRAINT hand_hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(id);
 
 
 --
@@ -2540,14 +2492,6 @@ ALTER TABLE ONLY hands
 
 ALTER TABLE ONLY nail_colors
     ADD CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
-
-
---
--- Name: nails nails_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY nails
-    ADD CONSTRAINT nails_colors_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(id);
 
 
 --

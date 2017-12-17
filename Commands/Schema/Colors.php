@@ -7,20 +7,24 @@ use Klapuch\Storage;
 final class Colors implements Enum {
 	private $column;
 	private $database;
-	private $purpose;
+	private $set;
 
-	public function __construct(string $column, string $purpose, \PDO $database) {
+	public function __construct(string $column, string $set, \PDO $database) {
 		$this->column = $column;
 		$this->database = $database;
-		$this->purpose = $purpose;
+		$this->set = $set;
 	}
 
 	public function values(): array {
 		return array_column(
 			(new Storage\NativeQuery(
 				$this->database,
-				'SELECT * FROM colors WHERE ? = ANY(purpose) ORDER BY id',
-				[$this->purpose]
+				sprintf(
+					'SELECT * FROM %1$s
+					JOIN colors ON colors.id = %1$s.color_id
+					ORDER BY colors.id',
+					$this->set
+				)
 			))->rows(),
 			$this->column
 		);

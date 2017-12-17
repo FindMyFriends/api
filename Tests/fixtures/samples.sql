@@ -8,7 +8,7 @@ DECLARE
 BEGIN
 	INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
 		md5(random()::TEXT),
-		(SELECT id FROM colors ORDER BY random() LIMIT 1),
+		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
 		test_utils.better_random('smallint'),
 		random() > 0.5,
 		random() > 0.5,
@@ -28,7 +28,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO eyebrows (color_id, care) VALUES (
-		(SELECT id FROM colors ORDER BY random() LIMIT 1),
+		(SELECT color_id FROM eyebrow_colors ORDER BY random() LIMIT 1),
 		test_utils.better_random(0, 10)
 	)
 	RETURNING id
@@ -45,7 +45,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO eyes (color_id, lenses) VALUES (
-		(SELECT id FROM colors ORDER BY random() LIMIT 1),
+		(SELECT color_id FROM eye_colors ORDER BY random() LIMIT 1),
 		random() > 0.5
 	)
 	RETURNING id
@@ -77,7 +77,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO beards (color_id, length, style) VALUES (
-		COALESCE(CAST(replacement -> 'color_id' AS INTEGER), (SELECT id FROM colors ORDER BY random() LIMIT 1)),
+		COALESCE(CAST(replacement -> 'color_id' AS INTEGER), (SELECT color_id FROM beard_colors ORDER BY random() LIMIT 1)),
 		COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')),
 		COALESCE(replacement -> 'style', md5(random()::text))
 	)
@@ -95,7 +95,7 @@ DECLARE
 BEGIN
 	INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
 		COALESCE(CAST(replacement -> 'build_id' AS SMALLINT), (SELECT id FROM body_builds ORDER BY random() LIMIT 1)),
-		COALESCE(CAST(replacement -> 'skin_color_id' AS SMALLINT), (SELECT id FROM colors ORDER BY random() LIMIT 1)),
+		COALESCE(CAST(replacement -> 'skin_color_id' AS SMALLINT), (SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1)),
 		COALESCE(CAST(replacement -> 'weight' AS SMALLINT), test_utils.better_random('smallint')),
 		COALESCE(CAST(replacement -> 'height' AS SMALLINT), test_utils.better_random('smallint'))
 	)
@@ -145,7 +145,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO hand_hair (color_id, amount) VALUES (
-		(SELECT id FROM colors ORDER BY random() LIMIT 1),
+		(SELECT color_id FROM hand_hair_colors ORDER BY random() LIMIT 1),
 		test_utils.better_random(0, 10)
 	)
 	RETURNING id
@@ -161,7 +161,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO nails (color_id, length, care) VALUES (
-		(SELECT id FROM colors ORDER BY random() LIMIT 1),
+		(SELECT color_id FROM nail_colors ORDER BY random() LIMIT 1),
 		test_utils.better_random('smallint'),
 		test_utils.better_random(0, 10)
 	)

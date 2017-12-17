@@ -51,15 +51,15 @@ final class Description {
 										'properties' => [
 											'id' => [
 												'type' => ['integer', 'null'],
-												'enum' => array_merge([null], (new Colors('id', 'skin', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('id', 'skin_colors', $this->database))->values()),
 											],
 											'name' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('name', 'skin', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('name', 'skin_colors', $this->database))->values()),
 											],
 											'hex' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('hex', 'skin', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('hex', 'skin_colors', $this->database))->values()),
 											],
 										],
 										'required' => [
@@ -88,15 +88,15 @@ final class Description {
 										'properties' => [
 											'id' => [
 												'type' => ['integer', 'null'],
-												'enum' => array_merge([null], (new Colors('id', 'hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('id', 'hair_colors', $this->database))->values()),
 											],
 											'name' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('name', 'hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('name', 'hair_colors', $this->database))->values()),
 											],
 											'hex' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('hex', 'hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('hex', 'hair_colors', $this->database))->values()),
 											],
 										],
 										'required' => [
@@ -137,15 +137,15 @@ final class Description {
 													'properties' => [
 														'id' => [
 															'type' => ['integer', 'null'],
-															'enum' => array_merge([null], (new Colors('id', 'beard', $this->database))->values()),
+															'enum' => array_merge([null], (new Colors('id', 'beard_colors', $this->database))->values()),
 														],
 														'name' => [
 															'type' => ['string', 'null'],
-															'enum' => array_merge([null], (new Colors('name', 'beard', $this->database))->values()),
+															'enum' => array_merge([null], (new Colors('name', 'beard_colors', $this->database))->values()),
 														],
 														'hex' => [
 															'type' => ['string', 'null'],
-															'enum' => array_merge([null], (new Colors('hex', 'beard', $this->database))->values()),
+															'enum' => array_merge([null], (new Colors('hex', 'beard_colors', $this->database))->values()),
 														],
 													],
 													'required' => [
@@ -189,15 +189,15 @@ final class Description {
 												'properties' => [
 													'id' => [
 														'type' => ['integer', 'null'],
-														'enum' => array_merge([null], (new Colors('id', 'eyebrow', $this->database))->values()),
+														'enum' => array_merge([null], (new Colors('id', 'eyebrow_colors', $this->database))->values()),
 													],
 													'name' => [
 														'type' => ['string', 'null'],
-														'enum' => array_merge([null], (new Colors('name', 'eyebrow', $this->database))->values()),
+														'enum' => array_merge([null], (new Colors('name', 'eyebrow_colors', $this->database))->values()),
 													],
 													'hex' => [
 														'type' => ['string', 'null'],
-														'enum' => array_merge([null], (new Colors('hex', 'eyebrow', $this->database))->values()),
+														'enum' => array_merge([null], (new Colors('hex', 'eyebrow_colors', $this->database))->values()),
 													],
 												],
 												'required' => [
@@ -238,15 +238,15 @@ final class Description {
 																		'properties' => [
 																			'id' => [
 																				'type' => ['integer', 'null'],
-																				'enum' => array_merge([null], (new Colors('id', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
 																			],
 																			'name' => [
 																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('name', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('name', 'eye_colors', $this->database))->values()),
 																			],
 																			'hex' => [
 																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('hex', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('hex', 'eye_colors', $this->database))->values()),
 																			],
 																		],
 																		'required' => [
@@ -276,15 +276,15 @@ final class Description {
 																		'properties' => [
 																			'id' => [
 																				'type' => ['integer', 'null'],
-																				'enum' => array_merge([null], (new Colors('id', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
 																			],
 																			'name' => [
 																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('name', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('name', 'eye_colors', $this->database))->values()),
 																			],
 																			'hex' => [
 																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('hex', 'eye', $this->database))->values()),
+																				'enum' => array_merge([null], (new Colors('hex', 'eye_colors', $this->database))->values()),
 																			],
 																		],
 																		'required' => [
@@ -413,15 +413,15 @@ final class Description {
 										'properties' => [
 											'id' => [
 												'type' => ['integer', 'null'],
-												'enum' => array_merge([null], (new Colors('id', 'nail', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('id', 'nail_colors', $this->database))->values()),
 											],
 											'name' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('name', 'nail', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('name', 'nail_colors', $this->database))->values()),
 											],
 											'hex' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('hex', 'nail', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('hex', 'nail_colors', $this->database))->values()),
 											],
 										],
 										'required' => [
@@ -473,15 +473,15 @@ final class Description {
 										'properties' => [
 											'id' => [
 												'type' => ['integer', 'null'],
-												'enum' => array_merge([null], (new Colors('id', 'hand_hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('id', 'hand_hair_colors', $this->database))->values()),
 											],
 											'name' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('name', 'hand_hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('name', 'hand_hair_colors', $this->database))->values()),
 											],
 											'hex' => [
 												'type' => ['string', 'null'],
-												'enum' => array_merge([null], (new Colors('hex', 'hand_hair', $this->database))->values()),
+												'enum' => array_merge([null], (new Colors('hex', 'hand_hair_colors', $this->database))->values()),
 											],
 										],
 										'required' => [
