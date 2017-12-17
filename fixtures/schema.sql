@@ -623,6 +623,7 @@ CREATE TABLE colors (
     id smallint NOT NULL,
     name text NOT NULL,
     hex text NOT NULL,
+    purpose text[],
     CONSTRAINT colors_hex_check CHECK ((is_hex_color(hex) AND (lower(hex) = hex)))
 );
 
