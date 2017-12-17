@@ -623,7 +623,6 @@ CREATE TABLE colors (
     id smallint NOT NULL,
     name text NOT NULL,
     hex text NOT NULL,
-    purpose text[],
     CONSTRAINT colors_hex_check CHECK ((is_hex_color(hex) AND (lower(hex) = hex)))
 );
 
@@ -1286,8 +1285,8 @@ SET search_path = public, pg_catalog;
 --
 
 CREATE TABLE skin_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1341,8 +1340,8 @@ ALTER TABLE base_evolution OWNER TO postgres;
 --
 
 CREATE TABLE beard_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1642,8 +1641,8 @@ ALTER TABLE evolutions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE eye_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1668,8 +1667,8 @@ ALTER TABLE eye_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE eyebrow_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1750,8 +1749,8 @@ ALTER TABLE general ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE hair_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1790,8 +1789,8 @@ ALTER TABLE hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE hand_hair_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -1858,8 +1857,8 @@ ALTER TABLE locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE nail_colors (
-    id integer NOT NULL,
-    color_id integer NOT NULL
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
 );
 
 
@@ -2332,7 +2331,7 @@ ALTER TABLE ONLY beard_colors
 --
 
 ALTER TABLE ONLY beards
-    ADD CONSTRAINT beards_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT beards_colors_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(id);
 
 
 --
@@ -2348,7 +2347,7 @@ ALTER TABLE ONLY bodies
 --
 
 ALTER TABLE ONLY bodies
-    ADD CONSTRAINT bodies_colors_id_fk FOREIGN KEY (skin_color_id) REFERENCES colors(id);
+    ADD CONSTRAINT bodies_colors_id_fk FOREIGN KEY (skin_color_id) REFERENCES skin_colors(id);
 
 
 --
@@ -2444,7 +2443,7 @@ ALTER TABLE ONLY eyebrow_colors
 --
 
 ALTER TABLE ONLY eyebrows
-    ADD CONSTRAINT eyebrows_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT eyebrows_colors_id_fk FOREIGN KEY (color_id) REFERENCES eyebrow_colors(id);
 
 
 --
@@ -2452,7 +2451,7 @@ ALTER TABLE ONLY eyebrows
 --
 
 ALTER TABLE ONLY eyes
-    ADD CONSTRAINT eyes_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT eyes_colors_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(id);
 
 
 --
@@ -2508,7 +2507,7 @@ ALTER TABLE ONLY hair_colors
 --
 
 ALTER TABLE ONLY hair
-    ADD CONSTRAINT hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(id);
 
 
 --
@@ -2524,7 +2523,7 @@ ALTER TABLE ONLY hand_hair_colors
 --
 
 ALTER TABLE ONLY hand_hair
-    ADD CONSTRAINT hand_hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT hand_hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(id);
 
 
 --
@@ -2548,7 +2547,7 @@ ALTER TABLE ONLY nail_colors
 --
 
 ALTER TABLE ONLY nails
-    ADD CONSTRAINT nails_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+    ADD CONSTRAINT nails_colors_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(id);
 
 
 --
