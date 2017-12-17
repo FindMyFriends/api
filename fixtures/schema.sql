@@ -1282,6 +1282,32 @@ ALTER TABLE etags ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 SET search_path = public, pg_catalog;
 
 --
+-- Name: skin_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE skin_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE skin_colors OWNER TO postgres;
+
+--
+-- Name: alter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE skin_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME alter_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: evolutions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1309,6 +1335,32 @@ CREATE VIEW base_evolution AS
 
 
 ALTER TABLE base_evolution OWNER TO postgres;
+
+--
+-- Name: beard_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE beard_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE beard_colors OWNER TO postgres;
+
+--
+-- Name: beard_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE beard_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME beard_colors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: beards_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1586,6 +1638,58 @@ ALTER TABLE evolutions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: eye_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE eye_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE eye_colors OWNER TO postgres;
+
+--
+-- Name: eye_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE eye_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME eye_colors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: eyebrow_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE eyebrow_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE eyebrow_colors OWNER TO postgres;
+
+--
+-- Name: eyebrow_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE eyebrow_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME eyebrow_colors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: eyebrows_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1642,11 +1746,63 @@ ALTER TABLE general ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: hair_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE hair_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE hair_colors OWNER TO postgres;
+
+--
+-- Name: hair_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE hair_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME hair_colors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: hair_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 ALTER TABLE hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME hair_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: hand_hair_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE hand_hair_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE hand_hair_colors OWNER TO postgres;
+
+--
+-- Name: hand_hair_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE hand_hair_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME hand_hair_colors_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1689,6 +1845,32 @@ ALTER TABLE hands ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 ALTER TABLE locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME locations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: nail_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE nail_colors (
+    id integer NOT NULL,
+    color_id integer NOT NULL
+);
+
+
+ALTER TABLE nail_colors OWNER TO postgres;
+
+--
+-- Name: nail_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE nail_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME nail_colors_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1779,6 +1961,14 @@ ALTER TABLE ONLY etags
 SET search_path = public, pg_catalog;
 
 --
+-- Name: beard_colors beard_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY beard_colors
+    ADD CONSTRAINT beard_colors_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: beards beards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1835,6 +2025,22 @@ ALTER TABLE ONLY evolutions
 
 
 --
+-- Name: eye_colors eye_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eye_colors
+    ADD CONSTRAINT eye_colors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: eyebrow_colors eyebrow_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eyebrow_colors
+    ADD CONSTRAINT eyebrow_colors_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: eyebrows eyebrows_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1867,11 +2073,27 @@ ALTER TABLE ONLY general
 
 
 --
+-- Name: hair_colors hair_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hair_colors
+    ADD CONSTRAINT hair_colors_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: hair hair_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY hair
     ADD CONSTRAINT hair_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hand_hair_colors hand_hair_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hand_hair_colors
+    ADD CONSTRAINT hand_hair_colors_pkey PRIMARY KEY (id);
 
 
 --
@@ -1899,6 +2121,14 @@ ALTER TABLE ONLY locations
 
 
 --
+-- Name: nail_colors nail_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY nail_colors
+    ADD CONSTRAINT nail_colors_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: nails nails_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1920,6 +2150,14 @@ ALTER TABLE ONLY races
 
 ALTER TABLE ONLY seekers
     ADD CONSTRAINT seekers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: skin_colors skin_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY skin_colors
+    ADD CONSTRAINT skin_colors_pkey PRIMARY KEY (id);
 
 
 --
@@ -2082,6 +2320,14 @@ CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH RO
 
 
 --
+-- Name: beard_colors beard_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY beard_colors
+    ADD CONSTRAINT beard_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
 -- Name: beards beards_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2178,6 +2424,22 @@ ALTER TABLE ONLY evolutions
 
 
 --
+-- Name: eye_colors eye_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eye_colors
+    ADD CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
+-- Name: eyebrow_colors eyebrow_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eyebrow_colors
+    ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
 -- Name: eyebrows eyebrows_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2234,11 +2496,27 @@ ALTER TABLE ONLY general
 
 
 --
+-- Name: hair_colors hair_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hair_colors
+    ADD CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
 -- Name: hair hair_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY hair
     ADD CONSTRAINT hair_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
+-- Name: hand_hair_colors hand_hair_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hand_hair_colors
+    ADD CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 --
@@ -2258,11 +2536,27 @@ ALTER TABLE ONLY hands
 
 
 --
+-- Name: nail_colors nail_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY nail_colors
+    ADD CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
 -- Name: nails nails_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY nails
     ADD CONSTRAINT nails_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
+-- Name: skin_colors skin_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY skin_colors
+    ADD CONSTRAINT skin_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 --
