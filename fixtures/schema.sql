@@ -85,8 +85,7 @@ ALTER TYPE genders OWNER TO postgres;
 
 CREATE TYPE length_units AS ENUM (
     'mm',
-    'cm',
-    'in'
+    'cm'
 );
 
 
@@ -1040,6 +1039,26 @@ $$;
 
 
 ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
+
+--
+-- Name: suited_length(length); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION suited_length(length) RETURNS length
+    LANGUAGE plpgsql IMMUTABLE
+    AS $_$
+BEGIN
+	IF (($1).unit = 'mm' AND ($1).value >= 10) THEN
+		RETURN ROW(($1).value / 10, 'cm'::length_units);
+	ELSIF (($1).unit = 'cm') THEN
+		RETURN ROW(($1).value * 10, 'mm'::length_units);
+	END IF;
+	RETURN $1;
+END
+$_$;
+
+
+ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
 
 --
 -- Name: updated_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
