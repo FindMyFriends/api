@@ -56,7 +56,10 @@ final class StoredDemandTest extends Tester\TestCase {
 				'hair' => [
 					'style' => null,
 					'color_id' => 1,
-					'length' => null,
+					'length' => [
+						'value' => 5,
+						'unit' => null,
+					],
 					'highlights' => null,
 					'roots' => null,
 					'nature' => null,
@@ -65,7 +68,10 @@ final class StoredDemandTest extends Tester\TestCase {
 					'care' => null,
 					'beard' => [
 						'color_id' => 2,
-						'length' => 1,
+						'length' => [
+							'value' => 1,
+							'unit' => 'mm',
+						],
 						'style' => null,
 					],
 					'eyebrow' => [
@@ -107,7 +113,10 @@ final class StoredDemandTest extends Tester\TestCase {
 				],
 				'hands' => [
 					'nails' => [
-						'length' => null,
+						'length' => [
+							'value' => null,
+							'unit' => 'mm',
+						],
 						'care' => null,
 						'color_id' => 2,
 					],
@@ -125,7 +134,10 @@ final class StoredDemandTest extends Tester\TestCase {
 			[
 				'hands' => [
 					'nails' => [
-						'length' => null,
+						'length' => [
+							'value' => null,
+							'unit' => 'mm',
+						],
 						'care' => null,
 						'color' => ['id' => 2, 'hex' => 'faebd7', 'name' => 'AntiqueWhite'],
 					],
@@ -151,7 +163,10 @@ final class StoredDemandTest extends Tester\TestCase {
 					'care' => null,
 					'beard' => [
 						'id' => 3,
-						'length' => 1,
+						'length' => [
+							'value' => 1,
+							'unit' => 'mm',
+						],
 						'style' => null,
 						'color' => ['id' => 2, 'hex' => 'faebd7', 'name' => 'AntiqueWhite'],
 					],
@@ -179,7 +194,10 @@ final class StoredDemandTest extends Tester\TestCase {
 				'hair' => [
 					'style' => null,
 					'color' => ['id' => 1, 'hex' => 'f0f8ff', 'name' => 'AliceBlue'],
-					'length' => null,
+					'length' => [
+						'value' => 5,
+						'unit' => null,
+					],
 					'highlights' => null,
 					'roots' => null,
 					'nature' => null,

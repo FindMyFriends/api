@@ -107,7 +107,21 @@ final class Description {
 										'type' => 'object',
 									],
 									'highlights' => ['type' => ['boolean', 'null']],
-									'length' => ['type' => ['integer', 'null']],
+									'length' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'value' => ['type' => ['number', 'null']],
+											'unit' => [
+												'type' => ['null', 'string'],
+												'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
+											],
+										],
+										'type' => 'object',
+										'required' => [
+											'value',
+											'unit',
+										],
+									],
 									'nature' => ['type' => ['boolean', 'null']],
 									'roots' => ['type' => ['boolean', 'null']],
 									'style' => ['type' => ['string', 'null']],
@@ -157,7 +171,18 @@ final class Description {
 												],
 												'length' => [
 													'additionalProperties' => false,
-													'type' => ['integer', 'null'],
+													'properties' => [
+														'value' => ['type' => ['number', 'null']],
+														'unit' => [
+															'type' => ['null', 'string'],
+															'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
+														],
+													],
+													'type' => 'object',
+													'required' => [
+														'value',
+														'unit',
+													],
 												],
 												'style' => [
 													'additionalProperties' => false,
@@ -431,10 +456,21 @@ final class Description {
 										],
 										'type' => 'object',
 									],
-									'length' =>
-										[
-											'type' => ['integer', 'null'],
+									'length' => [
+										'additionalProperties' => false,
+										'properties' => [
+											'value' => ['type' => ['number', 'null']],
+											'unit' => [
+												'type' => ['null', 'string'],
+												'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
+											],
 										],
+										'type' => 'object',
+										'required' => [
+											'value',
+											'unit',
+										],
+									],
 									'care' =>
 										[
 											'type' => ['integer', 'null'],

@@ -80,6 +80,31 @@ CREATE TYPE genders AS ENUM (
 ALTER TYPE genders OWNER TO postgres;
 
 --
+-- Name: length_units; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE length_units AS ENUM (
+    'mm',
+    'cm',
+    'in'
+);
+
+
+ALTER TYPE length_units OWNER TO postgres;
+
+--
+-- Name: length; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE length AS (
+	value numeric,
+	unit length_units
+);
+
+
+ALTER TYPE length OWNER TO postgres;
+
+--
 -- Name: age_to_year(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -581,7 +606,7 @@ SET default_with_oids = false;
 CREATE TABLE beards (
     id integer NOT NULL,
     color_id smallint,
-    length smallint,
+    length length,
     style text
 );
 
@@ -717,7 +742,7 @@ CREATE TABLE hair (
     id integer NOT NULL,
     style text,
     color_id smallint,
-    length smallint,
+    length length,
     highlights boolean,
     roots boolean,
     nature boolean
@@ -766,7 +791,7 @@ ALTER TABLE hands OWNER TO postgres;
 CREATE TABLE nails (
     id integer NOT NULL,
     color_id smallint,
-    length smallint,
+    length length,
     care smallint,
     CONSTRAINT nails_care_check CHECK (is_rating(care))
 );

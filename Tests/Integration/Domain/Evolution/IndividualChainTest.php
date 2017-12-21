@@ -43,7 +43,10 @@ final class IndividualChainTest extends Tester\TestCase {
 				'hair' => [
 					'style' => null,
 					'color_id' => 1,
-					'length' => null,
+					'length' => [
+						'value' => 1,
+						'unit' => 'mm',
+					],
 					'highlights' => null,
 					'roots' => null,
 					'nature' => null,
@@ -52,7 +55,10 @@ final class IndividualChainTest extends Tester\TestCase {
 					'care' => null,
 					'beard' => [
 						'color_id' => 2,
-						'length' => 1,
+						'length' => [
+							'value' => null,
+							'unit' => 'mm',
+						],
 						'style' => null,
 					],
 					'eyebrow' => [
@@ -84,7 +90,10 @@ final class IndividualChainTest extends Tester\TestCase {
 				],
 				'hands' => [
 					'nails' => [
-						'length' => null,
+						'length' => [
+							'value' => 1,
+							'unit' => null,
+						],
 						'care' => null,
 						'color_id' => 2,
 					],

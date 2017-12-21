@@ -9,7 +9,7 @@ BEGIN
 	INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
 		md5(random()::TEXT),
 		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
-		test_utils.better_random('smallint'),
+		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
 		random() > 0.5,
 		random() > 0.5,
 		random() > 0.5
@@ -78,7 +78,7 @@ DECLARE
 BEGIN
 	INSERT INTO beards (color_id, length, style) VALUES (
 		COALESCE(CAST(replacement -> 'color_id' AS INTEGER), (SELECT color_id FROM beard_colors ORDER BY random() LIMIT 1)),
-		COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')),
+		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
 		COALESCE(replacement -> 'style', md5(random()::text))
 	)
 	RETURNING id
@@ -162,7 +162,7 @@ DECLARE
 BEGIN
 	INSERT INTO nails (color_id, length, care) VALUES (
 		(SELECT color_id FROM nail_colors ORDER BY random() LIMIT 1),
-		test_utils.better_random('smallint'),
+		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
 		test_utils.better_random(0, 10)
 	)
 	RETURNING id

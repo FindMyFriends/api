@@ -165,9 +165,31 @@
                     ]
                 },
                 "length": {
-                    "type": [
-                        "integer",
-                        "null"
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "type": [
+                                "null",
+                                "string"
+                            ],
+                            "enum": [
+                                null,
+                                "mm",
+                                "cm",
+                                "in"
+                            ]
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
                     ]
                 },
                 "nature": {
@@ -254,9 +276,30 @@
                         },
                         "length": {
                             "additionalProperties": false,
-                            "type": [
-                                "integer",
-                                "null"
+                            "properties": {
+                                "value": {
+                                    "type": [
+                                        "number",
+                                        "null"
+                                    ]
+                                },
+                                "unit": {
+                                    "type": [
+                                        "null",
+                                        "string"
+                                    ],
+                                    "enum": [
+                                        null,
+                                        "mm",
+                                        "cm",
+                                        "in"
+                                    ]
+                                }
+                            },
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "unit"
                             ]
                         },
                         "style": {
@@ -677,9 +720,31 @@
                             "type": "object"
                         },
                         "length": {
-                            "type": [
-                                "integer",
-                                "null"
+                            "additionalProperties": false,
+                            "properties": {
+                                "value": {
+                                    "type": [
+                                        "number",
+                                        "null"
+                                    ]
+                                },
+                                "unit": {
+                                    "type": [
+                                        "null",
+                                        "string"
+                                    ],
+                                    "enum": [
+                                        null,
+                                        "mm",
+                                        "cm",
+                                        "in"
+                                    ]
+                                }
+                            },
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "unit"
                             ]
                         },
                         "care": {

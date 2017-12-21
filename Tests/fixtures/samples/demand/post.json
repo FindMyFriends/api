@@ -12,7 +12,10 @@
   "hair": {
     "style": "normal",
     "color_id": 20,
-    "length": 20,
+    "length": {
+      "value": 20,
+      "unit": "mm"
+    },
     "highlights": false,
     "roots": true,
     "nature": false
@@ -25,7 +28,10 @@
     "freckles": false,
     "beard": {
       "color_id": 12,
-      "length": 2,
+      "length": {
+        "value": 2,
+        "unit": "mm"
+      },
       "style": "none"
     },
     "shape": "oval",
@@ -64,7 +70,10 @@
   "hands": {
     "nails": {
       "color_id": null,
-      "length": null,
+      "length": {
+        "value": null,
+        "unit": "mm"
+      },
       "care": null
     },
     "care": 10,
