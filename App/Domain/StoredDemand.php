@@ -121,7 +121,7 @@ final class StoredDemand implements Demand {
 			'UPDATE collective_demands
 			SET general_gender = :general_gender,
 				general_race_id = :general_race_id,
-				general_age = int4range(:general_age_from::INTEGER, :general_age_to::INTEGER),
+				general_age = int4range(:general_age_from, :general_age_to),
 				general_firstname = :general_firstname,
 				general_lastname = :general_lastname,
 				hair_style = :hair_style,
@@ -140,7 +140,7 @@ final class StoredDemand implements Demand {
 				face_beard = ROW(NULL, :face_beard_color_id, ROW(:face_beard_length_value, :face_beard_length_unit), :face_beard_style),
 				face_tooth = ROW(NULL, :face_teeth_care, :face_teeth_braces)::teeth,
 				location_coordinates = POINT(:location_coordinates_latitude, :location_coordinates_longitude),
-				location_met_at = tstzrange(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				location_met_at = tstzrange(:location_met_at_from, :location_met_at_to),
 				hands_nails = ROW(NULL, :hands_nails_color_id, ROW(:hands_nails_length_value, :hands_nails_length_unit), :hands_nails_care),
 				hands_vein_visibility = :hands_vein_visibility,
 				hands_joint_visibility = :hands_joint_visibility,
