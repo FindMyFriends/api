@@ -19,7 +19,7 @@ final class PostgresTableEnum implements Enum {
 		return array_column(
 			(new Storage\NativeQuery(
 				$this->database,
-				sprintf('SELECT %s FROM %s', $this->column, $this->table)
+				sprintf('SELECT %s FROM %s ORDER BY id', $this->column, $this->table)
 			))->rows(),
 			$this->column
 		);

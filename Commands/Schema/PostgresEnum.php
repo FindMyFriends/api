@@ -17,7 +17,7 @@ final class PostgresEnum implements Enum {
 		return array_column(
 			(new Storage\NativeQuery(
 				$this->database,
-				sprintf('SELECT unnest(enum_range(NULL::%s)) AS values', $this->name)
+				sprintf('SELECT unnest(enum_range(NULL::%s)) AS values ORDER BY 1', $this->name)
 			))->rows(),
 			'values'
 		);
