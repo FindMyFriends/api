@@ -20,66 +20,13 @@ final class StoredDemand implements Demand {
 			'SELECT * FROM collective_demands WHERE id = ?',
 			[$this->id]
 		))->row();
-		return new Output\FilledFormat(
-			$format,
-			[
-				'id' => $demand['id'],
-				'seeker_id' => $demand['seeker_id'],
-				'created_at' => $demand['created_at'],
-				'general' => [
-					'age' => [
-						'from' => $demand['general_age'][0],
-						'to' => $demand['general_age'][1],
-					],
-					'firstname' => $demand['general_firstname'],
-					'lastname' => $demand['general_lastname'],
-					'gender' => $demand['general_gender'],
-					'race' => $demand['general_race'],
-				],
-				'hair' => [
-					'style' => $demand['hair_style'],
-					'color' => $demand['hair_color'],
-					'length' => $demand['hair_length'],
-					'highlights' => $demand['hair_highlights'],
-					'roots' => $demand['hair_roots'],
-					'nature' => $demand['hair_nature'],
-				],
-				'face' => [
-					'care' => $demand['face_care'],
-					'beard' => [
-						'id' => $demand['face_beard']['id'],
-						'length' => $demand['face_beard']['length'],
-						'style' => $demand['face_beard']['style'],
-						'color' => $demand['face_beard_color'],
-					],
-					'eyebrow' => [
-						'id' => $demand['face_eyebrow']['id'],
-						'care' => $demand['face_eyebrow']['care'],
-						'color' => $demand['face_eyebrow_color'],
-					],
-					'freckles' => $demand['face_freckles'],
-					'eye' => [
-						'left' => [
-							'id' => $demand['face_left_eye']['id'],
-							'color' => $demand['face_left_eye_color'],
-							'lenses' => $demand['face_left_eye']['lenses'],
-						],
-						'right' => [
-							'id' => $demand['face_right_eye']['id'],
-							'color' => $demand['face_right_eye_color'],
-							'lenses' => $demand['face_right_eye']['lenses'],
-						],
-					],
-					'shape' => $demand['face_shape'],
-					'teeth' => $demand['face_tooth'],
-				],
-				'body' => [
-					'build' => $demand['body_build'],
-					'skin_color' => $demand['body_skin_color'],
-					'weight' => $demand['body']['weight'],
-					'height' => $demand['body']['height'],
-				],
-				'location' => [
+		return (new DescriptionFormat($format, $demand))
+			->with('id', $demand['id'])
+			->with('seeker_id', $demand['seeker_id'])
+			->with('created_at', $demand['created_at'])
+			->with(
+				'location',
+				[
 					'coordinates' => [
 						'latitude' => $demand['location_coordinates']['x'],
 						'longitude' => $demand['location_coordinates']['y'],
@@ -88,23 +35,8 @@ final class StoredDemand implements Demand {
 						'from' => $demand['location_met_at'][0],
 						'to' => $demand['location_met_at'][1],
 					],
-				],
-				'hands' => [
-					'nails' => [
-						'length' => $demand['hands_nails']['length'],
-						'care' => $demand['hands_nails']['care'],
-						'color' => $demand['hand_nail_color'],
-					],
-					'vein_visibility' => $demand['hands_vein_visibility'],
-					'joint_visibility' => $demand['hands_joint_visibility'],
-					'care' => $demand['hands_care'],
-					'hair' => [
-						'color' => $demand['hand_hair_color'],
-						'amount' => $demand['hand_hair_amount'],
-					],
-				],
-			]
-		);
+				]
+			);
 	}
 
 	public function retract(): void {
