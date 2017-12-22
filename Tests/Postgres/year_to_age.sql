@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.timestamp_to_age_range() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.timestamp_to_age_range() RETURNS TEST_RESULT AS $$
 DECLARE
 	messages TEXT[];
 BEGIN

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.deleting_all_evidences() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.deleting_all_evidences() RETURNS TEST_RESULT AS $$
 DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 	inserted_seeker_id seekers.id%TYPE;

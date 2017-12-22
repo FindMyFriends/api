@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.throwing_on_changing_created_at() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.throwing_on_changing_created_at() RETURNS TEST_RESULT AS $$
 DECLARE
 	v_freezed_now TIMESTAMPTZ DEFAULT NOW() - INTERVAL '10 MINUTE';
 	messages TEXT[];

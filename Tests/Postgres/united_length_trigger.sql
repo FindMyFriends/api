@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.trigger_before_insert() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.trigger_before_insert() RETURNS TEST_RESULT AS $$
 BEGIN
 	INSERT INTO beards (color_id, length, style) VALUES (1, ROW(100, 'cm'::length_units), 'ok');
 	RETURN message FROM assert.is_equal(
@@ -10,7 +10,7 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION unit_tests.trigger_before_update() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.trigger_before_update() RETURNS TEST_RESULT AS $$
 DECLARE
 	v_beard_id beards.id%TYPE;
 BEGIN

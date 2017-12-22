@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.all_ranges_to_hstore() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.all_ranges_to_hstore() RETURNS TEST_RESULT AS $$
 DECLARE
 	messages TEXT[];
 BEGIN
@@ -19,7 +19,7 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION unit_tests.unspecified_bound_leading_to_null() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.unspecified_bound_leading_to_null() RETURNS TEST_RESULT AS $$
 DECLARE
 	messages TEXT[];
 BEGIN

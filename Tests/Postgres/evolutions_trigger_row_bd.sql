@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION unit_tests.throwing_on_deleting_base() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.throwing_on_deleting_base() RETURNS TEST_RESULT AS $$
 DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 BEGIN
@@ -17,7 +17,7 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION unit_tests.passing_on_not_deleting_base() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.passing_on_not_deleting_base() RETURNS TEST_RESULT AS $$
 DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 	inserted_seeker_id seekers.id%TYPE;
