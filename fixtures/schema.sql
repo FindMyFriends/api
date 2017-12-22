@@ -24,42 +24,42 @@ CREATE SCHEMA http;
 ALTER SCHEMA http OWNER TO postgres;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner: 
+-- Name: citext; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -1059,6 +1059,22 @@ $_$;
 
 
 ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
+
+--
+-- Name: suited_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION suited_length_trigger() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	new."length" = suited_length(new."length");
+	RETURN new;
+END;
+$$;
+
+
+ALTER FUNCTION public.suited_length_trigger() OWNER TO postgres;
 
 --
 -- Name: updated_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
@@ -2307,6 +2323,13 @@ CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
 
 
 --
+-- Name: beards beards_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
+
+
+--
 -- Name: collective_demands collective_demands_row_ii_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -2360,6 +2383,20 @@ CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW
 --
 
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
+
+
+--
+-- Name: hair hair_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
+
+
+--
+-- Name: hand_hair hand_hair_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
 
 
 --
