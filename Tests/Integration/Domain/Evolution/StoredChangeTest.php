@@ -52,7 +52,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'beard' => [
 						'color_id' => 2,
 						'length' => [
-							'value' => 1,
+							'value' => 100,
 							'unit' => 'mm',
 						],
 						'style' => null,
@@ -133,8 +133,8 @@ final class StoredChangeTest extends Tester\TestCase {
 					'beard' => [
 						'id' => 3,
 						'length' => [
-							'value' => 1,
-							'unit' => 'mm',
+							'value' => 10,
+							'unit' => 'cm',
 						],
 						'style' => null,
 						'color' => ['id' => 2, 'hex' => 'faebd7', 'name' => 'AntiqueWhite'],

@@ -594,6 +594,36 @@ $$;
 
 ALTER FUNCTION public.is_rating(rating smallint) OWNER TO postgres;
 
+--
+-- Name: suited_length(length); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION suited_length(length) RETURNS length
+    LANGUAGE plpgsql IMMUTABLE
+    AS $_$
+BEGIN
+	IF (($1).unit = 'mm' AND ($1).value >= 10) THEN
+		RETURN ROW(($1).value / 10, 'cm'::length_units);
+	END IF;
+	RETURN $1;
+END
+$_$;
+
+
+CREATE FUNCTION united_length(length) RETURNS length
+LANGUAGE plpgsql IMMUTABLE
+AS $_$
+BEGIN
+	IF (($1).unit = 'cm') THEN
+		RETURN ROW(($1).value * 10, 'mm'::length_units);
+	END IF;
+	RETURN $1;
+END
+$_$;
+
+
+ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -844,7 +874,7 @@ CREATE VIEW complete_descriptions AS
     race.*::races AS general_race,
     face.freckles AS face_freckles,
     face.care AS face_care,
-    beard.*::beards AS face_beard,
+    ROW(beard.id, beard.color_id, suited_length(beard.length), beard.style)::beards AS face_beard,
     beard_color.*::colors AS face_beard_color,
     eyebrow.*::eyebrows AS face_eyebrow,
     face.shape AS face_shape,
@@ -853,7 +883,7 @@ CREATE VIEW complete_descriptions AS
     right_eye.*::eyes AS face_right_eye,
     face_left_eye_color.*::colors AS face_left_eye_color,
     face_right_eye_color.*::colors AS face_right_eye_color,
-    nail.*::nails AS hands_nails,
+    ROW(nail.id, nail.color_id, suited_length(nail.length), nail.care)::nails AS hands_nails,
     eyebrow_color.*::colors AS face_eyebrow_color,
     hand.vein_visibility AS hands_vein_visibility,
     hand.joint_visibility AS hands_joint_visibility,
@@ -864,7 +894,7 @@ CREATE VIEW complete_descriptions AS
     hair_color.*::colors AS hair_color,
     hair.color_id AS hair_color_id,
     hair.style AS hair_style,
-    hair.length AS hair_length,
+    suited_length(hair.length) AS hair_length,
     hair.highlights AS hair_highlights,
     hair.roots AS hair_roots,
     hair.nature AS hair_nature
@@ -1041,40 +1071,20 @@ $$;
 ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
 
 --
--- Name: suited_length(length); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: united_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION suited_length(length) RETURNS length
-    LANGUAGE plpgsql IMMUTABLE
-    AS $_$
-BEGIN
-	IF (($1).unit = 'mm' AND ($1).value >= 10) THEN
-		RETURN ROW(($1).value / 10, 'cm'::length_units);
-	ELSIF (($1).unit = 'cm') THEN
-		RETURN ROW(($1).value * 10, 'mm'::length_units);
-	END IF;
-	RETURN $1;
-END
-$_$;
-
-
-ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
-
---
--- Name: suited_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION suited_length_trigger() RETURNS trigger
+CREATE FUNCTION united_length_trigger() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	new."length" = suited_length(new."length");
+	new."length" = united_length(new."length");
 	RETURN new;
 END;
 $$;
 
 
-ALTER FUNCTION public.suited_length_trigger() OWNER TO postgres;
+ALTER FUNCTION public.united_length_trigger() OWNER TO postgres;
 
 --
 -- Name: updated_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
@@ -2326,7 +2336,7 @@ CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
 -- Name: beards beards_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
+CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
 
 --
@@ -2389,14 +2399,14 @@ CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH RO
 -- Name: hair hair_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
+CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
 
 --
--- Name: hand_hair hand_hair_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: nails nails_row_abiu_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE suited_length_trigger();
+CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
 
 --
