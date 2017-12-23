@@ -22,7 +22,7 @@ final class Colors implements Enum {
 				sprintf(
 					'SELECT * FROM %1$s
 					JOIN colors ON colors.id = %1$s.color_id
-					ORDER BY colors.id DESC',
+					ORDER BY hex DESC',
 					$this->set
 				)
 			))->rows(),
