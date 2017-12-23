@@ -221,7 +221,7 @@ BEGIN
 		random() > 0.5,
 		(SELECT beard FROM samples.beard()),
 		test_utils.better_random(0, 10),
-		md5(random()::TEXT),
+		test_utils.random_enum('face_shapes')::face_shapes,
 		(SELECT eye FROM samples.eye()),
 		(SELECT eye FROM samples.eye())
 	)

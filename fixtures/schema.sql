@@ -24,48 +24,62 @@ CREATE SCHEMA http;
 ALTER SCHEMA http OWNER TO postgres;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: face_shapes; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE face_shapes AS ENUM (
+    'oval',
+    'long',
+    'round',
+    'square'
+);
+
+
+ALTER TYPE face_shapes OWNER TO postgres;
 
 --
 -- Name: genders; Type: TYPE; Schema: public; Owner: postgres
@@ -610,18 +624,6 @@ END
 $_$;
 
 
-CREATE FUNCTION united_length(length) RETURNS length
-LANGUAGE plpgsql IMMUTABLE
-AS $_$
-BEGIN
-	IF (($1).unit = 'cm') THEN
-		RETURN ROW(($1).value * 10, 'mm'::length_units);
-	END IF;
-	RETURN $1;
-END
-$_$;
-
-
 ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
 
 SET default_tablespace = '';
@@ -736,7 +738,7 @@ CREATE TABLE faces (
     freckles boolean,
     beard_id integer,
     care smallint,
-    shape text,
+    shape face_shapes,
     eyebrow_id integer,
     left_eye_id integer,
     right_eye_id integer,
@@ -1069,6 +1071,24 @@ $$;
 
 
 ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
+
+--
+-- Name: united_length(length); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION united_length(length) RETURNS length
+    LANGUAGE plpgsql IMMUTABLE
+    AS $_$
+BEGIN
+	IF (($1).unit = 'cm') THEN
+		RETURN ROW(($1).value * 10, 'mm'::length_units);
+	END IF;
+	RETURN $1;
+END
+$_$;
+
+
+ALTER FUNCTION public.united_length(length) OWNER TO postgres;
 
 --
 -- Name: united_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres

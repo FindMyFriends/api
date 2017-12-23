@@ -330,7 +330,10 @@ final class Description {
 														],
 												],
 										],
-									'shape' => ['type' => ['string', 'null']],
+									'shape' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new PostgresEnum('face_shapes', $this->database))->values()),
+									],
 									'teeth' =>
 										[
 											'additionalProperties' => false,

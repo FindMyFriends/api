@@ -1198,6 +1198,13 @@
                     "type": [
                         "string",
                         "null"
+                    ],
+                    "enum": [
+                        null,
+                        "oval",
+                        "long",
+                        "round",
+                        "square"
                     ]
                 },
                 "teeth": {
