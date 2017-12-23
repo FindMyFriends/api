@@ -594,19 +594,19 @@ $$;
 ALTER FUNCTION public.is_hex_color(color text) OWNER TO postgres;
 
 --
--- Name: is_rating(smallint); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: is_rating(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION is_rating(rating smallint) RETURNS boolean
+CREATE FUNCTION is_rating(rating integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	RETURN rating <= 10 AND rating >= 0;
+	RETURN int4range(0, 10, '[]') @> rating;
 END
 $$;
 
 
-ALTER FUNCTION public.is_rating(rating smallint) OWNER TO postgres;
+ALTER FUNCTION public.is_rating(rating integer) OWNER TO postgres;
 
 --
 -- Name: suited_length(length); Type: FUNCTION; Schema: public; Owner: postgres
@@ -709,7 +709,7 @@ CREATE TABLE eyebrows (
     id integer NOT NULL,
     color_id smallint,
     care smallint,
-    CONSTRAINT eyebrows_care_check CHECK (is_rating(care))
+    CONSTRAINT eyebrows_care_check CHECK (is_rating((care)::integer))
 );
 
 
@@ -742,7 +742,7 @@ CREATE TABLE faces (
     eyebrow_id integer,
     left_eye_id integer,
     right_eye_id integer,
-    CONSTRAINT faces_care_check CHECK (is_rating(care))
+    CONSTRAINT faces_care_check CHECK (is_rating((care)::integer))
 );
 
 
@@ -790,7 +790,7 @@ CREATE TABLE hand_hair (
     id integer NOT NULL,
     color_id smallint,
     amount smallint,
-    CONSTRAINT hand_hair_amount_check CHECK (is_rating(amount))
+    CONSTRAINT hand_hair_amount_check CHECK (is_rating((amount)::integer))
 );
 
 
@@ -807,9 +807,9 @@ CREATE TABLE hands (
     vein_visibility smallint,
     joint_visibility smallint,
     hand_hair_id integer,
-    CONSTRAINT hands_care_check CHECK (is_rating(care)),
-    CONSTRAINT hands_joint_visibility_check CHECK (is_rating(joint_visibility)),
-    CONSTRAINT hands_vein_visibility_check CHECK (is_rating(vein_visibility))
+    CONSTRAINT hands_care_check CHECK (is_rating((care)::integer)),
+    CONSTRAINT hands_joint_visibility_check CHECK (is_rating((joint_visibility)::integer)),
+    CONSTRAINT hands_vein_visibility_check CHECK (is_rating((vein_visibility)::integer))
 );
 
 
@@ -824,7 +824,7 @@ CREATE TABLE nails (
     color_id smallint,
     length length,
     care smallint,
-    CONSTRAINT nails_care_check CHECK (is_rating(care))
+    CONSTRAINT nails_care_check CHECK (is_rating((care)::integer))
 );
 
 
@@ -850,7 +850,7 @@ CREATE TABLE teeth (
     id integer NOT NULL,
     care smallint,
     braces boolean,
-    CONSTRAINT teeth_care_check CHECK (is_rating(care))
+    CONSTRAINT teeth_care_check CHECK (is_rating((care)::integer))
 );
 
 
