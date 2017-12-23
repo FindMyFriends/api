@@ -57,7 +57,7 @@ final class Demand {
 				] + $description['properties'],
 			'required' => array_merge(['location'], $description['required']),
 			'type' => 'object',
-			] + $description;
+		] + $description;
 	}
 
 	public function put(): array {
