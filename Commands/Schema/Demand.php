@@ -64,6 +64,7 @@ final class Demand {
 		$schema = $this->get();
 		$description = (new Description($this->database))->put();
 		$schema['properties'] = $description['properties'] + $schema['properties'];
+		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
 		unset($properties['created_at']);
 		unset($properties['seeker_id']);

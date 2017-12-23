@@ -389,136 +389,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "left": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": "integer"
-                                },
-                                "color": {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "id": {
-                                            "type": [
-                                                "integer",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                8,
-                                                10,
-                                                12
-                                            ]
-                                        },
-                                        "name": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                "Black",
-                                                "Blue",
-                                                "Brown"
-                                            ]
-                                        },
-                                        "hex": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                "000000",
-                                                "0000ff",
-                                                "a52a2a"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "name",
-                                        "hex"
-                                    ],
-                                    "type": "object"
-                                },
-                                "lenses": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "lenses",
-                                "color"
-                            ],
-                            "type": "object"
+                            "$ref": "#/definitions/eye"
                         },
                         "right": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": "integer"
-                                },
-                                "color": {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "id": {
-                                            "type": [
-                                                "integer",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                8,
-                                                10,
-                                                12
-                                            ]
-                                        },
-                                        "name": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                "Black",
-                                                "Blue",
-                                                "Brown"
-                                            ]
-                                        },
-                                        "hex": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "enum": [
-                                                null,
-                                                "000000",
-                                                "0000ff",
-                                                "a52a2a"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "name",
-                                        "hex"
-                                    ],
-                                    "type": "object"
-                                },
-                                "lenses": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "lenses",
-                                "color"
-                            ],
-                            "type": "object"
+                            "$ref": "#/definitions/eye"
                         }
                     }
                 },
@@ -844,6 +718,72 @@
             ],
             "minimum": 0,
             "maximum": 10
+        },
+        "eye": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "color": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "id": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                8,
+                                10,
+                                12
+                            ]
+                        },
+                        "name": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "Black",
+                                "Blue",
+                                "Brown"
+                            ]
+                        },
+                        "hex": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "000000",
+                                "0000ff",
+                                "a52a2a"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name",
+                        "hex"
+                    ],
+                    "type": "object"
+                },
+                "lenses": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "lenses",
+                "color"
+            ],
+            "type": "object"
         }
     }
 }

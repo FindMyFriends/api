@@ -18,6 +18,35 @@ final class Description {
 					'minimum' => 0,
 					'maximum' => 10,
 				],
+				'eye' => [
+					'additionalProperties' => false,
+					'properties' =>
+						[
+							'id' => ['type' => 'integer'],
+							'color' => [
+								'additionalProperties' => false,
+								'properties' => [
+									'id' => [
+										'type' => ['integer', 'null'],
+										'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
+									],
+									'name' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('name', 'eye_colors', $this->database))->values()),
+									],
+									'hex' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('hex', 'eye_colors', $this->database))->values()),
+									],
+								],
+								'required' => ['id', 'name', 'hex'],
+								'type' => 'object',
+							],
+							'lenses' => ['type' => ['boolean', 'null']],
+						],
+					'required' => ['lenses', 'color'],
+					'type' => 'object',
+				],
 			],
 			'additionalProperties' => false,
 			'properties' =>
@@ -249,82 +278,8 @@ final class Description {
 											'additionalProperties' => false,
 											'properties' =>
 												[
-													'left' =>
-														[
-															'additionalProperties' => false,
-															'properties' =>
-																[
-																	'id' => ['type' => 'integer'],
-																	'color' => [
-																		'additionalProperties' => false,
-																		'properties' => [
-																			'id' => [
-																				'type' => ['integer', 'null'],
-																				'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
-																			],
-																			'name' => [
-																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('name', 'eye_colors', $this->database))->values()),
-																			],
-																			'hex' => [
-																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('hex', 'eye_colors', $this->database))->values()),
-																			],
-																		],
-																		'required' => [
-																			'id',
-																			'name',
-																			'hex',
-																		],
-																		'type' => 'object',
-																	],
-																	'lenses' => ['type' => ['boolean', 'null']],
-																],
-															'required' =>
-																[
-																	'lenses',
-																	'color',
-																],
-															'type' => 'object',
-														],
-													'right' =>
-														[
-															'additionalProperties' => false,
-															'properties' =>
-																[
-																	'id' => ['type' => 'integer'],
-																	'color' => [
-																		'additionalProperties' => false,
-																		'properties' => [
-																			'id' => [
-																				'type' => ['integer', 'null'],
-																				'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
-																			],
-																			'name' => [
-																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('name', 'eye_colors', $this->database))->values()),
-																			],
-																			'hex' => [
-																				'type' => ['string', 'null'],
-																				'enum' => array_merge([null], (new Colors('hex', 'eye_colors', $this->database))->values()),
-																			],
-																		],
-																		'required' => [
-																			'id',
-																			'name',
-																			'hex',
-																		],
-																		'type' => 'object',
-																	],
-																	'lenses' => ['type' => ['boolean', 'null']],
-																],
-															'required' =>
-																[
-																	'lenses',
-																	'color',
-																],
-															'type' => 'object',
-														],
+													'left' => ['$ref' => '#/definitions/eye'],
+													'right' => ['$ref' => '#/definitions/eye'],
 												],
 										],
 									'shape' => [
@@ -552,8 +507,7 @@ final class Description {
 		$properties['face']['properties']['beard'] = (new JsonEnum($colors, $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
 		$properties['face']['properties']['beard'] = (new JsonEnum($colors, $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
 		$properties['face']['properties']['eyebrow'] = (new JsonEnum($colors, $properties['face']['properties']['eyebrow'], 'color', 'color_id'))->values();
-		$properties['face']['properties']['eye']['properties']['left'] = (new JsonEnum($colors, $properties['face']['properties']['eye']['properties']['left'], 'color', 'color_id'))->values();
-		$properties['face']['properties']['eye']['properties']['right'] = (new JsonEnum($colors, $properties['face']['properties']['eye']['properties']['right'], 'color', 'color_id'))->values();
+		$schema['definitions']['eye'] = (new JsonEnum($colors, $schema['definitions']['eye'], 'color', 'color_id'))->values();
 		$properties['general'] = (new JsonEnum($races, $properties['general'], 'race', 'race_id'))->values();
 		$properties['hands']['properties']['nails'] = (new JsonEnum($colors, $properties['hands']['properties']['nails'], 'color', 'color_id'))->values();
 		$properties['hands']['properties']['hair'] = (new JsonEnum($colors, $properties['hands']['properties']['hair'], 'color', 'color_id'))->values();

@@ -28,6 +28,7 @@ final class Evolution {
 		$schema = $this->get();
 		$description = (new Description($this->database))->put();
 		$schema['properties'] = $description['properties'] + $schema['properties'];
+		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
 		unset($properties['seeker_id']);
 		unset($properties['general']['properties']['age']);
