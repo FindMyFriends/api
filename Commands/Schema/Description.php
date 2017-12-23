@@ -12,6 +12,13 @@ final class Description {
 	public function get(): array {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'definitions' => [
+				'rating' => [
+					'type' => ['integer', 'null'],
+					'minimum' => 0,
+					'maximum' => 10,
+				],
+			],
 			'additionalProperties' => false,
 			'properties' =>
 				[
@@ -197,12 +204,7 @@ final class Description {
 												'style',
 											],
 										],
-									'care' =>
-										[
-											'type' => ['integer', 'null'],
-											'minimum' => 0,
-											'maximum' => 10,
-										],
+									'care' => ['$ref' => '#/definitions/rating'],
 									'eyebrow' => [
 										'additionalProperties' => false,
 										'properties' => [
@@ -232,12 +234,7 @@ final class Description {
 												],
 												'type' => 'object',
 											],
-											'care' =>
-												[
-													'type' => ['integer', 'null'],
-													'minimum' => 0,
-													'maximum' => 10,
-												],
+											'care' => ['$ref' => '#/definitions/rating'],
 										],
 										'required' =>
 											[
@@ -341,12 +338,7 @@ final class Description {
 												[
 													'id' => ['type' => 'integer'],
 													'braces' => ['type' => ['boolean', 'null']],
-													'care' =>
-														[
-															'type' => ['integer', 'null'],
-															'minimum' => 0,
-															'maximum' => 10,
-														],
+													'care' => ['$ref' => '#/definitions/rating'],
 												],
 											'required' =>
 												[
@@ -474,12 +466,7 @@ final class Description {
 											'unit',
 										],
 									],
-									'care' =>
-										[
-											'type' => ['integer', 'null'],
-											'minimum' => 0,
-											'maximum' => 10,
-										],
+									'care' => ['$ref' => '#/definitions/rating'],
 								],
 								'required' =>
 									[
@@ -489,21 +476,9 @@ final class Description {
 									],
 								'type' => 'object',
 							],
-							'care' => [
-								'type' => ['integer', 'null'],
-								'minimum' => 0,
-								'maximum' => 10,
-							],
-							'vein_visibility' => [
-								'type' => ['integer', 'null'],
-								'minimum' => 0,
-								'maximum' => 10,
-							],
-							'joint_visibility' => [
-								'type' => ['integer', 'null'],
-								'minimum' => 0,
-								'maximum' => 10,
-							],
+							'care' => ['$ref' => '#/definitions/rating'],
+							'vein_visibility' => ['$ref' => '#/definitions/rating'],
+							'joint_visibility' => ['$ref' => '#/definitions/rating'],
 							'hair' => [
 								'additionalProperties' => false,
 								'properties' => [

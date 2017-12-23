@@ -637,12 +637,7 @@
                     ]
                 },
                 "care": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 10
+                    "$ref": "#/definitions/rating"
                 },
                 "eyebrow": {
                     "additionalProperties": false,
@@ -651,12 +646,7 @@
                             "type": "integer"
                         },
                         "care": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 0,
-                            "maximum": 10
+                            "$ref": "#/definitions/rating"
                         },
                         "color_id": {
                             "type": {
@@ -1220,12 +1210,7 @@
                             ]
                         },
                         "care": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 0,
-                            "maximum": 10
+                            "$ref": "#/definitions/rating"
                         }
                     },
                     "required": [
@@ -1325,12 +1310,7 @@
                             ]
                         },
                         "care": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 0,
-                            "maximum": 10
+                            "$ref": "#/definitions/rating"
                         },
                         "color_id": {
                             "type": {
@@ -1501,28 +1481,13 @@
                     "type": "object"
                 },
                 "care": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 10
+                    "$ref": "#/definitions/rating"
                 },
                 "vein_visibility": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 10
+                    "$ref": "#/definitions/rating"
                 },
                 "joint_visibility": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 10
+                    "$ref": "#/definitions/rating"
                 },
                 "hair": {
                     "additionalProperties": false,
@@ -1725,5 +1690,15 @@
         "body",
         "hands"
     ],
-    "type": "object"
+    "type": "object",
+    "definitions": {
+        "rating": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "minimum": 0,
+            "maximum": 10
+        }
+    }
 }

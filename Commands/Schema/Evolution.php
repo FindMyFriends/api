@@ -21,7 +21,7 @@ final class Evolution {
 				] + $description['properties'],
 			'required' => $description['required'],
 			'type' => 'object',
-		];
+		] + $description;
 	}
 
 	public function put(): array {
