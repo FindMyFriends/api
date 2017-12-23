@@ -4,7 +4,7 @@
 	<resolvepath propertyName="base_path" file="."/>
 
 	<target name="check" depends="lint, phpcpd, phpstan, phpcs, generate-schemas, tests, cgi-tests"/>
-	<target name="ci" depends="check, tester-coverage"/>
+	<target name="ci" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests, tester-coverage"/> <!-- Everything in CHECK except generate-schemas -->
 	<target name="init" depends="lint, move-schemas"/>
 
 	<target name="lint">
