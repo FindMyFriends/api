@@ -53,7 +53,6 @@ final class DescriptionFormat implements Output\Format {
 				'face' => [
 					'care' => $description['face_care'],
 					'beard' => [
-						'id' => $description['face_beard']['id'],
 						'length' => $description['face_beard']['length'],
 						'style' => $description['face_beard']['style'],
 						'color' => $description['face_beard_color'],

@@ -181,7 +181,6 @@ final class Description {
 										[
 											'additionalProperties' => false,
 											'properties' => [
-												'id' => ['type' => 'integer'],
 												'color' => [
 													'additionalProperties' => false,
 													'properties' => [
@@ -227,7 +226,6 @@ final class Description {
 											],
 											'type' => 'object',
 											'required' => [
-												'id',
 												'color',
 												'length',
 												'style',
@@ -503,7 +501,6 @@ final class Description {
 		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
 		$properties['body'] = (new JsonEnum(new Colors('id', 'skin_colors', $this->database), $properties['body'], 'skin_color', 'skin_color_id'))->values();
 		$properties['hair'] = (new JsonEnum(new Colors('id', 'hair_colors', $this->database), $properties['hair'], 'color', 'color_id'))->values();
-		$properties['face']['properties']['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
 		$properties['face']['properties']['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
 		$properties['face']['properties']['eyebrow'] = (new JsonEnum(new Colors('id', 'eyebrow_colors', $this->database), $properties['face']['properties']['eyebrow'], 'color', 'color_id'))->values();
 		$schema['definitions']['eye'] = (new JsonEnum(new Colors('id', 'eye_colors', $this->database), $schema['definitions']['eye'], 'color', 'color_id'))->values();

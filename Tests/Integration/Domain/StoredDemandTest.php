@@ -162,7 +162,6 @@ final class StoredDemandTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'beard' => [
-						'id' => 3,
 						'length' => [
 							'value' => 1,
 							'unit' => 'mm',

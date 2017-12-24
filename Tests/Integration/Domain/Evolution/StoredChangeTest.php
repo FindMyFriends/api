@@ -131,7 +131,6 @@ final class StoredChangeTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'beard' => [
-						'id' => 3,
 						'length' => [
 							'value' => 10,
 							'unit' => 'cm',

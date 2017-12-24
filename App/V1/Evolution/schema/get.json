@@ -226,9 +226,6 @@
                 "beard": {
                     "additionalProperties": false,
                     "properties": {
-                        "id": {
-                            "type": "integer"
-                        },
                         "color": {
                             "additionalProperties": false,
                             "properties": {
@@ -310,7 +307,6 @@
                     },
                     "type": "object",
                     "required": [
-                        "id",
                         "color",
                         "length",
                         "style"
