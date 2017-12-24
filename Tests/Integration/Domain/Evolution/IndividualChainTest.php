@@ -42,7 +42,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				],
 				'hair' => [
 					'style' => null,
-					'color_id' => 1,
+					'color_id' => 8,
 					'length' => [
 						'value' => 1,
 						'unit' => 'mm',
@@ -54,7 +54,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'beard' => [
-						'color_id' => 2,
+						'color_id' => 8,
 						'length' => [
 							'value' => null,
 							'unit' => 'mm',
@@ -62,17 +62,17 @@ final class IndividualChainTest extends Tester\TestCase {
 						'style' => null,
 					],
 					'eyebrow' => [
-						'color_id' => 3,
+						'color_id' => 8,
 						'care' => 5,
 					],
 					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'color_id' => 4,
+							'color_id' => 8,
 							'lenses' => false,
 						],
 						'right' => [
-							'color_id' => 4,
+							'color_id' => 8,
 							'lenses' => false,
 						],
 					],
@@ -84,7 +84,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				],
 				'body' => [
 					'build_id' => 1,
-					'skin_color_id' => 6,
+					'skin_color_id' => 8,
 					'weight' => 120,
 					'height' => 130,
 				],
@@ -95,13 +95,13 @@ final class IndividualChainTest extends Tester\TestCase {
 							'unit' => null,
 						],
 						'care' => null,
-						'color_id' => 2,
+						'color_id' => 8,
 					],
 					'vein_visibility' => null,
 					'joint_visibility' => null,
 					'care' => null,
 					'hair' => [
-						'color_id' => 3,
+						'color_id' => 8,
 						'amount' => null,
 					],
 				],

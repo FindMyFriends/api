@@ -2276,6 +2276,13 @@ CREATE UNIQUE INDEX etags_id_uindex ON etags USING btree (id);
 SET search_path = public, pg_catalog;
 
 --
+-- Name: beard_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX beard_colors_color_id_uindex ON beard_colors USING btree (color_id);
+
+
+--
 -- Name: demands_description_id_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2339,6 +2346,27 @@ CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
 
 
 --
+-- Name: eye_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX eye_colors_color_id_uindex ON eye_colors USING btree (color_id);
+
+
+--
+-- Name: hair_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX hair_colors_color_id_uindex ON hair_colors USING btree (color_id);
+
+
+--
+-- Name: hand_hair_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX hand_hair_colors_color_id_uindex ON hand_hair_colors USING btree (color_id);
+
+
+--
 -- Name: hands_id_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2346,10 +2374,24 @@ CREATE UNIQUE INDEX hands_id_uindex ON hands USING btree (id);
 
 
 --
+-- Name: nail_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX nail_colors_color_id_uindex ON nail_colors USING btree (color_id);
+
+
+--
 -- Name: seekers_email_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
+
+
+--
+-- Name: skin_colors_color_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX skin_colors_color_id_uindex ON skin_colors USING btree (color_id);
 
 
 --
@@ -2438,11 +2480,27 @@ ALTER TABLE ONLY beard_colors
 
 
 --
+-- Name: beards beards_beard_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY beards
+    ADD CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id);
+
+
+--
 -- Name: bodies bodies_body_builds_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY bodies
     ADD CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id);
+
+
+--
+-- Name: bodies bodies_skin_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY bodies
+    ADD CONSTRAINT bodies_skin_colors_color_id_fk FOREIGN KEY (skin_color_id) REFERENCES skin_colors(color_id);
 
 
 --
@@ -2534,11 +2592,27 @@ ALTER TABLE ONLY eyebrow_colors
 
 
 --
+-- Name: eyes eyes_eye_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY eyes
+    ADD CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id);
+
+
+--
 -- Name: faces faces_beards_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY faces
     ADD CONSTRAINT faces_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id);
+
+
+--
+-- Name: faces faces_eyebrows_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY faces
+    ADD CONSTRAINT faces_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id);
 
 
 --
@@ -2582,11 +2656,35 @@ ALTER TABLE ONLY hair_colors
 
 
 --
+-- Name: hair hair_hair_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hair
+    ADD CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id);
+
+
+--
 -- Name: hand_hair_colors hand_hair_colors_colors_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY hand_hair_colors
     ADD CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
+-- Name: hand_hair hand_hair_hand_hair_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hand_hair
+    ADD CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id);
+
+
+--
+-- Name: hands hands_hand_hair_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hands
+    ADD CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id);
 
 
 --
@@ -2603,6 +2701,14 @@ ALTER TABLE ONLY hands
 
 ALTER TABLE ONLY nail_colors
     ADD CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+
+
+--
+-- Name: nails nails_nail_colors_color_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY nails
+    ADD CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id);
 
 
 --
