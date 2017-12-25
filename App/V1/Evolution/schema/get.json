@@ -3,7 +3,8 @@
     "additionalProperties": false,
     "properties": {
         "evolved_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
         },
         "id": {
             "type": "integer"
