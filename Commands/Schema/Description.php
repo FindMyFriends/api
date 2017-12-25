@@ -289,7 +289,6 @@ final class Description {
 											'additionalProperties' => false,
 											'properties' =>
 												[
-													'id' => ['type' => 'integer'],
 													'braces' => ['type' => ['boolean', 'null']],
 													'care' => ['$ref' => '#/definitions/rating'],
 												],

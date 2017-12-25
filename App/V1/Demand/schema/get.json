@@ -459,9 +459,6 @@
                 "teeth": {
                     "additionalProperties": false,
                     "properties": {
-                        "id": {
-                            "type": "integer"
-                        },
                         "braces": {
                             "type": [
                                 "boolean",
