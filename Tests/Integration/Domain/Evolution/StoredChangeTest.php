@@ -139,25 +139,22 @@ final class StoredChangeTest extends Tester\TestCase {
 						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
 					],
 					'eyebrow' => [
-						'id' => 3,
 						'care' => 5,
 						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
 					],
 					'freckles' => null,
 					'eye' => [
 						'left' => [
-							'id' => 5,
 							'lenses' => false,
 							'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
 						],
 						'right' => [
-							'id' => 6,
 							'lenses' => false,
 							'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
 						],
 					],
 					'shape' => null,
-					'teeth' => ['id' => 3, 'care' => 10, 'braces' => true],
+					'teeth' => ['care' => 10, 'braces' => true],
 				],
 				'hair' => [
 					'style' => null,

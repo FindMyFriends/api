@@ -118,6 +118,67 @@ CREATE TYPE length AS (
 ALTER TYPE length OWNER TO postgres;
 
 --
+-- Name: flat_description; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE flat_description AS (
+	id integer,
+	general_gender genders,
+	general_race_id smallint,
+	general_birth_year int4range,
+	general_firstname text,
+	general_lastname text,
+	hair_style text,
+	hair_color_id smallint,
+	hair_length length,
+	hair_highlights boolean,
+	hair_roots boolean,
+	hair_nature boolean,
+	body_build_id smallint,
+	body_skin_color_id smallint,
+	body_weight smallint,
+	body_height smallint,
+	beard_color_id smallint,
+	beard_length length,
+	beard_style text,
+	eyebrow_color_id smallint,
+	eyebrow_care smallint,
+	left_eye_color_id smallint,
+	left_eye_lenses boolean,
+	right_eye_color_id smallint,
+	right_eye_lenses boolean,
+	face_freckles boolean,
+	face_care smallint,
+	face_shape face_shapes,
+	hand_care smallint,
+	hand_vein_visibility smallint,
+	hand_joint_visibility smallint,
+	hand_hair_color_id smallint,
+	hand_hair_amount smallint,
+	nail_color_id smallint,
+	nail_length length,
+	nail_care smallint,
+	tooth_care smallint,
+	tooth_braces boolean
+);
+
+
+ALTER TYPE flat_description OWNER TO postgres;
+
+--
+-- Name: printed_color; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE printed_color AS (
+	id smallint,
+	name text,
+	hex text
+);
+
+
+ALTER TYPE printed_color OWNER TO postgres;
+
+--
 -- Name: age_to_year(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -182,45 +243,44 @@ BEGIN
 	v_description_id = inserted_description(
 			ROW(
 			NULL,
-			age_to_year(new.general_age, new.location_met_at),
+			new.general_gender,
 			new.general_race_id,
+			age_to_year(new.general_age, new.location_met_at),
 			new.general_firstname,
 			new.general_lastname,
-			new.general_gender,
-			new.body_build_id,
-			new.body,
-			new.body_build,
-			new.hand_nail_color,
-			new.body_skin_color,
-			new.body_skin_color_id,
-			new.general_race,
-			new.face_freckles,
-			new.face_care,
-			new.face_beard,
-			new.face_beard_color,
-			new.face_eyebrow,
-			new.face_shape,
-			new.face_tooth,
-			new.face_left_eye,
-			new.face_right_eye,
-			new.face_left_eye_color,
-			new.face_right_eye_color,
-			new.hands_nails,
-			new.face_eyebrow_color,
-			new.hands_vein_visibility,
-			new.hands_joint_visibility,
-			new.hands_care,
-			new.hand_hair_color,
-			new.hand_hair_amount,
-			new.hands_hair,
-			new.hair_color,
-			new.hair_color_id,
 			new.hair_style,
+			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
 			new.hair_roots,
-			new.hair_nature
-		)
+			new.hair_nature,
+			new.body_build_id,
+			new.body_skin_color_id,
+			new.body_weight,
+			new.body_height,
+			new.face_beard_color_id,
+			new.face_beard_length,
+			new.face_beard_style,
+			new.face_eyebrow_color_id,
+			new.face_eyebrow_care,
+			new.face_left_eye_color_id,
+			new.face_left_eye_lenses,
+			new.face_right_eye_color_id,
+			new.face_right_eye_lenses,
+			new.face_freckles,
+			new.face_care,
+			new.face_shape,
+			new.hands_care,
+			new.hands_vein_visibility,
+			new.hands_joint_visibility,
+			new.hands_hair_color_id,
+			new.hands_hair_amount,
+			new.hands_nails_color_id,
+			new.hands_nails_length,
+			new.hands_nails_care,
+			new.face_tooth_care,
+			new.face_tooth_braces
+		)::flat_description
 	);
 	INSERT INTO locations (coordinates, place, met_at) VALUES (
 		new.location_coordinates,
@@ -228,7 +288,7 @@ BEGIN
 		new.location_met_at
 	)
 	RETURNING id
-		INTO v_location_id;
+	INTO v_location_id;
 
 	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
 		new.seeker_id,
@@ -270,45 +330,44 @@ BEGIN
 	PERFORM updated_description(
 			ROW(
 			v_description_id,
-			age_to_year(new.general_age, new.location_met_at),
+			new.general_gender,
 			new.general_race_id,
+			age_to_year(new.general_age, new.location_met_at),
 			new.general_firstname,
 			new.general_lastname,
-			new.general_gender,
-			new.body_build_id,
-			new.body,
-			new.body_build,
-			new.hand_nail_color,
-			new.body_skin_color,
-			new.body_skin_color_id,
-			new.general_race,
-			new.face_freckles,
-			new.face_care,
-			new.face_beard,
-			new.face_beard_color,
-			new.face_eyebrow,
-			new.face_shape,
-			new.face_tooth,
-			new.face_left_eye,
-			new.face_right_eye,
-			new.face_left_eye_color,
-			new.face_right_eye_color,
-			new.hands_nails,
-			new.face_eyebrow_color,
-			new.hands_vein_visibility,
-			new.hands_joint_visibility,
-			new.hands_care,
-			new.hand_hair_color,
-			new.hand_hair_amount,
-			new.hands_hair,
-			new.hair_color,
-			new.hair_color_id,
 			new.hair_style,
+			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
 			new.hair_roots,
-			new.hair_nature
-		)
+			new.hair_nature,
+			new.body_build_id,
+			new.body_skin_color_id,
+			new.body_weight,
+			new.body_height,
+			new.face_beard_color_id,
+			new.face_beard_length,
+			new.face_beard_style,
+			new.face_eyebrow_color_id,
+			new.face_eyebrow_care,
+			new.face_left_eye_color_id,
+			new.face_left_eye_lenses,
+			new.face_right_eye_color_id,
+			new.face_right_eye_lenses,
+			new.face_freckles,
+			new.face_care,
+			new.face_shape,
+			new.hands_care,
+			new.hands_vein_visibility,
+			new.hands_joint_visibility,
+			new.hands_hair_color_id,
+			new.hands_hair_amount,
+			new.hands_nails_color_id,
+			new.hands_nails_length,
+			new.hands_nails_care,
+			new.face_tooth_care,
+			new.face_tooth_braces
+		)::flat_description
 	);
 
 	RETURN new;
@@ -331,50 +390,49 @@ BEGIN
 	v_description_id = inserted_description(
 			ROW(
 			NULL,
+			new.general_gender,
+			new.general_race_id,
 			(
 				SELECT birth_year
 				FROM base_evolution
 				WHERE seeker_id = new.seeker_id
 				LIMIT 1
 			),
-			new.general_race_id,
 			new.general_firstname,
 			new.general_lastname,
-			new.general_gender,
-			new.body_build_id,
-			new.body,
-			new.body_build,
-			new.hand_nail_color,
-			new.body_skin_color,
-			new.body_skin_color_id,
-			new.general_race,
-			new.face_freckles,
-			new.face_care,
-			new.face_beard,
-			new.face_beard_color,
-			new.face_eyebrow,
-			new.face_shape,
-			new.face_tooth,
-			new.face_left_eye,
-			new.face_right_eye,
-			new.face_left_eye_color,
-			new.face_right_eye_color,
-			new.hands_nails,
-			new.face_eyebrow_color,
-			new.hands_vein_visibility,
-			new.hands_joint_visibility,
-			new.hands_care,
-			new.hand_hair_color,
-			new.hand_hair_amount,
-			new.hands_hair,
-			new.hair_color,
-			new.hair_color_id,
 			new.hair_style,
+			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
 			new.hair_roots,
-			new.hair_nature
-		)
+			new.hair_nature,
+			new.body_build_id,
+			new.body_skin_color_id,
+			new.body_weight,
+			new.body_height,
+			new.face_beard_color_id,
+			new.face_beard_length,
+			new.face_beard_style,
+			new.face_eyebrow_color_id,
+			new.face_eyebrow_care,
+			new.face_left_eye_color_id,
+			new.face_left_eye_lenses,
+			new.face_right_eye_color_id,
+			new.face_right_eye_lenses,
+			new.face_freckles,
+			new.face_care,
+			new.face_shape,
+			new.hands_care,
+			new.hands_vein_visibility,
+			new.hands_joint_visibility,
+			new.hands_hair_color_id,
+			new.hands_hair_amount,
+			new.hands_nails_color_id,
+			new.hands_nails_length,
+			new.hands_nails_care,
+			new.face_tooth_care,
+			new.face_tooth_braces
+		)::flat_description
 	);
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
 		new.seeker_id,
@@ -407,45 +465,44 @@ BEGIN
 
 	PERFORM updated_description(
 		ROW(
-			v_description_id,
-			new.general_birth_year,
-			new.general_race_id,
-			new.general_firstname,
-			new.general_lastname,
-			new.general_gender,
-			new.body_build_id,
-			new.body,
-			new.body_build,
-			new.hand_nail_color,
-			new.body_skin_color,
-			new.body_skin_color_id,
-			new.general_race,
-			new.face_freckles,
-			new.face_care,
-			new.face_beard,
-			new.face_beard_color,
-			new.face_eyebrow,
-			new.face_shape,
-			new.face_tooth,
-			new.face_left_eye,
-			new.face_right_eye,
-			new.face_left_eye_color,
-			new.face_right_eye_color,
-			new.hands_nails,
-			new.face_eyebrow_color,
-			new.hands_vein_visibility,
-			new.hands_joint_visibility,
-			new.hands_care,
-			new.hand_hair_color,
-			new.hand_hair_amount,
-			new.hands_hair,
-			new.hair_color,
-			new.hair_color_id,
-			new.hair_style,
-			new.hair_length,
-			new.hair_highlights,
-			new.hair_roots,
-			new.hair_nature
+		v_description_id,
+		new.general_gender,
+		new.general_race_id,
+		new.general_birth_year,
+		new.general_firstname,
+		new.general_lastname,
+		new.hair_style,
+		new.hair_color_id,
+		new.hair_length,
+		new.hair_highlights,
+		new.hair_roots,
+		new.hair_nature,
+		new.body_build_id,
+		new.body_skin_color_id,
+		new.body_weight,
+		new.body_height,
+		new.face_beard_color_id,
+		new.face_beard_length,
+		new.face_beard_style,
+		new.face_eyebrow_color_id,
+		new.face_eyebrow_care,
+		new.face_left_eye_color_id,
+		new.face_left_eye_lenses,
+		new.face_right_eye_color_id,
+		new.face_right_eye_lenses,
+		new.face_freckles,
+		new.face_care,
+		new.face_shape,
+		new.hands_care,
+		new.hands_vein_visibility,
+		new.hands_joint_visibility,
+		new.hands_hair_color_id,
+		new.hands_hair_amount,
+		new.hands_nails_color_id,
+		new.hands_nails_length,
+		new.hands_nails_care,
+		new.face_tooth_care,
+		new.face_tooth_braces
 		)
 	);
 
@@ -579,6 +636,133 @@ $$;
 ALTER FUNCTION public.evolutions_trigger_row_bd() OWNER TO postgres;
 
 --
+-- Name: inserted_description(flat_description); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION inserted_description(description flat_description) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+	DECLARE
+		v_beard_id INTEGER;
+		v_tooth_id INTEGER;
+		v_eyebrow_id INTEGER;
+		v_left_eye_id INTEGER;
+		v_right_eye_id INTEGER;
+		v_hand_nail_id INTEGER;
+		v_hand_hair_id INTEGER;
+		v_face_id INTEGER;
+		v_body_id INTEGER;
+		v_hand_id INTEGER;
+		v_general_id INTEGER;
+		v_hair_id INTEGER;
+		v_description_id INTEGER;
+	BEGIN
+		INSERT INTO general (gender, race_id, birth_year, firstname, lastname) VALUES (
+			description.general_gender,
+			description.general_race_id,
+			description.general_birth_year,
+			description.general_firstname,
+			description.general_lastname
+		)
+		RETURNING id
+		INTO v_general_id;
+		INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
+			description.hair_style,
+			description.hair_color_id,
+			description.hair_length,
+			description.hair_highlights,
+			description.hair_roots,
+			description.hair_nature
+		)
+		RETURNING id
+		INTO v_hair_id;
+		INSERT INTO beards (color_id, length, style) VALUES (
+			description.beard_color_id,
+			description.beard_length,
+			description.beard_style
+		)
+		RETURNING id
+		INTO v_beard_id;
+		INSERT INTO teeth (care, braces) VALUES (
+			description.tooth_care,
+			description.tooth_braces
+		)
+		RETURNING id
+		INTO v_tooth_id;
+		INSERT INTO eyebrows (color_id, care) VALUES (
+			description.eyebrow_color_id,
+			description.eyebrow_care
+		)
+		RETURNING id
+		INTO v_eyebrow_id;
+		INSERT INTO eyes (color_id, lenses) VALUES (
+			description.left_eye_color_id,
+			description.left_eye_lenses
+		)
+		RETURNING id
+		INTO v_left_eye_id;
+		INSERT INTO eyes (color_id, lenses) VALUES (
+			description.right_eye_color_id,
+			description.right_eye_lenses
+		)
+		RETURNING id
+		INTO v_right_eye_id;
+		INSERT INTO nails (color_id, length, care) VALUES (
+			description.nail_color_id,
+			description.nail_length,
+			description.nail_care
+		)
+		RETURNING id
+		INTO v_hand_nail_id;
+		INSERT INTO hand_hair (color_id, amount) VALUES (
+			description.hand_hair_color_id,
+			description.hand_hair_amount
+		)
+		RETURNING id
+		INTO v_hand_hair_id;
+		INSERT INTO faces (tooth_id, freckles, beard_id, care, shape, eyebrow_id, left_eye_id, right_eye_id) VALUES (
+			v_tooth_id,
+			description.face_freckles,
+			v_beard_id,
+			description.face_care,
+			description.face_shape,
+			v_eyebrow_id,
+			v_left_eye_id,
+			v_right_eye_id
+		)
+		RETURNING id
+		INTO v_face_id;
+		INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
+			description.body_build_id,
+			description.body_skin_color_id,
+			description.body_weight,
+			description.body_height
+		)
+		RETURNING id
+		INTO v_body_id;
+		INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+			v_hand_nail_id,
+			description.hand_care,
+			description.hand_vein_visibility,
+			description.hand_joint_visibility,
+			v_hand_hair_id
+		)
+		RETURNING id
+		INTO v_hand_id;
+		INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id) VALUES (
+			v_general_id,
+			v_body_id,
+			v_face_id,
+			v_hand_id,
+			v_hair_id
+		) RETURNING id INTO v_description_id;
+		RETURN v_description_id;
+	END $$;
+
+
+ALTER FUNCTION public.inserted_description(description flat_description) OWNER TO postgres;
+
+--
 -- Name: is_hex_color(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -609,6 +793,24 @@ $$;
 ALTER FUNCTION public.is_rating(rating integer) OWNER TO postgres;
 
 --
+-- Name: range_to_hstore(anyrange); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION range_to_hstore(range anyrange) RETURNS hstore
+    LANGUAGE plpgsql IMMUTABLE STRICT
+    AS $$
+BEGIN
+	RETURN hstore(
+		ARRAY['from', 'to'],
+		(SELECT ARRAY[lower(range)::TEXT, upper(range)::TEXT])
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
+
+--
 -- Name: suited_length(length); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -626,9 +828,346 @@ $_$;
 
 ALTER FUNCTION public.suited_length(length) OWNER TO postgres;
 
+--
+-- Name: united_length(length); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION united_length(length) RETURNS length
+    LANGUAGE plpgsql IMMUTABLE
+    AS $_$
+BEGIN
+	IF (($1).unit = 'cm') THEN
+		RETURN ROW(($1).value * 10, 'mm'::length_units);
+	END IF;
+	RETURN $1;
+END
+$_$;
+
+
+ALTER FUNCTION public.united_length(length) OWNER TO postgres;
+
+--
+-- Name: united_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION united_length_trigger() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	new."length" = united_length(new."length");
+	RETURN new;
+END;
+$$;
+
+
+ALTER FUNCTION public.united_length_trigger() OWNER TO postgres;
+
+--
+-- Name: updated_description(flat_description); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION updated_description(description flat_description) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_beard_id INTEGER;
+	v_tooth_id INTEGER;
+	v_eyebrow_id INTEGER;
+	v_left_eye_id INTEGER;
+	v_right_eye_id INTEGER;
+	v_hand_nail_id INTEGER;
+	v_hand_hair_id INTEGER;
+	parts RECORD;
+BEGIN
+	SELECT *
+	FROM description_parts
+	WHERE id = description.id
+	INTO parts;
+
+	UPDATE general
+	SET gender = description.general_gender,
+		race_id = description.general_race_id,
+		birth_year = description.general_birth_year,
+		firstname = description.general_firstname,
+		lastname = description.general_lastname
+	WHERE id = parts.general_id;
+	UPDATE hair
+	SET style = description.hair_style,
+		color_id = description.hair_color_id,
+		length = description.hair_length,
+		highlights = description.hair_highlights,
+		roots = description.hair_roots,
+		nature = description.hair_nature
+	WHERE id = parts.hair_id;
+
+	INSERT INTO beards (color_id, length, style) VALUES (
+		description.beard_color_id,
+		description.beard_length,
+		description.beard_style
+	)
+	RETURNING id
+	INTO v_beard_id;
+
+	INSERT INTO teeth (care, braces) VALUES (
+		description.tooth_care,
+		description.tooth_braces
+	)
+	RETURNING id
+	INTO v_tooth_id;
+
+	INSERT INTO eyebrows (color_id, care) VALUES (
+		description.eyebrow_color_id,
+		description.eyebrow_care
+	)
+	RETURNING id
+	INTO v_eyebrow_id;
+
+	INSERT INTO eyes (color_id, lenses) VALUES (
+		description.left_eye_color_id,
+		description.left_eye_lenses
+	)
+	RETURNING id
+	INTO v_left_eye_id;
+
+	INSERT INTO eyes (color_id, lenses) VALUES (
+		description.right_eye_color_id,
+		description.right_eye_lenses
+	)
+	RETURNING id
+	INTO v_right_eye_id;
+
+	UPDATE faces
+	SET tooth_id = v_tooth_id,
+		freckles = description.face_freckles,
+		beard_id = v_beard_id,
+		care = description.face_care,
+		shape = description.face_shape,
+		eyebrow_id = v_eyebrow_id,
+		left_eye_id = v_left_eye_id,
+		right_eye_id = v_right_eye_id
+	WHERE id = parts.face_id;
+
+	UPDATE bodies
+	SET build_id = description.body_build_id,
+		skin_color_id = description.body_skin_color_id,
+		weight = description.body_weight,
+		height = description.body_height
+	WHERE id = parts.body_id;
+
+	INSERT INTO nails (color_id, length, care) VALUES (
+		description.nail_color_id,
+		description.nail_length,
+		description.nail_care
+	)
+	RETURNING id
+	INTO v_hand_nail_id;
+
+	INSERT INTO hand_hair (color_id, amount) VALUES (
+		description.hand_hair_color_id,
+		description.hand_hair_amount
+	)
+	RETURNING id
+	INTO v_hand_hair_id;
+
+	UPDATE hands
+	SET nail_id = v_hand_nail_id,
+		care = description.hand_care,
+		vein_visibility = description.hand_vein_visibility,
+		joint_visibility = description.hand_joint_visibility,
+		hand_hair_id = v_hand_hair_id
+	WHERE id = parts.hand_id;
+
+	RETURN parts.id;
+END $$;
+
+
+ALTER FUNCTION public.updated_description(description flat_description) OWNER TO postgres;
+
+--
+-- Name: year_to_age(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+	RETURN int4range(
+		(EXTRACT('year' from now) - upper(year))::INTEGER,
+		(EXTRACT('year' from now) - lower(year))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.year_to_age(year int4range, now timestamp with time zone) OWNER TO postgres;
+
+--
+-- Name: year_to_age(int4range, tstzrange); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION year_to_age(year int4range, now tstzrange) RETURNS int4range
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+	RETURN int4range(
+		(SELECT extract('year' from lower(now)) - upper(year))::INTEGER,
+		(SELECT extract('year' from lower(now)) - lower(year))::INTEGER
+	);
+END
+$$;
+
+
+ALTER FUNCTION public.year_to_age(year int4range, now tstzrange) OWNER TO postgres;
+
+SET search_path = http, pg_catalog;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: etags; Type: TABLE; Schema: http; Owner: postgres
+--
+
+CREATE TABLE etags (
+    id integer NOT NULL,
+    entity character varying NOT NULL,
+    tag character varying(34) NOT NULL,
+    created_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE etags OWNER TO postgres;
+
+--
+-- Name: etags_id_seq; Type: SEQUENCE; Schema: http; Owner: postgres
+--
+
+ALTER TABLE etags ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME etags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: skin_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE skin_colors (
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
+);
+
+
+ALTER TABLE skin_colors OWNER TO postgres;
+
+--
+-- Name: alter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE skin_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME alter_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: descriptions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE descriptions (
+    id integer NOT NULL,
+    general_id integer NOT NULL,
+    body_id integer NOT NULL,
+    face_id integer NOT NULL,
+    hand_id integer NOT NULL,
+    hair_id integer NOT NULL
+);
+
+
+ALTER TABLE descriptions OWNER TO postgres;
+
+--
+-- Name: evolutions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE evolutions (
+    id integer NOT NULL,
+    seeker_id integer NOT NULL,
+    description_id integer NOT NULL,
+    evolved_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE evolutions OWNER TO postgres;
+
+--
+-- Name: general; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE general (
+    id integer NOT NULL,
+    gender genders NOT NULL,
+    race_id smallint NOT NULL,
+    birth_year int4range NOT NULL,
+    firstname text,
+    lastname text,
+    CONSTRAINT general_birth_year_check CHECK (birth_year_in_range(birth_year))
+);
+
+
+ALTER TABLE general OWNER TO postgres;
+
+--
+-- Name: base_evolution; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW base_evolution AS
+ SELECT general.birth_year,
+    general.id AS general_id,
+    evolutions.seeker_id
+   FROM ((general
+     JOIN descriptions ON ((descriptions.general_id = general.id)))
+     JOIN evolutions ON ((evolutions.description_id = descriptions.id)));
+
+
+ALTER TABLE base_evolution OWNER TO postgres;
+
+--
+-- Name: beard_colors; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE beard_colors (
+    id smallint NOT NULL,
+    color_id smallint NOT NULL
+);
+
+
+ALTER TABLE beard_colors OWNER TO postgres;
+
+--
+-- Name: beard_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE beard_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME beard_colors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: beards; Type: TABLE; Schema: public; Owner: postgres
@@ -643,6 +1182,20 @@ CREATE TABLE beards (
 
 
 ALTER TABLE beards OWNER TO postgres;
+
+--
+-- Name: beards_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE beards ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME beards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: bodies; Type: TABLE; Schema: public; Owner: postgres
@@ -660,6 +1213,20 @@ CREATE TABLE bodies (
 ALTER TABLE bodies OWNER TO postgres;
 
 --
+-- Name: bodies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME bodies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: body_builds; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -670,6 +1237,20 @@ CREATE TABLE body_builds (
 
 
 ALTER TABLE body_builds OWNER TO postgres;
+
+--
+-- Name: body_builds_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE body_builds ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME body_builds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: colors; Type: TABLE; Schema: public; Owner: postgres
@@ -684,22 +1265,6 @@ CREATE TABLE colors (
 
 
 ALTER TABLE colors OWNER TO postgres;
-
---
--- Name: descriptions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE descriptions (
-    id integer NOT NULL,
-    general_id integer NOT NULL,
-    body_id integer NOT NULL,
-    face_id integer NOT NULL,
-    hand_id integer NOT NULL,
-    hair_id integer NOT NULL
-);
-
-
-ALTER TABLE descriptions OWNER TO postgres;
 
 --
 -- Name: eyebrows; Type: TABLE; Schema: public; Owner: postgres
@@ -747,23 +1312,6 @@ CREATE TABLE faces (
 
 
 ALTER TABLE faces OWNER TO postgres;
-
---
--- Name: general; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE general (
-    id integer NOT NULL,
-    gender genders NOT NULL,
-    race_id smallint NOT NULL,
-    birth_year int4range NOT NULL,
-    firstname text,
-    lastname text,
-    CONSTRAINT general_birth_year_check CHECK (birth_year_in_range(birth_year))
-);
-
-
-ALTER TABLE general OWNER TO postgres;
 
 --
 -- Name: hair; Type: TABLE; Schema: public; Owner: postgres
@@ -862,44 +1410,28 @@ ALTER TABLE teeth OWNER TO postgres;
 
 CREATE VIEW complete_descriptions AS
  SELECT description.id,
-    general.birth_year AS general_birth_year,
-    general.race_id AS general_race_id,
-    general.firstname AS general_firstname,
-    general.lastname AS general_lastname,
-    general.gender AS general_gender,
-    body.build_id AS body_build_id,
-    body.*::bodies AS body,
-    body_build.*::body_builds AS body_build,
-    nail_color.*::colors AS hand_nail_color,
-    body_skin_color.*::colors AS body_skin_color,
-    body.skin_color_id AS body_skin_color_id,
-    race.*::races AS general_race,
-    face.freckles AS face_freckles,
-    face.care AS face_care,
-    ROW(beard.id, beard.color_id, suited_length(beard.length), beard.style)::beards AS face_beard,
-    beard_color.*::colors AS face_beard_color,
-    eyebrow.*::eyebrows AS face_eyebrow,
-    face.shape AS face_shape,
-    tooth.*::teeth AS face_tooth,
-    left_eye.*::eyes AS face_left_eye,
-    right_eye.*::eyes AS face_right_eye,
-    face_left_eye_color.*::colors AS face_left_eye_color,
-    face_right_eye_color.*::colors AS face_right_eye_color,
-    ROW(nail.id, nail.color_id, suited_length(nail.length), nail.care)::nails AS hands_nails,
-    eyebrow_color.*::colors AS face_eyebrow_color,
-    hand.vein_visibility AS hands_vein_visibility,
-    hand.joint_visibility AS hands_joint_visibility,
-    hand.care AS hands_care,
-    hand_hair_color.*::colors AS hand_hair_color,
-    hand_hair.amount AS hand_hair_amount,
-    hand_hair.*::hand_hair AS hands_hair,
-    hair_color.*::colors AS hair_color,
-    hair.color_id AS hair_color_id,
-    hair.style AS hair_style,
-    suited_length(hair.length) AS hair_length,
-    hair.highlights AS hair_highlights,
-    hair.roots AS hair_roots,
-    hair.nature AS hair_nature
+    ROW(general.id, general.gender, general.race_id, general.birth_year, general.firstname, general.lastname)::general AS general,
+    ROW(hair.id, hair.style, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
+    ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
+    ROW(body_build.id, body_build.value)::body_builds AS body_build,
+    ROW(face.id, face.tooth_id, face.freckles, face.beard_id, face.care, face.shape, face.eyebrow_id, face.left_eye_id, face.right_eye_id)::faces AS face,
+    ROW(beard.id, beard.color_id, beard.length, beard.style)::beards AS beard,
+    ROW(race.id, race.value)::races AS race,
+    ROW(hand.id, hand.nail_id, hand.care, hand.vein_visibility, hand.joint_visibility, hand.hand_hair_id)::hands AS hand,
+    ROW(hand_hair.id, hand_hair.color_id, hand_hair.amount)::hand_hair AS hand_hair,
+    ROW(nail.id, nail.color_id, nail.length, nail.care)::nails AS nail,
+    ROW(tooth.id, tooth.care, tooth.braces)::teeth AS tooth,
+    ROW(eyebrow.id, eyebrow.color_id, eyebrow.care)::eyebrows AS eyebrow,
+    ROW(left_eye.id, left_eye.color_id, left_eye.lenses)::eyes AS left_eye,
+    ROW(right_eye.id, right_eye.color_id, right_eye.lenses)::eyes AS right_eye,
+    ROW(body_skin_color.id, body_skin_color.name, body_skin_color.hex)::colors AS body_skin_color,
+    ROW(left_eye_color.id, left_eye_color.name, left_eye_color.hex)::colors AS left_eye_color,
+    ROW(right_eye_color.id, right_eye_color.name, right_eye_color.hex)::colors AS right_eye_color,
+    ROW(beard_color.id, beard_color.name, beard_color.hex)::colors AS beard_color,
+    ROW(hair_color.id, hair_color.name, hair_color.hex)::colors AS hair_color,
+    ROW(eyebrow_color.id, eyebrow_color.name, eyebrow_color.hex)::colors AS eyebrow_color,
+    ROW(hand_hair_color.id, hand_hair_color.name, hand_hair_color.hex)::colors AS hand_hair_color,
+    ROW(nail_color.id, nail_color.name, nail_color.hex)::colors AS nail_color
    FROM ((((((((((((((((((((((descriptions description
      LEFT JOIN hair ON ((hair.id = description.hair_id)))
      LEFT JOIN bodies body ON ((body.id = description.body_id)))
@@ -916,8 +1448,8 @@ CREATE VIEW complete_descriptions AS
      LEFT JOIN eyes left_eye ON ((left_eye.id = face.left_eye_id)))
      LEFT JOIN eyes right_eye ON ((right_eye.id = face.right_eye_id)))
      LEFT JOIN colors body_skin_color ON ((body_skin_color.id = body.skin_color_id)))
-     LEFT JOIN colors face_left_eye_color ON ((face_left_eye_color.id = left_eye.color_id)))
-     LEFT JOIN colors face_right_eye_color ON ((face_right_eye_color.id = left_eye.color_id)))
+     LEFT JOIN colors left_eye_color ON ((left_eye_color.id = left_eye.color_id)))
+     LEFT JOIN colors right_eye_color ON ((right_eye_color.id = left_eye.color_id)))
      LEFT JOIN colors beard_color ON ((beard_color.id = beard.color_id)))
      LEFT JOIN colors hair_color ON ((hair_color.id = hair.color_id)))
      LEFT JOIN colors eyebrow_color ON ((eyebrow_color.id = eyebrow.color_id)))
@@ -926,572 +1458,6 @@ CREATE VIEW complete_descriptions AS
 
 
 ALTER TABLE complete_descriptions OWNER TO postgres;
-
---
--- Name: inserted_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION inserted_description(description complete_descriptions) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$
-	DECLARE
-		v_beard_id INTEGER;
-		v_tooth_id INTEGER;
-		v_eyebrow_id INTEGER;
-		v_left_eye_id INTEGER;
-		v_right_eye_id INTEGER;
-		v_hand_nail_id INTEGER;
-		v_hand_hair_id INTEGER;
-		v_face_id INTEGER;
-		v_body_id INTEGER;
-		v_hand_id INTEGER;
-		v_general_id INTEGER;
-		v_hair_id INTEGER;
-		v_description_id INTEGER;
-	BEGIN
-		INSERT INTO general (gender, race_id, birth_year, firstname, lastname) VALUES (
-			description.general_gender,
-			description.general_race_id,
-			description.general_birth_year,
-			description.general_firstname,
-			description.general_lastname
-		)
-		RETURNING id
-			INTO v_general_id;
-		INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
-			description.hair_style,
-			description.hair_color_id,
-			description.hair_length,
-			description.hair_highlights,
-			description.hair_roots,
-			description.hair_nature
-		)
-		RETURNING id
-			INTO v_hair_id;
-		INSERT INTO beards (color_id, length, style) VALUES (
-			(description.face_beard).color_id,
-			(description.face_beard).length,
-			(description.face_beard).style
-		)
-		RETURNING id
-			INTO v_beard_id;
-		INSERT INTO teeth (care, braces) VALUES (
-			(description.face_tooth).care,
-			(description.face_tooth).braces
-		)
-		RETURNING id
-			INTO v_tooth_id;
-		INSERT INTO eyebrows (color_id, care) VALUES (
-			(description.face_eyebrow).color_id,
-			(description.face_eyebrow).care
-		)
-		RETURNING id
-			INTO v_eyebrow_id;
-		INSERT INTO eyes (color_id, lenses) VALUES (
-			(description.face_left_eye).color_id,
-			(description.face_left_eye).lenses
-		)
-		RETURNING id
-			INTO v_left_eye_id;
-		INSERT INTO eyes (color_id, lenses) VALUES (
-			(description.face_right_eye).color_id,
-			(description.face_right_eye).lenses
-		)
-		RETURNING id
-			INTO v_right_eye_id;
-		INSERT INTO nails (color_id, length, care) VALUES (
-			(description.hands_nails).color_id,
-			(description.hands_nails).LENGTH,
-			(description.hands_nails).care
-		)
-		RETURNING id
-			INTO v_hand_nail_id;
-		INSERT INTO hand_hair (color_id, amount) VALUES (
-			(description.hands_hair).color_id,
-			(description.hands_hair).amount
-		)
-		RETURNING id
-			INTO v_hand_hair_id;
-		INSERT INTO faces (tooth_id, freckles, beard_id, care, shape, eyebrow_id, left_eye_id, right_eye_id) VALUES (
-			v_tooth_id,
-			description.face_freckles,
-			v_beard_id,
-			description.face_care,
-			description.face_shape,
-			v_eyebrow_id,
-			v_left_eye_id,
-			v_right_eye_id
-		)
-		RETURNING id
-			INTO v_face_id;
-		INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
-			(description.body).build_id,
-			(description.body).skin_color_id,
-			(description.body).weight,
-			(description.body).height
-		)
-		RETURNING id
-			INTO v_body_id;
-		INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
-			v_hand_nail_id,
-			description.hands_care,
-			description.hands_vein_visibility,
-			description.hands_joint_visibility,
-			v_hand_hair_id
-		)
-		RETURNING id
-			INTO v_hand_id;
-		INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id) VALUES (
-			v_general_id,
-			v_body_id,
-			v_face_id,
-			v_hand_id,
-			v_hair_id
-		) RETURNING id INTO v_description_id;
-		RETURN v_description_id;
-	END $$;
-
-
-ALTER FUNCTION public.inserted_description(description complete_descriptions) OWNER TO postgres;
-
---
--- Name: range_to_hstore(anyrange); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION range_to_hstore(range anyrange) RETURNS hstore
-    LANGUAGE plpgsql IMMUTABLE STRICT
-    AS $$
-BEGIN
-	RETURN hstore(
-		ARRAY['from', 'to'],
-		(SELECT ARRAY[lower(range)::TEXT, upper(range)::TEXT])
-	);
-END
-$$;
-
-
-ALTER FUNCTION public.range_to_hstore(range anyrange) OWNER TO postgres;
-
---
--- Name: united_length(length); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION united_length(length) RETURNS length
-    LANGUAGE plpgsql IMMUTABLE
-    AS $_$
-BEGIN
-	IF (($1).unit = 'cm') THEN
-		RETURN ROW(($1).value * 10, 'mm'::length_units);
-	END IF;
-	RETURN $1;
-END
-$_$;
-
-
-ALTER FUNCTION public.united_length(length) OWNER TO postgres;
-
---
--- Name: united_length_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION united_length_trigger() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	new."length" = united_length(new."length");
-	RETURN new;
-END;
-$$;
-
-
-ALTER FUNCTION public.united_length_trigger() OWNER TO postgres;
-
---
--- Name: updated_description(complete_descriptions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION updated_description(description complete_descriptions) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-	v_beard_id INTEGER;
-	v_tooth_id INTEGER;
-	v_eyebrow_id INTEGER;
-	v_left_eye_id INTEGER;
-	v_right_eye_id INTEGER;
-	v_hand_nail_id INTEGER;
-	v_hand_hair_id INTEGER;
-	parts RECORD;
-BEGIN
-	SELECT *
-	FROM description_parts
-	WHERE id = description.id
-	INTO parts;
-
-	UPDATE general
-	SET gender = description.general_gender,
-		race_id = description.general_race_id,
-		birth_year = description.general_birth_year,
-		firstname = description.general_firstname,
-		lastname = description.general_lastname
-	WHERE id = parts.general_id;
-	UPDATE hair
-	SET style = description.hair_style,
-		color_id = description.hair_color_id,
-		length = description.hair_length,
-		highlights = description.hair_highlights,
-		roots = description.hair_roots,
-		nature = description.hair_nature
-	WHERE id = parts.hair_id;
-
-	IF description.face_beard IS NOT NULL THEN
-		SELECT id
-		FROM beards
-		WHERE id = parts.beard_id
-			  AND beards.color_id = (description.face_beard).color_id
-			  AND beards.length = (description.face_beard).length
-			  AND beards.style = (description.face_beard).style
-		INTO v_beard_id;
-	END IF;
-	IF v_beard_id IS NULL THEN
-		INSERT INTO beards (color_id, length, style) VALUES (
-			(description.face_beard).color_id,
-			(description.face_beard).length,
-			(description.face_beard).style
-		)
-		RETURNING id
-			INTO v_beard_id;
-	END IF;
-
-	IF description.face_tooth IS NOT NULL THEN
-		SELECT id
-		FROM teeth
-		WHERE id = parts.tooth_id
-			  AND teeth.care = (description.face_tooth).care
-			  AND teeth.braces = (description.face_tooth).braces
-		INTO v_tooth_id;
-	END IF;
-	IF v_tooth_id IS NULL THEN
-		INSERT INTO teeth (care, braces) VALUES (
-			(description.face_tooth).care,
-			(description.face_tooth).braces
-		)
-		RETURNING id
-			INTO v_tooth_id;
-	END IF;
-
-	IF description.face_eyebrow IS NOT NULL THEN
-		SELECT id
-		FROM eyebrows
-		WHERE id = parts.eyebrow_id
-			  AND eyebrows.care = (description.face_eyebrow).care
-			  AND eyebrows.color_id = (description.face_eyebrow).color_id
-		INTO v_eyebrow_id;
-	END IF;
-	IF v_eyebrow_id IS NULL THEN
-		INSERT INTO eyebrows (color_id, care) VALUES (
-			(description.face_eyebrow).color_id,
-			(description.face_eyebrow).care
-		)
-		RETURNING id
-			INTO v_eyebrow_id;
-	END IF;
-
-	IF description.face_left_eye IS NOT NULL THEN
-		SELECT id
-		FROM eyes
-		WHERE id = parts.left_eye_id
-			  AND eyes.color_id = (description.face_left_eye).color_id
-			  AND eyes.lenses = (description.face_left_eye).lenses
-		INTO v_left_eye_id;
-	END IF;
-	IF v_left_eye_id IS NULL THEN
-		INSERT INTO eyes (color_id, lenses) VALUES (
-			(description.face_left_eye).color_id,
-			(description.face_left_eye).lenses
-		)
-		RETURNING id
-			INTO v_left_eye_id;
-	END IF;
-
-	IF description.face_right_eye IS NOT NULL THEN
-		SELECT id
-		FROM eyes
-		WHERE id = parts.right_eye_id
-			  AND eyes.color_id = (description.face_right_eye).color_id
-			  AND eyes.lenses = (description.face_right_eye).lenses
-		INTO v_right_eye_id;
-	END IF;
-	IF v_right_eye_id IS NULL
-	THEN
-		INSERT INTO eyes (color_id, lenses) VALUES (
-			(description.face_right_eye).color_id,
-			(description.face_right_eye).lenses
-		)
-		RETURNING id
-			INTO v_right_eye_id;
-	END IF;
-
-	UPDATE faces
-	SET tooth_id = v_tooth_id,
-		freckles = description.face_freckles,
-		beard_id = v_beard_id,
-		care = description.face_care,
-		shape = description.face_shape,
-		eyebrow_id = v_eyebrow_id,
-		left_eye_id = v_left_eye_id,
-		right_eye_id = v_right_eye_id
-	WHERE id = parts.face_id;
-
-	UPDATE bodies
-	SET build_id = (description.body).build_id,
-		skin_color_id = (description.body).skin_color_id,
-		weight = (description.body).weight,
-		height = (description.body).height
-	WHERE id = parts.body_id;
-
-	IF description.hands_nails IS NOT NULL THEN
-		SELECT id
-		FROM nails
-		WHERE id = parts.nail_id
-			  AND nails.color_id = (description.hands_nails).color_id
-			  AND nails.length = (description.hands_nails).length
-			  AND nails.care = (description.hands_nails).care
-		INTO v_hand_nail_id;
-	END IF;
-
-	IF v_hand_nail_id IS NULL THEN
-		INSERT INTO nails (color_id, length, care) VALUES (
-			(description.hands_nails).color_id,
-			(description.hands_nails).LENGTH,
-			(description.hands_nails).care
-		)
-		RETURNING id
-			INTO v_hand_nail_id;
-	END IF;
-
-	IF description.hands_hair IS NOT NULL THEN
-		SELECT id
-		FROM hand_hair
-		WHERE id = parts.hand_hair_id
-			  AND hand_hair.color_id = (description.hands_hair).color_id
-			  AND hand_hair.amount = (description.hands_hair).amount
-		INTO v_hand_hair_id;
-	END IF;
-
-	IF v_hand_hair_id IS NULL THEN
-		INSERT INTO hand_hair (color_id, amount) VALUES (
-			(description.hands_hair).color_id,
-			(description.hands_hair).amount
-		)
-		RETURNING id
-			INTO v_hand_hair_id;
-	END IF;
-
-	UPDATE hands
-	SET nail_id = v_hand_nail_id,
-		care = description.hands_care,
-		vein_visibility = description.hands_vein_visibility,
-		joint_visibility = description.hands_joint_visibility,
-		hand_hair_id = v_hand_hair_id
-	WHERE id = parts.hand_id;
-
-	RETURN parts.id;
-END $$;
-
-
-ALTER FUNCTION public.updated_description(description complete_descriptions) OWNER TO postgres;
-
---
--- Name: year_to_age(int4range, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
-BEGIN
-	RETURN int4range(
-		(EXTRACT('year' from now) - upper(year))::INTEGER,
-		(EXTRACT('year' from now) - lower(year))::INTEGER
-	);
-END
-$$;
-
-
-ALTER FUNCTION public.year_to_age(year int4range, now timestamp with time zone) OWNER TO postgres;
-
---
--- Name: year_to_age(int4range, tstzrange); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION year_to_age(year int4range, now tstzrange) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
-BEGIN
-	RETURN int4range(
-		(SELECT extract('year' from lower(now)) - upper(year))::INTEGER,
-		(SELECT extract('year' from lower(now)) - lower(year))::INTEGER
-	);
-END
-$$;
-
-
-ALTER FUNCTION public.year_to_age(year int4range, now tstzrange) OWNER TO postgres;
-
-SET search_path = http, pg_catalog;
-
---
--- Name: etags; Type: TABLE; Schema: http; Owner: postgres
---
-
-CREATE TABLE etags (
-    id integer NOT NULL,
-    entity character varying NOT NULL,
-    tag character varying(34) NOT NULL,
-    created_at timestamp with time zone NOT NULL
-);
-
-
-ALTER TABLE etags OWNER TO postgres;
-
---
--- Name: etags_id_seq; Type: SEQUENCE; Schema: http; Owner: postgres
---
-
-ALTER TABLE etags ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME etags_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
-SET search_path = public, pg_catalog;
-
---
--- Name: skin_colors; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE skin_colors (
-    id smallint NOT NULL,
-    color_id smallint NOT NULL
-);
-
-
-ALTER TABLE skin_colors OWNER TO postgres;
-
---
--- Name: alter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE skin_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME alter_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: evolutions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE evolutions (
-    id integer NOT NULL,
-    seeker_id integer NOT NULL,
-    description_id integer NOT NULL,
-    evolved_at timestamp with time zone NOT NULL
-);
-
-
-ALTER TABLE evolutions OWNER TO postgres;
-
---
--- Name: base_evolution; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW base_evolution AS
- SELECT general.birth_year,
-    general.id AS general_id,
-    evolutions.seeker_id
-   FROM ((general
-     JOIN descriptions ON ((descriptions.general_id = general.id)))
-     JOIN evolutions ON ((evolutions.description_id = descriptions.id)));
-
-
-ALTER TABLE base_evolution OWNER TO postgres;
-
---
--- Name: beard_colors; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE beard_colors (
-    id smallint NOT NULL,
-    color_id smallint NOT NULL
-);
-
-
-ALTER TABLE beard_colors OWNER TO postgres;
-
---
--- Name: beard_colors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE beard_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME beard_colors_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: beards_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE beards ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME beards_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: bodies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME bodies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: body_builds_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE body_builds ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME body_builds_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
 
 --
 -- Name: demands; Type: TABLE; Schema: public; Owner: postgres
@@ -1507,6 +1473,107 @@ CREATE TABLE demands (
 
 
 ALTER TABLE demands OWNER TO postgres;
+
+--
+-- Name: printed_descriptions; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW printed_descriptions AS
+ SELECT complete_descriptions.id,
+    ROW((complete_descriptions.general).id, (complete_descriptions.general).gender, (complete_descriptions.general).race_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
+    (complete_descriptions.general).birth_year AS general_birth_year,
+    (complete_descriptions.general).race_id AS general_race_id,
+    (complete_descriptions.general).firstname AS general_firstname,
+    (complete_descriptions.general).lastname AS general_lastname,
+    (complete_descriptions.general).gender AS general_gender,
+    complete_descriptions.race AS general_race,
+    complete_descriptions.body,
+    complete_descriptions.body_build,
+    ROW((complete_descriptions.body_skin_color).id, (complete_descriptions.body_skin_color).name, (complete_descriptions.body_skin_color).hex)::printed_color AS body_skin_color,
+    ROW((complete_descriptions.nail_color).id, (complete_descriptions.nail_color).name, (complete_descriptions.nail_color).hex)::printed_color AS hands_nails_color,
+    (complete_descriptions.face).freckles AS face_freckles,
+    (complete_descriptions.face).care AS face_care,
+    ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS face_beard,
+    ROW((complete_descriptions.beard_color).id, (complete_descriptions.beard_color).name, (complete_descriptions.beard_color).hex)::printed_color AS face_beard_color,
+    complete_descriptions.eyebrow AS face_eyebrow,
+    (complete_descriptions.face).shape AS face_shape,
+    complete_descriptions.tooth AS face_tooth,
+    complete_descriptions.left_eye AS face_left_eye,
+    complete_descriptions.right_eye AS face_right_eye,
+    ROW((complete_descriptions.left_eye_color).id, (complete_descriptions.left_eye_color).name, (complete_descriptions.left_eye_color).hex)::printed_color AS left_eye_color,
+    ROW((complete_descriptions.right_eye_color).id, (complete_descriptions.right_eye_color).name, (complete_descriptions.right_eye_color).hex)::printed_color AS right_eye_color,
+    ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, suited_length((complete_descriptions.nail).length), (complete_descriptions.nail).care)::nails AS hands_nails,
+    ROW((complete_descriptions.eyebrow_color).id, (complete_descriptions.eyebrow_color).name, (complete_descriptions.eyebrow_color).hex)::printed_color AS face_eyebrow_color,
+    (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
+    (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
+    (complete_descriptions.hand).care AS hands_care,
+    ROW((complete_descriptions.hand_hair_color).id, (complete_descriptions.hand_hair_color).name, (complete_descriptions.hand_hair_color).hex)::printed_color AS hands_hair_color,
+    complete_descriptions.hand_hair AS hands_hair,
+    ROW((complete_descriptions.hair_color).id, (complete_descriptions.hair_color).name, (complete_descriptions.hair_color).hex)::printed_color AS hair_color,
+    ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style, (complete_descriptions.hair).color_id, suited_length((complete_descriptions.hair).length), (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair
+   FROM complete_descriptions;
+
+
+ALTER TABLE printed_descriptions OWNER TO postgres;
+
+--
+-- Name: flat_descriptions; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW flat_descriptions AS
+ SELECT printed_descriptions.id,
+    printed_descriptions.general_birth_year,
+    printed_descriptions.general_race,
+    printed_descriptions.general_firstname,
+    printed_descriptions.general_lastname,
+    printed_descriptions.general_gender,
+    (printed_descriptions.body).weight AS body_weight,
+    (printed_descriptions.body).height AS body_height,
+    printed_descriptions.body_skin_color,
+    printed_descriptions.body_build,
+    (printed_descriptions.hair).color_id AS hair_color_id,
+    (printed_descriptions.hair).style AS hair_style,
+    (printed_descriptions.hair).length AS hair_length,
+    (printed_descriptions.hair).highlights AS hair_highlights,
+    (printed_descriptions.hair).roots AS hair_roots,
+    (printed_descriptions.hair).nature AS hair_nature,
+    (printed_descriptions.hands_nails).color_id AS hands_nails_color_id,
+    (printed_descriptions.hands_nails).care AS hands_nails_care,
+    (printed_descriptions.face_beard).color_id AS face_beard_color_id,
+    (printed_descriptions.face_beard).length AS face_beard_length,
+    (printed_descriptions.face_beard).style AS face_beard_style,
+    (printed_descriptions.face_eyebrow).color_id AS face_eyebrow_color_id,
+    (printed_descriptions.face_eyebrow).care AS face_eyebrow_care,
+    (printed_descriptions.face_tooth).care AS face_tooth_care,
+    (printed_descriptions.face_tooth).braces AS face_tooth_braces,
+    (printed_descriptions.face_left_eye).color_id AS face_left_eye_color_id,
+    (printed_descriptions.face_left_eye).lenses AS face_left_eye_lenses,
+    (printed_descriptions.face_right_eye).color_id AS face_right_eye_color_id,
+    (printed_descriptions.face_right_eye).lenses AS face_right_eye_lenses,
+    (printed_descriptions.hands_hair).color_id AS hands_hair_color_id,
+    (printed_descriptions.hands_hair).amount AS hands_hair_amount,
+    printed_descriptions.hands_nails_color,
+    printed_descriptions.face_freckles,
+    printed_descriptions.face_care,
+    printed_descriptions.face_beard_color,
+    printed_descriptions.face_eyebrow,
+    printed_descriptions.face_shape,
+    printed_descriptions.face_tooth,
+    printed_descriptions.face_left_eye,
+    printed_descriptions.face_right_eye,
+    printed_descriptions.left_eye_color,
+    printed_descriptions.right_eye_color,
+    (printed_descriptions.hands_nails).length AS hands_nails_length,
+    printed_descriptions.face_eyebrow_color,
+    printed_descriptions.hands_vein_visibility,
+    printed_descriptions.hands_joint_visibility,
+    printed_descriptions.hands_care,
+    printed_descriptions.hands_hair_color,
+    printed_descriptions.hair_color
+   FROM printed_descriptions;
+
+
+ALTER TABLE flat_descriptions OWNER TO postgres;
 
 --
 -- Name: locations; Type: TABLE; Schema: public; Owner: postgres
@@ -1527,52 +1594,65 @@ ALTER TABLE locations OWNER TO postgres;
 --
 
 CREATE VIEW collective_demands AS
- SELECT complete_description.general_birth_year,
-    complete_description.general_race_id,
-    complete_description.general_firstname,
-    complete_description.general_lastname,
-    complete_description.general_gender,
-    complete_description.body_build_id,
-    complete_description.body,
-    complete_description.body_build,
-    complete_description.hand_nail_color,
-    complete_description.body_skin_color,
-    complete_description.body_skin_color_id,
-    complete_description.general_race,
-    complete_description.face_freckles,
-    complete_description.face_care,
-    complete_description.face_beard,
-    complete_description.face_beard_color,
-    complete_description.face_eyebrow,
-    complete_description.face_shape,
-    complete_description.face_tooth,
-    complete_description.face_left_eye,
-    complete_description.face_right_eye,
-    complete_description.face_left_eye_color,
-    complete_description.face_right_eye_color,
-    complete_description.hands_nails,
-    complete_description.face_eyebrow_color,
-    complete_description.hands_vein_visibility,
-    complete_description.hands_joint_visibility,
-    complete_description.hands_care,
-    complete_description.hand_hair_color,
-    complete_description.hand_hair_amount,
-    complete_description.hands_hair,
-    complete_description.hair_color,
-    complete_description.hair_color_id,
-    complete_description.hair_style,
-    complete_description.hair_length,
-    complete_description.hair_highlights,
-    complete_description.hair_roots,
-    complete_description.hair_nature,
+ SELECT printed_description.general_birth_year,
+    year_to_age(printed_description.general_birth_year, location.met_at) AS general_age,
+    printed_description.body_build,
+    printed_description.face_shape,
+    printed_description.face_eyebrow_color,
+    printed_description.hands_vein_visibility,
+    printed_description.hands_joint_visibility,
+    printed_description.hands_care,
+    printed_description.hands_hair_color,
+    printed_description.hands_hair,
+    printed_description.hair_color,
+    (printed_description.body).build_id AS body_build_id,
+    (printed_description.body).skin_color_id AS body_skin_color_id,
+    printed_description.general_race_id,
+    flat_description.face_beard_color,
+    flat_description.general_firstname,
+    flat_description.general_lastname,
+    flat_description.general_gender,
+    flat_description.body_weight,
+    flat_description.body_height,
+    flat_description.hands_nails_color_id,
+    flat_description.hands_nails_length,
+    flat_description.hands_nails_care,
+    flat_description.face_beard_color_id,
+    flat_description.face_beard_length,
+    flat_description.face_beard_style,
+    flat_description.face_eyebrow_color_id,
+    flat_description.face_eyebrow_care,
+    flat_description.face_tooth_care,
+    flat_description.face_tooth_braces,
+    flat_description.face_left_eye_color_id,
+    flat_description.face_left_eye_lenses,
+    flat_description.face_right_eye_color_id,
+    flat_description.face_right_eye_lenses,
+    flat_description.hands_hair_color_id,
+    flat_description.hands_hair_amount,
+    flat_description.hands_nails_color,
+    flat_description.body_skin_color,
+    flat_description.general_race,
+    flat_description.face_freckles,
+    flat_description.face_care,
+    flat_description.face_left_eye,
+    flat_description.face_right_eye,
+    flat_description.left_eye_color,
+    flat_description.right_eye_color,
+    flat_description.hair_color_id,
+    flat_description.hair_style,
+    flat_description.hair_length,
+    flat_description.hair_highlights,
+    flat_description.hair_roots,
+    flat_description.hair_nature,
     location.met_at AS location_met_at,
     location.coordinates AS location_coordinates,
-    year_to_age(complete_description.general_birth_year, location.met_at) AS general_age,
     demand.id,
     demand.seeker_id,
     demand.created_at
-   FROM ((demands demand
-     JOIN complete_descriptions complete_description ON ((demand.description_id = complete_description.id)))
+   FROM (((demands demand
+     JOIN printed_descriptions printed_description ON ((demand.description_id = printed_description.id)))
+     JOIN flat_descriptions flat_description ON ((flat_description.id = printed_description.id)))
      JOIN locations location ON ((location.id = demand.location_id)));
 
 
@@ -1583,50 +1663,63 @@ ALTER TABLE collective_demands OWNER TO postgres;
 --
 
 CREATE VIEW collective_evolutions AS
- SELECT evolution.id,
+ SELECT printed_description.general_birth_year,
+    year_to_age(printed_description.general_birth_year, evolution.evolved_at) AS general_age,
+    printed_description.body_build,
+    printed_description.face_shape,
+    printed_description.face_eyebrow_color,
+    printed_description.hands_vein_visibility,
+    printed_description.hands_joint_visibility,
+    printed_description.hands_care,
+    printed_description.hands_hair_color,
+    printed_description.hands_hair,
+    printed_description.hair_color,
+    (printed_description.body).build_id AS body_build_id,
+    (printed_description.body).skin_color_id AS body_skin_color_id,
+    printed_description.general_race_id,
+    flat_description.face_beard_color,
+    flat_description.general_firstname,
+    flat_description.general_lastname,
+    flat_description.general_gender,
+    flat_description.body_weight,
+    flat_description.body_height,
+    flat_description.hands_nails_color_id,
+    flat_description.hands_nails_length,
+    flat_description.hands_nails_care,
+    flat_description.face_beard_color_id,
+    flat_description.face_beard_length,
+    flat_description.face_beard_style,
+    flat_description.face_eyebrow_color_id,
+    flat_description.face_eyebrow_care,
+    flat_description.face_tooth_care,
+    flat_description.face_tooth_braces,
+    flat_description.face_left_eye_color_id,
+    flat_description.face_left_eye_lenses,
+    flat_description.face_right_eye_color_id,
+    flat_description.face_right_eye_lenses,
+    flat_description.hands_hair_color_id,
+    flat_description.hands_hair_amount,
+    flat_description.hands_nails_color,
+    flat_description.body_skin_color,
+    flat_description.general_race,
+    flat_description.face_freckles,
+    flat_description.face_care,
+    flat_description.face_left_eye,
+    flat_description.face_right_eye,
+    flat_description.left_eye_color,
+    flat_description.right_eye_color,
+    flat_description.hair_color_id,
+    flat_description.hair_style,
+    flat_description.hair_length,
+    flat_description.hair_highlights,
+    flat_description.hair_roots,
+    flat_description.hair_nature,
+    evolution.id,
     evolution.seeker_id,
-    evolution.evolved_at,
-    complete_description.general_birth_year,
-    complete_description.general_race_id,
-    complete_description.general_firstname,
-    complete_description.general_lastname,
-    complete_description.general_gender,
-    complete_description.body_build_id,
-    complete_description.body,
-    complete_description.body_build,
-    complete_description.hand_nail_color,
-    complete_description.body_skin_color,
-    complete_description.body_skin_color_id,
-    complete_description.general_race,
-    complete_description.face_freckles,
-    complete_description.face_care,
-    complete_description.face_beard,
-    complete_description.face_beard_color,
-    complete_description.face_eyebrow,
-    complete_description.face_shape,
-    complete_description.face_tooth,
-    complete_description.face_left_eye,
-    complete_description.face_right_eye,
-    complete_description.face_left_eye_color,
-    complete_description.face_right_eye_color,
-    complete_description.hands_nails,
-    complete_description.face_eyebrow_color,
-    complete_description.hands_vein_visibility,
-    complete_description.hands_joint_visibility,
-    complete_description.hands_care,
-    complete_description.hand_hair_color,
-    complete_description.hand_hair_amount,
-    complete_description.hands_hair,
-    complete_description.hair_color,
-    complete_description.hair_color_id,
-    complete_description.hair_style,
-    complete_description.hair_length,
-    complete_description.hair_highlights,
-    complete_description.hair_roots,
-    complete_description.hair_nature,
-    year_to_age(complete_description.general_birth_year, evolution.evolved_at) AS general_age
-   FROM (evolutions evolution
-     JOIN complete_descriptions complete_description ON ((evolution.description_id = complete_description.id)));
+    evolution.evolved_at
+   FROM ((evolutions evolution
+     JOIN printed_descriptions printed_description ON ((evolution.description_id = printed_description.id)))
+     JOIN flat_descriptions flat_description ON ((flat_description.id = printed_description.id)));
 
 
 ALTER TABLE collective_evolutions OWNER TO postgres;
