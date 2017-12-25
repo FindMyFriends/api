@@ -40,8 +40,8 @@ final class Demand {
 											'additionalProperties' => false,
 											'properties' =>
 												[
-													'from' => ['type' => ['string', 'null']],
-													'to' => ['type' => ['string', 'null']],
+													'from' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+													'to' => ['type' => ['string', 'null'], 'format' => 'date-time'],
 												],
 											'required' => ['from', 'to'],
 											'type' => 'object',
