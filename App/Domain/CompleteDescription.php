@@ -7,7 +7,7 @@ use Klapuch\Output;
 /**
  * Format for common description
  */
-final class DescriptionFormat implements Output\Format {
+final class CompleteDescription implements Output\Format {
 	private $origin;
 	private $description;
 

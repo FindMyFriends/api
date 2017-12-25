@@ -70,7 +70,7 @@ final class StoredChange implements Change {
 			'SELECT * FROM collective_evolutions WHERE id = ?',
 			[$this->id]
 		))->row();
-		return (new Domain\DescriptionFormat($format, $evolution))
+		return (new Domain\CompleteDescription($format, $evolution))
 			->with('id', $evolution['id'])
 			->with('evolved_at', $evolution['evolved_at']);
 	}

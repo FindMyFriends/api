@@ -20,7 +20,7 @@ final class StoredDemand implements Demand {
 			'SELECT * FROM collective_demands WHERE id = ?',
 			[$this->id]
 		))->row();
-		return (new DescriptionFormat($format, $demand))
+		return (new CompleteDescription($format, $demand))
 			->with('id', $demand['id'])
 			->with('seeker_id', $demand['seeker_id'])
 			->with('created_at', $demand['created_at'])
