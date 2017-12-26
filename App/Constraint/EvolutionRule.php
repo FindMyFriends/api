@@ -20,7 +20,7 @@ final class EvolutionRule implements Validation\Rule {
 					'evolved_at must be in ISO8601'
 				))->apply($subject['evolved_at']),
 			],
-			$subject
+			(new DescriptionRule())->apply($subject)
 		);
 	}
 }

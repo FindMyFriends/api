@@ -28,7 +28,7 @@ final class DemandRule implements Validation\Rule {
 					],
 				],
 			],
-			$subject
+			(new DescriptionRule())->apply($subject)
 		);
 	}
 }

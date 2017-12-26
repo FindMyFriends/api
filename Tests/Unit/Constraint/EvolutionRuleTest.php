@@ -14,9 +14,19 @@ require __DIR__ . '/../../bootstrap.php';
 
 final class EvolutionRuleTest extends Tester\TestCase {
 	public function testApplicationWithAllReturnedValues() {
-		Assert::same(
-			['evolved_at' => '2017-09-17T13:58:10+00:00'],
-			(new Constraint\EvolutionRule())->apply(['evolved_at' => '2017-09-17T13:58:10+00:00'])
+		Assert::equal(
+			[
+				'general' => ['gender' => 'man'],
+				'face' => ['beard' => ['care' => 10]],
+				'evolved_at' => '2017-09-17T13:58:10+00:00',
+			],
+			(new Constraint\EvolutionRule())->apply(
+				[
+					'general' => ['gender' => 'man'],
+					'face' => ['beard' => ['care' => 10]],
+					'evolved_at' => '2017-09-17T13:58:10+00:00',
+				]
+			)
 		);
 	}
 }
