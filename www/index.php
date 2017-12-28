@@ -55,7 +55,6 @@ echo (new Application\RawPage(
 							) implements Routing\Routes {
 								private $uri;
 								private $database;
-								private $redis;
 
 								public function __construct(
 									Uri\Uri $uri,
