@@ -139,13 +139,13 @@ final class StoredDemandTest extends Tester\TestCase {
 							'unit' => 'mm',
 						],
 						'care' => null,
-						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					],
 					'vein_visibility' => null,
 					'joint_visibility' => null,
 					'care' => null,
 					'hair' => [
-						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 						'amount' => null,
 					],
 				],
@@ -155,7 +155,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				],
 				'body' => [
 					'build' => ['id' => 1, 'value' => 'skinny'],
-					'skin_color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'weight' => 120,
 					'height' => 130,
 				],
@@ -167,21 +167,21 @@ final class StoredDemandTest extends Tester\TestCase {
 							'unit' => 'mm',
 						],
 						'style' => null,
-						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					],
 					'eyebrow' => [
 						'care' => 5,
-						'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					],
 					'freckles' => null,
 					'eye' => [
 						'left' => [
 							'lenses' => false,
-							'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+							'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 						],
 						'right' => [
 							'lenses' => false,
-							'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+							'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 						],
 					],
 					'shape' => null,
@@ -189,7 +189,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				],
 				'hair' => [
 					'style' => null,
-					'color' => ['name' => 'Black', 'hex' => '000000', 'id' => 8],
+					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'length' => [
 						'value' => 5,
 						'unit' => null,
