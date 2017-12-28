@@ -47,10 +47,12 @@ echo (new Application\RawPage(
 						new Routing\HttpMethodRoutes(
 							new class(
 								$uri,
-								new Storage\SafePDO(
-									$configuration['DATABASE']['dsn'],
-									$configuration['DATABASE']['user'],
-									$configuration['DATABASE']['password']
+								new Storage\CachedPDO(
+									new Storage\SafePDO(
+										$configuration['DATABASE']['dsn'],
+										$configuration['DATABASE']['user'],
+										$configuration['DATABASE']['password']
+									)
 								)
 							) implements Routing\Routes {
 								private $uri;
