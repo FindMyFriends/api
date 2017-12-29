@@ -47,7 +47,7 @@ echo (new Application\RawPage(
 						new Routing\HttpMethodRoutes(
 							new class(
 								$uri,
-								new Storage\CachedPDO(
+								new Storage\SideCachedPDO(
 									new Storage\SafePDO(
 										$configuration['DATABASE']['dsn'],
 										$configuration['DATABASE']['user'],
