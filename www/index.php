@@ -58,10 +58,7 @@ echo (new Application\RawPage(
 								private $uri;
 								private $database;
 
-								public function __construct(
-									Uri\Uri $uri,
-									\PDO $database
-								) {
+								public function __construct(Uri\Uri $uri, \PDO $database) {
 									$this->uri = $uri;
 									$this->database = $database;
 								}
