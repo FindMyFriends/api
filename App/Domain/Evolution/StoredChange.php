@@ -13,7 +13,7 @@ final class StoredChange implements Change {
 	private $id;
 	private $database;
 
-	public function __construct(int $id, \PDO $database) {
+	public function __construct(int $id, Storage\MetaPDO $database) {
 		$this->id = $id;
 		$this->database = $database;
 	}

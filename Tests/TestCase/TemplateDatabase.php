@@ -4,6 +4,7 @@ namespace FindMyFriends\TestCase;
 
 use FindMyFriends\Misc;
 use Klapuch\Ini;
+use Predis;
 
 trait TemplateDatabase {
 	/** @var \PDO */
@@ -20,7 +21,8 @@ trait TemplateDatabase {
 		$this->credentials = (new Ini\ValidSource(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.config.local.ini')
 		))->read();
-		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE']);
+		$redis = new Predis\Client($this->credentials['REDIS']['uri']);
+		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE'], $redis);
 		$this->database = $this->databases->create();
 	}
 

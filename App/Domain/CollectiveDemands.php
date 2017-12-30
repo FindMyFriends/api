@@ -12,7 +12,7 @@ final class CollectiveDemands implements Demands {
 	private $origin;
 	private $database;
 
-	public function __construct(Demands $origin, \PDO $database) {
+	public function __construct(Demands $origin, Storage\MetaPDO $database) {
 		$this->origin = $origin;
 		$this->database = $database;
 	}
@@ -24,7 +24,51 @@ final class CollectiveDemands implements Demands {
 	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression('SELECT * FROM collective_demands'),
+			$selection->expression(
+				'SELECT general_age,
+				general_firstname,
+				general_lastname,
+				general_gender,
+				general_race,
+				hair_style,
+				hair_color,
+				hair_length,
+				hair_highlights,
+				hair_roots,
+				hair_nature,
+				face_care,
+				face_beard_length,
+				face_beard_style,
+				face_beard_color,
+				face_eyebrow_care,
+				face_eyebrow_color,
+				face_freckles,
+				left_eye_color,
+				face_left_eye_lenses,
+				right_eye_color,
+				face_right_eye_lenses,
+				face_shape,
+				face_tooth_care,
+				face_tooth_braces,
+				body_build,
+				body_skin_color,
+				body_weight,
+				body_height,
+				hands_nails_length,
+				hands_nails_care,
+				hands_nails_color,
+				hands_vein_visibility,
+				hands_joint_visibility,
+				hands_care,
+				hands_hair_color,
+				hands_hair_amount,
+				seeker_id,
+				id,
+				created_at,
+				location_coordinates,
+				location_met_at
+				FROM collective_demands'
+			),
 			$selection->criteria([])
 		))->rows();
 		foreach ($demands as $demand) {

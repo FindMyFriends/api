@@ -47,12 +47,15 @@ echo (new Application\RawPage(
 						new Routing\HttpMethodRoutes(
 							new class(
 								$uri,
-								new Storage\SideCachedPDO(
-									new Storage\SafePDO(
-										$configuration['DATABASE']['dsn'],
-										$configuration['DATABASE']['user'],
-										$configuration['DATABASE']['password']
-									)
+								new Storage\MetaPDO(
+									new Storage\SideCachedPDO(
+										new Storage\SafePDO(
+											$configuration['DATABASE']['dsn'],
+											$configuration['DATABASE']['user'],
+											$configuration['DATABASE']['password']
+										)
+									),
+									new Predis\Client($configuration['REDIS']['uri'])
 								)
 							) implements Routing\Routes {
 								private $uri;

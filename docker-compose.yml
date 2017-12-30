@@ -41,3 +41,11 @@ services:
         - 80:80
       networks:
         - fmf
+
+    redis:
+      image: redis:alpine
+      container_name: find-my-friends-redis
+      ports:
+        - 6379:6379
+      networks:
+        - fmf

@@ -13,7 +13,7 @@ final class IndividualChain implements Chain {
 	private $seeker;
 	private $database;
 
-	public function __construct(Access\User $seeker, \PDO $database) {
+	public function __construct(Access\User $seeker, Storage\MetaPDO $database) {
 		$this->seeker = $seeker;
 		$this->database = $database;
 	}
