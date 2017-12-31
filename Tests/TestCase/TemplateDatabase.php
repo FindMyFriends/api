@@ -4,7 +4,6 @@ namespace FindMyFriends\TestCase;
 
 use FindMyFriends\Misc;
 use Klapuch\Ini;
-use Predis;
 
 trait TemplateDatabase {
 	/** @var \PDO */

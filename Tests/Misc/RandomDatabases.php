@@ -8,7 +8,6 @@ use Predis;
 final class RandomDatabases implements Databases {
 	private $credentials;
 	private $name;
-	private $redis;
 
 	public function __construct(array $credentials) {
 		$this->credentials = $credentials;
@@ -44,34 +43,32 @@ final class RandomDatabases implements Databases {
 			new class implements Predis\ClientInterface {
 				private $cache;
 
-				public function getProfile() {
-
+				public function getProfile(): void {
 				}
 
-				public function getOptions() {
-
+				public function getOptions(): void {
 				}
 
-				public function connect() {
-
+				public function connect(): void {
 				}
 
-				public function disconnect() {
-
+				public function disconnect(): void {
 				}
 
-				public function getConnection() {
-
+				public function getConnection(): void {
 				}
 
-				public function createCommand($method, $arguments = []) {
-
+				public function createCommand($method, $arguments = []): void {
 				}
 
-				public function executeCommand(Predis\Command\CommandInterface $command) {
-
+				public function executeCommand(Predis\Command\CommandInterface $command): void {
 				}
 
+				/**
+				 * @param string $method
+				 * @param array $arguments
+				 * @return bool|mixed|null
+				 */
 				public function __call($method, $arguments) {
 					if (in_array($method, ['exists', 'hexists'], true))
 						return false;
