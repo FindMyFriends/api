@@ -27,7 +27,6 @@ install:
   - composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
 
 before_script:
-  - redis-cli flushall
   - cp -f Tests/Configuration/.config.travis.ini Tests/Configuration/.config.local.ini
   - cp -f App/Configuration/.config.travis.ini App/Configuration/.config.local.ini
   - sudo cp -f ./docker/php-fpm/sendmail /usr/sbin/fake-sendmail && sudo chmod +x /usr/sbin/fake-sendmail
