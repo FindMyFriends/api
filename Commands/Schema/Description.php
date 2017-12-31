@@ -66,17 +66,17 @@ final class Description {
 														(new PostgresTableEnum('id', 'body_builds', $this->database))->values()
 													),
 												],
-												'value' => [
+												'name' => [
 													'type' => ['string', 'null'],
 													'enum' => array_merge(
 														[null],
-														(new PostgresTableEnum('value', 'body_builds', $this->database))->values()
+														(new PostgresTableEnum('name', 'body_builds', $this->database))->values()
 													),
 												],
 											],
 											'required' => [
 												'id',
-												'value',
+												'name',
 											],
 											'type' => 'object',
 										],
@@ -349,7 +349,7 @@ final class Description {
 											'type' => 'object',
 											'required' => [
 												'id',
-												'value',
+												'name',
 											],
 											'additionalProperties' => false,
 											'properties' => [
@@ -357,9 +357,9 @@ final class Description {
 													'type' => 'integer',
 													'enum' => (new PostgresTableEnum('id', 'races', $this->database))->values(),
 												],
-												'value' => [
+												'name' => [
 													'type' => 'string',
-													'enum' => (new PostgresTableEnum('value', 'races', $this->database))->values(),
+													'enum' => (new PostgresTableEnum('name', 'races', $this->database))->values(),
 												],
 											],
 										],

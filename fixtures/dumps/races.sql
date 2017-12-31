@@ -1,4 +1,4 @@
-INSERT INTO races (value) VALUES
+INSERT INTO races (name) VALUES
 	('asian'),
 	('european'),
 	('other');

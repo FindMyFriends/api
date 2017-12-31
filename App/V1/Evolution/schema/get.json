@@ -26,7 +26,7 @@
                                 2
                             ]
                         },
-                        "value": {
+                        "name": {
                             "type": [
                                 "string",
                                 "null"
@@ -40,7 +40,7 @@
                     },
                     "required": [
                         "id",
-                        "value"
+                        "name"
                     ],
                     "type": "object"
                 },
@@ -489,7 +489,7 @@
                     "type": "object",
                     "required": [
                         "id",
-                        "value"
+                        "name"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -501,7 +501,7 @@
                                 3
                             ]
                         },
-                        "value": {
+                        "name": {
                             "type": "string",
                             "enum": [
                                 "asian",

@@ -1,3 +1,3 @@
-INSERT INTO body_builds (value) VALUES
+INSERT INTO body_builds (name) VALUES
 	('skinny'),
 	('muscular');

@@ -24,42 +24,42 @@ CREATE SCHEMA http;
 ALTER SCHEMA http OWNER TO postgres;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -1232,7 +1232,7 @@ ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE body_builds (
     id smallint NOT NULL,
-    value text NOT NULL
+    name text NOT NULL
 );
 
 
@@ -1384,7 +1384,7 @@ ALTER TABLE nails OWNER TO postgres;
 
 CREATE TABLE races (
     id smallint NOT NULL,
-    value text NOT NULL
+    name text NOT NULL
 );
 
 
@@ -1413,10 +1413,10 @@ CREATE VIEW complete_descriptions AS
     ROW(general.id, general.gender, general.race_id, general.birth_year, general.firstname, general.lastname)::general AS general,
     ROW(hair.id, hair.style, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
     ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
-    ROW(body_build.id, body_build.value)::body_builds AS body_build,
+    ROW(body_build.id, body_build.name)::body_builds AS body_build,
     ROW(face.id, face.tooth_id, face.freckles, face.beard_id, face.care, face.shape, face.eyebrow_id, face.left_eye_id, face.right_eye_id)::faces AS face,
     ROW(beard.id, beard.color_id, beard.length, beard.style)::beards AS beard,
-    ROW(race.id, race.value)::races AS race,
+    ROW(race.id, race.name)::races AS race,
     ROW(hand.id, hand.nail_id, hand.care, hand.vein_visibility, hand.joint_visibility, hand.hand_hair_id)::hands AS hand,
     ROW(hand_hair.id, hand_hair.color_id, hand_hair.amount)::hand_hair AS hand_hair,
     ROW(nail.id, nail.color_id, nail.length, nail.care)::nails AS nail,

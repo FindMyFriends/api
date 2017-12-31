@@ -123,7 +123,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					],
 				],
 				'body' => [
-					'build' => ['id' => 1, 'value' => 'skinny'],
+					'build' => ['id' => 1, 'name' => 'skinny'],
 					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'weight' => 120,
 					'height' => 130,
@@ -172,7 +172,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',
-					'race' => ['id' => 1, 'value' => 'asian'],
+					'race' => ['id' => 1, 'name' => 'asian'],
 				],
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,

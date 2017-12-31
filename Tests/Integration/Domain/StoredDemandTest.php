@@ -154,7 +154,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'met_at' => ['to' => '2017-01-02 00:00:00.000000+0000', 'from' => '2017-01-01 00:00:00.000000+0000'],
 				],
 				'body' => [
-					'build' => ['id' => 1, 'value' => 'skinny'],
+					'build' => ['id' => 1, 'name' => 'skinny'],
 					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'weight' => 120,
 					'height' => 130,
@@ -203,7 +203,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',
-					'race' => ['id' => 1, 'value' => 'asian'],
+					'race' => ['id' => 1, 'name' => 'asian'],
 				],
 				'created_at' => '2017-09-16 00:00:00+00',
 				'seeker_id' => $seeker,
