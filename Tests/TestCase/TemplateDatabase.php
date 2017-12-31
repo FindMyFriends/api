@@ -6,7 +6,7 @@ use FindMyFriends\Misc;
 use Klapuch\Ini;
 
 trait TemplateDatabase {
-	/** @var \PDO */
+	/** @var \Klapuch\Storage\MetaPDO */
 	protected $database;
 
 	/** @var mixed[] */
