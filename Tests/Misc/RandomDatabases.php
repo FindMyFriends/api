@@ -10,10 +10,9 @@ final class RandomDatabases implements Databases {
 	private $name;
 	private $redis;
 
-	public function __construct(array $credentials, Predis\ClientInterface $redis) {
+	public function __construct(array $credentials) {
 		$this->credentials = $credentials;
 		$this->name = 'test_' . bin2hex(random_bytes(20));
-		$this->redis = $redis;
 	}
 
 	public function create(): \PDO {
@@ -42,7 +41,51 @@ final class RandomDatabases implements Databases {
 				$this->credentials['user'],
 				$this->credentials['password']
 			),
-			$this->redis
+			new class implements Predis\ClientInterface {
+				private $cache;
+
+				public function getProfile() {
+
+				}
+
+				public function getOptions() {
+
+				}
+
+				public function connect() {
+
+				}
+
+				public function disconnect() {
+
+				}
+
+				public function getConnection() {
+
+				}
+
+				public function createCommand($method, $arguments = []) {
+
+				}
+
+				public function executeCommand(Predis\Command\CommandInterface $command) {
+
+				}
+
+				public function __call($method, $arguments) {
+					if (in_array($method, ['exists', 'hexists'], true))
+						return false;
+					elseif ($method === 'hset')
+						$this->cache['hget'][$arguments[0]][$arguments[1]] = $arguments[2];
+					elseif ($method === 'hget')
+						return $this->cache[$method][$arguments[0]][$arguments[1]];
+					elseif ($method === 'set')
+						$this->cache['get'][$arguments[0]] = $arguments[1];
+					elseif ($method === 'get')
+						return $this->cache[$method][$arguments[0]];
+					return null;
+				}
+			}
 		);
 	}
 }

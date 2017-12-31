@@ -21,8 +21,7 @@ trait TemplateDatabase {
 		$this->credentials = (new Ini\ValidSource(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.config.local.ini')
 		))->read();
-		$redis = new Predis\Client($this->credentials['REDIS']['uri']);
-		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE'], $redis);
+		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE']);
 		$this->database = $this->databases->create();
 	}
 
