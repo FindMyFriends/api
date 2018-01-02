@@ -18,7 +18,7 @@ services:
         - ./:/var/www/FindMyFriends
       command: postgres -c config_file=/etc/postgresql.conf
       ports:
-        - 5432:5432
+        - 5433:5432
       networks:
         - fmf
 

@@ -68,6 +68,33 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 SET search_path = public, pg_catalog;
 
 --
+-- Name: timeline_sides; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE timeline_sides AS ENUM (
+    'exactly',
+    'sooner',
+    'later',
+    'sooner or later'
+);
+
+
+ALTER TYPE timeline_sides OWNER TO postgres;
+
+--
+-- Name: approximate_timestamptz; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE approximate_timestamptz AS (
+	moment timestamp with time zone,
+	timeline_side timeline_sides,
+	approximation interval
+);
+
+
+ALTER TYPE approximate_timestamptz OWNER TO postgres;
+
+--
 -- Name: face_shapes; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -245,7 +272,7 @@ BEGIN
 			NULL,
 			new.general_gender,
 			new.general_race_id,
-			age_to_year(new.general_age, new.location_met_at),
+			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
 			new.hair_style,
@@ -332,7 +359,7 @@ BEGIN
 			v_description_id,
 			new.general_gender,
 			new.general_race_id,
-			age_to_year(new.general_age, new.location_met_at),
+			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
 			new.hair_style,
@@ -1565,7 +1592,7 @@ CREATE TABLE locations (
     id integer NOT NULL,
     coordinates point NOT NULL,
     place text,
-    met_at tstzrange NOT NULL
+    met_at approximate_timestamptz NOT NULL
 );
 
 
@@ -1577,7 +1604,7 @@ ALTER TABLE locations OWNER TO postgres;
 
 CREATE VIEW collective_demands AS
  SELECT printed_description.general_birth_year,
-    year_to_age(printed_description.general_birth_year, location.met_at) AS general_age,
+    year_to_age(printed_description.general_birth_year, (location.met_at).moment) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
     printed_description.face_eyebrow_color,

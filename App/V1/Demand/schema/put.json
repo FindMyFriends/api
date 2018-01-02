@@ -487,24 +487,36 @@
                 "met_at": {
                     "additionalProperties": false,
                     "properties": {
-                        "from": {
+                        "moment": {
                             "type": [
                                 "string",
                                 "null"
                             ],
                             "format": "date-time"
                         },
-                        "to": {
+                        "timeline_side": {
                             "type": [
                                 "string",
                                 "null"
                             ],
-                            "format": "date-time"
+                            "enum": [
+                                "exactly",
+                                "sooner",
+                                "later",
+                                "sooner or later"
+                            ]
+                        },
+                        "approximation": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     },
                     "required": [
-                        "from",
-                        "to"
+                        "moment",
+                        "timeline_side",
+                        "approximation"
                     ],
                     "type": "object"
                 }

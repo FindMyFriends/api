@@ -19,14 +19,14 @@ final class FormattedDemand implements Demand {
 			->adjusted('created_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('location', function(array $location): array {
-				return [
-					'met_at' => array_map(
-						function(string $range): string {
-								return (new \DateTime($range))->format(\DateTime::ATOM);
-						},
-						$location['met_at']
-					),
-				] + $location;
+				return array_replace_recursive(
+					$location,
+					[
+						'met_at' => [
+							'moment' => (new \DateTime($location['met_at']['moment']))->format(\DateTime::ATOM),
+						],
+					]
+				);
 			});
 	}
 

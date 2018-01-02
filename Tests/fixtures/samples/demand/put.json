@@ -63,8 +63,9 @@
       "longitude": 50.2
     },
     "met_at": {
-      "from": "2017-01-01T13:58:10+00:00",
-      "to": "2017-01-02T13:58:10+00:00"
+      "moment": "2017-01-01T13:58:10+00:00",
+      "timeline_side": "sooner",
+      "approximation": "PT3H"
     }
   },
   "hands": {

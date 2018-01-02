@@ -20,8 +20,8 @@ final class DemandRuleTest extends Tester\TestCase {
 				'face' => ['beard' => ['care' => 10]],
 				'location' => [
 					'met_at' => [
-						'from' => '2015-09-17T13:58:10+00:00',
-						'to' => '2017-10-17T13:58:10+00:00',
+						'moment' => '2015-09-17T13:58:10+00:00',
+						'approximation' => 'PT2H',
 					],
 				],
 			],
@@ -31,8 +31,8 @@ final class DemandRuleTest extends Tester\TestCase {
 					'face' => ['beard' => ['care' => 10]],
 					'location' => [
 						'met_at' => [
-							'from' => '2015-09-17T13:58:10+00:00',
-							'to' => '2017-10-17T13:58:10+00:00',
+							'moment' => '2015-09-17T13:58:10+00:00',
+							'approximation' => 'PT2H',
 						],
 					],
 				]

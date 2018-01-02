@@ -3,8 +3,8 @@
 
 	<resolvepath propertyName="base_path" file="."/>
 
-	<target name="check" depends="lint, phpcpd, phpstan, phpcs, generate-schemas, tests, cgi-tests"/>
-	<target name="ci" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests, tester-coverage"/> <!-- Everything in CHECK except generate-schemas -->
+	<target name="check" depends="lint, phpcpd, phpstan, phpcs, generate-schemas, tests"/>
+	<target name="ci" depends="lint, phpcpd, phpstan, phpcs, tests"/> <!-- Everything in CHECK except generate-schemas -->
 	<target name="init" depends="lint, move-schemas"/>
 
 	<target name="lint">
@@ -81,35 +81,18 @@
 		</exec>
 	</target>
 
-	<target name="cgi-tests">
-		<exec executable="vendor/bin/tester" logoutput="true" passthru="true" checkreturn="true">
-			<arg value="-o"/>
-			<arg value="console"/>
-			<arg value="-s"/>
-			<arg value="-p"/>
-			<arg value="php-cgi"/>
-			<arg value="-c"/>
-			<arg path="Tests/php.ini"/>
-			<arg path="Tests/Unit"/>
-			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Integration"/>
-			<arg path="Tests/Functional"/>
-		</exec>
-	</target>
-
 	<target name="tester-coverage">
 		<exec executable="vendor/bin/tester" logoutput="true" passthru="true" checkreturn="true">
 			<arg value="-o"/>
 			<arg value="console"/>
 			<arg value="-s"/>
 			<arg value="-p"/>
-			<arg value="php-cgi"/>
+			<arg value="php"/>
 			<arg value="-d"/>
 			<arg value="extension=xdebug.so"/>
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
 			<arg path="Tests/Unit"/>
-			<arg path="Tests/Postgres"/>
 			<arg path="Tests/Integration"/>
 			<arg path="Tests/Functional"/>
 			<arg value="--coverage"/>

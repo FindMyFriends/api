@@ -77,7 +77,7 @@ final class IndividualDemands implements Demands {
 				hair_roots,
 				hair_nature
 			) VALUES (
-				tstzrange(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+				ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation),
 				:seeker,
 				int4range(:general_age_from, :general_age_to),
 				:general_race_id,

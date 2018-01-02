@@ -1,4 +1,4 @@
-FROM php:rc-fpm
+FROM php:fpm
 
 # PHP
 RUN apt-get update -qq && apt-get install -y git sudo libcurl4-openssl-dev gnupg \
@@ -8,6 +8,10 @@ RUN apt-get update -qq && apt-get install -y git sudo libcurl4-openssl-dev gnupg
 
 # COMPOSER
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+COPY .bash_aliases /root/.bash_aliases
+
+RUN echo '. /root/.bash_aliases' >> ~/.bashrc
 
 # CLEANING
 RUN apt-get clean

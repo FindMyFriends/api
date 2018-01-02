@@ -130,7 +130,7 @@ BEGIN
 	INSERT INTO locations (coordinates, place, met_at) VALUES (
 		COALESCE(CAST(replacement -> 'coordinates' AS POINT), POINT(random(), random())),
 		COALESCE(replacement -> 'place', md5(random()::text)),
-		COALESCE(CAST(replacement -> 'met_at' AS TSTZRANGE), '[2017-01-01,2017-01-02)'::tstzrange)
+		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(0, 100)))::approximate_timestamptz
 	)
 	RETURNING id
 	INTO v_id;

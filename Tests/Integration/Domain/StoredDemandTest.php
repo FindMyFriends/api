@@ -107,8 +107,9 @@ final class StoredDemandTest extends Tester\TestCase {
 						'longitude' => 50.4,
 					],
 					'met_at' => [
-						'from' => '2017-01-01 00:00:00+00',
-						'to' => '2017-01-02 00:00:00+00',
+						'moment' => '2017-01-01 00:00:00+00',
+						'timeline_side' => 'sooner',
+						'approximation' => 'PT1H',
 					],
 				],
 				'hands' => [
@@ -151,7 +152,11 @@ final class StoredDemandTest extends Tester\TestCase {
 				],
 				'location' => [
 					'coordinates' => ['latitude' => 10.4, 'longitude' => 50.4],
-					'met_at' => ['to' => '2017-01-02 00:00:00.000000+0000', 'from' => '2017-01-01 00:00:00.000000+0000'],
+					'met_at' => [
+						'moment' => '2017-01-01T00:00:00+00:00',
+						'timeline_side' => 'sooner',
+						'approximation' => 'PT1H',
+					],
 				],
 				'body' => [
 					'build' => ['id' => 1, 'name' => 'skinny'],

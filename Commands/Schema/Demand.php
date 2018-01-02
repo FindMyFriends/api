@@ -40,10 +40,14 @@ final class Demand {
 											'additionalProperties' => false,
 											'properties' =>
 												[
-													'from' => ['type' => ['string', 'null'], 'format' => 'date-time'],
-													'to' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+													'moment' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+													'timeline_side' => [
+														'type' => ['string', 'null'],
+														'enum' => (new PostgresEnum('timeline_sides', $this->database))->values(),
+													],
+													'approximation' => ['type' => ['string', 'null']],
 												],
-											'required' => ['from', 'to'],
+											'required' => ['moment', 'timeline_side', 'approximation'],
 											'type' => 'object',
 										],
 								],

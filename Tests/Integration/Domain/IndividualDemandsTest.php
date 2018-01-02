@@ -88,8 +88,9 @@ final class IndividualDemandsTest extends Tester\TestCase {
 						'longitude' => 50.4,
 					],
 					'met_at' => [
-						'from' => '2017-01-01 00:00:00+00',
-						'to' => '2017-01-02 00:00:00+00',
+						'moment' => '2017-01-01 00:00:00+00',
+						'timeline_side' => 'sooner',
+						'approximation' => 'PT1H',
 					],
 				],
 				'hands' => [

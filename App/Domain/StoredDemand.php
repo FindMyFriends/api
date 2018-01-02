@@ -75,10 +75,7 @@ final class StoredDemand implements Demand {
 						'latitude' => $demand['location_coordinates']['x'],
 						'longitude' => $demand['location_coordinates']['y'],
 					],
-					'met_at' => [
-						'from' => $demand['location_met_at'][0],
-						'to' => $demand['location_met_at'][1],
-					],
+					'met_at' => $demand['location_met_at'],
 				]
 			);
 	}
@@ -95,7 +92,7 @@ final class StoredDemand implements Demand {
 		(new Storage\FlatQuery(
 			$this->database,
 			'UPDATE collective_demands
-			SET location_met_at = tstzrange(:location_met_at_from::TIMESTAMPTZ, :location_met_at_to::TIMESTAMPTZ),
+			SET location_met_at = ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation),
 				general_age = int4range(:general_age_from, :general_age_to),
 				general_race_id = :general_race_id,
 				general_firstname = :general_firstname,
