@@ -17,7 +17,7 @@ final class DemandRuleTest extends Tester\TestCase {
 		Assert::equal(
 			[
 				'general' => ['gender' => 'man'],
-				'face' => ['beard' => ['care' => 10]],
+				'beard' => ['care' => 10],
 				'location' => [
 					'met_at' => [
 						'moment' => '2015-09-17T13:58:10+00:00',
@@ -28,7 +28,7 @@ final class DemandRuleTest extends Tester\TestCase {
 			(new Constraint\DemandRule())->apply(
 				[
 					'general' => ['gender' => 'man'],
-					'face' => ['beard' => ['care' => 10]],
+					'beard' => ['care' => 10],
 					'location' => [
 						'met_at' => [
 							'moment' => '2015-09-17T13:58:10+00:00',

@@ -19,11 +19,9 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		(new Constraint\DescriptionRule())->apply(
 			[
 				'general' => ['gender' => 'woman'],
-				'face' => [
-					'beard' => [
-						'color_id' => 8,
-						'care' => null,
-					],
+				'beard' => [
+					'color_id' => 8,
+					'care' => null,
 				],
 			]
 		);
@@ -33,21 +31,17 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		Assert::same(
 			[
 				'general' => ['gender' => 'woman'],
-				'face' => [
-					'beard' => [
-						'color_id' => null,
-						'care' => null,
-					],
+				'beard' => [
+					'color_id' => null,
+					'care' => null,
 				],
 			],
 			(new Constraint\DescriptionRule())->apply(
 				[
 					'general' => ['gender' => 'woman'],
-					'face' => [
-						'beard' => [
-							'color_id' => null,
-							'care' => null,
-						],
+					'beard' => [
+						'color_id' => null,
+						'care' => null,
 					],
 				]
 			)
@@ -60,11 +54,9 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				(new Constraint\DescriptionRule())->apply(
 					[
 						'general' => ['gender' => 'man'],
-						'face' => [
-							'beard' => [
-								'color_id' => null,
-								'care' => null,
-							],
+						'beard' => [
+							'color_id' => null,
+							'care' => null,
 						],
 					]
 				);
@@ -75,11 +67,9 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				(new Constraint\DescriptionRule())->apply(
 					[
 						'general' => ['gender' => 'man'],
-						'face' => [
-							'beard' => [
-								'color_id' => 1,
-								'care' => 10,
-							],
+						'beard' => [
+							'color_id' => 1,
+							'care' => 10,
 						],
 					]
 				);

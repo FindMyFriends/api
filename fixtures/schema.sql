@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.0
--- Dumped by pg_dump version 10.0
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -24,42 +24,42 @@ CREATE SCHEMA http;
 ALTER SCHEMA http OWNER TO postgres;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: citext; Type: EXTENSION; Schema: -; Owner:
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
--- Name: hstore; Type: EXTENSION; Schema: -; Owner:
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
@@ -285,15 +285,15 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
-			new.face_beard_color_id,
-			new.face_beard_length,
-			new.face_beard_style,
-			new.face_eyebrow_color_id,
-			new.face_eyebrow_care,
-			new.face_left_eye_color_id,
-			new.face_left_eye_lenses,
-			new.face_right_eye_color_id,
-			new.face_right_eye_lenses,
+			new.beard_color_id,
+			new.beard_length,
+			new.beard_style,
+			new.eyebrow_color_id,
+			new.eyebrow_care,
+			new.left_eye_color_id,
+			new.left_eye_lenses,
+			new.right_eye_color_id,
+			new.right_eye_lenses,
 			new.face_freckles,
 			new.face_care,
 			new.face_shape,
@@ -305,8 +305,8 @@ BEGIN
 			new.hands_nails_color_id,
 			new.hands_nails_length,
 			new.hands_nails_care,
-			new.face_tooth_care,
-			new.face_tooth_braces
+			new.tooth_care,
+			new.tooth_braces
 		)::flat_description
 	);
 	INSERT INTO locations (coordinates, place, met_at) VALUES (
@@ -372,15 +372,15 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
-			new.face_beard_color_id,
-			new.face_beard_length,
-			new.face_beard_style,
-			new.face_eyebrow_color_id,
-			new.face_eyebrow_care,
-			new.face_left_eye_color_id,
-			new.face_left_eye_lenses,
-			new.face_right_eye_color_id,
-			new.face_right_eye_lenses,
+			new.beard_color_id,
+			new.beard_length,
+			new.beard_style,
+			new.eyebrow_color_id,
+			new.eyebrow_care,
+			new.left_eye_color_id,
+			new.left_eye_lenses,
+			new.right_eye_color_id,
+			new.right_eye_lenses,
 			new.face_freckles,
 			new.face_care,
 			new.face_shape,
@@ -392,8 +392,8 @@ BEGIN
 			new.hands_nails_color_id,
 			new.hands_nails_length,
 			new.hands_nails_care,
-			new.face_tooth_care,
-			new.face_tooth_braces
+			new.tooth_care,
+			new.tooth_braces
 		)::flat_description
 	);
 
@@ -437,15 +437,15 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
-			new.face_beard_color_id,
-			new.face_beard_length,
-			new.face_beard_style,
-			new.face_eyebrow_color_id,
-			new.face_eyebrow_care,
-			new.face_left_eye_color_id,
-			new.face_left_eye_lenses,
-			new.face_right_eye_color_id,
-			new.face_right_eye_lenses,
+			new.beard_color_id,
+			new.beard_length,
+			new.beard_style,
+			new.eyebrow_color_id,
+			new.eyebrow_care,
+			new.left_eye_color_id,
+			new.left_eye_lenses,
+			new.right_eye_color_id,
+			new.right_eye_lenses,
 			new.face_freckles,
 			new.face_care,
 			new.face_shape,
@@ -457,8 +457,8 @@ BEGIN
 			new.hands_nails_color_id,
 			new.hands_nails_length,
 			new.hands_nails_care,
-			new.face_tooth_care,
-			new.face_tooth_braces
+			new.tooth_care,
+			new.tooth_braces
 		)::flat_description
 	);
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
@@ -508,15 +508,15 @@ BEGIN
 		new.body_skin_color_id,
 		new.body_weight,
 		new.body_height,
-		new.face_beard_color_id,
-		new.face_beard_length,
-		new.face_beard_style,
-		new.face_eyebrow_color_id,
-		new.face_eyebrow_care,
-		new.face_left_eye_color_id,
-		new.face_left_eye_lenses,
-		new.face_right_eye_color_id,
-		new.face_right_eye_lenses,
+		new.beard_color_id,
+		new.beard_length,
+		new.beard_style,
+		new.eyebrow_color_id,
+		new.eyebrow_care,
+		new.left_eye_color_id,
+		new.left_eye_lenses,
+		new.right_eye_color_id,
+		new.right_eye_lenses,
 		new.face_freckles,
 		new.face_care,
 		new.face_shape,
@@ -528,8 +528,8 @@ BEGIN
 		new.hands_nails_color_id,
 		new.hands_nails_length,
 		new.hands_nails_care,
-		new.face_tooth_care,
-		new.face_tooth_braces
+		new.tooth_care,
+		new.tooth_braces
 		)
 	);
 
@@ -557,23 +557,20 @@ CREATE FUNCTION deleted_description(v_description_id integer) RETURNS integer
     AS $$
 DECLARE
 	description RECORD;
-	face RECORD;
 	hand RECORD;
 BEGIN
 	DELETE FROM descriptions
 	WHERE id = v_description_id
-	RETURNING face_id, general_id, body_id, hand_id, hair_id
+	RETURNING face_id, general_id, body_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id
 	INTO description;
 
 	DELETE FROM faces
-	WHERE id = description.face_id
-	RETURNING tooth_id, beard_id, left_eye_id, right_eye_id, eyebrow_id
-	INTO face;
+	WHERE id = description.face_id;
 
-	DELETE FROM teeth WHERE id = face.tooth_id;
-	DELETE FROM beards WHERE id = face.beard_id;
-	DELETE FROM eyes WHERE id IN(face.left_eye_id, face.right_eye_id);
-	DELETE FROM eyebrows WHERE id = face.eyebrow_id;
+	DELETE FROM teeth WHERE id = description.tooth_id;
+	DELETE FROM beards WHERE id = description.beard_id;
+	DELETE FROM eyes WHERE id IN(description.left_eye_id, description.right_eye_id);
+	DELETE FROM eyebrows WHERE id = description.eyebrow_id;
 
 	DELETE FROM general WHERE id = description.general_id;
 
@@ -747,15 +744,10 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 		)
 		RETURNING id
 		INTO v_hand_hair_id;
-		INSERT INTO faces (tooth_id, freckles, beard_id, care, shape, eyebrow_id, left_eye_id, right_eye_id) VALUES (
-			v_tooth_id,
+		INSERT INTO faces (freckles, care, shape) VALUES (
 			description.face_freckles,
-			v_beard_id,
 			description.face_care,
-			description.face_shape,
-			v_eyebrow_id,
-			v_left_eye_id,
-			v_right_eye_id
+			description.face_shape
 		)
 		RETURNING id
 		INTO v_face_id;
@@ -776,12 +768,17 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 		)
 		RETURNING id
 		INTO v_hand_id;
-		INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id) VALUES (
+		INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id) VALUES (
 			v_general_id,
 			v_body_id,
 			v_face_id,
 			v_hand_id,
-			v_hair_id
+			v_hair_id,
+			v_beard_id,
+			v_eyebrow_id,
+			v_tooth_id,
+			v_left_eye_id,
+			v_right_eye_id
 		) RETURNING id INTO v_description_id;
 		RETURN v_description_id;
 	END $$;
@@ -946,14 +943,9 @@ BEGIN
 	INTO v_right_eye_id;
 
 	UPDATE faces
-	SET tooth_id = v_tooth_id,
-		freckles = description.face_freckles,
-		beard_id = v_beard_id,
+	SET freckles = description.face_freckles,
 		care = description.face_care,
-		shape = description.face_shape,
-		eyebrow_id = v_eyebrow_id,
-		left_eye_id = v_left_eye_id,
-		right_eye_id = v_right_eye_id
+		shape = description.face_shape
 	WHERE id = parts.face_id;
 
 	UPDATE bodies
@@ -985,6 +977,14 @@ BEGIN
 		joint_visibility = description.hand_joint_visibility,
 		hand_hair_id = v_hand_hair_id
 	WHERE id = parts.hand_id;
+
+	UPDATE descriptions
+	SET beard_id = v_beard_id,
+		eyebrow_id = v_eyebrow_id,
+		tooth_id = v_tooth_id,
+		left_eye_id = v_left_eye_id,
+		right_eye_id = v_right_eye_id
+	WHERE id = description.id;
 
 	RETURN parts.id;
 END $$;
@@ -1100,7 +1100,12 @@ CREATE TABLE descriptions (
     body_id integer NOT NULL,
     face_id integer NOT NULL,
     hand_id integer NOT NULL,
-    hair_id integer NOT NULL
+    hair_id integer NOT NULL,
+    beard_id integer NOT NULL,
+    eyebrow_id integer NOT NULL,
+    tooth_id integer NOT NULL,
+    left_eye_id integer NOT NULL,
+    right_eye_id integer NOT NULL
 );
 
 
@@ -1308,14 +1313,9 @@ ALTER TABLE eyes OWNER TO postgres;
 
 CREATE TABLE faces (
     id integer NOT NULL,
-    tooth_id integer,
     freckles boolean,
-    beard_id integer,
     care smallint,
     shape face_shapes,
-    eyebrow_id integer,
-    left_eye_id integer,
-    right_eye_id integer,
     CONSTRAINT faces_care_check CHECK (is_rating((care)::integer))
 );
 
@@ -1423,7 +1423,7 @@ CREATE VIEW complete_descriptions AS
     ROW(hair.id, hair.style, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
     ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
     ROW(body_build.id, body_build.name)::body_builds AS body_build,
-    ROW(face.id, face.tooth_id, face.freckles, face.beard_id, face.care, face.shape, face.eyebrow_id, face.left_eye_id, face.right_eye_id)::faces AS face,
+    ROW(face.id, face.freckles, face.care, face.shape)::faces AS face,
     ROW(beard.id, beard.color_id, beard.length, beard.style)::beards AS beard,
     ROW(race.id, race.name)::races AS race,
     ROW(hand.id, hand.nail_id, hand.care, hand.vein_visibility, hand.joint_visibility, hand.hand_hair_id)::hands AS hand,
@@ -1446,16 +1446,16 @@ CREATE VIEW complete_descriptions AS
      LEFT JOIN bodies body ON ((body.id = description.body_id)))
      LEFT JOIN body_builds body_build ON ((body_build.id = body.build_id)))
      LEFT JOIN faces face ON ((face.id = description.face_id)))
-     LEFT JOIN beards beard ON ((beard.id = face.beard_id)))
+     LEFT JOIN beards beard ON ((beard.id = description.beard_id)))
      LEFT JOIN general ON ((general.id = description.general_id)))
      LEFT JOIN races race ON ((race.id = general.race_id)))
      LEFT JOIN hands hand ON ((hand.id = description.hand_id)))
      LEFT JOIN hand_hair ON ((hand_hair.id = hand.hand_hair_id)))
      LEFT JOIN nails nail ON ((nail.id = hand.nail_id)))
-     LEFT JOIN teeth tooth ON ((tooth.id = face.tooth_id)))
-     LEFT JOIN eyebrows eyebrow ON ((eyebrow.id = face.eyebrow_id)))
-     LEFT JOIN eyes left_eye ON ((left_eye.id = face.left_eye_id)))
-     LEFT JOIN eyes right_eye ON ((right_eye.id = face.right_eye_id)))
+     LEFT JOIN teeth tooth ON ((tooth.id = description.tooth_id)))
+     LEFT JOIN eyebrows eyebrow ON ((eyebrow.id = description.eyebrow_id)))
+     LEFT JOIN eyes left_eye ON ((left_eye.id = description.left_eye_id)))
+     LEFT JOIN eyes right_eye ON ((right_eye.id = description.right_eye_id)))
      LEFT JOIN colors body_skin_color ON ((body_skin_color.id = body.skin_color_id)))
      LEFT JOIN colors left_eye_color ON ((left_eye_color.id = left_eye.color_id)))
      LEFT JOIN colors right_eye_color ON ((right_eye_color.id = left_eye.color_id)))
@@ -1502,17 +1502,17 @@ CREATE VIEW printed_descriptions AS
     ROW((complete_descriptions.nail_color).id, (complete_descriptions.nail_color).name, (complete_descriptions.nail_color).hex)::printed_color AS hands_nails_color,
     (complete_descriptions.face).freckles AS face_freckles,
     (complete_descriptions.face).care AS face_care,
-    ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS face_beard,
-    ROW((complete_descriptions.beard_color).id, (complete_descriptions.beard_color).name, (complete_descriptions.beard_color).hex)::printed_color AS face_beard_color,
-    complete_descriptions.eyebrow AS face_eyebrow,
+    ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS beard,
+    ROW((complete_descriptions.beard_color).id, (complete_descriptions.beard_color).name, (complete_descriptions.beard_color).hex)::printed_color AS beard_color,
+    complete_descriptions.eyebrow,
     (complete_descriptions.face).shape AS face_shape,
-    complete_descriptions.tooth AS face_tooth,
-    complete_descriptions.left_eye AS face_left_eye,
-    complete_descriptions.right_eye AS face_right_eye,
+    complete_descriptions.tooth,
+    complete_descriptions.left_eye,
+    complete_descriptions.right_eye,
     ROW((complete_descriptions.left_eye_color).id, (complete_descriptions.left_eye_color).name, (complete_descriptions.left_eye_color).hex)::printed_color AS left_eye_color,
     ROW((complete_descriptions.right_eye_color).id, (complete_descriptions.right_eye_color).name, (complete_descriptions.right_eye_color).hex)::printed_color AS right_eye_color,
     ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, suited_length((complete_descriptions.nail).length), (complete_descriptions.nail).care)::nails AS hands_nails,
-    ROW((complete_descriptions.eyebrow_color).id, (complete_descriptions.eyebrow_color).name, (complete_descriptions.eyebrow_color).hex)::printed_color AS face_eyebrow_color,
+    ROW((complete_descriptions.eyebrow_color).id, (complete_descriptions.eyebrow_color).name, (complete_descriptions.eyebrow_color).hex)::printed_color AS eyebrow_color,
     (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
     (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
     (complete_descriptions.hand).care AS hands_care,
@@ -1548,32 +1548,32 @@ CREATE VIEW flat_descriptions AS
     (printed_descriptions.hair).nature AS hair_nature,
     (printed_descriptions.hands_nails).color_id AS hands_nails_color_id,
     (printed_descriptions.hands_nails).care AS hands_nails_care,
-    (printed_descriptions.face_beard).color_id AS face_beard_color_id,
-    (printed_descriptions.face_beard).length AS face_beard_length,
-    (printed_descriptions.face_beard).style AS face_beard_style,
-    (printed_descriptions.face_eyebrow).color_id AS face_eyebrow_color_id,
-    (printed_descriptions.face_eyebrow).care AS face_eyebrow_care,
-    (printed_descriptions.face_tooth).care AS face_tooth_care,
-    (printed_descriptions.face_tooth).braces AS face_tooth_braces,
-    (printed_descriptions.face_left_eye).color_id AS face_left_eye_color_id,
-    (printed_descriptions.face_left_eye).lenses AS face_left_eye_lenses,
-    (printed_descriptions.face_right_eye).color_id AS face_right_eye_color_id,
-    (printed_descriptions.face_right_eye).lenses AS face_right_eye_lenses,
+    (printed_descriptions.beard).color_id AS beard_color_id,
+    (printed_descriptions.beard).length AS beard_length,
+    (printed_descriptions.beard).style AS beard_style,
+    (printed_descriptions.eyebrow).color_id AS eyebrow_color_id,
+    (printed_descriptions.eyebrow).care AS eyebrow_care,
+    (printed_descriptions.tooth).care AS tooth_care,
+    (printed_descriptions.tooth).braces AS tooth_braces,
+    (printed_descriptions.left_eye).color_id AS left_eye_color_id,
+    (printed_descriptions.left_eye).lenses AS left_eye_lenses,
+    (printed_descriptions.right_eye).color_id AS right_eye_color_id,
+    (printed_descriptions.right_eye).lenses AS right_eye_lenses,
     (printed_descriptions.hands_hair).color_id AS hands_hair_color_id,
     (printed_descriptions.hands_hair).amount AS hands_hair_amount,
     printed_descriptions.hands_nails_color,
     printed_descriptions.face_freckles,
     printed_descriptions.face_care,
-    printed_descriptions.face_beard_color,
-    printed_descriptions.face_eyebrow,
+    printed_descriptions.beard_color,
+    printed_descriptions.eyebrow,
     printed_descriptions.face_shape,
-    printed_descriptions.face_tooth,
-    printed_descriptions.face_left_eye,
-    printed_descriptions.face_right_eye,
+    printed_descriptions.tooth,
+    printed_descriptions.left_eye,
+    printed_descriptions.right_eye,
     printed_descriptions.left_eye_color,
     printed_descriptions.right_eye_color,
     (printed_descriptions.hands_nails).length AS hands_nails_length,
-    printed_descriptions.face_eyebrow_color,
+    printed_descriptions.eyebrow_color,
     printed_descriptions.hands_vein_visibility,
     printed_descriptions.hands_joint_visibility,
     printed_descriptions.hands_care,
@@ -1607,7 +1607,7 @@ CREATE VIEW collective_demands AS
     year_to_age(printed_description.general_birth_year, (location.met_at).moment) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
-    printed_description.face_eyebrow_color,
+    printed_description.eyebrow_color,
     printed_description.hands_vein_visibility,
     printed_description.hands_joint_visibility,
     printed_description.hands_care,
@@ -1617,7 +1617,7 @@ CREATE VIEW collective_demands AS
     (printed_description.body).build_id AS body_build_id,
     (printed_description.body).skin_color_id AS body_skin_color_id,
     printed_description.general_race_id,
-    flat_description.face_beard_color,
+    flat_description.beard_color,
     flat_description.general_firstname,
     flat_description.general_lastname,
     flat_description.general_gender,
@@ -1626,17 +1626,17 @@ CREATE VIEW collective_demands AS
     flat_description.hands_nails_color_id,
     flat_description.hands_nails_length,
     flat_description.hands_nails_care,
-    flat_description.face_beard_color_id,
-    flat_description.face_beard_length,
-    flat_description.face_beard_style,
-    flat_description.face_eyebrow_color_id,
-    flat_description.face_eyebrow_care,
-    flat_description.face_tooth_care,
-    flat_description.face_tooth_braces,
-    flat_description.face_left_eye_color_id,
-    flat_description.face_left_eye_lenses,
-    flat_description.face_right_eye_color_id,
-    flat_description.face_right_eye_lenses,
+    flat_description.beard_color_id,
+    flat_description.beard_length,
+    flat_description.beard_style,
+    flat_description.eyebrow_color_id,
+    flat_description.eyebrow_care,
+    flat_description.tooth_care,
+    flat_description.tooth_braces,
+    flat_description.left_eye_color_id,
+    flat_description.left_eye_lenses,
+    flat_description.right_eye_color_id,
+    flat_description.right_eye_lenses,
     flat_description.hands_hair_color_id,
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
@@ -1644,8 +1644,8 @@ CREATE VIEW collective_demands AS
     flat_description.general_race,
     flat_description.face_freckles,
     flat_description.face_care,
-    flat_description.face_left_eye,
-    flat_description.face_right_eye,
+    flat_description.left_eye,
+    flat_description.right_eye,
     flat_description.left_eye_color,
     flat_description.right_eye_color,
     flat_description.hair_color_id,
@@ -1676,7 +1676,7 @@ CREATE VIEW collective_evolutions AS
     year_to_age(printed_description.general_birth_year, evolution.evolved_at) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
-    printed_description.face_eyebrow_color,
+    printed_description.eyebrow_color,
     printed_description.hands_vein_visibility,
     printed_description.hands_joint_visibility,
     printed_description.hands_care,
@@ -1686,7 +1686,7 @@ CREATE VIEW collective_evolutions AS
     (printed_description.body).build_id AS body_build_id,
     (printed_description.body).skin_color_id AS body_skin_color_id,
     printed_description.general_race_id,
-    flat_description.face_beard_color,
+    flat_description.beard_color,
     flat_description.general_firstname,
     flat_description.general_lastname,
     flat_description.general_gender,
@@ -1695,17 +1695,17 @@ CREATE VIEW collective_evolutions AS
     flat_description.hands_nails_color_id,
     flat_description.hands_nails_length,
     flat_description.hands_nails_care,
-    flat_description.face_beard_color_id,
-    flat_description.face_beard_length,
-    flat_description.face_beard_style,
-    flat_description.face_eyebrow_color_id,
-    flat_description.face_eyebrow_care,
-    flat_description.face_tooth_care,
-    flat_description.face_tooth_braces,
-    flat_description.face_left_eye_color_id,
-    flat_description.face_left_eye_lenses,
-    flat_description.face_right_eye_color_id,
-    flat_description.face_right_eye_lenses,
+    flat_description.beard_color_id,
+    flat_description.beard_length,
+    flat_description.beard_style,
+    flat_description.eyebrow_color_id,
+    flat_description.eyebrow_care,
+    flat_description.tooth_care,
+    flat_description.tooth_braces,
+    flat_description.left_eye_color_id,
+    flat_description.left_eye_lenses,
+    flat_description.right_eye_color_id,
+    flat_description.right_eye_lenses,
     flat_description.hands_hair_color_id,
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
@@ -1713,8 +1713,8 @@ CREATE VIEW collective_evolutions AS
     flat_description.general_race,
     flat_description.face_freckles,
     flat_description.face_care,
-    flat_description.face_left_eye,
-    flat_description.face_right_eye,
+    flat_description.left_eye,
+    flat_description.right_eye,
     flat_description.left_eye_color,
     flat_description.right_eye_color,
     flat_description.hair_color_id,
@@ -1767,35 +1767,35 @@ ALTER TABLE demands ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE VIEW description_parts AS
  SELECT description.id,
-    face.beard_id,
+    description.beard_id,
     description.body_id,
     description.general_id,
     description.face_id,
     description.hair_id,
-    face.eyebrow_id,
-    face.left_eye_id,
-    face.right_eye_id,
+    description.eyebrow_id,
+    description.left_eye_id,
+    description.right_eye_id,
     hand.hand_hair_id,
     description.hand_id,
     demand.location_id,
     hand.nail_id,
-    face.tooth_id
+    description.tooth_id
    FROM (((((((((((((((demands demand
      RIGHT JOIN descriptions description ON ((description.id = demand.description_id)))
      LEFT JOIN hair ON ((hair.id = description.hair_id)))
      LEFT JOIN bodies body ON ((body.id = description.body_id)))
      LEFT JOIN body_builds body_build ON ((body_build.id = body.build_id)))
      LEFT JOIN faces face ON ((face.id = description.face_id)))
-     LEFT JOIN beards beard ON ((beard.id = face.beard_id)))
+     LEFT JOIN beards beard ON ((beard.id = description.beard_id)))
      LEFT JOIN general ON ((general.id = description.general_id)))
      LEFT JOIN races race ON ((race.id = general.race_id)))
      LEFT JOIN hands hand ON ((hand.id = description.hand_id)))
      LEFT JOIN hand_hair ON ((hand_hair.id = hand.hand_hair_id)))
      LEFT JOIN nails nail ON ((nail.id = hand.nail_id)))
-     LEFT JOIN teeth tooth ON ((tooth.id = face.tooth_id)))
-     LEFT JOIN eyebrows eyebrow ON ((eyebrow.id = face.eyebrow_id)))
-     LEFT JOIN eyes left_eye ON ((left_eye.id = face.left_eye_id)))
-     LEFT JOIN eyes right_eye ON ((right_eye.id = face.right_eye_id)));
+     LEFT JOIN teeth tooth ON ((tooth.id = description.tooth_id)))
+     LEFT JOIN eyebrows eyebrow ON ((eyebrow.id = description.eyebrow_id)))
+     LEFT JOIN eyes left_eye ON ((left_eye.id = description.left_eye_id)))
+     LEFT JOIN eyes right_eye ON ((right_eye.id = description.right_eye_id)));
 
 
 ALTER TABLE description_parts OWNER TO postgres;
@@ -2399,10 +2399,24 @@ CREATE UNIQUE INDEX demands_location_id_uindex ON demands USING btree (location_
 
 
 --
+-- Name: descriptions_beard_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_beard_id_uindex ON descriptions USING btree (beard_id);
+
+
+--
 -- Name: descriptions_body_id_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX descriptions_body_id_uindex ON descriptions USING btree (body_id);
+
+
+--
+-- Name: descriptions_eyebrow_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_eyebrow_id_uindex ON descriptions USING btree (eyebrow_id);
 
 
 --
@@ -2431,6 +2445,27 @@ CREATE UNIQUE INDEX descriptions_hair_id_uindex ON descriptions USING btree (hai
 --
 
 CREATE UNIQUE INDEX descriptions_hand_id_uindex ON descriptions USING btree (hand_id);
+
+
+--
+-- Name: descriptions_left_eye_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_left_eye_id_uindex ON descriptions USING btree (left_eye_id);
+
+
+--
+-- Name: descriptions_right_eye_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_right_eye_id_uindex ON descriptions USING btree (right_eye_id);
+
+
+--
+-- Name: descriptions_tooth_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX descriptions_tooth_id_uindex ON descriptions USING btree (tooth_id);
 
 
 --
@@ -2622,11 +2657,43 @@ ALTER TABLE ONLY demands
 
 
 --
+-- Name: descriptions descriptions_beards_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id);
+
+
+--
 -- Name: descriptions descriptions_bodies_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY descriptions
     ADD CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id) ON DELETE CASCADE;
+
+
+--
+-- Name: descriptions descriptions_eyebrows_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id);
+
+
+--
+-- Name: descriptions descriptions_eyes_left_id_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id);
+
+
+--
+-- Name: descriptions descriptions_eyes_right_id_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id);
 
 
 --
@@ -2659,6 +2726,14 @@ ALTER TABLE ONLY descriptions
 
 ALTER TABLE ONLY descriptions
     ADD CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id) ON DELETE CASCADE;
+
+
+--
+-- Name: descriptions descriptions_teeth_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY descriptions
+    ADD CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id);
 
 
 --
@@ -2699,46 +2774,6 @@ ALTER TABLE ONLY eyebrow_colors
 
 ALTER TABLE ONLY eyes
     ADD CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id);
-
-
---
--- Name: faces faces_beards_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY faces
-    ADD CONSTRAINT faces_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id);
-
-
---
--- Name: faces faces_eyebrows_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY faces
-    ADD CONSTRAINT faces_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id);
-
-
---
--- Name: faces faces_eyes_left_id_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY faces
-    ADD CONSTRAINT faces_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id);
-
-
---
--- Name: faces faces_eyes_right_id_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY faces
-    ADD CONSTRAINT faces_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id);
-
-
---
--- Name: faces faces_teeth_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY faces
-    ADD CONSTRAINT faces_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id);
 
 
 --

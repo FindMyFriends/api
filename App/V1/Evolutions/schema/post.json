@@ -131,115 +131,134 @@
             ],
             "type": "object"
         },
-        "face": {
+        "beard": {
             "additionalProperties": false,
             "properties": {
-                "beard": {
+                "length": {
                     "additionalProperties": false,
                     "properties": {
-                        "length": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "value": {
-                                    "type": [
-                                        "number",
-                                        "null"
-                                    ]
-                                },
-                                "unit": {
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "mm",
-                                        "cm"
-                                    ]
-                                }
-                            },
-                            "type": "object",
-                            "required": [
-                                "value",
-                                "unit"
-                            ]
-                        },
-                        "style": {
-                            "additionalProperties": false,
+                        "value": {
                             "type": [
-                                "string",
+                                "number",
                                 "null"
                             ]
                         },
-                        "color_id": {
-                            "type": {
-                                "0": [
-                                    "integer",
-                                    "null"
-                                ],
-                                "enum": [
-                                    null,
-                                    12,
-                                    8
-                                ]
-                            }
+                        "unit": {
+                            "type": [
+                                "null",
+                                "string"
+                            ],
+                            "enum": [
+                                null,
+                                "mm",
+                                "cm"
+                            ]
                         }
                     },
                     "type": "object",
                     "required": [
-                        "length",
-                        "style",
-                        "color_id"
+                        "value",
+                        "unit"
                     ]
+                },
+                "style": {
+                    "additionalProperties": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            8
+                        ]
+                    }
+                }
+            },
+            "type": "object",
+            "required": [
+                "length",
+                "style",
+                "color_id"
+            ]
+        },
+        "eye": {
+            "additionalProperties": false,
+            "properties": {
+                "left": {
+                    "$ref": "#/definitions/eye"
+                },
+                "right": {
+                    "$ref": "#/definitions/eye"
+                }
+            }
+        },
+        "eyebrow": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "care": {
                     "$ref": "#/definitions/rating"
                 },
-                "eyebrow": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": "integer"
-                        },
-                        "care": {
-                            "$ref": "#/definitions/rating"
-                        },
-                        "color_id": {
-                            "type": {
-                                "0": [
-                                    "integer",
-                                    "null"
-                                ],
-                                "enum": [
-                                    null,
-                                    12,
-                                    8
-                                ]
-                            }
-                        }
-                    },
-                    "required": [
-                        "care",
-                        "color_id"
-                    ],
-                    "type": "object"
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            8
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "care",
+                "color_id"
+            ],
+            "type": "object"
+        },
+        "teeth": {
+            "additionalProperties": false,
+            "properties": {
+                "braces": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
+                }
+            },
+            "required": [
+                "care",
+                "braces"
+            ],
+            "type": "object"
+        },
+        "face": {
+            "additionalProperties": false,
+            "properties": {
+                "care": {
+                    "$ref": "#/definitions/rating"
                 },
                 "freckles": {
                     "type": [
                         "boolean",
                         "null"
                     ]
-                },
-                "eye": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "left": {
-                            "$ref": "#/definitions/eye"
-                        },
-                        "right": {
-                            "$ref": "#/definitions/eye"
-                        }
-                    }
                 },
                 "shape": {
                     "type": [
@@ -253,34 +272,11 @@
                         "round",
                         "square"
                     ]
-                },
-                "teeth": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "braces": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
-                        },
-                        "care": {
-                            "$ref": "#/definitions/rating"
-                        }
-                    },
-                    "required": [
-                        "care",
-                        "braces"
-                    ],
-                    "type": "object"
                 }
             },
             "required": [
-                "beard",
-                "teeth",
                 "shape",
                 "care",
-                "eye",
-                "eyebrow",
                 "freckles"
             ],
             "type": "object"

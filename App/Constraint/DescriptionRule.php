@@ -13,7 +13,7 @@ final class DescriptionRule implements Validation\Rule {
 	}
 
 	public function apply($subject): array {
-		if ($this->womanWithBeard($subject['general']['gender'], $subject['face']['beard'])) {
+		if ($this->womanWithBeard($subject['general']['gender'], $subject['beard'])) {
 			throw new \UnexpectedValueException('Women do not have beards');
 		}
 		return $subject;

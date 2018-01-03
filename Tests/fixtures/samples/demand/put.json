@@ -20,36 +20,36 @@
     "roots": true,
     "nature": false
   },
-  "face": {
-    "teeth": {
-      "care": 5,
-      "braces": false
+  "teeth": {
+    "care": 5,
+    "braces": false
+  },
+  "beard": {
+    "color_id": 8,
+    "length": {
+      "value": 2,
+      "unit": "mm"
     },
-    "freckles": false,
-    "beard": {
+    "style": "none"
+  },
+  "eyebrow": {
+    "color_id": 8,
+    "care": 2
+  },
+  "eye": {
+    "left": {
       "color_id": 8,
-      "length": {
-        "value": 2,
-        "unit": "mm"
-      },
-      "style": "none"
+      "lenses": false
     },
-    "shape": "oval",
-    "care": 10,
-    "eyebrow": {
+    "right": {
       "color_id": 8,
-      "care": 2
-    },
-    "eye": {
-      "left": {
-        "color_id": 8,
-        "lenses": false
-      },
-      "right": {
-        "color_id": 8,
-        "lenses": false
-      }
+      "lenses": false
     }
+  },
+  "face": {
+    "freckles": false,
+    "shape": "oval",
+    "care": 10
   },
   "body": {
     "build_id": 1,

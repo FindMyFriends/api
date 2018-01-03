@@ -17,13 +17,13 @@ final class EvolutionRuleTest extends Tester\TestCase {
 		Assert::equal(
 			[
 				'general' => ['gender' => 'man'],
-				'face' => ['beard' => ['care' => 10]],
+				'beard' => ['care' => 10],
 				'evolved_at' => '2017-09-17T13:58:10+00:00',
 			],
 			(new Constraint\EvolutionRule())->apply(
 				[
 					'general' => ['gender' => 'man'],
-					'face' => ['beard' => ['care' => 10]],
+					'beard' => ['care' => 10],
 					'evolved_at' => '2017-09-17T13:58:10+00:00',
 				]
 			)

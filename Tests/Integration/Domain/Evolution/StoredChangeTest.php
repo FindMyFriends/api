@@ -47,36 +47,36 @@ final class StoredChangeTest extends Tester\TestCase {
 					'roots' => null,
 					'nature' => null,
 				],
+				'beard' => [
+					'color_id' => 8,
+					'length' => [
+						'value' => 100,
+						'unit' => 'mm',
+					],
+					'style' => null,
+				],
+				'eyebrow' => [
+					'color_id' => 8,
+					'care' => 5,
+				],
+				'eye' => [
+					'left' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+					'right' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+				],
+				'teeth' => [
+					'care' => 10,
+					'braces' => true,
+				],
 				'face' => [
 					'care' => null,
-					'beard' => [
-						'color_id' => 8,
-						'length' => [
-							'value' => 100,
-							'unit' => 'mm',
-						],
-						'style' => null,
-					],
-					'eyebrow' => [
-						'color_id' => 8,
-						'care' => 5,
-					],
 					'freckles' => null,
-					'eye' => [
-						'left' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-						'right' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-					],
 					'shape' => null,
-					'teeth' => [
-						'care' => 10,
-						'braces' => true,
-					],
 				],
 				'body' => [
 					'build_id' => 1,
@@ -128,33 +128,33 @@ final class StoredChangeTest extends Tester\TestCase {
 					'weight' => 120,
 					'height' => 130,
 				],
+				'beard' => [
+					'length' => [
+						'value' => 10,
+						'unit' => 'cm',
+					],
+					'style' => null,
+					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+				],
+				'eyebrow' => [
+					'care' => 5,
+					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+				],
+				'eye' => [
+					'left' => [
+						'lenses' => false,
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+					],
+					'right' => [
+						'lenses' => false,
+						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+					],
+				],
+				'teeth' => ['care' => 10, 'braces' => true],
 				'face' => [
 					'care' => null,
-					'beard' => [
-						'length' => [
-							'value' => 10,
-							'unit' => 'cm',
-						],
-						'style' => null,
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
-					],
-					'eyebrow' => [
-						'care' => 5,
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
-					],
 					'freckles' => null,
-					'eye' => [
-						'left' => [
-							'lenses' => false,
-							'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
-						],
-						'right' => [
-							'lenses' => false,
-							'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
-						],
-					],
 					'shape' => null,
-					'teeth' => ['care' => 10, 'braces' => true],
 				],
 				'hair' => [
 					'style' => null,
@@ -210,36 +210,36 @@ final class StoredChangeTest extends Tester\TestCase {
 					'roots' => null,
 					'nature' => null,
 				],
+				'beard' => [
+					'color_id' => 8,
+					'length' => [
+						'value' => 1,
+						'unit' => 'mm',
+					],
+					'style' => null,
+				],
+				'eyebrow' => [
+					'color_id' => 8,
+					'care' => 5,
+				],
+				'eye' => [
+					'left' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+					'right' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+				],
+				'teeth' => [
+					'care' => 10,
+					'braces' => true,
+				],
 				'face' => [
 					'care' => null,
-					'beard' => [
-						'color_id' => 8,
-						'length' => [
-							'value' => 1,
-							'unit' => 'mm',
-						],
-						'style' => null,
-					],
-					'eyebrow' => [
-						'color_id' => 8,
-						'care' => 5,
-					],
 					'freckles' => null,
-					'eye' => [
-						'left' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-						'right' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-					],
 					'shape' => null,
-					'teeth' => [
-						'care' => 10,
-						'braces' => true,
-					],
 				],
 				'body' => [
 					'build_id' => 1,

@@ -215,15 +215,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO faces (tooth_id, eyebrow_id, freckles, beard_id, care, shape, left_eye_id, right_eye_id) VALUES (
-		(SELECT tooth FROM samples.tooth()),
-		(SELECT eyebrow FROM samples.eyebrow()),
+	INSERT INTO faces (freckles, care, shape) VALUES (
 		random() > 0.5,
-		(SELECT beard FROM samples.beard()),
 		test_utils.better_random(0, 10),
-		test_utils.random_enum('face_shapes')::face_shapes,
-		(SELECT eye FROM samples.eye()),
-		(SELECT eye FROM samples.eye())
+		test_utils.random_enum('face_shapes')::face_shapes
 	)
 	RETURNING id
 	INTO v_id;
@@ -237,12 +232,17 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id) VALUES (
+	INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, left_eye_id, right_eye_id, beard_id, tooth_id, eyebrow_id) VALUES (
 		(SELECT general FROM samples.general()),
 		(SELECT body FROM samples.body()),
 		(SELECT face FROM samples.face()),
 		(SELECT hand FROM samples.hand()),
-		(SELECT hair FROM samples.hair())
+		(SELECT hair FROM samples.hair()),
+		(SELECT eye FROM samples.eye()),
+		(SELECT eye FROM samples.eye()),
+		(SELECT beard FROM samples.beard()),
+		(SELECT tooth FROM samples.tooth()),
+		(SELECT eyebrow FROM samples.eyebrow())
 	)
 	RETURNING id
 	INTO v_id;

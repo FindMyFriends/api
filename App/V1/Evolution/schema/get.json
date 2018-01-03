@@ -221,177 +221,196 @@
             ],
             "type": "object"
         },
-        "face": {
+        "beard": {
             "additionalProperties": false,
             "properties": {
-                "beard": {
+                "color": {
                     "additionalProperties": false,
                     "properties": {
-                        "color": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        12,
-                                        8
-                                    ]
-                                },
-                                "name": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "Brown",
-                                        "Black"
-                                    ]
-                                },
-                                "hex": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "#a52a2a",
-                                        "#000000"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "hex"
+                        "id": {
+                            "type": [
+                                "integer",
+                                "null"
                             ],
-                            "type": "object"
-                        },
-                        "length": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "value": {
-                                    "type": [
-                                        "number",
-                                        "null"
-                                    ]
-                                },
-                                "unit": {
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "mm",
-                                        "cm"
-                                    ]
-                                }
-                            },
-                            "type": "object",
-                            "required": [
-                                "value",
-                                "unit"
+                            "enum": [
+                                null,
+                                12,
+                                8
                             ]
                         },
-                        "style": {
-                            "additionalProperties": false,
+                        "name": {
                             "type": [
                                 "string",
                                 "null"
+                            ],
+                            "enum": [
+                                null,
+                                "Brown",
+                                "Black"
+                            ]
+                        },
+                        "hex": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "#a52a2a",
+                                "#000000"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name",
+                        "hex"
+                    ],
+                    "type": "object"
+                },
+                "length": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "type": [
+                                "null",
+                                "string"
+                            ],
+                            "enum": [
+                                null,
+                                "mm",
+                                "cm"
                             ]
                         }
                     },
                     "type": "object",
                     "required": [
-                        "color",
-                        "length",
-                        "style"
+                        "value",
+                        "unit"
+                    ]
+                },
+                "style": {
+                    "additionalProperties": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "type": "object",
+            "required": [
+                "color",
+                "length",
+                "style"
+            ]
+        },
+        "eye": {
+            "additionalProperties": false,
+            "properties": {
+                "left": {
+                    "$ref": "#/definitions/eye"
+                },
+                "right": {
+                    "$ref": "#/definitions/eye"
+                }
+            }
+        },
+        "eyebrow": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "color": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "id": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                12,
+                                8
+                            ]
+                        },
+                        "name": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "Brown",
+                                "Black"
+                            ]
+                        },
+                        "hex": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "#a52a2a",
+                                "#000000"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name",
+                        "hex"
+                    ],
+                    "type": "object"
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
+                }
+            },
+            "required": [
+                "color",
+                "care"
+            ],
+            "type": "object"
+        },
+        "teeth": {
+            "additionalProperties": false,
+            "properties": {
+                "braces": {
+                    "type": [
+                        "boolean",
+                        "null"
                     ]
                 },
                 "care": {
                     "$ref": "#/definitions/rating"
-                },
-                "eyebrow": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": "integer"
-                        },
-                        "color": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        12,
-                                        8
-                                    ]
-                                },
-                                "name": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "Brown",
-                                        "Black"
-                                    ]
-                                },
-                                "hex": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "#a52a2a",
-                                        "#000000"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "hex"
-                            ],
-                            "type": "object"
-                        },
-                        "care": {
-                            "$ref": "#/definitions/rating"
-                        }
-                    },
-                    "required": [
-                        "color",
-                        "care"
-                    ],
-                    "type": "object"
+                }
+            },
+            "required": [
+                "care",
+                "braces"
+            ],
+            "type": "object"
+        },
+        "face": {
+            "additionalProperties": false,
+            "properties": {
+                "care": {
+                    "$ref": "#/definitions/rating"
                 },
                 "freckles": {
                     "type": [
                         "boolean",
                         "null"
                     ]
-                },
-                "eye": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "left": {
-                            "$ref": "#/definitions/eye"
-                        },
-                        "right": {
-                            "$ref": "#/definitions/eye"
-                        }
-                    }
                 },
                 "shape": {
                     "type": [
@@ -405,34 +424,11 @@
                         "round",
                         "square"
                     ]
-                },
-                "teeth": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "braces": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
-                        },
-                        "care": {
-                            "$ref": "#/definitions/rating"
-                        }
-                    },
-                    "required": [
-                        "care",
-                        "braces"
-                    ],
-                    "type": "object"
                 }
             },
             "required": [
-                "beard",
-                "teeth",
                 "shape",
                 "care",
-                "eye",
-                "eyebrow",
                 "freckles"
             ],
             "type": "object"

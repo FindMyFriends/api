@@ -51,36 +51,36 @@ final class IndividualChainTest extends Tester\TestCase {
 					'roots' => null,
 					'nature' => null,
 				],
+				'beard' => [
+					'color_id' => 8,
+					'length' => [
+						'value' => null,
+						'unit' => 'mm',
+					],
+					'style' => null,
+				],
+				'eyebrow' => [
+					'color_id' => 8,
+					'care' => 5,
+				],
+				'eye' => [
+					'left' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+					'right' => [
+						'color_id' => 8,
+						'lenses' => false,
+					],
+				],
+				'teeth' => [
+					'care' => 10,
+					'braces' => true,
+				],
 				'face' => [
 					'care' => null,
-					'beard' => [
-						'color_id' => 8,
-						'length' => [
-							'value' => null,
-							'unit' => 'mm',
-						],
-						'style' => null,
-					],
-					'eyebrow' => [
-						'color_id' => 8,
-						'care' => 5,
-					],
 					'freckles' => null,
-					'eye' => [
-						'left' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-						'right' => [
-							'color_id' => 8,
-							'lenses' => false,
-						],
-					],
 					'shape' => null,
-					'teeth' => [
-						'care' => 10,
-						'braces' => true,
-					],
 				],
 				'body' => [
 					'build_id' => 1,

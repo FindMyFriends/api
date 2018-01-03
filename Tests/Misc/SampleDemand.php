@@ -31,6 +31,11 @@ final class SampleDemand implements Sample {
 							'face_id' => current((new SamplePostgresData($this->database, 'face', $this->demand['face'] ?? []))->try()),
 							'hand_id' => current((new SamplePostgresData($this->database, 'hand', $this->demand['hand'] ?? []))->try()),
 							'hair_id' => current((new SamplePostgresData($this->database, 'hair', $this->demand['hair'] ?? []))->try()),
+							'beard_id' => current((new SamplePostgresData($this->database, 'beard', $this->demand['beard'] ?? []))->try()),
+							'eyebrow_id' => current((new SamplePostgresData($this->database, 'eyebrow', $this->demand['eyebrow'] ?? []))->try()),
+							'tooth_id' => current((new SamplePostgresData($this->database, 'tooth', $this->demand['tooth'] ?? []))->try()),
+							'left_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->demand['left_eye'] ?? []))->try()),
+							'right_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->demand['right_eye'] ?? []))->try()),
 						]
 					))->try()
 				),

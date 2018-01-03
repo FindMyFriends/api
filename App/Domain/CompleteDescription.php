@@ -50,33 +50,33 @@ final class CompleteDescription implements Output\Format {
 					'roots' => $description['hair_roots'],
 					'nature' => $description['hair_nature'],
 				],
+				'eyebrow' => [
+					'care' => $description['eyebrow_care'],
+					'color' => $description['eyebrow_color'],
+				],
+				'beard' => [
+					'length' => $description['beard_length'],
+					'style' => $description['beard_style'],
+					'color' => $description['beard_color'],
+				],
+				'eye' => [
+					'left' => [
+						'color' => $description['left_eye_color'],
+						'lenses' => $description['left_eye_lenses'],
+					],
+					'right' => [
+						'color' => $description['right_eye_color'],
+						'lenses' => $description['right_eye_lenses'],
+					],
+				],
+				'teeth' => [
+					'care' => $description['tooth_care'],
+					'braces' => $description['tooth_braces'],
+				],
 				'face' => [
 					'care' => $description['face_care'],
-					'beard' => [
-						'length' => $description['face_beard_length'],
-						'style' => $description['face_beard_style'],
-						'color' => $description['face_beard_color'],
-					],
-					'eyebrow' => [
-						'care' => $description['face_eyebrow_care'],
-						'color' => $description['face_eyebrow_color'],
-					],
 					'freckles' => $description['face_freckles'],
-					'eye' => [
-						'left' => [
-							'color' => $description['left_eye_color'],
-							'lenses' => $description['face_left_eye_lenses'],
-						],
-						'right' => [
-							'color' => $description['right_eye_color'],
-							'lenses' => $description['face_right_eye_lenses'],
-						],
-					],
 					'shape' => $description['face_shape'],
-					'teeth' => [
-						'care' => $description['face_tooth_care'],
-						'braces' => $description['face_tooth_braces'],
-					],
 				],
 				'body' => [
 					'build' => $description['body_build'],

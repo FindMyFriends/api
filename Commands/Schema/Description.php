@@ -135,11 +135,7 @@ final class Description {
 												'enum' => array_merge([null], (new Colors('hex', 'hair_colors', $this->database))->values()),
 											],
 										],
-										'required' => [
-											'id',
-											'name',
-											'hex',
-										],
+										'required' => ['id', 'name', 'hex'],
 										'type' => 'object',
 									],
 									'highlights' => ['type' => ['boolean', 'null']],
@@ -153,10 +149,7 @@ final class Description {
 											],
 										],
 										'type' => 'object',
-										'required' => [
-											'value',
-											'unit',
-										],
+										'required' => ['value', 'unit'],
 									],
 									'nature' => ['type' => ['boolean', 'null']],
 									'roots' => ['type' => ['boolean', 'null']],
@@ -173,141 +166,109 @@ final class Description {
 								],
 						'type' => 'object',
 					],
+					'beard' => [
+						'additionalProperties' => false,
+						'properties' => [
+							'color' => [
+								'additionalProperties' => false,
+								'properties' => [
+									'id' => [
+										'type' => ['integer', 'null'],
+										'enum' => array_merge([null], (new Colors('id', 'beard_colors', $this->database))->values()),
+									],
+									'name' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('name', 'beard_colors', $this->database))->values()),
+									],
+									'hex' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('hex', 'beard_colors', $this->database))->values()),
+									],
+								],
+								'required' => ['id', 'name', 'hex'],
+								'type' => 'object',
+							],
+							'length' => [
+								'additionalProperties' => false,
+								'properties' => [
+									'value' => ['type' => ['number', 'null']],
+									'unit' => [
+										'type' => ['null', 'string'],
+										'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
+									],
+								],
+								'type' => 'object',
+								'required' => ['value', 'unit'],
+							],
+							'style' => [
+								'additionalProperties' => false,
+								'type' => ['string', 'null'],
+							],
+						],
+						'type' => 'object',
+						'required' => ['color', 'length', 'style'],
+					],
+					'eye' => [
+						'additionalProperties' => false,
+						'properties' =>
+							[
+								'left' => ['$ref' => '#/definitions/eye'],
+								'right' => ['$ref' => '#/definitions/eye'],
+							],
+					],
+					'eyebrow' => [
+						'additionalProperties' => false,
+						'properties' => [
+							'id' => ['type' => 'integer'],
+							'color' => [
+								'additionalProperties' => false,
+								'properties' => [
+									'id' => [
+										'type' => ['integer', 'null'],
+										'enum' => array_merge([null], (new Colors('id', 'eyebrow_colors', $this->database))->values()),
+									],
+									'name' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('name', 'eyebrow_colors', $this->database))->values()),
+									],
+									'hex' => [
+										'type' => ['string', 'null'],
+										'enum' => array_merge([null], (new Colors('hex', 'eyebrow_colors', $this->database))->values()),
+									],
+								],
+								'required' => ['id', 'name', 'hex'],
+								'type' => 'object',
+							],
+							'care' => ['$ref' => '#/definitions/rating'],
+						],
+						'required' => ['color', 'care'],
+						'type' => 'object',
+					],
+					'teeth' => [
+						'additionalProperties' => false,
+						'properties' =>
+							[
+								'braces' => ['type' => ['boolean', 'null']],
+								'care' => ['$ref' => '#/definitions/rating'],
+							],
+						'required' => ['care', 'braces'],
+						'type' => 'object',
+					],
 					'face' => [
 						'additionalProperties' => false,
 						'properties' =>
 								[
-									'beard' =>
-										[
-											'additionalProperties' => false,
-											'properties' => [
-												'color' => [
-													'additionalProperties' => false,
-													'properties' => [
-														'id' => [
-															'type' => ['integer', 'null'],
-															'enum' => array_merge([null], (new Colors('id', 'beard_colors', $this->database))->values()),
-														],
-														'name' => [
-															'type' => ['string', 'null'],
-															'enum' => array_merge([null], (new Colors('name', 'beard_colors', $this->database))->values()),
-														],
-														'hex' => [
-															'type' => ['string', 'null'],
-															'enum' => array_merge([null], (new Colors('hex', 'beard_colors', $this->database))->values()),
-														],
-													],
-													'required' => [
-														'id',
-														'name',
-														'hex',
-													],
-													'type' => 'object',
-												],
-												'length' => [
-													'additionalProperties' => false,
-													'properties' => [
-														'value' => ['type' => ['number', 'null']],
-														'unit' => [
-															'type' => ['null', 'string'],
-															'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
-														],
-													],
-													'type' => 'object',
-													'required' => [
-														'value',
-														'unit',
-													],
-												],
-												'style' => [
-													'additionalProperties' => false,
-													'type' => ['string', 'null'],
-												],
-											],
-											'type' => 'object',
-											'required' => [
-												'color',
-												'length',
-												'style',
-											],
-										],
 									'care' => ['$ref' => '#/definitions/rating'],
-									'eyebrow' => [
-										'additionalProperties' => false,
-										'properties' => [
-											'id' => [
-												'type' => 'integer',
-											],
-											'color' => [
-												'additionalProperties' => false,
-												'properties' => [
-													'id' => [
-														'type' => ['integer', 'null'],
-														'enum' => array_merge([null], (new Colors('id', 'eyebrow_colors', $this->database))->values()),
-													],
-													'name' => [
-														'type' => ['string', 'null'],
-														'enum' => array_merge([null], (new Colors('name', 'eyebrow_colors', $this->database))->values()),
-													],
-													'hex' => [
-														'type' => ['string', 'null'],
-														'enum' => array_merge([null], (new Colors('hex', 'eyebrow_colors', $this->database))->values()),
-													],
-												],
-												'required' => [
-													'id',
-													'name',
-													'hex',
-												],
-												'type' => 'object',
-											],
-											'care' => ['$ref' => '#/definitions/rating'],
-										],
-										'required' =>
-											[
-												'color',
-												'care',
-											],
-										'type' => 'object',
-									],
 									'freckles' => ['type' => ['boolean', 'null']],
-									'eye' =>
-										[
-											'additionalProperties' => false,
-											'properties' =>
-												[
-													'left' => ['$ref' => '#/definitions/eye'],
-													'right' => ['$ref' => '#/definitions/eye'],
-												],
-										],
 									'shape' => [
 										'type' => ['string', 'null'],
 										'enum' => array_merge([null], (new PostgresEnum('face_shapes', $this->database))->values()),
 									],
-									'teeth' =>
-										[
-											'additionalProperties' => false,
-											'properties' =>
-												[
-													'braces' => ['type' => ['boolean', 'null']],
-													'care' => ['$ref' => '#/definitions/rating'],
-												],
-											'required' =>
-												[
-													'care',
-													'braces',
-												],
-											'type' => 'object',
-										],
 								],
 						'required' =>
 								[
-									'beard',
-									'teeth',
 									'shape',
 									'care',
-									'eye',
-									'eyebrow',
 									'freckles',
 								],
 						'type' => 'object',
@@ -500,8 +461,8 @@ final class Description {
 		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
 		$properties['body'] = (new JsonEnum(new Colors('id', 'skin_colors', $this->database), $properties['body'], 'skin_color', 'skin_color_id'))->values();
 		$properties['hair'] = (new JsonEnum(new Colors('id', 'hair_colors', $this->database), $properties['hair'], 'color', 'color_id'))->values();
-		$properties['face']['properties']['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['face']['properties']['beard'], 'color', 'color_id'))->values();
-		$properties['face']['properties']['eyebrow'] = (new JsonEnum(new Colors('id', 'eyebrow_colors', $this->database), $properties['face']['properties']['eyebrow'], 'color', 'color_id'))->values();
+		$properties['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['beard'], 'color', 'color_id'))->values();
+		$properties['eyebrow'] = (new JsonEnum(new Colors('id', 'eyebrow_colors', $this->database), $properties['eyebrow'], 'color', 'color_id'))->values();
 		$schema['definitions']['eye'] = (new JsonEnum(new Colors('id', 'eye_colors', $this->database), $schema['definitions']['eye'], 'color', 'color_id'))->values();
 		$properties['general'] = (new JsonEnum($races, $properties['general'], 'race', 'race_id'))->values();
 		$properties['hands']['properties']['nails'] = (new JsonEnum(new Colors('id', 'nail_colors', $this->database), $properties['hands']['properties']['nails'], 'color', 'color_id'))->values();
