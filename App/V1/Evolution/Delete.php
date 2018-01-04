@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace FindMyFriends\V1\Evolution;
 
 use FindMyFriends\Domain\Evolution;
