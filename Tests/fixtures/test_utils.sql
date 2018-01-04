@@ -43,7 +43,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION test_utils.better_random(low INT = 1 ,high BIGINT = 2147483647) RETURNS INT
+CREATE OR REPLACE FUNCTION test_utils.better_random(low INT = 1, high BIGINT = 2147483647) RETURNS INT
 AS $$
 BEGIN
 	RETURN floor(random()* (high - low + 1) + low);

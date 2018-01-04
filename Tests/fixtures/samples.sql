@@ -1,6 +1,33 @@
 CREATE SCHEMA IF NOT EXISTS samples;
 
-CREATE OR REPLACE FUNCTION samples.hair(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.random_if_not_exists(random text, replacements jsonb, field text) RETURNS text
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_replacement text;
+BEGIN
+	IF replacements ? field THEN
+		v_replacement = trim(both '"' from CAST (replacements -> field AS TEXT));
+		RETURN SUBSTRING(v_replacement, 1, LENGTH(v_replacement));
+	ELSE
+		RETURN random;
+	END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.random_if_not_exists(random integer, replacements jsonb, field text) RETURNS integer
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	IF replacements ? field THEN
+		RETURN CAST (replacements -> field AS TEXT);
+	ELSE
+		RETURN random;
+	END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.hair(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -9,7 +36,7 @@ BEGIN
 	INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
 		md5(random()::TEXT),
 		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
-		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
+		ROW(test_utils.better_random('smallint'), 'mm')::length,
 		random() > 0.5,
 		random() > 0.5,
 		random() > 0.5
@@ -21,7 +48,7 @@ END;
 $$;
 
 
-CREATE OR REPLACE FUNCTION samples.eyebrow(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.eyebrow(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -38,7 +65,7 @@ END;
 $$;
 
 
-CREATE OR REPLACE FUNCTION samples.eye(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.eye(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -54,7 +81,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.tooth(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.tooth(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -70,16 +97,16 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.beard(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.beard(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO beards (color_id, length, style) VALUES (
-		COALESCE(CAST(replacement -> 'color_id' AS INTEGER), (SELECT color_id FROM beard_colors ORDER BY random() LIMIT 1)),
-		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
-		COALESCE(replacement -> 'style', md5(random()::text))
+		(SELECT color_id FROM beard_colors ORDER BY random() LIMIT 1),
+		ROW(test_utils.better_random('smallint'), 'mm')::length,
+		md5(random()::text)
 	)
 	RETURNING id
 	INTO v_id;
@@ -87,17 +114,17 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.body(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.body(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
-		COALESCE(CAST(replacement -> 'build_id' AS SMALLINT), (SELECT id FROM body_builds ORDER BY random() LIMIT 1)),
-		COALESCE(CAST(replacement -> 'skin_color_id' AS SMALLINT), (SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1)),
-		COALESCE(CAST(replacement -> 'weight' AS SMALLINT), test_utils.better_random('smallint')),
-		COALESCE(CAST(replacement -> 'height' AS SMALLINT), test_utils.better_random('smallint'))
+		samples.random_if_not_exists((SELECT id FROM body_builds ORDER BY random() LIMIT 1), replacements, 'build_id'),
+		samples.random_if_not_exists((SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1), replacements, 'skin_color_id'),
+		samples.random_if_not_exists(test_utils.better_random('smallint'), replacements, 'weight'),
+		samples.random_if_not_exists(test_utils.better_random('smallint'), replacements, 'height')
 	)
 	RETURNING id
 	INTO v_id;
@@ -105,15 +132,15 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.seeker(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.seeker(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO seekers (email, password) VALUES (
-		COALESCE(replacement -> 'email', md5(random()::text)),
-		COALESCE(replacement -> 'password', md5(random()::text))
+		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'password')
 	)
 	RETURNING id
 	INTO v_id;
@@ -121,15 +148,15 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.location(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.location(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO locations (coordinates, place, met_at) VALUES (
-		COALESCE(CAST(replacement -> 'coordinates' AS POINT), POINT(random(), random())),
-		COALESCE(replacement -> 'place', md5(random()::text)),
+		POINT(random(), random()),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'place'),
 		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(0, 100)))::approximate_timestamptz
 	)
 	RETURNING id
@@ -138,7 +165,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.hand_hair(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.hand_hair(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -154,7 +181,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.nail(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.nail(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -162,7 +189,7 @@ DECLARE
 BEGIN
 	INSERT INTO nails (color_id, length, care) VALUES (
 		(SELECT color_id FROM nail_colors ORDER BY random() LIMIT 1),
-		ROW(COALESCE(CAST(replacement -> 'length' AS INTEGER), test_utils.better_random('smallint')), 'mm')::length,
+		ROW(test_utils.better_random('smallint'), 'mm')::length,
 		test_utils.better_random(0, 10)
 	)
 	RETURNING id
@@ -171,18 +198,18 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.hand(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.hand(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
-		COALESCE(CAST(replacement -> 'nail_id' AS integer), (SELECT nail FROM samples.nail())),
-		COALESCE(CAST(replacement -> 'care' AS smallint), test_utils.better_random(0, 10)),
-		COALESCE(CAST(replacement -> 'vein_visibility' AS smallint), test_utils.better_random(0, 10)),
-		COALESCE(CAST(replacement -> 'joint_visibility' AS smallint), test_utils.better_random(0, 10)),
-		COALESCE(CAST(replacement -> 'hand_hair_id' AS integer), (SELECT hand_hair FROM samples.hand_hair()))
+		(SELECT nail FROM samples.nail()),
+		test_utils.better_random(0, 10),
+		test_utils.better_random(0, 10),
+		test_utils.better_random(0, 10),
+		(SELECT hand_hair FROM samples.hand_hair())
 	)
 	RETURNING id
 	INTO v_id;
@@ -190,18 +217,18 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.general(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.general(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO general (gender, race_id, birth_year, firstname, lastname) VALUES (
-		COALESCE(CAST(replacement -> 'gender' AS genders), test_utils.random_enum('genders')::genders),
-		COALESCE(CAST(replacement -> 'race_id' AS integer), (SELECT id FROM races ORDER BY random() LIMIT 1)),
-		COALESCE(CAST(replacement -> 'birth_year' AS int4range), int4range(1996, 1998)),
-		COALESCE(replacement -> 'firstname', md5(random()::TEXT)),
-		COALESCE(replacement -> 'lastname', md5(random()::TEXT))
+		samples.random_if_not_exists(test_utils.random_enum('genders'), replacements, 'gender')::genders,
+		(SELECT id FROM races ORDER BY random() LIMIT 1),
+		samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
+		samples.random_if_not_exists(md5(random()::text), replacements, 'firstname'),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'lastname')
 	)
 	RETURNING id
 	INTO v_id;
@@ -209,7 +236,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.face(replacement hstore = '') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.face(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
