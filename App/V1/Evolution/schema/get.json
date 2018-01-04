@@ -175,15 +175,7 @@
                             ]
                         },
                         "unit": {
-                            "type": [
-                                "null",
-                                "string"
-                            ],
-                            "enum": [
-                                null,
-                                "mm",
-                                "cm"
-                            ]
+                            "$ref": "#/definitions/length_unit"
                         }
                     },
                     "type": "object",
@@ -440,20 +432,10 @@
                     "additionalProperties": false,
                     "properties": {
                         "from": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 15,
-                            "maximum": 130
+                            "$ref": "#/definitions/age"
                         },
                         "to": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "minimum": 15,
-                            "maximum": 130
+                            "$ref": "#/definitions/age"
                         }
                     },
                     "required": [
@@ -583,15 +565,7 @@
                                     ]
                                 },
                                 "unit": {
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "mm",
-                                        "cm"
-                                    ]
+                                    "$ref": "#/definitions/length_unit"
                                 }
                             },
                             "type": "object",
@@ -774,6 +748,25 @@
                 "color"
             ],
             "type": "object"
+        },
+        "length_unit": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "enum": [
+                null,
+                "mm",
+                "cm"
+            ]
+        },
+        "age": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "minimum": 15,
+            "maximum": 130
         }
     }
 }

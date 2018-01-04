@@ -71,15 +71,7 @@
                             ]
                         },
                         "unit": {
-                            "type": [
-                                "null",
-                                "string"
-                            ],
-                            "enum": [
-                                null,
-                                "mm",
-                                "cm"
-                            ]
+                            "$ref": "#/definitions/length_unit"
                         }
                     },
                     "type": "object",
@@ -342,15 +334,7 @@
                                     ]
                                 },
                                 "unit": {
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "mm",
-                                        "cm"
-                                    ]
+                                    "$ref": "#/definitions/length_unit"
                                 }
                             },
                             "type": "object",
@@ -491,6 +475,25 @@
                 "color_id"
             ],
             "type": "object"
+        },
+        "length_unit": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "enum": [
+                null,
+                "mm",
+                "cm"
+            ]
+        },
+        "age": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "minimum": 15,
+            "maximum": 130
         }
     }
 }
