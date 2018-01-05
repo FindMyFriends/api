@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 require __DIR__ . '/../vendor/autoload.php';
 
 use FindMyFriends\Http;
@@ -12,17 +13,11 @@ use Klapuch\Output;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
+
 const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 	LOCAL_CONFIGURATION = __DIR__ . '/../App/Configuration/.config.local.ini',
 	LOGS = __DIR__ . '/../log',
 	V1_ROUTES_PATH = __DIR__ . '/../App/Configuration/Routes/v1.json';
-
-$source = new Ini\CachedSource(
-	new Ini\CombinedSource(
-		new Ini\ValidSource(new SplFileInfo(CONFIGURATION)),
-		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
-	)
-);
 
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
@@ -33,12 +28,15 @@ $uri = new Uri\CachedUri(
 	)
 );
 
-$configuration = $source->read();
-echo (new Application\RawPage(
-	$source,
-	new Log\FilesystemLogs(
-		new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))
-	),
+$configuration = (new Ini\CachedSource(
+	new Ini\CombinedSource(
+		new Ini\ValidSource(new SplFileInfo(CONFIGURATION)),
+		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
+	)
+))->read();
+
+echo (new class(
+	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
 			new Routing\QueryRoutes(
@@ -133,4 +131,29 @@ echo (new Application\RawPage(
 		$uri,
 		$_SERVER['REQUEST_METHOD']
 	)
-))->render();
+) implements Output\Template {
+	private $logs;
+	private $routes;
+
+	public function __construct(Log\Logs $logs, Routing\Routes $routes) {
+		$this->logs = $logs;
+		$this->routes = $routes;
+	}
+
+	public function render(array $variables = []): string {
+		try {
+			return current($this->routes->matches())->render($variables);
+		} catch (\Throwable $ex) {
+			$this->logs->put(
+				new Log\PrettyLog(
+					$ex,
+					new Log\PrettySeverity(
+						new Log\JustifiedSeverity(Log\Severity::ERROR)
+					)
+				)
+			);
+			http_response_code(500);
+			exit;
+		}
+	}
+})->render();
