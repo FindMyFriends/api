@@ -1,59 +1,59 @@
 {
-  "description": "REST API for Find My Friends",
-  "homepage": "https://github.com/FindMyFriends/api",
-  "type": "project",
-  "authors": [
-    {
-      "name": "Dominik Klapuch",
-      "email": "klapuchdominik@gmail.com",
-      "homepage": "https://www.github.com/klapuch",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": ">=7.2",
-    "ext-mbstring": "*",
-    "ext-dom": "*",
-    "klapuch/access": "^2.17.1",
-    "klapuch/application": "@dev",
-    "klapuch/dataset": "@dev",
-    "klapuch/ini": "dev-master as 2.0.0",
-    "klapuch/iterator": "dev-master",
-    "klapuch/log": "^1.0.0",
-    "klapuch/output": "dev-master as 2.6.0",
-    "klapuch/routing": "dev-master as 0.0.12",
-    "klapuch/storage": "dev-master as 2.0.0",
-    "klapuch/validation": "dev-master as 2.6.0",
-    "justinrainbow/json-schema": "^5.2",
-    "klapuch/ui": "dev-master as 0.0.3"
-  },
-  "require-dev": {
-    "nette/tester": "^2.0",
-    "jakub-onderka/php-parallel-lint": "^0.9.2",
-    "slevomat/coding-standard": "^4.0",
-    "sebastian/phpcpd": "^3.0.0",
-    "phing/phing": "^2.16",
-    "consistence/coding-standard": "^2.2",
-    "phpstan/phpstan": "*",
-    "phpstan/phpstan-strict-rules": "*",
-    "mockery/mockery": "^1.0.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "FindMyFriends\\": [
-        "App/"
-      ]
-    },
-    "files": [
-      "App/Http/statuses.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "FindMyFriends\\": [
-        "Tests/",
-        "Commands/"
-      ]
-    }
-  }
+	"description": "REST API for Find My Friends",
+	"homepage": "https://github.com/FindMyFriends/api",
+	"type": "project",
+	"authors": [
+		{
+			"name": "Dominik Klapuch",
+			"email": "klapuchdominik@gmail.com",
+			"homepage": "https://www.github.com/klapuch",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.2",
+		"ext-mbstring": "*",
+		"ext-dom": "*",
+		"klapuch/access": "^2.17.1",
+		"klapuch/application": "@dev",
+		"klapuch/dataset": "@dev",
+		"klapuch/ini": "dev-master as 2.0.0",
+		"klapuch/iterator": "dev-master",
+		"klapuch/log": "^1.0.0",
+		"klapuch/output": "dev-master as 2.6.0",
+		"klapuch/routing": "dev-master as 0.0.12",
+		"klapuch/storage": "dev-master as 2.0.0",
+		"klapuch/validation": "dev-master as 2.6.0",
+		"justinrainbow/json-schema": "^5.2",
+		"klapuch/ui": "dev-master as 0.0.3"
+	},
+	"require-dev": {
+		"nette/tester": "^2.0",
+		"jakub-onderka/php-parallel-lint": "^0.9.2",
+		"slevomat/coding-standard": "^4.0",
+		"sebastian/phpcpd": "^3.0.0",
+		"phing/phing": "^2.16",
+		"consistence/coding-standard": "^2.2",
+		"phpstan/phpstan": "*",
+		"phpstan/phpstan-strict-rules": "*",
+		"mockery/mockery": "^1.0.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"FindMyFriends\\": [
+				"App/"
+			]
+		},
+		"files": [
+			"App/Http/statuses.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"FindMyFriends\\": [
+				"Tests/",
+				"Commands/"
+			]
+		}
+	}
 }
