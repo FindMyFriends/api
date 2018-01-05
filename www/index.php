@@ -69,7 +69,7 @@ echo (new class(
 										$this->database
 									))->enter((new Application\PlainRequest())->headers());
 									return [
-										'v1/demands?page=(1)&per_page=(10)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
+										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 											$this->uri,
 											$this->database,
 											new Http\ChosenRole($user, ['member', 'guest'])
@@ -95,7 +95,7 @@ echo (new class(
 											$this->database,
 											$user
 										),
-										'v1/evolutions?page=(1)&per_page=(10) [GET]' => new V1\Evolutions\Get(
+										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
 											$this->uri,
 											$this->database,
 											$user,
