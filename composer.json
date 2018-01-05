@@ -1,7 +1,9 @@
 {
+	"name": "find-my-friends/api",
 	"description": "REST API for Find My Friends",
 	"homepage": "https://github.com/FindMyFriends/api",
 	"type": "project",
+	"license": "proprietary",
 	"authors": [
 		{
 			"name": "Dominik Klapuch",
@@ -12,8 +14,6 @@
 	],
 	"require": {
 		"php": ">=7.2",
-		"ext-mbstring": "*",
-		"ext-dom": "*",
 		"klapuch/access": "^2.17.1",
 		"klapuch/application": "@dev",
 		"klapuch/dataset": "@dev",
