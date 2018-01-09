@@ -84,7 +84,15 @@ final class Description {
 							'type' => 'object',
 						],
 						'weight' => ['type' => ['integer', 'null']],
-						'height' => ['type' => ['integer', 'null']],
+						'height' => [
+							'additionalProperties' => false,
+							'properties' => [
+								'value' => ['type' => ['number', 'null']],
+								'unit' => ['$ref' => '#/definitions/length_unit'],
+							],
+							'type' => 'object',
+							'required' => ['value', 'unit'],
+						],
 						'skin_color' => [
 							'additionalProperties' => false,
 							'properties' => [

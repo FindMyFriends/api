@@ -81,7 +81,10 @@ final class IndividualDemandsTest extends Tester\TestCase {
 					'build_id' => 1,
 					'skin_color_id' => 8,
 					'weight' => 120,
-					'height' => 130,
+					'height' => [
+						'value' => 130,
+						'unit' => 'cm',
+					],
 				],
 				'location' => [
 					'coordinates' => [

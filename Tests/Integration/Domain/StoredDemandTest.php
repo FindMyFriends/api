@@ -100,7 +100,10 @@ final class StoredDemandTest extends Tester\TestCase {
 					'build_id' => 1,
 					'skin_color_id' => 8,
 					'weight' => 120,
-					'height' => 130,
+					'height' => [
+						'value' => 130,
+						'unit' => 'cm',
+					],
 				],
 				'location' => [
 					'coordinates' => [
@@ -163,7 +166,10 @@ final class StoredDemandTest extends Tester\TestCase {
 					'build' => ['id' => 1, 'name' => 'skinny'],
 					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'weight' => 120,
-					'height' => 130,
+					'height' => [
+						'value' => 130,
+						'unit' => 'cm',
+					],
 				],
 				'beard' => [
 					'length' => [

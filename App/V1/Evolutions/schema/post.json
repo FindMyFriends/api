@@ -12,9 +12,22 @@
                     ]
                 },
                 "height": {
-                    "type": [
-                        "integer",
-                        "null"
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "$ref": "#/definitions/length_unit"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
                     ]
                 },
                 "build_id": {

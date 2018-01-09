@@ -124,7 +124,7 @@ BEGIN
 		samples.random_if_not_exists((SELECT id FROM body_builds ORDER BY random() LIMIT 1), replacements, 'build_id'),
 		samples.random_if_not_exists((SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1), replacements, 'skin_color_id'),
 		samples.random_if_not_exists(test_utils.better_random('smallint'), replacements, 'weight'),
-		samples.random_if_not_exists(test_utils.better_random('smallint'), replacements, 'height')
+    ROW(test_utils.better_random('smallint'), 'mm')::length
 	)
 	RETURNING id
 	INTO v_id;

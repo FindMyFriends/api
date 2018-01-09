@@ -164,7 +164,7 @@ CREATE TYPE flat_description AS (
 	body_build_id smallint,
 	body_skin_color_id smallint,
 	body_weight smallint,
-	body_height smallint,
+	body_height length,
 	beard_color_id smallint,
 	beard_length length,
 	beard_style text,
@@ -1220,7 +1220,7 @@ CREATE TABLE bodies (
     build_id smallint,
     skin_color_id smallint,
     weight smallint,
-    height smallint
+    height length
 );
 
 
