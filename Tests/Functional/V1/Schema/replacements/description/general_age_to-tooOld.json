@@ -1,8 +1,8 @@
 {
-  "general": {
-    "age": {
-      "from": 16,
-      "to": 170
-    }
-  }
+	"general": {
+		"age": {
+			"from": 16,
+			"to": 170
+		}
+	}
 }

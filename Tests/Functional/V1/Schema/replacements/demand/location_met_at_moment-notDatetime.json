@@ -1,7 +1,7 @@
 {
-  "location": {
-    "met_at": {
-      "moment": "bla"
-    }
-  }
+	"location": {
+		"met_at": {
+			"moment": "bla"
+		}
+	}
 }
