@@ -123,7 +123,7 @@ BEGIN
 	INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
 		samples.random_if_not_exists((SELECT id FROM body_builds ORDER BY random() LIMIT 1), replacements, 'build_id'),
 		samples.random_if_not_exists((SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1), replacements, 'skin_color_id'),
-		samples.random_if_not_exists(test_utils.better_random('smallint'), replacements, 'weight'),
+    ROW(test_utils.better_random('smallint'), 'kg')::mass,
     ROW(test_utils.better_random('smallint'), 'mm')::length
 	)
 	RETURNING id

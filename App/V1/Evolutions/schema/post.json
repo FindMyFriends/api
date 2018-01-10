@@ -6,9 +6,22 @@
             "additionalProperties": false,
             "properties": {
                 "weight": {
-                    "type": [
-                        "integer",
-                        "null"
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "$ref": "#/definitions/mass_unit"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
                     ]
                 },
                 "height": {
@@ -498,6 +511,16 @@
                 null,
                 "mm",
                 "cm"
+            ]
+        },
+        "mass_unit": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "enum": [
+                null,
+                "kg"
             ]
         },
         "age": {

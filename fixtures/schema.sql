@@ -145,6 +145,29 @@ CREATE TYPE length AS (
 ALTER TYPE length OWNER TO postgres;
 
 --
+-- Name: mass_units; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE mass_units AS ENUM (
+    'kg'
+);
+
+
+ALTER TYPE mass_units OWNER TO postgres;
+
+--
+-- Name: mass; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE mass AS (
+	value numeric,
+	unit mass_units
+);
+
+
+ALTER TYPE mass OWNER TO postgres;
+
+--
 -- Name: flat_description; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -163,7 +186,7 @@ CREATE TYPE flat_description AS (
 	hair_nature boolean,
 	body_build_id smallint,
 	body_skin_color_id smallint,
-	body_weight smallint,
+	body_weight mass,
 	body_height length,
 	beard_color_id smallint,
 	beard_length length,
@@ -1219,7 +1242,7 @@ CREATE TABLE bodies (
     id integer NOT NULL,
     build_id smallint,
     skin_color_id smallint,
-    weight smallint,
+    weight mass,
     height length
 );
 

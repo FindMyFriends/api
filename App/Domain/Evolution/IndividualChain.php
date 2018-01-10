@@ -70,7 +70,7 @@ final class IndividualChain implements Chain {
 				:general_gender,
 				:body_build_id,
 				:body_skin_color_id,
-				:body_weight,
+				ROW(:body_weight_value, :body_weight_unit),
 				ROW(:body_height_value, :body_height_unit),
 				:hands_nails_color_id,
 				ROW(:hands_nails_length_value, :hands_nails_length_unit),

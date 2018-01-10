@@ -51,6 +51,10 @@ final class Description {
 					'type' => ['null', 'string'],
 					'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
 				],
+				'mass_unit' => [
+					'type' => ['null', 'string'],
+					'enum' => array_merge([null], (new PostgresEnum('mass_units', $this->database))->values()),
+				],
 				'age' => [
 					'type' => ['integer', 'null'],
 					'minimum' => 15,
@@ -83,7 +87,15 @@ final class Description {
 							'required' => ['id', 'name'],
 							'type' => 'object',
 						],
-						'weight' => ['type' => ['integer', 'null']],
+						'weight' => [
+							'additionalProperties' => false,
+							'properties' => [
+								'value' => ['type' => ['number', 'null']],
+								'unit' => ['$ref' => '#/definitions/mass_unit'],
+							],
+							'type' => 'object',
+							'required' => ['value', 'unit'],
+						],
 						'height' => [
 							'additionalProperties' => false,
 							'properties' => [

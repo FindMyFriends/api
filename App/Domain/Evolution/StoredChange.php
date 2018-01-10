@@ -29,7 +29,7 @@ final class StoredChange implements Change {
 				general_gender = :general_gender,
 				body_build_id = :body_build_id,
 				body_skin_color_id = :body_skin_color_id,
-				body_weight = :body_weight,
+				body_weight = ROW(:body_weight_value, :body_weight_unit),
 				body_height = ROW(:body_height_value, :body_height_unit),
 				hands_nails_color_id = :hands_nails_color_id,
 				hands_nails_length = ROW(:hands_nails_length_value, :hands_nails_length_unit),

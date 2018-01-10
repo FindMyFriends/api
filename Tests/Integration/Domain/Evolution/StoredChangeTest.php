@@ -82,7 +82,10 @@ final class StoredChangeTest extends Tester\TestCase {
 				'body' => [
 					'build_id' => 1,
 					'skin_color_id' => 8,
-					'weight' => 120,
+					'weight' => [
+						'value' => 120,
+						'unit' => 'kg',
+					],
 					'height' => [
 						'value' => 130,
 						'unit' => 'cm',
@@ -129,7 +132,10 @@ final class StoredChangeTest extends Tester\TestCase {
 				'body' => [
 					'build' => ['id' => 1, 'name' => 'skinny'],
 					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
-					'weight' => 120,
+					'weight' => [
+						'value' => 120,
+						'unit' => 'kg',
+					],
 					'height' => [
 						'value' => 130,
 						'unit' => 'cm',
@@ -251,7 +257,10 @@ final class StoredChangeTest extends Tester\TestCase {
 				'body' => [
 					'build_id' => 1,
 					'skin_color_id' => 8,
-					'weight' => 120,
+					'weight' => [
+						'value' => 120,
+						'unit' => 'kg',
+					],
 					'height' => [
 						'value' => 130,
 						'unit' => 'cm',

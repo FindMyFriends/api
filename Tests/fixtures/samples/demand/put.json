@@ -54,7 +54,10 @@
   "body": {
     "build_id": 1,
     "skin_color_id": 8,
-    "weight": 60,
+	  "weight": {
+		  "value": 60,
+		  "unit": "kg"
+	  },
     "height": {
       "value": 181,
        "unit": "cm"
