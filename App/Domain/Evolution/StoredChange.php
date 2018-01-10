@@ -23,7 +23,7 @@ final class StoredChange implements Change {
 		(new Storage\FlatQuery(
 			$this->database,
 			'UPDATE collective_evolutions
-			SET general_race_id = :general_race_id,
+			SET general_ethnic_group_id = :general_ethnic_group_id,
 				general_firstname = :general_firstname,
 				general_lastname = :general_lastname,
 				general_gender = :general_gender,
@@ -72,7 +72,7 @@ final class StoredChange implements Change {
 				general_firstname,
 				general_lastname,
 				general_gender,
-				general_race,
+				general_ethnic_group,
 				hair_style,
 				hair_color,
 				hair_length,

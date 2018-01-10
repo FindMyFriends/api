@@ -41,7 +41,7 @@ final class CompleteDescription implements Output\Format {
 					'firstname' => $description['general_firstname'],
 					'lastname' => $description['general_lastname'],
 					'gender' => $description['general_gender'],
-					'race' => $description['general_race'],
+					'ethnic_group' => $description['general_ethnic_group'],
 				],
 				'hair' => [
 					'style' => $description['hair_style'],

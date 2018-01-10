@@ -489,7 +489,7 @@
                         "null"
                     ]
                 },
-                "race": {
+                "ethnic_group": {
                     "type": "object",
                     "required": [
                         "id",
@@ -502,14 +502,32 @@
                             "enum": [
                                 1,
                                 2,
-                                3
+                                3,
+                                4,
+                                5,
+                                6,
+                                7,
+                                8,
+                                9,
+                                10,
+                                11,
+                                12
                             ]
                         },
                         "name": {
                             "type": "string",
                             "enum": [
-                                "asian",
-                                "european",
+                                "white",
+                                "hispanic / latino",
+                                "black / african descent",
+                                "asian / pacific islander",
+                                "indian",
+                                "chinese",
+                                "native american",
+                                "arabic / middle eastern",
+                                "korean",
+                                "japanese",
+                                "mixed",
                                 "other"
                             ]
                         }
@@ -519,7 +537,7 @@
             "required": [
                 "lastname",
                 "firstname",
-                "race",
+                "ethnic_group",
                 "age",
                 "gender"
             ],

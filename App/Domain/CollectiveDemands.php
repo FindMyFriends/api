@@ -30,7 +30,7 @@ final class CollectiveDemands implements Demands {
 				general_firstname,
 				general_lastname,
 				general_gender,
-				general_race,
+				general_ethnic_group,
 				hair_style,
 				hair_color,
 				hair_length,

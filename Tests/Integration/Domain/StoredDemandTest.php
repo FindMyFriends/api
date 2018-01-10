@@ -52,7 +52,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',
-					'race_id' => 1,
+					'ethnic_group_id' => 1,
 				],
 				'hair' => [
 					'style' => null,
@@ -221,7 +221,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',
-					'race' => ['id' => 1, 'name' => 'asian'],
+					'ethnic_group' => ['id' => 1, 'name' => 'white'],
 				],
 				'created_at' => '2017-09-16 00:00:00+00',
 				'seeker_id' => $seeker,

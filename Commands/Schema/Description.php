@@ -296,18 +296,18 @@ final class Description {
 							'enum' => (new PostgresEnum('genders', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
-						'race' => [
+						'ethnic_group' => [
 							'type' => 'object',
 							'required' => ['id', 'name'],
 							'additionalProperties' => false,
 							'properties' => [
 								'id' => [
 									'type' => 'integer',
-									'enum' => (new PostgresTableEnum('id', 'races', $this->database))->values(),
+									'enum' => (new PostgresTableEnum('id', 'ethnic_groups', $this->database))->values(),
 								],
 								'name' => [
 									'type' => 'string',
-									'enum' => (new PostgresTableEnum('name', 'races', $this->database))->values(),
+									'enum' => (new PostgresTableEnum('name', 'ethnic_groups', $this->database))->values(),
 								],
 							],
 						],
@@ -315,7 +315,7 @@ final class Description {
 					'required' => [
 						'lastname',
 						'firstname',
-						'race',
+						'ethnic_group',
 						'age',
 						'gender',
 					],
@@ -417,7 +417,7 @@ final class Description {
 
 	public function put(): array {
 		$schema = $this->get();
-		$races = new PostgresTableEnum('id', 'races', $this->database);
+		$ethnicGroups = new PostgresTableEnum('id', 'ethnic_groups', $this->database);
 		$builds = new PostgresTableEnum('id', 'body_builds', $this->database);
 		$properties = &$schema['properties'];
 		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
@@ -426,7 +426,7 @@ final class Description {
 		$properties['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['beard'], 'color', 'color_id'))->values();
 		$properties['eyebrow'] = (new JsonEnum(new Colors('id', 'eyebrow_colors', $this->database), $properties['eyebrow'], 'color', 'color_id'))->values();
 		$schema['definitions']['eye'] = (new JsonEnum(new Colors('id', 'eye_colors', $this->database), $schema['definitions']['eye'], 'color', 'color_id'))->values();
-		$properties['general'] = (new JsonEnum($races, $properties['general'], 'race', 'race_id'))->values();
+		$properties['general'] = (new JsonEnum($ethnicGroups, $properties['general'], 'ethnic_group', 'ethnic_group_id'))->values();
 		$properties['hands']['properties']['nails'] = (new JsonEnum(new Colors('id', 'nail_colors', $this->database), $properties['hands']['properties']['nails'], 'color', 'color_id'))->values();
 		$properties['hands']['properties']['hair'] = (new JsonEnum(new Colors('id', 'hand_hair_colors', $this->database), $properties['hands']['properties']['hair'], 'color', 'color_id'))->values();
 		return $schema;

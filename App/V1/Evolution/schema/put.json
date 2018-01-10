@@ -321,7 +321,7 @@
                         "null"
                     ]
                 },
-                "race_id": {
+                "ethnic_group_id": {
                     "type": {
                         "0": [
                             "integer",
@@ -331,7 +331,16 @@
                             null,
                             1,
                             2,
-                            3
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12
                         ]
                     }
                 }
@@ -340,7 +349,7 @@
                 "0": "lastname",
                 "1": "firstname",
                 "3": "gender",
-                "4": "race_id"
+                "4": "ethnic_group_id"
             },
             "type": "object"
         },

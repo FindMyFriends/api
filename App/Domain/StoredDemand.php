@@ -22,7 +22,7 @@ final class StoredDemand implements Demand {
 				general_firstname,
 				general_lastname,
 				general_gender,
-				general_race,
+				general_ethnic_group,
 				hair_style,
 				hair_color,
 				hair_length,
@@ -95,7 +95,7 @@ final class StoredDemand implements Demand {
 			'UPDATE collective_demands
 			SET location_met_at = ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation),
 				general_age = int4range(:general_age_from, :general_age_to),
-				general_race_id = :general_race_id,
+				general_ethnic_group_id = :general_ethnic_group_id,
 				general_firstname = :general_firstname,
 				general_lastname = :general_lastname,
 				general_gender = :general_gender,

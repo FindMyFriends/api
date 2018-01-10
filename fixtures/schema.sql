@@ -174,7 +174,7 @@ ALTER TYPE mass OWNER TO postgres;
 CREATE TYPE flat_description AS (
 	id integer,
 	general_gender genders,
-	general_race_id smallint,
+	general_ethnic_group_id smallint,
 	general_birth_year int4range,
 	general_firstname text,
 	general_lastname text,
@@ -294,7 +294,7 @@ BEGIN
 			ROW(
 			NULL,
 			new.general_gender,
-			new.general_race_id,
+			new.general_ethnic_group_id,
 			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
@@ -381,7 +381,7 @@ BEGIN
 			ROW(
 			v_description_id,
 			new.general_gender,
-			new.general_race_id,
+			new.general_ethnic_group_id,
 			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
@@ -441,7 +441,7 @@ BEGIN
 			ROW(
 			NULL,
 			new.general_gender,
-			new.general_race_id,
+			new.general_ethnic_group_id,
 			(
 				SELECT birth_year
 				FROM base_evolution
@@ -517,7 +517,7 @@ BEGIN
 		ROW(
 		v_description_id,
 		new.general_gender,
-		new.general_race_id,
+		new.general_ethnic_group_id,
 		new.general_birth_year,
 		new.general_firstname,
 		new.general_lastname,
@@ -704,9 +704,9 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 		v_hair_id INTEGER;
 		v_description_id INTEGER;
 	BEGIN
-		INSERT INTO general (gender, race_id, birth_year, firstname, lastname) VALUES (
+		INSERT INTO general (gender, ethnic_group_id, birth_year, firstname, lastname) VALUES (
 			description.general_gender,
-			description.general_race_id,
+			description.general_ethnic_group_id,
 			description.general_birth_year,
 			description.general_firstname,
 			description.general_lastname
@@ -915,7 +915,7 @@ BEGIN
 
 	UPDATE general
 	SET gender = description.general_gender,
-		race_id = description.general_race_id,
+		ethnic_group_id = description.general_ethnic_group_id,
 		birth_year = description.general_birth_year,
 		firstname = description.general_firstname,
 		lastname = description.general_lastname
@@ -1155,7 +1155,7 @@ ALTER TABLE evolutions OWNER TO postgres;
 CREATE TABLE general (
     id integer NOT NULL,
     gender genders NOT NULL,
-    race_id smallint NOT NULL,
+    ethnic_group_id smallint NOT NULL,
     birth_year int4range NOT NULL,
     firstname text,
     lastname text,
@@ -1304,6 +1304,18 @@ CREATE TABLE colors (
 ALTER TABLE colors OWNER TO postgres;
 
 --
+-- Name: ethnic_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE ethnic_groups (
+    id smallint NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE ethnic_groups OWNER TO postgres;
+
+--
 -- Name: eyebrows; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1411,18 +1423,6 @@ CREATE TABLE nails (
 ALTER TABLE nails OWNER TO postgres;
 
 --
--- Name: races; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE races (
-    id smallint NOT NULL,
-    name text NOT NULL
-);
-
-
-ALTER TABLE races OWNER TO postgres;
-
---
 -- Name: teeth; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1442,13 +1442,13 @@ ALTER TABLE teeth OWNER TO postgres;
 
 CREATE VIEW complete_descriptions AS
  SELECT description.id,
-    ROW(general.id, general.gender, general.race_id, general.birth_year, general.firstname, general.lastname)::general AS general,
+    ROW(general.id, general.gender, general.ethnic_group_id, general.birth_year, general.firstname, general.lastname)::general AS general,
     ROW(hair.id, hair.style, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
     ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
     ROW(body_build.id, body_build.name)::body_builds AS body_build,
     ROW(face.id, face.freckles, face.care, face.shape)::faces AS face,
     ROW(beard.id, beard.color_id, beard.length, beard.style)::beards AS beard,
-    ROW(race.id, race.name)::races AS race,
+    ROW(ethnic_group.id, ethnic_group.name)::ethnic_groups AS ethnic_group,
     ROW(hand.id, hand.nail_id, hand.care, hand.vein_visibility, hand.joint_visibility, hand.hand_hair_id)::hands AS hand,
     ROW(hand_hair.id, hand_hair.color_id, hand_hair.amount)::hand_hair AS hand_hair,
     ROW(nail.id, nail.color_id, nail.length, nail.care)::nails AS nail,
@@ -1471,7 +1471,7 @@ CREATE VIEW complete_descriptions AS
      LEFT JOIN faces face ON ((face.id = description.face_id)))
      LEFT JOIN beards beard ON ((beard.id = description.beard_id)))
      LEFT JOIN general ON ((general.id = description.general_id)))
-     LEFT JOIN races race ON ((race.id = general.race_id)))
+     LEFT JOIN ethnic_groups ethnic_group ON ((ethnic_group.id = general.ethnic_group_id)))
      LEFT JOIN hands hand ON ((hand.id = description.hand_id)))
      LEFT JOIN hand_hair ON ((hand_hair.id = hand.hand_hair_id)))
      LEFT JOIN nails nail ON ((nail.id = hand.nail_id)))
@@ -1512,13 +1512,13 @@ ALTER TABLE demands OWNER TO postgres;
 
 CREATE VIEW printed_descriptions AS
  SELECT complete_descriptions.id,
-    ROW((complete_descriptions.general).id, (complete_descriptions.general).gender, (complete_descriptions.general).race_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
+    ROW((complete_descriptions.general).id, (complete_descriptions.general).gender, (complete_descriptions.general).ethnic_group_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
     (complete_descriptions.general).birth_year AS general_birth_year,
-    (complete_descriptions.general).race_id AS general_race_id,
+    (complete_descriptions.general).ethnic_group_id AS general_ethnic_group_id,
     (complete_descriptions.general).firstname AS general_firstname,
     (complete_descriptions.general).lastname AS general_lastname,
     (complete_descriptions.general).gender AS general_gender,
-    complete_descriptions.race AS general_race,
+    complete_descriptions.ethnic_group AS general_ethnic_group,
     complete_descriptions.body,
     complete_descriptions.body_build,
     ROW((complete_descriptions.body_skin_color).id, (complete_descriptions.body_skin_color).name, (complete_descriptions.body_skin_color).hex)::printed_color AS body_skin_color,
@@ -1555,7 +1555,7 @@ ALTER TABLE printed_descriptions OWNER TO postgres;
 CREATE VIEW flat_descriptions AS
  SELECT printed_descriptions.id,
     printed_descriptions.general_birth_year,
-    printed_descriptions.general_race,
+    printed_descriptions.general_ethnic_group,
     printed_descriptions.general_firstname,
     printed_descriptions.general_lastname,
     printed_descriptions.general_gender,
@@ -1639,7 +1639,7 @@ CREATE VIEW collective_demands AS
     printed_description.hair_color,
     (printed_description.body).build_id AS body_build_id,
     (printed_description.body).skin_color_id AS body_skin_color_id,
-    printed_description.general_race_id,
+    printed_description.general_ethnic_group_id,
     flat_description.beard_color,
     flat_description.general_firstname,
     flat_description.general_lastname,
@@ -1664,7 +1664,7 @@ CREATE VIEW collective_demands AS
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
     flat_description.body_skin_color,
-    flat_description.general_race,
+    flat_description.general_ethnic_group,
     flat_description.face_freckles,
     flat_description.face_care,
     flat_description.left_eye,
@@ -1708,7 +1708,7 @@ CREATE VIEW collective_evolutions AS
     printed_description.hair_color,
     (printed_description.body).build_id AS body_build_id,
     (printed_description.body).skin_color_id AS body_skin_color_id,
-    printed_description.general_race_id,
+    printed_description.general_ethnic_group_id,
     flat_description.beard_color,
     flat_description.general_firstname,
     flat_description.general_lastname,
@@ -1733,7 +1733,7 @@ CREATE VIEW collective_evolutions AS
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
     flat_description.body_skin_color,
-    flat_description.general_race,
+    flat_description.general_ethnic_group,
     flat_description.face_freckles,
     flat_description.face_care,
     flat_description.left_eye,
@@ -1811,7 +1811,7 @@ CREATE VIEW description_parts AS
      LEFT JOIN faces face ON ((face.id = description.face_id)))
      LEFT JOIN beards beard ON ((beard.id = description.beard_id)))
      LEFT JOIN general ON ((general.id = description.general_id)))
-     LEFT JOIN races race ON ((race.id = general.race_id)))
+     LEFT JOIN ethnic_groups ethnic_group ON ((ethnic_group.id = general.ethnic_group_id)))
      LEFT JOIN hands hand ON ((hand.id = description.hand_id)))
      LEFT JOIN hand_hair ON ((hand_hair.id = hand.hand_hair_id)))
      LEFT JOIN nails nail ON ((nail.id = hand.nail_id)))
@@ -2111,7 +2111,7 @@ ALTER TABLE nails ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 -- Name: races_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-ALTER TABLE races ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE ethnic_groups ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME races_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2351,10 +2351,10 @@ ALTER TABLE ONLY nails
 
 
 --
--- Name: races races_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ethnic_groups races_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY races
+ALTER TABLE ONLY ethnic_groups
     ADD CONSTRAINT races_pkey PRIMARY KEY (id);
 
 
@@ -2800,11 +2800,11 @@ ALTER TABLE ONLY eyes
 
 
 --
--- Name: general general_races_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: general general_ethnic_groups_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY general
-    ADD CONSTRAINT general_races_id_fk FOREIGN KEY (race_id) REFERENCES races(id);
+    ADD CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id);
 
 
 --

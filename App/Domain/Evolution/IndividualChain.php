@@ -25,7 +25,7 @@ final class IndividualChain implements Chain {
 			'INSERT INTO collective_evolutions (
 				evolved_at,
 				seeker_id,
-				general_race_id,
+				general_ethnic_group_id,
 				general_firstname,
 				general_lastname,
 				general_gender,
@@ -64,7 +64,7 @@ final class IndividualChain implements Chain {
 			) VALUES (
 				:evolved_at,
 				:seeker,
-				:general_race_id,
+				:general_ethnic_group_id,
 				:general_firstname,
 				:general_lastname,
 				:general_gender,
@@ -115,7 +115,7 @@ final class IndividualChain implements Chain {
 				general_firstname,
 				general_lastname,
 				general_gender,
-				general_race,
+				general_ethnic_group,
 				hair_style,
 				hair_color,
 				hair_length,

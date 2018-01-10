@@ -5,7 +5,7 @@
 			"to": 20
 		},
 		"gender": "man",
-		"race_id": 2,
+		"ethnic_group_id": 2,
 		"firstname": "Dominik",
 		"lastname": "Klapuch"
 	},
