@@ -166,7 +166,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					],
 				],
 				'body' => [
-					'build' => ['id' => 1, 'name' => 'skinny'],
+					'build' => ['id' => 1, 'name' => 'muscular'],
 					'skin_color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'weight' => [
 						'value' => 120,

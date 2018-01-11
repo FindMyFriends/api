@@ -1,3 +1,6 @@
 INSERT INTO body_builds (name) VALUES
-	('skinny'),
-	('muscular');
+	('muscular'),
+	('athletic'),
+	('slim'),
+	('large'),
+	('heavyset');

@@ -87,7 +87,10 @@
                             "enum": [
                                 null,
                                 1,
-                                2
+                                2,
+                                3,
+                                4,
+                                5
                             ]
                         },
                         "name": {
@@ -97,8 +100,11 @@
                             ],
                             "enum": [
                                 null,
-                                "skinny",
-                                "muscular"
+                                "muscular",
+                                "athletic",
+                                "slim",
+                                "large",
+                                "heavyset"
                             ]
                         }
                     },
