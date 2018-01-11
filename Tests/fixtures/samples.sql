@@ -33,8 +33,8 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
-		md5(random()::TEXT),
+	INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+    (SELECT id FROM hair_styles ORDER BY random() LIMIT 1),
 		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
 		ROW(test_utils.better_random('smallint'), 'mm')::length,
 		random() > 0.5,

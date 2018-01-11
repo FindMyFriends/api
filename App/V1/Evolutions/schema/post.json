@@ -118,12 +118,6 @@
                         "null"
                     ]
                 },
-                "style": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
                 "color_id": {
                     "type": {
                         "0": [
@@ -137,6 +131,23 @@
                             8
                         ]
                     }
+                },
+                "style_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ]
+                    }
                 }
             },
             "required": [
@@ -144,8 +155,8 @@
                 "length",
                 "highlights",
                 "nature",
-                "style",
-                "color_id"
+                "color_id",
+                "style_id"
             ],
             "type": "object"
         },

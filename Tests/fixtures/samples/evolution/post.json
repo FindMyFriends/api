@@ -7,7 +7,7 @@
 		"lastname": "Klapuch"
 	},
 	"hair": {
-		"style": "normal",
+		"style_id": 1,
 		"color_id": 8,
 		"length": {
 			"value": 20,

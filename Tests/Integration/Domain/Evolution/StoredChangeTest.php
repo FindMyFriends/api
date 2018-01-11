@@ -38,7 +38,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [
-					'style' => null,
+					'style_id' => 1,
 					'color_id' => 8,
 					'length' => [
 						'value' => null,
@@ -170,7 +170,10 @@ final class StoredChangeTest extends Tester\TestCase {
 					'shape' => null,
 				],
 				'hair' => [
-					'style' => null,
+					'style' => [
+						'id' => 1,
+						'name' => 'short',
+					],
 					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'length' => [
 						'value' => null,
@@ -213,7 +216,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [
-					'style' => null,
+					'style_id' => 1,
 					'color_id' => 8,
 					'length' => [
 						'value' => null,

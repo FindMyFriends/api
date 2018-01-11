@@ -54,7 +54,7 @@ final class StoredChange implements Change {
 				hands_hair_color_id = :hands_hair_color_id,
 				hands_hair_amount = :hands_hair_amount,
 				hair_color_id = :hair_color_id,
-				hair_style = :hair_style,
+				hair_style_id = :hair_style_id,
 				hair_length = ROW(:hair_length_value, :hair_length_unit),
 				hair_highlights = :hair_highlights,
 				hair_roots = :hair_roots,

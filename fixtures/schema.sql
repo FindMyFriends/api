@@ -178,7 +178,7 @@ CREATE TYPE flat_description AS (
 	general_birth_year int4range,
 	general_firstname text,
 	general_lastname text,
-	hair_style text,
+	hair_style_id smallint,
 	hair_color_id smallint,
 	hair_length length,
 	hair_highlights boolean,
@@ -298,7 +298,7 @@ BEGIN
 			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
-			new.hair_style,
+			new.hair_style_id,
 			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
@@ -385,7 +385,7 @@ BEGIN
 			age_to_year(new.general_age, (new.location_met_at).moment),
 			new.general_firstname,
 			new.general_lastname,
-			new.hair_style,
+			new.hair_style_id,
 			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
@@ -450,7 +450,7 @@ BEGIN
 			),
 			new.general_firstname,
 			new.general_lastname,
-			new.hair_style,
+			new.hair_style_id,
 			new.hair_color_id,
 			new.hair_length,
 			new.hair_highlights,
@@ -521,7 +521,7 @@ BEGIN
 		new.general_birth_year,
 		new.general_firstname,
 		new.general_lastname,
-		new.hair_style,
+		new.hair_style_id,
 		new.hair_color_id,
 		new.hair_length,
 		new.hair_highlights,
@@ -713,8 +713,8 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 		)
 		RETURNING id
 		INTO v_general_id;
-		INSERT INTO hair (style, color_id, length, highlights, roots, nature) VALUES (
-			description.hair_style,
+		INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+			description.hair_style_id,
 			description.hair_color_id,
 			description.hair_length,
 			description.hair_highlights,
@@ -921,7 +921,7 @@ BEGIN
 		lastname = description.general_lastname
 	WHERE id = parts.general_id;
 	UPDATE hair
-	SET style = description.hair_style,
+	SET style_id = description.hair_style_id,
 		color_id = description.hair_color_id,
 		length = description.hair_length,
 		highlights = description.hair_highlights,
@@ -1363,7 +1363,7 @@ ALTER TABLE faces OWNER TO postgres;
 
 CREATE TABLE hair (
     id integer NOT NULL,
-    style text,
+    style_id smallint,
     color_id smallint,
     length length,
     highlights boolean,
@@ -1373,6 +1373,18 @@ CREATE TABLE hair (
 
 
 ALTER TABLE hair OWNER TO postgres;
+
+--
+-- Name: hair_styles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE hair_styles (
+    id smallint NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE hair_styles OWNER TO postgres;
 
 --
 -- Name: hand_hair; Type: TABLE; Schema: public; Owner: postgres
@@ -1443,7 +1455,8 @@ ALTER TABLE teeth OWNER TO postgres;
 CREATE VIEW complete_descriptions AS
  SELECT description.id,
     ROW(general.id, general.gender, general.ethnic_group_id, general.birth_year, general.firstname, general.lastname)::general AS general,
-    ROW(hair.id, hair.style, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
+    ROW(hair.id, hair.style_id, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
+    ROW(hair_style.id, hair_style.name)::hair_styles AS hair_style,
     ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
     ROW(body_build.id, body_build.name)::body_builds AS body_build,
     ROW(face.id, face.freckles, face.care, face.shape)::faces AS face,
@@ -1464,7 +1477,7 @@ CREATE VIEW complete_descriptions AS
     ROW(eyebrow_color.id, eyebrow_color.name, eyebrow_color.hex)::colors AS eyebrow_color,
     ROW(hand_hair_color.id, hand_hair_color.name, hand_hair_color.hex)::colors AS hand_hair_color,
     ROW(nail_color.id, nail_color.name, nail_color.hex)::colors AS nail_color
-   FROM ((((((((((((((((((((((descriptions description
+   FROM (((((((((((((((((((((((descriptions description
      LEFT JOIN hair ON ((hair.id = description.hair_id)))
      LEFT JOIN bodies body ON ((body.id = description.body_id)))
      LEFT JOIN body_builds body_build ON ((body_build.id = body.build_id)))
@@ -1472,6 +1485,7 @@ CREATE VIEW complete_descriptions AS
      LEFT JOIN beards beard ON ((beard.id = description.beard_id)))
      LEFT JOIN general ON ((general.id = description.general_id)))
      LEFT JOIN ethnic_groups ethnic_group ON ((ethnic_group.id = general.ethnic_group_id)))
+     LEFT JOIN hair_styles hair_style ON ((hair_style.id = hair.style_id)))
      LEFT JOIN hands hand ON ((hand.id = description.hand_id)))
      LEFT JOIN hand_hair ON ((hand_hair.id = hand.hand_hair_id)))
      LEFT JOIN nails nail ON ((nail.id = hand.nail_id)))
@@ -1542,7 +1556,8 @@ CREATE VIEW printed_descriptions AS
     ROW((complete_descriptions.hand_hair_color).id, (complete_descriptions.hand_hair_color).name, (complete_descriptions.hand_hair_color).hex)::printed_color AS hands_hair_color,
     complete_descriptions.hand_hair AS hands_hair,
     ROW((complete_descriptions.hair_color).id, (complete_descriptions.hair_color).name, (complete_descriptions.hair_color).hex)::printed_color AS hair_color,
-    ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style, (complete_descriptions.hair).color_id, suited_length((complete_descriptions.hair).length), (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair
+    ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style_id, (complete_descriptions.hair).color_id, suited_length((complete_descriptions.hair).length), (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair,
+    complete_descriptions.hair_style
    FROM complete_descriptions;
 
 
@@ -1564,11 +1579,12 @@ CREATE VIEW flat_descriptions AS
     printed_descriptions.body_skin_color,
     printed_descriptions.body_build,
     (printed_descriptions.hair).color_id AS hair_color_id,
-    (printed_descriptions.hair).style AS hair_style,
+    (printed_descriptions.hair).style_id AS hair_style_id,
     (printed_descriptions.hair).length AS hair_length,
     (printed_descriptions.hair).highlights AS hair_highlights,
     (printed_descriptions.hair).roots AS hair_roots,
     (printed_descriptions.hair).nature AS hair_nature,
+    printed_descriptions.hair_style,
     (printed_descriptions.hands_nails).color_id AS hands_nails_color_id,
     (printed_descriptions.hands_nails).care AS hands_nails_care,
     (printed_descriptions.beard).color_id AS beard_color_id,
@@ -1672,11 +1688,12 @@ CREATE VIEW collective_demands AS
     flat_description.left_eye_color,
     flat_description.right_eye_color,
     flat_description.hair_color_id,
-    flat_description.hair_style,
+    flat_description.hair_style_id,
     flat_description.hair_length,
     flat_description.hair_highlights,
     flat_description.hair_roots,
     flat_description.hair_nature,
+    flat_description.hair_style,
     location.met_at AS location_met_at,
     location.coordinates AS location_coordinates,
     demand.id,
@@ -1741,11 +1758,12 @@ CREATE VIEW collective_evolutions AS
     flat_description.left_eye_color,
     flat_description.right_eye_color,
     flat_description.hair_color_id,
-    flat_description.hair_style,
+    flat_description.hair_style_id,
     flat_description.hair_length,
     flat_description.hair_highlights,
     flat_description.hair_roots,
     flat_description.hair_nature,
+    flat_description.hair_style,
     evolution.id,
     evolution.seeker_id,
     evolution.evolved_at
@@ -1829,6 +1847,20 @@ ALTER TABLE description_parts OWNER TO postgres;
 
 ALTER TABLE descriptions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: ethnic_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ethnic_groups ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME ethnic_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2000,6 +2032,20 @@ ALTER TABLE hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: hair_styles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE hair_styles ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME hair_styles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: hand_hair_colors; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -2099,20 +2145,6 @@ ALTER TABLE nail_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 ALTER TABLE nails ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME nails_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: races_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE ethnic_groups ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME races_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2231,6 +2263,14 @@ ALTER TABLE ONLY descriptions
 
 
 --
+-- Name: ethnic_groups ethnic_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ethnic_groups
+    ADD CONSTRAINT ethnic_groups_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: evolutions evolution_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2303,6 +2343,14 @@ ALTER TABLE ONLY hair
 
 
 --
+-- Name: hair_styles hair_styles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hair_styles
+    ADD CONSTRAINT hair_styles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: hand_hair_colors hand_hair_colors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2348,14 +2396,6 @@ ALTER TABLE ONLY nail_colors
 
 ALTER TABLE ONLY nails
     ADD CONSTRAINT nails_pkey PRIMARY KEY (id);
-
-
---
--- Name: ethnic_groups races_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ethnic_groups
-    ADD CONSTRAINT races_pkey PRIMARY KEY (id);
 
 
 --
@@ -2821,6 +2861,14 @@ ALTER TABLE ONLY hair_colors
 
 ALTER TABLE ONLY hair
     ADD CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id);
+
+
+--
+-- Name: hair hair_hair_styles_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY hair
+    ADD CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id);
 
 
 --

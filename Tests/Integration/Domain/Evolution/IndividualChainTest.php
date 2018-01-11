@@ -42,7 +42,7 @@ final class IndividualChainTest extends Tester\TestCase {
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [
-					'style' => null,
+					'style_id' => 1,
 					'color_id' => 8,
 					'length' => [
 						'value' => 1,
