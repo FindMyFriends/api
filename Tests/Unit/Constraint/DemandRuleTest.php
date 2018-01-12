@@ -17,6 +17,7 @@ final class DemandRuleTest extends Tester\TestCase {
 	public function testApplicationWithAllReturnedValues() {
 		Assert::equal(
 			[
+				'body' => ['breast_size' => null],
 				'general' => ['gender' => 'man'],
 				'beard' => ['care' => 10],
 				'location' => [
@@ -28,6 +29,7 @@ final class DemandRuleTest extends Tester\TestCase {
 			],
 			(new Constraint\DemandRule())->apply(
 				[
+					'body' => ['breast_size' => null],
 					'general' => ['gender' => 'man'],
 					'beard' => ['care' => 10],
 					'location' => [

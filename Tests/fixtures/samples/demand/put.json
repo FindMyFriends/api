@@ -61,7 +61,8 @@
 		"height": {
 			"value": 181,
 			"unit": "cm"
-		}
+		},
+		"breast_size": null
 	},
 	"location": {
 		"coordinates": {

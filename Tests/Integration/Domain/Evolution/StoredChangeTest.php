@@ -90,6 +90,7 @@ final class StoredChangeTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'hands' => [
 					'nails' => [
@@ -140,6 +141,7 @@ final class StoredChangeTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'beard' => [
 					'length' => [
@@ -268,6 +270,7 @@ final class StoredChangeTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'hands' => [
 					'nails' => [

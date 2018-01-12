@@ -105,6 +105,10 @@ final class Description {
 							'type' => 'object',
 							'required' => ['value', 'unit'],
 						],
+						'breast_size' => [
+							'type' => ['string', 'null'],
+							'enum' => array_merge([null], (new PostgresEnum('breast_sizes', $this->database))->values()),
+						],
 						'skin_color' => [
 							'additionalProperties' => false,
 							'properties' => [

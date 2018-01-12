@@ -84,6 +84,7 @@ final class CompleteDescription implements Output\Format {
 					'skin_color' => $description['body_skin_color'],
 					'weight' => $description['body_weight'],
 					'height' => $description['body_height'],
+					'breast_size' => $description['body_breast_size'],
 				],
 				'hands' => [
 					'nails' => [

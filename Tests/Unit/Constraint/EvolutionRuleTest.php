@@ -17,12 +17,14 @@ final class EvolutionRuleTest extends Tester\TestCase {
 	public function testApplicationWithAllReturnedValues() {
 		Assert::equal(
 			[
+				'body' => ['breast_size' => null],
 				'general' => ['gender' => 'man'],
 				'beard' => ['care' => 10],
 				'evolved_at' => '2017-09-17T13:58:10+00:00',
 			],
 			(new Constraint\EvolutionRule())->apply(
 				[
+					'body' => ['breast_size' => null],
 					'general' => ['gender' => 'man'],
 					'beard' => ['care' => 10],
 					'evolved_at' => '2017-09-17T13:58:10+00:00',

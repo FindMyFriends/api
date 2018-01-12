@@ -120,11 +120,12 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
+	INSERT INTO bodies (build_id, skin_color_id, weight, height, breast_size) VALUES (
 		samples.random_if_not_exists((SELECT id FROM body_builds ORDER BY random() LIMIT 1), replacements, 'build_id'),
 		samples.random_if_not_exists((SELECT color_id FROM skin_colors ORDER BY random() LIMIT 1), replacements, 'skin_color_id'),
-    ROW(test_utils.better_random('smallint'), 'kg')::mass,
-    ROW(test_utils.better_random('smallint'), 'mm')::length
+		ROW(test_utils.better_random('smallint'), 'kg')::mass,
+		ROW(test_utils.better_random('smallint'), 'mm')::length,
+		NULL
 	)
 	RETURNING id
 	INTO v_id;

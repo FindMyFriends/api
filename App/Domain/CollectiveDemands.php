@@ -55,6 +55,7 @@ final class CollectiveDemands implements Demands {
 				body_skin_color,
 				body_weight,
 				body_height,
+				body_breast_size,
 				hands_nails_length,
 				hands_nails_care,
 				hands_nails_color,

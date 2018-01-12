@@ -95,6 +95,20 @@ CREATE TYPE approximate_timestamptz AS (
 ALTER TYPE approximate_timestamptz OWNER TO postgres;
 
 --
+-- Name: breast_sizes; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE breast_sizes AS ENUM (
+    'A',
+    'B',
+    'C',
+    'D'
+);
+
+
+ALTER TYPE breast_sizes OWNER TO postgres;
+
+--
 -- Name: face_shapes; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -188,6 +202,7 @@ CREATE TYPE flat_description AS (
 	body_skin_color_id smallint,
 	body_weight mass,
 	body_height length,
+	body_breast_size breast_sizes,
 	beard_color_id smallint,
 	beard_length length,
 	beard_style text,
@@ -308,6 +323,7 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
+			new.body_breast_size,
 			new.beard_color_id,
 			new.beard_length,
 			new.beard_style,
@@ -395,6 +411,7 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
+      new.body_breast_size,
 			new.beard_color_id,
 			new.beard_length,
 			new.beard_style,
@@ -460,6 +477,7 @@ BEGIN
 			new.body_skin_color_id,
 			new.body_weight,
 			new.body_height,
+      new.body_breast_size,
 			new.beard_color_id,
 			new.beard_length,
 			new.beard_style,
@@ -531,6 +549,7 @@ BEGIN
 		new.body_skin_color_id,
 		new.body_weight,
 		new.body_height,
+		new.body_breast_size,
 		new.beard_color_id,
 		new.beard_length,
 		new.beard_style,
@@ -774,11 +793,12 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 		)
 		RETURNING id
 		INTO v_face_id;
-		INSERT INTO bodies (build_id, skin_color_id, weight, height) VALUES (
+		INSERT INTO bodies (build_id, skin_color_id, weight, height, breast_size) VALUES (
 			description.body_build_id,
 			description.body_skin_color_id,
 			description.body_weight,
-			description.body_height
+			description.body_height,
+			description.body_breast_size
 		)
 		RETURNING id
 		INTO v_body_id;
@@ -975,7 +995,8 @@ BEGIN
 	SET build_id = description.body_build_id,
 		skin_color_id = description.body_skin_color_id,
 		weight = description.body_weight,
-		height = description.body_height
+		height = description.body_height,
+    breast_size = description.body_breast_size
 	WHERE id = parts.body_id;
 
 	INSERT INTO nails (color_id, length, care) VALUES (
@@ -1243,7 +1264,8 @@ CREATE TABLE bodies (
     build_id smallint,
     skin_color_id smallint,
     weight mass,
-    height length
+    height length,
+    breast_size breast_sizes
 );
 
 
@@ -1457,7 +1479,7 @@ CREATE VIEW complete_descriptions AS
     ROW(general.id, general.gender, general.ethnic_group_id, general.birth_year, general.firstname, general.lastname)::general AS general,
     ROW(hair.id, hair.style_id, hair.color_id, hair.length, hair.highlights, hair.roots, hair.nature)::hair AS hair,
     ROW(hair_style.id, hair_style.name)::hair_styles AS hair_style,
-    ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height)::bodies AS body,
+    ROW(body.id, body.build_id, body.skin_color_id, body.weight, body.height, body.breast_size)::bodies AS body,
     ROW(body_build.id, body_build.name)::body_builds AS body_build,
     ROW(face.id, face.freckles, face.care, face.shape)::faces AS face,
     ROW(beard.id, beard.color_id, beard.length, beard.style)::beards AS beard,
@@ -1576,6 +1598,7 @@ CREATE VIEW flat_descriptions AS
     printed_descriptions.general_gender,
     (printed_descriptions.body).weight AS body_weight,
     (printed_descriptions.body).height AS body_height,
+    (printed_descriptions.body).breast_size AS body_breast_size,
     printed_descriptions.body_skin_color,
     printed_descriptions.body_build,
     (printed_descriptions.hair).color_id AS hair_color_id,
@@ -1662,6 +1685,7 @@ CREATE VIEW collective_demands AS
     flat_description.general_gender,
     flat_description.body_weight,
     flat_description.body_height,
+    flat_description.body_breast_size,
     flat_description.hands_nails_color_id,
     flat_description.hands_nails_length,
     flat_description.hands_nails_care,
@@ -1732,6 +1756,7 @@ CREATE VIEW collective_evolutions AS
     flat_description.general_gender,
     flat_description.body_weight,
     flat_description.body_height,
+    flat_description.body_breast_size,
     flat_description.hands_nails_color_id,
     flat_description.hands_nails_length,
     flat_description.hands_nails_care,

@@ -94,6 +94,7 @@ final class IndividualChainTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'hands' => [
 					'nails' => [

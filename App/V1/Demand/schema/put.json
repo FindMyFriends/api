@@ -43,6 +43,19 @@
                         "unit"
                     ]
                 },
+                "breast_size": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                    ]
+                },
                 "build_id": {
                     "type": {
                         "0": [

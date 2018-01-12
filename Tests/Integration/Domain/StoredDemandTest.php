@@ -107,6 +107,7 @@ final class StoredDemandTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'location' => [
 					'coordinates' => [
@@ -176,6 +177,7 @@ final class StoredDemandTest extends Tester\TestCase {
 						'value' => 130,
 						'unit' => 'cm',
 					],
+					'breast_size' => 'B',
 				],
 				'beard' => [
 					'length' => [
