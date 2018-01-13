@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain;
 
+use FindMyFriends\Sql;
 use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Storage;
@@ -22,7 +23,12 @@ final class IndividualDemands implements Demands {
 	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression('SELECT * FROM collective_demands WHERE seeker_id = ?'),
+			$selection->expression(
+				(new Sql\Demand\Select())
+					->from(['collective_demands'])
+					->where('seeker_id = ?')
+					->sql()
+			),
 			$selection->criteria([$this->seeker->id()])
 		))->rows();
 		foreach ($demands as $demand) {

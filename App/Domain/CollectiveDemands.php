@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain;
 
+use FindMyFriends\Sql;
 use Klapuch\Dataset;
 use Klapuch\Storage;
 
@@ -26,50 +27,9 @@ final class CollectiveDemands implements Demands {
 		$demands = (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression(
-				'SELECT general_age,
-				general_firstname,
-				general_lastname,
-				general_gender,
-				general_ethnic_group,
-				hair_style,
-				hair_color,
-				hair_length,
-				hair_highlights,
-				hair_roots,
-				hair_nature,
-				face_care,
-				beard_length,
-				beard_style,
-				beard_color,
-				eyebrow_care,
-				eyebrow_color,
-				face_freckles,
-				left_eye_color,
-				left_eye_lenses,
-				right_eye_color,
-				right_eye_lenses,
-				face_shape,
-				tooth_care,
-				tooth_braces,
-				body_build,
-				body_skin_color,
-				body_weight,
-				body_height,
-				body_breast_size,
-				hands_nails_length,
-				hands_nails_care,
-				hands_nails_color,
-				hands_vein_visibility,
-				hands_joint_visibility,
-				hands_care,
-				hands_hair_color,
-				hands_hair_amount,
-				seeker_id,
-				id,
-				created_at,
-				location_coordinates,
-				location_met_at
-				FROM collective_demands'
+				(new Sql\Demand\Select())
+					->from(['collective_demands'])
+					->sql()
 			),
 			$selection->criteria([])
 		))->rows();

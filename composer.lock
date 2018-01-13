@@ -573,12 +573,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "8b1c2a5d26aaf4b6f5e15fa2b3cb90434798da99"
+                "reference": "51ed70c4853ba5a85bae6a0470cd4b9f814ea888"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/8b1c2a5d26aaf4b6f5e15fa2b3cb90434798da99",
-                "reference": "8b1c2a5d26aaf4b6f5e15fa2b3cb90434798da99",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/51ed70c4853ba5a85bae6a0470cd4b9f814ea888",
+                "reference": "51ed70c4853ba5a85bae6a0470cd4b9f814ea888",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2017-12-31T23:19:04+00:00"
+            "time": "2018-01-13T16:24:18+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -2133,16 +2133,16 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "4.2.1",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "998b5e96ce36a55d7821d17f39d296a17c05b481"
+                "reference": "52f3c79c5fc0d575a8a763c54a16c96e7a7e41b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/998b5e96ce36a55d7821d17f39d296a17c05b481",
-                "reference": "998b5e96ce36a55d7821d17f39d296a17c05b481",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/52f3c79c5fc0d575a8a763c54a16c96e7a7e41b0",
+                "reference": "52f3c79c5fc0d575a8a763c54a16c96e7a7e41b0",
                 "shasum": ""
             },
             "require": {
@@ -2166,7 +2166,7 @@
                 "MIT"
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
-            "time": "2018-01-04T14:00:21+00:00"
+            "time": "2018-01-08T08:07:32+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
