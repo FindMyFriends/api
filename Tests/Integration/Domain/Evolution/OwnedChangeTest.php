@@ -22,30 +22,33 @@ final class OwnedChangeTest extends Tester\TestCase {
 
 	public function testThrowingOnForeign() {
 		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
-		Assert::exception(function() use ($id) {
+		$ex = Assert::exception(function() use ($id) {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));
-		Assert::exception(function() use ($id) {
+		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() use ($id) {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->affect([]);
-		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));
-		Assert::exception(function() use ($id) {
+		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() use ($id) {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->revert();
-		}, \UnexpectedValueException::class, sprintf('%d is not your evolution change', $id));
+		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithOwned() {

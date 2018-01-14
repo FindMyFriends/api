@@ -30,19 +30,19 @@ final class OwnedChange implements Change {
 
 	public function affect(array $changes): void {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your evolution change', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->affect($changes);
 	}
 
 	public function revert(): void {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your evolution change', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->revert();
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your evolution change', $this->id));
+			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
@@ -55,5 +55,13 @@ final class OwnedChange implements Change {
 			AND seeker_id = ?',
 			[$id, $this->owner->id()]
 		))->field();
+	}
+
+	private function exception(int $id): \Throwable {
+		return new \UnexpectedValueException(
+			'This evolution change does not belong to you',
+			0,
+			new \UnexpectedValueException(sprintf('Evolution change %d does not belong to you', $id))
+		);
 	}
 }

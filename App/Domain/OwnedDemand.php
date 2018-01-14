@@ -30,19 +30,19 @@ final class OwnedDemand implements Demand {
 
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your demand', $this->id));
+			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
 	public function retract(): void {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your demand', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->retract();
 	}
 
 	public function reconsider(array $description): void {
 		if (!$this->owned($this->id))
-			throw new \UnexpectedValueException(sprintf('%d is not your demand', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->reconsider($description);
 	}
 
@@ -55,5 +55,13 @@ final class OwnedDemand implements Demand {
 			AND seeker_id = ?',
 			[$id, $this->owner->id()]
 		))->field();
+	}
+
+	private function exception(int $id): \Throwable {
+		return new \UnexpectedValueException(
+			'This is not your demand',
+			0,
+			new \UnexpectedValueException(sprintf('%d is not your demand', $id))
+		);
 	}
 }

@@ -58,7 +58,7 @@ final class DeleteTest extends Tester\TestCase {
 			))->template(['id' => $id])->render(),
 			true
 		);
-		Assert::same(['message' => sprintf('%d is not your evolution change', $id)], $evolution);
+		Assert::same(['message' => 'This evolution change does not belong to you'], $evolution);
 		Assert::same(HTTP_FORBIDDEN, http_response_code());
 	}
 }

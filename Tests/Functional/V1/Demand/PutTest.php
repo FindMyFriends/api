@@ -92,7 +92,7 @@ final class PutTest extends Tester\TestCase {
 			))->template(['id' => $id])->render(),
 			true
 		);
-		Assert::same(['message' => sprintf('%d is not your demand', $id)], $demand);
+		Assert::same(['message' => 'This is not your demand'], $demand);
 		Assert::same(HTTP_FORBIDDEN, http_response_code());
 	}
 }

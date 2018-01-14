@@ -22,30 +22,33 @@ final class OwnedDemandTest extends Tester\TestCase {
 
 	public function testThrowingOnForeign() {
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
-		Assert::exception(function() use ($id) {
+		$ex = Assert::exception(function() use ($id) {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
-		Assert::exception(function() use ($id) {
+		}, \UnexpectedValueException::class, 'This is not your demand');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() use ($id) {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->retract();
-		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
-		Assert::exception(function() use ($id) {
+		}, \UnexpectedValueException::class, 'This is not your demand');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() use ($id) {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->reconsider([]);
-		}, \UnexpectedValueException::class, sprintf('%d is not your demand', $id));
+		}, \UnexpectedValueException::class, 'This is not your demand');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithOwned() {
