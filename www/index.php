@@ -34,7 +34,7 @@ $configuration = (new Configuration\CachedSource(
 	)
 ))->read();
 
-$hashids = new Hashids\Hashids($configuration['HASHID']['salt']);
+$hashids = new Hashids\Hashids($configuration['HASHID']['salt'], $configuration['HASHID']['length']);
 
 echo (new class(
 	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
