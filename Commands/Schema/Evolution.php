@@ -15,11 +15,10 @@ final class Evolution {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
-			'properties' =>
-				[
-					'evolved_at' => ['type' => 'string', 'format' => 'date-time'],
-					'id' => ['type' => 'integer'],
-				] + $description['properties'],
+			'properties' => [
+				'evolved_at' => ['type' => 'string', 'format' => 'date-time'],
+				'id' => ['type' => 'integer'],
+			] + $description['properties'],
 			'required' => $description['required'],
 			'type' => 'object',
 		] + $description;

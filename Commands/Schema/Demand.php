@@ -15,51 +15,40 @@ final class Demand {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
-			'properties' =>
-				[
-					'created_at' => ['type' => 'string'],
-					'seeker_id' => ['type' => 'integer'],
-					'id' => ['type' => 'integer'],
-					'location' =>
-						[
+			'properties' => [
+				'created_at' => ['type' => 'string'],
+				'seeker_id' => ['type' => 'integer'],
+				'id' => ['type' => 'integer'],
+				'location' => [
+					'additionalProperties' => false,
+					'properties' => [
+						'coordinates' => [
 							'additionalProperties' => false,
-							'properties' =>
-								[
-									'coordinates' =>
-										[
-											'additionalProperties' => false,
-											'properties' =>
-												[
-													'latitude' => ['type' => 'number'],
-													'longitude' => ['type' => 'number'],
-												],
-											'required' => ['latitude', 'longitude'],
-											'type' => 'object',
-										],
-									'met_at' =>
-										[
-											'additionalProperties' => false,
-											'properties' =>
-												[
-													'moment' => ['type' => ['string', 'null'], 'format' => 'date-time'],
-													'timeline_side' => [
-														'type' => ['string', 'null'],
-														'enum' => (new PostgresEnum('timeline_sides', $this->database))->values(),
-													],
-													'approximation' => ['type' => ['string', 'null']],
-												],
-											'required' => ['moment', 'timeline_side', 'approximation'],
-											'type' => 'object',
-										],
-								],
-							'required' =>
-								[
-									'coordinates',
-									'met_at',
-								],
+							'properties' => [
+								'latitude' => ['type' => 'number'],
+								'longitude' => ['type' => 'number'],
+							],
+							'required' => ['latitude', 'longitude'],
 							'type' => 'object',
 						],
-				] + $description['properties'],
+						'met_at' => [
+							'additionalProperties' => false,
+							'properties' => [
+								'moment' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+								'timeline_side' => [
+									'type' => ['string', 'null'],
+									'enum' => (new PostgresEnum('timeline_sides', $this->database))->values(),
+								],
+								'approximation' => ['type' => ['string', 'null']],
+							],
+							'required' => ['moment', 'timeline_side', 'approximation'],
+							'type' => 'object',
+						],
+					],
+					'required' => ['coordinates', 'met_at'],
+					'type' => 'object',
+				],
+			] + $description['properties'],
 			'required' => array_merge(['location'], $description['required']),
 			'type' => 'object',
 		] + $description;
