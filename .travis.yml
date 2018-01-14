@@ -27,4 +27,7 @@ before_script:
   - docker exec find-my-friends-postgres import
 
 script:
-  - docker exec -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST fmf_php-fpm_1 vendor/bin/phing ci
+  - docker exec fmf_php-fpm_1 vendor/bin/phing ci
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

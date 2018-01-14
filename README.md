@@ -1,2 +1,2 @@
 # API - Find My Friends
-[![Build Status](https://travis-ci.org/FindMyFriends/api.svg?branch=master)](https://travis-ci.org/FindMyFriends/api) [![Coverage Status](https://coveralls.io/repos/github/FindMyFriends/api/badge.svg?branch=master)](https://coveralls.io/github/FindMyFriends/api?branch=master)
+[![Build Status](https://travis-ci.org/FindMyFriends/api.svg?branch=master)](https://travis-ci.org/FindMyFriends/api) [![codecov](https://codecov.io/gh/FindMyFriends/api/branch/master/graph/badge.svg)](https://codecov.io/gh/FindMyFriends/api)
