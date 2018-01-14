@@ -22,19 +22,19 @@ final class ExistingChange implements Change {
 
 	public function affect(array $changes): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->affect($changes);
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
 	public function revert(): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->revert();
 	}
 
@@ -44,5 +44,13 @@ final class ExistingChange implements Change {
 			'SELECT 1 FROM evolutions WHERE id = ?',
 			[$id]
 		))->field();
+	}
+
+	private function exception(int $id): \Throwable {
+		return new \UnexpectedValueException(
+			'Evolution change does not exist',
+			0,
+			new \UnexpectedValueException(sprintf('Evolution change %d does not exist', $id))
+		);
 	}
 }

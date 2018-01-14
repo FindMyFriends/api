@@ -44,7 +44,7 @@ final class DeleteTest extends Tester\TestCase {
 			))->template(['id' => 1])->render(),
 			true
 		);
-		Assert::same(['message' => 'Evolution change 1 does not exist'], $evolution);
+		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
 		Assert::same(HTTP_NOT_FOUND, http_response_code());
 	}
 

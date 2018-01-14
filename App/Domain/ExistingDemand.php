@@ -19,19 +19,19 @@ final class ExistingDemand implements Demand {
 
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Demand %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
 	public function retract(): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Demand %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->retract();
 	}
 
 	public function reconsider(array $description): void {
 		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Demand %d does not exist', $this->id));
+			throw $this->exception($this->id);
 		$this->origin->reconsider($description);
 	}
 
@@ -41,5 +41,13 @@ final class ExistingDemand implements Demand {
 			'SELECT 1 FROM demands WHERE id = ?',
 			[$id]
 		))->field();
+	}
+
+	private function exception(int $id): \Throwable {
+		return new \UnexpectedValueException(
+			'Demand does not exist',
+			0,
+			new \UnexpectedValueException(sprintf('Demand %d does not exist', $id))
+		);
 	}
 }

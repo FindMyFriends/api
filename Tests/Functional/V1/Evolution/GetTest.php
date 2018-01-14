@@ -34,7 +34,7 @@ final class GetTest extends Tester\TestCase {
 				new Http\FakeRole(true)
 			))->template(['id' => $id])->render()
 		);
-		Assert::same($id, $evolution->id);
+		Assert::same((new Hashids())->encode($id), $evolution->id);
 		(new Misc\SchemaAssertion(
 			$evolution,
 			new \SplFileInfo(__DIR__ . '/../../../../App/V1/Evolution/schema/get.json')
@@ -51,7 +51,7 @@ final class GetTest extends Tester\TestCase {
 			))->template(['id' => 1])->render(),
 			true
 		);
-		Assert::same(['message' => 'Evolution change 1 does not exist'], $evolution);
+		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
 		Assert::same(HTTP_NOT_FOUND, http_response_code());
 	}
 }

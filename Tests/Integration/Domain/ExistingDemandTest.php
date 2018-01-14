@@ -20,27 +20,30 @@ final class ExistingDemandTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnUnknown() {
-		Assert::exception(function() {
+		$ex = Assert::exception(function() {
 			(new Domain\ExistingDemand(
 				new Domain\FakeDemand(),
 				1,
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, 'Demand 1 does not exist');
-		Assert::exception(function() {
+		}, \UnexpectedValueException::class, 'Demand does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() {
 			(new Domain\ExistingDemand(
 				new Domain\FakeDemand(),
 				1,
 				$this->database
 			))->retract();
-		}, \UnexpectedValueException::class, 'Demand 1 does not exist');
-		Assert::exception(function() {
+		}, \UnexpectedValueException::class, 'Demand does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() {
 			(new Domain\ExistingDemand(
 				new Domain\FakeDemand(),
 				1,
 				$this->database
 			))->reconsider([]);
-		}, \UnexpectedValueException::class, 'Demand 1 does not exist');
+		}, \UnexpectedValueException::class, 'Demand does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithExisting() {

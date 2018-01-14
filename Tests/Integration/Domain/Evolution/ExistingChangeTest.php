@@ -20,27 +20,30 @@ final class ExistingChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnUnknown() {
-		Assert::exception(function() {
+		$ex = Assert::exception(function() {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, 'Evolution change 1 does not exist');
-		Assert::exception(function() {
+		}, \UnexpectedValueException::class, 'Evolution change does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
 				$this->database
 			))->affect([]);
-		}, \UnexpectedValueException::class, 'Evolution change 1 does not exist');
-		Assert::exception(function() {
+		}, \UnexpectedValueException::class, 'Evolution change does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function() {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
 				$this->database
 			))->revert();
-		}, \UnexpectedValueException::class, 'Evolution change 1 does not exist');
+		}, \UnexpectedValueException::class, 'Evolution change does not exist');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithExisting() {

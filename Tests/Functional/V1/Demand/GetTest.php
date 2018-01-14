@@ -51,7 +51,7 @@ final class GetTest extends Tester\TestCase {
 			))->template(['id' => 1])->render(),
 			true
 		);
-		Assert::same(['message' => 'Demand 1 does not exist'], $demand);
+		Assert::same(['message' => 'Demand does not exist'], $demand);
 		Assert::same(HTTP_NOT_FOUND, http_response_code());
 	}
 }
