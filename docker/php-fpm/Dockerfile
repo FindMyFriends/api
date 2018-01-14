@@ -17,6 +17,4 @@ RUN curl -sSL https://github.com/xdebug/xdebug/archive/4ada850.zip -o /tmp/xdebu
 	&& make install \
 	&& rm -rf /tmp/xdebug*
 
-RUN docker-php-ext-enable xdebug
-
 RUN rm -rf /var/cache/apk/*
