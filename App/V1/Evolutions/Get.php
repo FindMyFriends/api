@@ -7,6 +7,7 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
+use Hashids\HashidsInterface;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
@@ -15,12 +16,15 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	private $hashids;
 	private $url;
 	private $database;
 	private $user;
 	private $role;
 
-	public function __construct(Uri\Uri $url, \PDO $database, Access\User $user, Http\Role $role) {
+
+	public function __construct(HashidsInterface $hashids, Uri\Uri $url, \PDO $database, Access\User $user, Http\Role $role) {
+		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->user = $user;
@@ -33,7 +37,8 @@ final class Get implements Application\View {
 				new Evolution\IndividualChain(
 					$this->user,
 					$this->database
-				)
+				),
+				$this->hashids
 			);
 			return new Application\RawTemplate(
 				new Response\PaginatedResponse(

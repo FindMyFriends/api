@@ -16,8 +16,7 @@ use Klapuch\Uri;
 
 const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 	LOCAL_CONFIGURATION = __DIR__ . '/../App/Configuration/.config.local.ini',
-	LOGS = __DIR__ . '/../log',
-	V1_ROUTES_PATH = __DIR__ . '/../App/Configuration/Routes/v1.json';
+	LOGS = __DIR__ . '/../log';
 
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
@@ -34,6 +33,8 @@ $configuration = (new Configuration\CachedSource(
 		new Configuration\ValidIni(new SplFileInfo(LOCAL_CONFIGURATION))
 	)
 ))->read();
+
+$hashids = new Hashids\Hashids($configuration['HASHID']['salt']);
 
 echo (new class(
 	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
@@ -54,14 +55,17 @@ echo (new class(
 										)
 									),
 									new Predis\Client($configuration['REDIS']['uri'])
-								)
+								),
+								$hashids
 							) implements Routing\Routes {
 								private $uri;
 								private $database;
+								private $hashids;
 
-								public function __construct(Uri\Uri $uri, \PDO $database) {
+								public function __construct(Uri\Uri $uri, \PDO $database, Hashids\HashidsInterface $hashids) {
 									$this->uri = $uri;
 									$this->database = $database;
+									$this->hashids = $hashids;
 								}
 
 								public function matches(): array {
@@ -70,38 +74,42 @@ echo (new class(
 									))->enter((new Application\PlainRequest())->headers());
 									return [
 										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
+											$this->hashids,
 											$this->uri,
 											$this->database,
 											new Http\ChosenRole($user, ['member', 'guest'])
 										),
-										'v1/demands/{id :id} [GET]' => new V1\Demand\Get(
+										'v1/demands/{id} [GET]' => new V1\Demand\Get(
+											$this->hashids,
 											$this->uri,
 											$this->database,
 											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/demands [POST]' => new V1\Demands\Post(
+											$this->hashids,
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
 											$user
 										),
-										'v1/demands/{id :id} [PUT]' => new V1\Demand\Put(
+										'v1/demands/{id} [PUT]' => new V1\Demand\Put(
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
 											$user
 										),
-										'v1/demands/{id :id} [DELETE]' => new V1\Demand\Delete(
+										'v1/demands/{id} [DELETE]' => new V1\Demand\Delete(
 											$this->database,
 											$user
 										),
 										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
+											$this->hashids,
 											$this->uri,
 											$this->database,
 											$user,
 											new Http\ChosenRole($user, ['member', 'guest'])
 										),
-										'v1/evolutions/{id :id} [DELETE]' => new V1\Evolution\Delete(
+										'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
 											$this->database,
 											$user
 										),
@@ -115,15 +123,19 @@ echo (new class(
 				),
 				$uri
 			),
-			function(array $match) use ($uri): Output\Template {
+			function(array $match) use ($uri, $hashids): Output\Template {
 				/** @var \Klapuch\Application\View $destination */
 				[$source, $destination] = [key($match), current($match)];
 				return $destination->template(
-					(new Routing\TypedMask(
-						new Routing\CombinedMask(
-							new Routing\PathMask($source, $uri),
-							new Routing\QueryMask($source, $uri)
-						)
+					(new Routing\HashIdMask(
+						new Routing\TypedMask(
+							new Routing\CombinedMask(
+								new Routing\PathMask($source, $uri),
+								new Routing\QueryMask($source, $uri)
+							)
+						),
+						['id'],
+						$hashids
 					))->parameters()
 				);
 			}
@@ -144,6 +156,7 @@ echo (new class(
 		try {
 			return current($this->routes->matches())->render($variables);
 		} catch (\Throwable $ex) {
+			var_dump($ex->getMessage());
 			$this->logs->put(
 				new Log\PrettyLog(
 					$ex,

@@ -7,6 +7,7 @@ use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
+use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Output;
@@ -18,8 +19,10 @@ final class Get implements Application\View {
 	private $url;
 	private $database;
 	private $role;
+	private $hashids;
 
-	public function __construct(Uri\Uri $url, \PDO $database, Http\Role $role) {
+	public function __construct(HashidsInterface $hashids, Uri\Uri $url, \PDO $database, Http\Role $role) {
+		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->role = $role;
@@ -31,7 +34,8 @@ final class Get implements Application\View {
 				new Domain\CollectiveDemands(
 					new Domain\FakeDemands(),
 					$this->database
-				)
+				),
+				$this->hashids
 			);
 			return new Application\RawTemplate(
 				new Response\PaginatedResponse(

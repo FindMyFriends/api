@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use Hashids\HashidsInterface;
 use Klapuch\Dataset;
 use Klapuch\Iterator;
 
@@ -11,9 +12,11 @@ use Klapuch\Iterator;
  */
 final class FormattedChain implements Chain {
 	private $origin;
+	private $hashids;
 
-	public function __construct(Chain $origin) {
+	public function __construct(Chain $origin, HashidsInterface $hashids) {
 		$this->origin = $origin;
+		$this->hashids = $hashids;
 	}
 
 	public function extend(array $progress): Change {
@@ -24,7 +27,7 @@ final class FormattedChain implements Chain {
 		return new Iterator\Mapped(
 			$this->origin->changes($selection),
 			function(Change $demand): Change {
-				return new FormattedChange($demand);
+				return new FormattedChange($demand, $this->hashids);
 			}
 		);
 	}

@@ -7,20 +7,25 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
+use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	private $hashids;
 	private $url;
 	private $database;
 	private $role;
 
+
 	public function __construct(
+		HashidsInterface $hashids,
 		Uri\Uri $url,
 		\PDO $database,
 		Http\Role $role
 	) {
+		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->role = $role;
@@ -45,7 +50,8 @@ final class Get implements Application\View {
 												$this->database
 											),
 											new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
-										)
+										),
+										$this->hashids
 									))->print(new Output\Json)
 								),
 								$this->role

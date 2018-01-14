@@ -12,6 +12,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Hashids\Hashids;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -27,6 +28,7 @@ final class GetTest extends Tester\TestCase {
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$evolution = json_decode(
 			(new V1\Evolution\Get(
+				new Hashids(),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
 				new Http\FakeRole(true)
@@ -42,6 +44,7 @@ final class GetTest extends Tester\TestCase {
 	public function test404ForNotExisting() {
 		$evolution = json_decode(
 			(new V1\Evolution\Get(
+				new Hashids(),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
 				new Http\FakeRole(true)

@@ -18,7 +18,7 @@ final class Demand {
 			'properties' => [
 				'created_at' => ['type' => 'string'],
 				'seeker_id' => ['type' => 'integer'],
-				'id' => ['type' => 'integer'],
+				'id' => ['type' => 'string'],
 				'location' => [
 					'additionalProperties' => false,
 					'properties' => [

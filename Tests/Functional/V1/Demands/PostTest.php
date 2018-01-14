@@ -11,6 +11,7 @@ namespace FindMyFriends\Functional\V1\Demands;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Hashids\Hashids;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
@@ -27,6 +28,7 @@ final class PostTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		$demand = json_decode(
 			(new V1\Demands\Post(
+				new Hashids(),
 				new Application\FakeRequest(
 					new Output\FakeFormat(
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/post.json')
@@ -45,6 +47,7 @@ final class PostTest extends Tester\TestCase {
 	public function test400OnBadInput() {
 		$demand = json_decode(
 			(new V1\Demands\Post(
+				new Hashids(),
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'v1/demands', []),
 				$this->database,

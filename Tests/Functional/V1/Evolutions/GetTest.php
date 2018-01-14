@@ -11,6 +11,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Hashids\Hashids;
 use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
@@ -28,6 +29,7 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$demands = json_decode(
 			(new V1\Evolutions\Get(
+				new Hashids(),
 				new Uri\FakeUri('/', 'v1/evolutions', []),
 				$this->database,
 				new Access\FakeUser((string) $seeker, ['role' => 'member']),

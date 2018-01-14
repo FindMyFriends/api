@@ -11,6 +11,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Hashids\Hashids;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -25,6 +26,7 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SampleDemand($this->database))->try();
 		$demands = json_decode(
 			(new V1\Demands\Get(
+				new Hashids(),
 				new Uri\FakeUri('/', 'v1/demands', []),
 				$this->database,
 				new Http\FakeRole(true)

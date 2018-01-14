@@ -9,7 +9,7 @@
             "type": "integer"
         },
         "id": {
-            "type": "integer"
+            "type": "string"
         },
         "location": {
             "additionalProperties": false,
