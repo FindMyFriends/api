@@ -1,11 +1,22 @@
 FROM php:fpm-alpine
 
-RUN apk add --no-cache git postgresql-dev zip unzip zlib-dev \
+RUN apk update  && apk add --no-cache git postgresql-dev zip unzip zlib-dev g++ make autoconf \
 	&& docker-php-ext-install pdo_pgsql zip
 
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 COPY .bash_aliases /root/.bash_aliases
 RUN echo '. /root/.bash_aliases' >> ~/.bashrc
+
+RUN curl -sSL https://github.com/xdebug/xdebug/archive/4ada850.zip -o /tmp/xdebug.zip \
+	&& unzip /tmp/xdebug.zip -d /tmp \
+	&& cd /tmp/xdebug-* \
+	&& phpize \
+	&& ./configure \
+	&& make \
+	&& make install \
+	&& rm -rf /tmp/xdebug*
+
+RUN docker-php-ext-enable xdebug
 
 RUN rm -rf /var/cache/apk/*

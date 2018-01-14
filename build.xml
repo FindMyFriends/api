@@ -4,7 +4,7 @@
 	<resolvepath propertyName="base_path" file="."/>
 
 	<target name="check" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, generate-schemas, tests"/>
-	<target name="ci" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests"/> <!-- Everything in CHECK except generate-schemas -->
+	<target name="ci" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests, tester-coverage, upload-coverage"/> <!-- Everything in CHECK except generate-schemas -->
 	<target name="init" depends="lint, move-schemas"/>
 
 	<target name="lint">
@@ -101,6 +101,23 @@
 			<arg path="App/"/>
 		</exec>
 	</target>
+
+	<target name="download-coveralls">
+		<exec executable="wget" logoutput="true" passthru="true" checkreturn="true">
+			<arg value="https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar"/>
+		</exec>
+	</target>
+
+	<target name="upload-coveralls">
+		<exec executable="php" logoutput="true" passthru="true" checkreturn="true">
+			<arg value="coveralls.phar"/>
+			<arg value="--verbose"/>
+			<arg value="--config"/>
+			<arg path="Tests/.coveralls.yml"/>
+		</exec>
+	</target>
+
+	<target name="upload-coverage" depends="download-coveralls, upload-coveralls"/>
 
 	<target name="validate-composer.lock">
 		<exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
