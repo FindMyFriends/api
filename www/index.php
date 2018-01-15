@@ -155,6 +155,10 @@ echo (new class(
 	public function render(array $variables = []): string {
 		try {
 			return current($this->routes->matches())->render($variables);
+		} catch (\UnexpectedValueException $ex) {
+			return (new Application\RawTemplate(
+				new FindMyFriends\Response\JsonError($ex, [])
+			))->render();
 		} catch (\Throwable $ex) {
 			var_dump($ex->getMessage());
 			$this->logs->put(
@@ -165,7 +169,7 @@ echo (new class(
 					)
 				)
 			);
-			http_response_code(500);
+			http_response_code(HTTP_INTERNAL_SERVER_ERROR);
 			exit;
 		}
 	}
