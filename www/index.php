@@ -7,7 +7,7 @@ use FindMyFriends\Http;
 use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Application;
-use Klapuch\Ini;
+use Klapuch\Configuration;
 use Klapuch\Log;
 use Klapuch\Output;
 use Klapuch\Routing;
@@ -28,10 +28,10 @@ $uri = new Uri\CachedUri(
 	)
 );
 
-$configuration = (new Ini\CachedSource(
-	new Ini\CombinedSource(
-		new Ini\ValidSource(new SplFileInfo(CONFIGURATION)),
-		new Ini\ValidSource(new SplFileInfo(LOCAL_CONFIGURATION))
+$configuration = (new Configuration\CachedSource(
+	new Configuration\CombinedSource(
+		new Configuration\ValidIni(new SplFileInfo(CONFIGURATION)),
+		new Configuration\ValidIni(new SplFileInfo(LOCAL_CONFIGURATION))
 	)
 ))->read();
 

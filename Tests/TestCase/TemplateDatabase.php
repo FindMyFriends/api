@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\TestCase;
 
 use FindMyFriends\Misc;
-use Klapuch\Ini;
+use Klapuch\Configuration;
 
 trait TemplateDatabase {
 	/** @var \Klapuch\Storage\MetaPDO */
@@ -18,8 +18,8 @@ trait TemplateDatabase {
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->credentials = (new Ini\ValidSource(
-			new \SplFileInfo(__DIR__ . '/../Configuration/.config.local.ini')
+		$this->credentials = (new Configuration\ValidIni(
+			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
 		))->read();
 		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE']);
 		$this->database = $this->databases->create();

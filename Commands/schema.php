@@ -4,7 +4,7 @@ declare(strict_types = 1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use FindMyFriends\Commands\Schema;
-use Klapuch\Ini;
+use Klapuch\Configuration;
 use Klapuch\Storage;
 
 $schemas = new class {
@@ -16,7 +16,7 @@ $schemas = new class {
 	}
 };
 
-$configuration = (new Ini\ValidSource(
+$configuration = (new Configuration\ValidIni(
 	new SplFileInfo(__DIR__ . '/../App/Configuration/.config.local.ini')
 ))->read();
 $database = new Storage\SafePDO(
