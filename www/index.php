@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use FindMyFriends\Configuration\CreatedHashids;
 use FindMyFriends\Http;
 use FindMyFriends\V1;
 use Klapuch\Access;
@@ -15,7 +16,9 @@ use Klapuch\Storage;
 use Klapuch\Uri;
 
 const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
-	LOCAL_CONFIGURATION = __DIR__ . '/../App/Configuration/.config.local.ini',
+	SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.secrets.ini',
+	HASHIDS_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.json',
+	HASHIDS_SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.secret.json',
 	LOGS = __DIR__ . '/../log';
 
 $uri = new Uri\CachedUri(
@@ -27,14 +30,19 @@ $uri = new Uri\CachedUri(
 	)
 );
 
-$configuration = (new Configuration\CachedSource(
-	new Configuration\CombinedSource(
+$configuration = (new Configuration\CombinedSource(
 		new Configuration\ValidIni(new SplFileInfo(CONFIGURATION)),
-		new Configuration\ValidIni(new SplFileInfo(LOCAL_CONFIGURATION))
-	)
+		new Configuration\ValidIni(new SplFileInfo(SECRET_CONFIGURATION)),
+		new Configuration\NamedSource(
+			'HASHIDS',
+			new CreatedHashids(
+				new Configuration\CombinedSource(
+					new Configuration\ValidJson(new SplFileInfo(HASHIDS_CONFIGURATION)),
+					new Configuration\ValidJson(new SplFileInfo(HASHIDS_SECRET_CONFIGURATION))
+				)
+			)
+		)
 ))->read();
-
-$hashids = new Hashids\Hashids($configuration['HASHID']['salt'], $configuration['HASHID']['length']);
 
 echo (new class(
 	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
@@ -56,13 +64,13 @@ echo (new class(
 									),
 									new Predis\Client($configuration['REDIS']['uri'])
 								),
-								$hashids
+								$configuration['HASHIDS']
 							) implements Routing\Routes {
 								private $uri;
 								private $database;
 								private $hashids;
 
-								public function __construct(Uri\Uri $uri, \PDO $database, Hashids\HashidsInterface $hashids) {
+								public function __construct(Uri\Uri $uri, \PDO $database, array $hashids) {
 									$this->uri = $uri;
 									$this->database = $database;
 									$this->hashids = $hashids;
@@ -74,19 +82,19 @@ echo (new class(
 									))->enter((new Application\PlainRequest())->headers());
 									return [
 										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
-											$this->hashids,
+											$this->hashids['demand']['hashid'],
 											$this->uri,
 											$this->database,
 											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/demands/{id} [GET]' => new V1\Demand\Get(
-											$this->hashids,
+											$this->hashids['demand']['hashid'],
 											$this->uri,
 											$this->database,
 											new Http\ChosenRole($user, ['member', 'guest'])
 										),
 										'v1/demands [POST]' => new V1\Demands\Post(
-											$this->hashids,
+											$this->hashids['demand']['hashid'],
 											new Application\PlainRequest(),
 											$this->uri,
 											$this->database,
@@ -103,7 +111,7 @@ echo (new class(
 											$user
 										),
 										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
-											$this->hashids,
+											$this->hashids['evolution']['hashid'],
 											$this->uri,
 											$this->database,
 											$user,
@@ -123,19 +131,19 @@ echo (new class(
 				),
 				$uri
 			),
-			function(array $match) use ($uri, $hashids): Output\Template {
+			function(array $match) use ($uri, $configuration): Output\Template {
 				/** @var \Klapuch\Application\View $destination */
 				[$source, $destination] = [key($match), current($match)];
 				return $destination->template(
-					(new Routing\HashIdMask(
+					(new FindMyFriends\Routing\SuitedHashIdMask(
 						new Routing\TypedMask(
 							new Routing\CombinedMask(
 								new Routing\PathMask($source, $uri),
 								new Routing\QueryMask($source, $uri)
 							)
 						),
-						['id'],
-						$hashids
+						$configuration['HASHIDS'],
+						$source
 					))->parameters()
 				);
 			}

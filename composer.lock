@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c6f72309a5b683fcf29d0026df307e",
+    "content-hash": "266f8305fc3dbdcebecb7dfa65bc1661",
     "packages": [
         {
             "name": "hashids/hashids",
@@ -247,16 +247,16 @@
         },
         {
             "name": "klapuch/configuration",
-            "version": "0.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Configuration.git",
-                "reference": "32d4d744745353ba49ae4687949ca5a0eb26df53"
+                "reference": "1f535a0e0f83f6c60bb685c7d065b2f0f3d96567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Configuration/zipball/32d4d744745353ba49ae4687949ca5a0eb26df53",
-                "reference": "32d4d744745353ba49ae4687949ca5a0eb26df53",
+                "url": "https://api.github.com/repos/klapuch/Configuration/zipball/1f535a0e0f83f6c60bb685c7d065b2f0f3d96567",
+                "reference": "1f535a0e0f83f6c60bb685c7d065b2f0f3d96567",
                 "shasum": ""
             },
             "require": {
@@ -296,7 +296,7 @@
                 "read",
                 "write"
             ],
-            "time": "2018-01-19T19:30:46+00:00"
+            "time": "2018-01-19T20:52:29+00:00"
         },
         {
             "name": "klapuch/dataset",
@@ -741,16 +741,16 @@
         },
         {
             "name": "klapuch/uri",
-            "version": "3.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Uri.git",
-                "reference": "5fd12787ef63befead9d128da3138bcd0b385c44"
+                "reference": "d0004c637025c7ad7d168d301aea3149b52df9ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Uri/zipball/5fd12787ef63befead9d128da3138bcd0b385c44",
-                "reference": "5fd12787ef63befead9d128da3138bcd0b385c44",
+                "url": "https://api.github.com/repos/klapuch/Uri/zipball/d0004c637025c7ad7d168d301aea3149b52df9ce",
+                "reference": "d0004c637025c7ad7d168d301aea3149b52df9ce",
                 "shasum": ""
             },
             "require": {
@@ -791,7 +791,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-10-04T20:01:17+00:00"
+            "time": "2018-01-14T18:20:10+00:00"
         },
         {
             "name": "klapuch/validation",
@@ -2563,6 +2563,12 @@
     ],
     "aliases": [
         {
+            "alias": "0.0.1",
+            "alias_normalized": "0.0.1.0",
+            "version": "9999999-dev",
+            "package": "klapuch/configuration"
+        },
+        {
             "alias": "2.6.0",
             "alias_normalized": "2.6.0.0",
             "version": "9999999-dev",
@@ -2591,18 +2597,26 @@
             "alias_normalized": "0.0.3.0",
             "version": "9999999-dev",
             "package": "klapuch/ui"
+        },
+        {
+            "alias": "3.0.0",
+            "alias_normalized": "3.0.0.0",
+            "version": "9999999-dev",
+            "package": "klapuch/uri"
         }
     ],
     "minimum-stability": "stable",
     "stability-flags": {
         "klapuch/application": 20,
         "klapuch/dataset": 20,
+        "klapuch/configuration": 20,
         "klapuch/iterator": 20,
         "klapuch/output": 20,
         "klapuch/routing": 20,
         "klapuch/storage": 20,
         "klapuch/validation": 20,
-        "klapuch/ui": 20
+        "klapuch/ui": 20,
+        "klapuch/uri": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

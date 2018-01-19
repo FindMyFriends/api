@@ -17,7 +17,7 @@ $schemas = new class {
 };
 
 $configuration = (new Configuration\ValidIni(
-	new SplFileInfo(__DIR__ . '/../App/Configuration/.config.local.ini')
+	new SplFileInfo(__DIR__ . '/../App/Configuration/.secrets.ini')
 ))->read();
 $database = new Storage\SafePDO(
 	$configuration['DATABASE']['dsn'],

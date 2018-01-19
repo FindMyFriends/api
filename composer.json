@@ -17,7 +17,7 @@
 		"klapuch/access": "^2.17.1",
 		"klapuch/application": "@dev",
 		"klapuch/dataset": "@dev",
-		"klapuch/configuration": "*",
+		"klapuch/configuration": "dev-master as 0.0.1",
 		"klapuch/iterator": "dev-master",
 		"klapuch/log": "^1.0.0",
 		"klapuch/output": "dev-master as 2.6.0",
@@ -25,7 +25,8 @@
 		"klapuch/storage": "dev-master as 2.0.0",
 		"klapuch/validation": "dev-master as 2.6.0",
 		"justinrainbow/json-schema": "^5.2",
-		"klapuch/ui": "dev-master as 0.0.3"
+		"klapuch/ui": "dev-master as 0.0.3",
+		"klapuch/uri": "dev-master as 3.0.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
