@@ -4,10 +4,10 @@ DECLARE
 	messages TEXT[];
 BEGIN
 	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
-		(SELECT seeker FROM samples.seeker()),
-		(SELECT description FROM samples.description()),
+		(SELECT samples.seeker()),
+		(SELECT samples.description()),
 		NOW() - INTERVAL '10 MINUTE',
-		(SELECT location FROM samples.location())
+		(SELECT samples.location())
 	);
 
 	messages = messages || message FROM assert.throws(

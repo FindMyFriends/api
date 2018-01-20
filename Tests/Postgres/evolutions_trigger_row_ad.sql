@@ -3,18 +3,18 @@ DECLARE
 	inserted_evolution_id evolutions.id%TYPE;
 	inserted_seeker_id seekers.id%TYPE;
 BEGIN
-	SELECT seeker FROM samples.seeker() INTO inserted_seeker_id;
+	SELECT samples.seeker() INTO inserted_seeker_id;
 
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
 		inserted_seeker_id,
-		(SELECT description FROM samples.description()),
+		(SELECT samples.description()),
 		NOW()
 	)
 	RETURNING id INTO inserted_evolution_id;
 
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
 		inserted_seeker_id,
-		(SELECT description FROM samples.description()),
+		(SELECT samples.description()),
 		NOW()
 	);
 

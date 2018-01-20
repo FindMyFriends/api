@@ -3,10 +3,10 @@ DECLARE
 	inserted_demand_id demands.id%TYPE;
 BEGIN
 	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
-		(SELECT seeker FROM samples.seeker()),
-		(SELECT description FROM samples.description()),
+		(SELECT samples.seeker()),
+		(SELECT samples.description()),
 		NOW(),
-		(SELECT location FROM samples.location())
+		(SELECT samples.location())
 	)
 	RETURNING id INTO inserted_demand_id;
 
