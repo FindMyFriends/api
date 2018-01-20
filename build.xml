@@ -113,11 +113,16 @@
 	<target name="move-schemas" depends="generate-schemas">
 		<mkdir dir="${base_path}/www/schema/v1/demand" />
 		<mkdir dir="${base_path}/www/schema/v1/evolution" />
+		<mkdir dir="${base_path}/www/schema/v1/description" />
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolutions/schema/post.json" link="${base_path}/www/schema/v1/evolution/post.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Evolution/schema/put.json" link="${base_path}/www/schema/v1/evolution/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolution/schema/get.json" link="${base_path}/www/schema/v1/evolution/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Description/schema/get.json" link="${base_path}/www/schema/v1/description/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Description/schema/put.json" link="${base_path}/www/schema/v1/description/put.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Descriptions/schema/post.json" link="${base_path}/www/schema/v1/description/post.json" overwrite="true"/>
 	</target>
 
 	<target name="generate-schemas">

@@ -34,3 +34,8 @@ $evolution = new Schema\Evolution($database);
 $schemas->save($evolution->get(), new SplFileInfo(__DIR__ . '/../App/V1/Evolution/schema/get.json'));
 $schemas->save($evolution->put(), new SplFileInfo(__DIR__ . '/../App/V1/Evolution/schema/put.json'));
 $schemas->save($evolution->post(), new SplFileInfo(__DIR__ . '/../App/V1/Evolutions/schema/post.json'));
+
+$description = new Schema\Description($database);
+$schemas->save($description->get(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/get.json'));
+$schemas->save($description->put(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/put.json'));
+$schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descriptions/schema/post.json'));

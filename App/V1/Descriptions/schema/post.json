@@ -1,0 +1,567 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "rating": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "minimum": 0,
+            "maximum": 10
+        },
+        "eye": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "lenses": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            10,
+                            8
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "lenses",
+                "color_id"
+            ],
+            "type": "object"
+        },
+        "length_unit": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "enum": [
+                null,
+                "mm",
+                "cm"
+            ]
+        },
+        "mass_unit": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "enum": [
+                null,
+                "kg"
+            ]
+        },
+        "age": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "minimum": 15,
+            "maximum": 130
+        }
+    },
+    "additionalProperties": false,
+    "properties": {
+        "body": {
+            "additionalProperties": false,
+            "properties": {
+                "weight": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "$ref": "#/definitions/mass_unit"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
+                    ]
+                },
+                "height": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "$ref": "#/definitions/length_unit"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
+                    ]
+                },
+                "breast_size": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                    ]
+                },
+                "build_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "weight",
+                "height",
+                "build_id"
+            ],
+            "type": "object"
+        },
+        "hair": {
+            "additionalProperties": false,
+            "properties": {
+                "highlights": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "length": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "$ref": "#/definitions/length_unit"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
+                    ]
+                },
+                "nature": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "roots": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            10,
+                            8
+                        ]
+                    }
+                },
+                "style_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "roots",
+                "length",
+                "highlights",
+                "nature",
+                "color_id",
+                "style_id"
+            ],
+            "type": "object"
+        },
+        "beard": {
+            "additionalProperties": false,
+            "properties": {
+                "length": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "type": [
+                                "number",
+                                "null"
+                            ]
+                        },
+                        "unit": {
+                            "type": [
+                                "null",
+                                "string"
+                            ],
+                            "enum": [
+                                null,
+                                "mm",
+                                "cm"
+                            ]
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "value",
+                        "unit"
+                    ]
+                },
+                "style": {
+                    "additionalProperties": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            8
+                        ]
+                    }
+                }
+            },
+            "type": "object",
+            "required": [
+                "length",
+                "style",
+                "color_id"
+            ]
+        },
+        "eye": {
+            "additionalProperties": false,
+            "properties": {
+                "left": {
+                    "$ref": "#/definitions/eye"
+                },
+                "right": {
+                    "$ref": "#/definitions/eye"
+                }
+            }
+        },
+        "eyebrow": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
+                },
+                "color_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            12,
+                            8
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "care",
+                "color_id"
+            ],
+            "type": "object"
+        },
+        "teeth": {
+            "additionalProperties": false,
+            "properties": {
+                "braces": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
+                }
+            },
+            "required": [
+                "care",
+                "braces"
+            ],
+            "type": "object"
+        },
+        "face": {
+            "additionalProperties": false,
+            "properties": {
+                "care": {
+                    "$ref": "#/definitions/rating"
+                },
+                "freckles": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "shape": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        "oval",
+                        "long",
+                        "round",
+                        "square"
+                    ]
+                }
+            },
+            "required": [
+                "shape",
+                "care",
+                "freckles"
+            ],
+            "type": "object"
+        },
+        "general": {
+            "additionalProperties": false,
+            "properties": {
+                "age": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "from": {
+                            "$ref": "#/definitions/age"
+                        },
+                        "to": {
+                            "$ref": "#/definitions/age"
+                        }
+                    },
+                    "required": [
+                        "from",
+                        "to"
+                    ],
+                    "type": "object"
+                },
+                "firstname": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "man",
+                        "woman"
+                    ]
+                },
+                "lastname": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ethnic_group_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "lastname",
+                "firstname",
+                "age",
+                "gender",
+                "ethnic_group_id"
+            ],
+            "type": "object"
+        },
+        "hands": {
+            "additionalProperties": false,
+            "properties": {
+                "nails": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "length": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "value": {
+                                    "type": [
+                                        "number",
+                                        "null"
+                                    ]
+                                },
+                                "unit": {
+                                    "$ref": "#/definitions/length_unit"
+                                }
+                            },
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "care": {
+                            "$ref": "#/definitions/rating"
+                        },
+                        "color_id": {
+                            "type": {
+                                "0": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "enum": [
+                                    null,
+                                    145,
+                                    12,
+                                    10,
+                                    8
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "length",
+                        "care",
+                        "color_id"
+                    ],
+                    "type": "object"
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
+                },
+                "vein_visibility": {
+                    "$ref": "#/definitions/rating"
+                },
+                "joint_visibility": {
+                    "$ref": "#/definitions/rating"
+                },
+                "hair": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "amount": {
+                            "additionalProperties": false,
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "color_id": {
+                            "type": {
+                                "0": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "enum": [
+                                    null,
+                                    12,
+                                    8
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "amount",
+                        "color_id"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "nails",
+                "care",
+                "vein_visibility",
+                "joint_visibility",
+                "hair"
+            ],
+            "type": "object"
+        }
+    },
+    "required": [
+        "general",
+        "face",
+        "hair",
+        "body",
+        "hands"
+    ],
+    "type": "object"
+}
