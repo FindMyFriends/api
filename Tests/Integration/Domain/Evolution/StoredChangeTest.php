@@ -95,7 +95,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nails' => [
 						'length' => [
 							'value' => 5,
-							'unit' => null,
+							'unit' => 'mm',
 						],
 						'care' => null,
 						'color_id' => 8,
@@ -116,7 +116,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nails' => [
 						'length' => [
 							'value' => 5,
-							'unit' => null,
+							'unit' => 'mm',
 						],
 						'care' => null,
 						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
@@ -276,7 +276,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nails' => [
 						'length' => [
 							'value' => 5,
-							'unit' => null,
+							'unit' => 'mm',
 						],
 						'care' => null,
 						'color_id' => 8,

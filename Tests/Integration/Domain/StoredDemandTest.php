@@ -59,7 +59,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'color_id' => 8,
 					'length' => [
 						'value' => 5,
-						'unit' => null,
+						'unit' => 'mm',
 					],
 					'highlights' => null,
 					'roots' => null,
@@ -122,7 +122,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				'hands' => [
 					'nails' => [
 						'length' => [
-							'value' => null,
+							'value' => 5,
 							'unit' => 'mm',
 						],
 						'care' => null,
@@ -143,7 +143,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				'hands' => [
 					'nails' => [
 						'length' => [
-							'value' => null,
+							'value' => 5,
 							'unit' => 'mm',
 						],
 						'care' => null,
@@ -216,7 +216,7 @@ final class StoredDemandTest extends Tester\TestCase {
 					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
 					'length' => [
 						'value' => 5,
-						'unit' => null,
+						'unit' => 'mm',
 					],
 					'highlights' => null,
 					'roots' => null,

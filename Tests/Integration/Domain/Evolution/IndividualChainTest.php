@@ -55,7 +55,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				'beard' => [
 					'color_id' => 8,
 					'length' => [
-						'value' => null,
+						'value' => 5,
 						'unit' => 'mm',
 					],
 					'style' => null,
@@ -99,7 +99,7 @@ final class IndividualChainTest extends Tester\TestCase {
 					'nails' => [
 						'length' => [
 							'value' => 1,
-							'unit' => null,
+							'unit' => 'mm',
 						],
 						'care' => null,
 						'color_id' => 8,

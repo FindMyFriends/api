@@ -39,8 +39,8 @@ final class IndividualDemandsTest extends Tester\TestCase {
 					'style_id' => 1,
 					'color_id' => 8,
 					'length' => [
-						'value' => null,
-						'unit' => null,
+						'value' => 5,
+						'unit' => 'mm',
 					],
 					'highlights' => null,
 					'roots' => null,
@@ -50,7 +50,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 					'color_id' => 8,
 					'length' => [
 						'value' => 1,
-						'unit' => null,
+						'unit' => 'mm',
 					],
 					'style' => null,
 				],
@@ -103,8 +103,8 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				'hands' => [
 					'nails' => [
 						'length' => [
-							'value' => null,
-							'unit' => null,
+							'value' => 5,
+							'unit' => 'mm',
 						],
 						'care' => null,
 						'color_id' => 8,

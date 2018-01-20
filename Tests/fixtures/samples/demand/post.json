@@ -78,7 +78,7 @@
 		"nails": {
 			"color_id": null,
 			"length": {
-				"value": null,
+				"value": 5,
 				"unit": "mm"
 			},
 			"care": null

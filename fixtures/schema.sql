@@ -112,6 +112,20 @@ CREATE TYPE printed_color AS (
 
 
 -- FUNCTIONS --
+CREATE FUNCTION validate_length(length) RETURNS boolean
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+  IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
+    RETURN TRUE;
+  ELSIF $1.value IS NULL THEN
+    RAISE EXCEPTION 'Length with unit must contain value';
+  ELSIF $1.unit IS NULL THEN
+    RAISE EXCEPTION 'Length with value must contain unit';
+  END IF;
+END
+$$;
+
 CREATE FUNCTION age_to_year(age int4range, now timestamp with time zone) RETURNS int4range
     LANGUAGE plpgsql IMMUTABLE
     AS $$
@@ -595,7 +609,8 @@ CREATE TABLE beards (
   id integer NOT NULL,
   color_id smallint,
   length length,
-  style text
+  style text,
+  CONSTRAINT beards_length_check CHECK (validate_length(length))
 );
 ALTER TABLE beards ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME beards_id_seq
@@ -615,7 +630,8 @@ CREATE TABLE bodies (
   build_id smallint,
   weight mass,
   height length,
-  breast_size breast_sizes
+  breast_size breast_sizes,
+  CONSTRAINT bodies_height_check CHECK (validate_length(height))
 );
 ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME bodies_id_seq
@@ -737,7 +753,8 @@ CREATE TABLE hair (
   length length,
   highlights boolean,
   roots boolean,
-  nature boolean
+  nature boolean,
+  CONSTRAINT hair_length_check CHECK (validate_length(length))
 );
 ALTER TABLE hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME hair_id_seq
@@ -810,7 +827,8 @@ CREATE TABLE nails (
   color_id smallint,
   length length,
   care smallint,
-  CONSTRAINT nails_care_check CHECK (is_rating((care)::integer))
+  CONSTRAINT nails_care_check CHECK (is_rating((care)::integer)),
+  CONSTRAINT nails_length_check CHECK (validate_length(length))
 );
 ALTER TABLE nails ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME nails_id_seq
