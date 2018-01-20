@@ -439,17 +439,40 @@
                     ]
                 },
                 "shape": {
-                    "type": [
-                        "string",
-                        "null"
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "name"
                     ],
-                    "enum": [
-                        null,
-                        "oval",
-                        "long",
-                        "round",
-                        "square"
-                    ]
+                    "additionalProperties": false,
+                    "properties": {
+                        "id": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                1,
+                                2,
+                                3,
+                                4
+                            ]
+                        },
+                        "name": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                "oval",
+                                "long",
+                                "round",
+                                "square"
+                            ]
+                        }
+                    }
                 }
             },
             "required": [

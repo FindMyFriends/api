@@ -94,7 +94,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'freckles' => null,
-					'shape' => null,
+					'shape_id' => 1,
 				],
 				'body' => [
 					'build_id' => 1,
@@ -203,7 +203,10 @@ final class StoredDemandTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'freckles' => null,
-					'shape' => null,
+					'shape' => [
+						'id' => 1,
+						'name' => 'oval',
+					],
 				],
 				'hair' => [
 					'style' => [

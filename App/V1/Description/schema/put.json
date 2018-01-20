@@ -363,24 +363,26 @@
                         "null"
                     ]
                 },
-                "shape": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "enum": [
-                        null,
-                        "oval",
-                        "long",
-                        "round",
-                        "square"
-                    ]
+                "shape_id": {
+                    "type": {
+                        "0": [
+                            "integer",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    }
                 }
             },
             "required": [
-                "shape",
                 "care",
-                "freckles"
+                "freckles",
+                "shape_id"
             ],
             "type": "object"
         },

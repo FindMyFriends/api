@@ -74,7 +74,7 @@ final class StoredDemand implements Demand {
 				beard_style = :beard_style,
 				eyebrow_color_id = :eyebrow_color_id,
 				eyebrow_care = :eyebrow_care,
-				face_shape = :face_shape,
+				face_shape_id = :face_shape_id,
 				tooth_care = :teeth_care,
 				tooth_braces = :teeth_braces,
 				left_eye_color_id = :eye_left_color_id,

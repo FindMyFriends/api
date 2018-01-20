@@ -75,7 +75,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				'face' => [
 					'care' => null,
 					'freckles' => null,
-					'shape' => null,
+					'shape_id' => null,
 				],
 				'body' => [
 					'build_id' => 1,

@@ -48,7 +48,7 @@
 	},
 	"face": {
 		"freckles": false,
-		"shape": "oval",
+		"shape_id": 1,
 		"care": 10
 	},
 	"body": {

@@ -242,10 +242,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO faces (freckles, care, shape) VALUES (
+	INSERT INTO faces (freckles, care, shape_id) VALUES (
 		random() > 0.5,
 		test_utils.better_random(0, 10),
-		test_utils.random_enum('face_shapes')::face_shapes
+    (SELECT id FROM face_shapes ORDER BY random() LIMIT 1)
 	)
 	RETURNING id
 	INTO v_id;

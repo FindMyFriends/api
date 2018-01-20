@@ -33,13 +33,6 @@ CREATE TYPE breast_sizes AS ENUM (
     'D'
 );
 
-CREATE TYPE face_shapes AS ENUM (
-    'oval',
-    'long',
-    'round',
-    'square'
-);
-
 
 CREATE TYPE genders AS ENUM (
     'man',
@@ -96,7 +89,7 @@ CREATE TYPE flat_description AS (
   right_eye_lenses boolean,
   face_freckles boolean,
   face_care smallint,
-  face_shape face_shapes,
+  face_shape_id smallint,
   hand_care smallint,
   hand_vein_visibility smallint,
   hand_joint_visibility smallint,
@@ -340,10 +333,10 @@ BEGIN
   )
   RETURNING id
     INTO v_hand_hair_id;
-  INSERT INTO faces (freckles, care, shape) VALUES (
+  INSERT INTO faces (freckles, care, shape_id) VALUES (
     description.face_freckles,
     description.face_care,
-    description.face_shape
+    description.face_shape_id
   )
   RETURNING id
     INTO v_face_id;
@@ -452,7 +445,7 @@ BEGIN
   UPDATE faces
   SET freckles = description.face_freckles,
     care = description.face_care,
-    shape = description.face_shape
+    shape_id = description.face_shape_id
   WHERE id = parts.face_id;
 
   UPDATE bodies
@@ -498,6 +491,20 @@ END $$;
 -----
 
 -- TABLES --
+CREATE TABLE face_shapes (
+  id smallint NOT NULL,
+  name text NOT NULL
+);
+ALTER TABLE face_shapes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+  SEQUENCE NAME face_shapes_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  NO MINVALUE
+  NO MAXVALUE
+  CACHE 1
+);
+ALTER TABLE ONLY face_shapes ADD CONSTRAINT face_shapes_pkey PRIMARY KEY(id);
+
 CREATE TABLE colors (
   id smallint NOT NULL,
   name text NOT NULL,
@@ -676,7 +683,7 @@ CREATE TABLE faces (
   id integer NOT NULL,
   freckles boolean,
   care smallint,
-  shape face_shapes,
+  shape_id smallint,
   CONSTRAINT faces_care_check CHECK (is_rating((care)::integer))
 );
 ALTER TABLE faces ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -688,6 +695,7 @@ ALTER TABLE faces ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   CACHE 1
 );
 ALTER TABLE ONLY faces ADD CONSTRAINT faces_pkey PRIMARY KEY(id);
+ALTER TABLE ONLY faces ADD CONSTRAINT faces_face_shapes_id_fk FOREIGN KEY (shape_id) REFERENCES face_shapes(id);
 
 
 CREATE TABLE hair_styles (
@@ -1074,12 +1082,14 @@ CREATE VIEW complete_descriptions AS
       ROW(hair_color.*)::colors AS hair_color,
       ROW(eyebrow_color.*)::colors AS eyebrow_color,
       ROW(hand_hair_color.*)::colors AS hand_hair_color,
-      ROW(nail_color.*)::colors AS nail_color
+      ROW(nail_color.*)::colors AS nail_color,
+      ROW(face_shape.*)::face_shapes AS face_shape
   FROM descriptions description
   LEFT JOIN hair ON hair.id = description.hair_id
   LEFT JOIN bodies body ON body.id = description.body_id
   LEFT JOIN body_builds body_build ON body_build.id = body.build_id
   LEFT JOIN faces face ON face.id = description.face_id
+  LEFT JOIN face_shapes face_shape ON face.shape_id = face_shape.id
   LEFT JOIN beards beard ON beard.id = description.beard_id
   LEFT JOIN general ON general.id = description.general_id
   LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
@@ -1117,7 +1127,8 @@ CREATE VIEW printed_descriptions AS
       ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS beard,
       ROW((complete_descriptions.beard_color).id, (complete_descriptions.beard_color).name, (complete_descriptions.beard_color).hex)::printed_color AS beard_color,
     complete_descriptions.eyebrow,
-    (complete_descriptions.face).shape AS face_shape,
+    (complete_descriptions.face).shape_id AS face_shape_id,
+    complete_descriptions.face_shape AS face_shape,
     complete_descriptions.tooth,
     complete_descriptions.left_eye,
     complete_descriptions.right_eye,
@@ -1194,6 +1205,7 @@ CREATE VIEW collective_demands AS
     year_to_age(printed_description.general_birth_year, (location.met_at).moment) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
+    printed_description.face_shape_id,
     printed_description.eyebrow_color,
     printed_description.hands_vein_visibility,
     printed_description.hands_joint_visibility,
@@ -1287,7 +1299,7 @@ BEGIN
       new.right_eye_lenses,
       new.face_freckles,
       new.face_care,
-      new.face_shape,
+      new.face_shape_id,
       new.hands_care,
       new.hands_vein_visibility,
       new.hands_joint_visibility,
@@ -1367,7 +1379,7 @@ BEGIN
       new.right_eye_lenses,
       new.face_freckles,
       new.face_care,
-      new.face_shape,
+      new.face_shape_id,
       new.hands_care,
       new.hands_vein_visibility,
       new.hands_joint_visibility,
@@ -1394,6 +1406,7 @@ CREATE VIEW collective_evolutions AS
     year_to_age(printed_description.general_birth_year, evolution.evolved_at) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
+    printed_description.face_shape_id,
     printed_description.eyebrow_color,
     printed_description.hands_vein_visibility,
     printed_description.hands_joint_visibility,
@@ -1488,7 +1501,7 @@ BEGIN
       new.right_eye_lenses,
       new.face_freckles,
       new.face_care,
-      new.face_shape,
+      new.face_shape_id,
       new.hands_care,
       new.hands_vein_visibility,
       new.hands_joint_visibility,
@@ -1552,7 +1565,7 @@ BEGIN
       new.right_eye_lenses,
       new.face_freckles,
       new.face_care,
-      new.face_shape,
+      new.face_shape_id,
       new.hands_care,
       new.hands_vein_visibility,
       new.hands_joint_visibility,
