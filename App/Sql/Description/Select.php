@@ -39,7 +39,6 @@ final class Select implements Clauses\Select {
 					'tooth_care',
 					'tooth_braces',
 					'body_build',
-					'body_skin_color',
 					'body_weight',
 					'body_height',
 					'body_breast_size',

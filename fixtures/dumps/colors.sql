@@ -149,7 +149,6 @@ INSERT INTO colors (name, hex) VALUES
 	('YellowGreen', '#9acd32'),
 	('Blonde', '#fbf6d9');
 
-INSERT INTO skin_colors (color_id) VALUES (8), (145);
 INSERT INTO hair_colors (color_id) VALUES (8), (10), (12);
 INSERT INTO eye_colors (color_id) VALUES (8), (10), (12);
 INSERT INTO nail_colors (color_id) VALUES (8), (10), (12), (145);

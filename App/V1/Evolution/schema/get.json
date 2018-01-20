@@ -100,55 +100,10 @@
                         "C",
                         "D"
                     ]
-                },
-                "skin_color": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                145,
-                                8
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "White",
-                                "Black"
-                            ]
-                        },
-                        "hex": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "#ffffff",
-                                "#000000"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name",
-                        "hex"
-                    ],
-                    "type": "object"
                 }
             },
             "required": [
                 "build",
-                "skin_color",
                 "weight",
                 "height"
             ],

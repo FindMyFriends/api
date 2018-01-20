@@ -82,7 +82,6 @@ CREATE TYPE flat_description AS (
   hair_roots boolean,
   hair_nature boolean,
   body_build_id smallint,
-  body_skin_color_id smallint,
   body_weight mass,
   body_height length,
   body_breast_size breast_sizes,
@@ -348,9 +347,8 @@ BEGIN
   )
   RETURNING id
     INTO v_face_id;
-  INSERT INTO bodies (build_id, skin_color_id, weight, height, breast_size) VALUES (
+  INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
     description.body_build_id,
-    description.body_skin_color_id,
     description.body_weight,
     description.body_height,
     description.body_breast_size
@@ -459,7 +457,6 @@ BEGIN
 
   UPDATE bodies
   SET build_id = description.body_build_id,
-    skin_color_id = description.body_skin_color_id,
     weight = description.body_weight,
     height = description.body_height,
     breast_size = description.body_breast_size
@@ -516,23 +513,6 @@ ALTER TABLE colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   CACHE 1
 );
 ALTER TABLE ONLY colors ADD CONSTRAINT colors_pkey PRIMARY KEY(id);
-
-
-CREATE TABLE skin_colors (
-  id smallint NOT NULL,
-  color_id smallint NOT NULL
-);
-ALTER TABLE skin_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME alter_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
-ALTER TABLE ONLY skin_colors ADD CONSTRAINT skin_colors_pkey PRIMARY KEY (id);
-CREATE UNIQUE INDEX skin_colors_color_id_uindex ON skin_colors USING btree (color_id);
-ALTER TABLE ONLY skin_colors ADD CONSTRAINT skin_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 CREATE TABLE body_builds (
@@ -626,7 +606,6 @@ CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EAC
 CREATE TABLE bodies (
   id integer NOT NULL,
   build_id smallint,
-  skin_color_id smallint,
   weight mass,
   height length,
   breast_size breast_sizes
@@ -641,7 +620,6 @@ ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 );
 ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id);
-ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_skin_colors_color_id_fk FOREIGN KEY (skin_color_id) REFERENCES skin_colors(color_id);
 
 
 CREATE TABLE eyebrows (
@@ -1090,7 +1068,6 @@ CREATE VIEW complete_descriptions AS
       ROW(eyebrow.*)::eyebrows AS eyebrow,
       ROW(left_eye.*)::eyes AS left_eye,
       ROW(right_eye.*)::eyes AS right_eye,
-      ROW(body_skin_color.*)::colors AS body_skin_color,
       ROW(left_eye_color.*)::colors AS left_eye_color,
       ROW(right_eye_color.*)::colors AS right_eye_color,
       ROW(beard_color.*)::colors AS beard_color,
@@ -1114,7 +1091,6 @@ CREATE VIEW complete_descriptions AS
   LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
   LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
   LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id
-  LEFT JOIN colors body_skin_color ON body_skin_color.id = body.skin_color_id
   LEFT JOIN colors left_eye_color ON left_eye_color.id = left_eye.color_id
   LEFT JOIN colors right_eye_color ON right_eye_color.id = left_eye.color_id
   LEFT JOIN colors beard_color ON beard_color.id = beard.color_id
@@ -1135,7 +1111,6 @@ CREATE VIEW printed_descriptions AS
     complete_descriptions.ethnic_group AS general_ethnic_group,
     complete_descriptions.body,
     complete_descriptions.body_build,
-      ROW((complete_descriptions.body_skin_color).id, (complete_descriptions.body_skin_color).name, (complete_descriptions.body_skin_color).hex)::printed_color AS body_skin_color,
       ROW((complete_descriptions.nail_color).id, (complete_descriptions.nail_color).name, (complete_descriptions.nail_color).hex)::printed_color AS hands_nails_color,
     (complete_descriptions.face).freckles AS face_freckles,
     (complete_descriptions.face).care AS face_care,
@@ -1170,7 +1145,6 @@ CREATE VIEW flat_descriptions AS
     (printed_descriptions.body).weight AS body_weight,
     (printed_descriptions.body).height AS body_height,
     (printed_descriptions.body).breast_size AS body_breast_size,
-    printed_descriptions.body_skin_color,
     printed_descriptions.body_build,
     (printed_descriptions.hair).color_id AS hair_color_id,
     (printed_descriptions.hair).style_id AS hair_style_id,
@@ -1228,7 +1202,6 @@ CREATE VIEW collective_demands AS
     printed_description.hands_hair,
     printed_description.hair_color,
     (printed_description.body).build_id AS body_build_id,
-    (printed_description.body).skin_color_id AS body_skin_color_id,
     printed_description.general_ethnic_group_id,
     flat_description.beard_color,
     flat_description.general_firstname,
@@ -1254,7 +1227,6 @@ CREATE VIEW collective_demands AS
     flat_description.hands_hair_color_id,
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
-    flat_description.body_skin_color,
     flat_description.general_ethnic_group,
     flat_description.face_freckles,
     flat_description.face_care,
@@ -1301,7 +1273,6 @@ BEGIN
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_skin_color_id,
       new.body_weight,
       new.body_height,
       new.body_breast_size,
@@ -1382,7 +1353,6 @@ BEGIN
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_skin_color_id,
       new.body_weight,
       new.body_height,
       new.body_breast_size,
@@ -1432,7 +1402,6 @@ CREATE VIEW collective_evolutions AS
     printed_description.hands_hair,
     printed_description.hair_color,
     (printed_description.body).build_id AS body_build_id,
-    (printed_description.body).skin_color_id AS body_skin_color_id,
     printed_description.general_ethnic_group_id,
     flat_description.beard_color,
     flat_description.general_firstname,
@@ -1458,7 +1427,6 @@ CREATE VIEW collective_evolutions AS
     flat_description.hands_hair_color_id,
     flat_description.hands_hair_amount,
     flat_description.hands_nails_color,
-    flat_description.body_skin_color,
     flat_description.general_ethnic_group,
     flat_description.face_freckles,
     flat_description.face_care,
@@ -1506,7 +1474,6 @@ BEGIN
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_skin_color_id,
       new.body_weight,
       new.body_height,
       new.body_breast_size,
@@ -1571,7 +1538,6 @@ BEGIN
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_skin_color_id,
       new.body_weight,
       new.body_height,
       new.body_breast_size,

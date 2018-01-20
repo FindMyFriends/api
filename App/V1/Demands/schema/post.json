@@ -71,26 +71,12 @@
                             5
                         ]
                     }
-                },
-                "skin_color_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            145,
-                            8
-                        ]
-                    }
                 }
             },
             "required": [
                 "weight",
                 "height",
-                "build_id",
-                "skin_color_id"
+                "build_id"
             ],
             "type": "object"
         },

@@ -50,7 +50,6 @@
 	},
 	"body": {
 		"build_id": 1,
-		"skin_color_id": 8,
 		"weight": {
 			"value": 60,
 			"unit": "kg"

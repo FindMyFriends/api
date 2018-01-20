@@ -109,29 +109,9 @@ final class Description {
 							'type' => ['string', 'null'],
 							'enum' => array_merge([null], (new PostgresEnum('breast_sizes', $this->database))->values()),
 						],
-						'skin_color' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'id' => [
-									'type' => ['integer', 'null'],
-									'enum' => array_merge([null], (new Colors('id', 'skin_colors', $this->database))->values()),
-								],
-								'name' => [
-									'type' => ['string', 'null'],
-									'enum' => array_merge([null], (new Colors('name', 'skin_colors', $this->database))->values()),
-								],
-								'hex' => [
-									'type' => ['string', 'null'],
-									'enum' => array_merge([null], (new Colors('hex', 'skin_colors', $this->database))->values()),
-								],
-							],
-							'required' => ['id', 'name', 'hex'],
-							'type' => 'object',
-						],
 					],
 					'required' => [
 						'build',
-						'skin_color',
 						'weight',
 						'height',
 					],
@@ -440,7 +420,6 @@ final class Description {
 		$builds = new PostgresTableEnum('id', 'body_builds', $this->database);
 		$properties = &$schema['properties'];
 		$properties['body'] = (new JsonEnum($builds, $properties['body'], 'build', 'build_id'))->values();
-		$properties['body'] = (new JsonEnum(new Colors('id', 'skin_colors', $this->database), $properties['body'], 'skin_color', 'skin_color_id'))->values();
 		$properties['hair'] = (new JsonEnum(new Colors('id', 'hair_colors', $this->database), $properties['hair'], 'color', 'color_id'))->values();
 		$properties['beard'] = (new JsonEnum(new Colors('id', 'beard_colors', $this->database), $properties['beard'], 'color', 'color_id'))->values();
 		$properties['eyebrow'] = (new JsonEnum(new Colors('id', 'eyebrow_colors', $this->database), $properties['eyebrow'], 'color', 'color_id'))->values();

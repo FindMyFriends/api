@@ -79,7 +79,6 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				],
 				'body' => [
 					'build_id' => 1,
-					'skin_color_id' => 8,
 					'weight' => [
 						'value' => 120,
 						'unit' => 'kg',

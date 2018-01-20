@@ -7,7 +7,7 @@ DECLARE
 	v_table_name TEXT;
 	counts hstore DEFAULT '';
 	zero_counts hstore DEFAULT '';
-	table_enums TEXT[] DEFAULT ARRAY['colors', 'ethnic_groups', 'body_builds', 'eye_colors', 'hair_colors', 'nail_colors', 'skin_colors', 'beard_colors', 'eyebrow_colors', 'hand_hair_colors', 'hair_styles'];
+	table_enums TEXT[] DEFAULT ARRAY['colors', 'ethnic_groups', 'body_builds', 'eye_colors', 'hair_colors', 'nail_colors', 'beard_colors', 'eyebrow_colors', 'hand_hair_colors', 'hair_styles'];
 	count INTEGER;
 BEGIN
 	FOR v_table_name IN (
