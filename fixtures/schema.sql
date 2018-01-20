@@ -126,6 +126,20 @@ BEGIN
 END
 $$;
 
+CREATE FUNCTION validate_mass(mass) RETURNS boolean
+LANGUAGE plpgsql IMMUTABLE
+AS $$
+BEGIN
+  IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
+    RETURN TRUE;
+  ELSIF $1.value IS NULL THEN
+    RAISE EXCEPTION 'Mass with unit must contain value';
+  ELSIF $1.unit IS NULL THEN
+    RAISE EXCEPTION 'Mass with value must contain unit';
+  END IF;
+END
+$$;
+
 CREATE FUNCTION age_to_year(age int4range, now timestamp with time zone) RETURNS int4range
     LANGUAGE plpgsql IMMUTABLE
     AS $$
@@ -631,7 +645,8 @@ CREATE TABLE bodies (
   weight mass,
   height length,
   breast_size breast_sizes,
-  CONSTRAINT bodies_height_check CHECK (validate_length(height))
+  CONSTRAINT bodies_height_check CHECK (validate_length(height)),
+  CONSTRAINT bodies_weight_check CHECK (validate_mass(weight))
 );
 ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME bodies_id_seq
