@@ -16,10 +16,7 @@ final class EvolutionRule implements Validation\Rule {
 	public function apply($subject): array {
 		return array_replace_recursive(
 			[
-				'evolved_at' => (new Validation\FriendlyRule(
-					new DateTimeRule(),
-					'evolved_at must be in ISO8601'
-				))->apply($subject['evolved_at']),
+				'evolved_at' => (new DateTimeRule('evolved_at'))->apply($subject['evolved_at']),
 			],
 			(new DescriptionRule())->apply($subject)
 		);

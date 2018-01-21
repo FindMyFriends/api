@@ -23,13 +23,11 @@ final class DemandRule implements Validation\Rule {
 			[
 				'location' => [
 					'met_at' => [
-						'moment' => (new Validation\FriendlyRule(
-							new DateTimeRule(),
-							'location.met_at.moment must be in ISO8601'
+						'moment' => (new DateTimeRule(
+							'location.met_at'
 						))->apply($subject['location']['met_at']['moment']),
-						'approximation' => (new Validation\FriendlyRule(
-							new IntervalRule(),
-							'location.met_at.approximation must be in ISO8601'
+						'approximation' => (new IntervalRule(
+							'location.met_at.approximation'
 						))->apply($subject['location']['met_at']['approximation']),
 					],
 				],
