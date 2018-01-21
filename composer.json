@@ -46,7 +46,8 @@
 			]
 		},
 		"files": [
-			"App/Http/statuses.php"
+			"App/Http/statuses.php",
+			"App/functions.php"
 		]
 	},
 	"autoload-dev": {

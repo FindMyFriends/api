@@ -17,9 +17,31 @@ final class DemandRuleTest extends Tester\TestCase {
 	public function testApplicationWithAllReturnedValues() {
 		Assert::equal(
 			[
-				'body' => ['breast_size' => null],
+				'body' => [
+					'breast_size' => null,
+					'height' => ['value' => 10, 'unit' => 'mm'],
+					'weight' => ['value' => 100, 'unit' => 'kg'],
+				],
+				'hair' => [
+					'length' => ['value' => 10, 'unit' => 'mm'],
+				],
 				'general' => ['gender' => 'man'],
-				'beard' => ['care' => 10],
+				'beard' => [
+					'color_id' => null,
+					'care' => 10,
+					'length' => [
+						'value' => null,
+						'unit' => null,
+					],
+				],
+				'hands' => [
+					'nails' => [
+						'length' => [
+							'value' => null,
+							'unit' => null,
+						],
+					],
+				],
 				'location' => [
 					'met_at' => [
 						'moment' => '2015-09-17T13:58:10+00:00',
@@ -29,9 +51,31 @@ final class DemandRuleTest extends Tester\TestCase {
 			],
 			(new Constraint\DemandRule())->apply(
 				[
-					'body' => ['breast_size' => null],
+					'body' => [
+						'breast_size' => null,
+						'height' => ['value' => 10, 'unit' => 'mm'],
+						'weight' => ['value' => 100, 'unit' => 'kg'],
+					],
+					'hair' => [
+						'length' => ['value' => 10, 'unit' => 'mm'],
+					],
 					'general' => ['gender' => 'man'],
-					'beard' => ['care' => 10],
+					'beard' => [
+						'color_id' => null,
+						'care' => 10,
+						'length' => [
+							'value' => null,
+							'unit' => null,
+						],
+					],
+					'hands' => [
+						'nails' => [
+							'length' => [
+								'value' => null,
+								'unit' => null,
+							],
+						],
+					],
 					'location' => [
 						'met_at' => [
 							'moment' => '2015-09-17T13:58:10+00:00',
