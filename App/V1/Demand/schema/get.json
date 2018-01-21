@@ -35,15 +35,13 @@
                     "properties": {
                         "moment": {
                             "type": [
-                                "string",
-                                "null"
+                                "string"
                             ],
                             "format": "date-time"
                         },
                         "timeline_side": {
                             "type": [
-                                "string",
-                                "null"
+                                "string"
                             ],
                             "enum": [
                                 "exactly",

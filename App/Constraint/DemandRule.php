@@ -14,6 +14,11 @@ final class DemandRule implements Validation\Rule {
 	}
 
 	public function apply($subject): array {
+		if ($subject['location']['met_at']['timeline_side'] === 'exactly' && $subject['location']['met_at']['approximation'] !== null) {
+			throw new \UnexpectedValueException(
+				'location.met_at.timeline_side - "exactly" do not have approximation'
+			);
+		}
 		return array_replace_recursive(
 			[
 				'location' => [

@@ -14,71 +14,58 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class DemandRuleTest extends Tester\TestCase {
-	public function testApplicationWithAllReturnedValues() {
-		Assert::equal(
-			[
-				'body' => [
-					'breast_size' => null,
-					'height' => ['value' => 10, 'unit' => 'mm'],
-					'weight' => ['value' => 100, 'unit' => 'kg'],
-				],
-				'hair' => [
-					'length' => ['value' => 10, 'unit' => 'mm'],
-				],
-				'general' => ['gender' => 'man'],
-				'beard' => [
-					'color_id' => null,
-					'care' => 10,
-					'length' => [
-						'value' => null,
-						'unit' => null,
-					],
-				],
-				'hands' => [
-					'nails' => [
-						'length' => [
-							'value' => null,
-							'unit' => null,
-						],
-					],
-				],
-				'location' => [
-					'met_at' => [
-						'moment' => '2015-09-17T13:58:10+00:00',
-						'approximation' => 'PT2H',
-					],
+	private const BASE = [
+		'body' => [
+			'breast_size' => null,
+			'height' => ['value' => 10, 'unit' => 'mm'],
+			'weight' => ['value' => 100, 'unit' => 'kg'],
+		],
+		'hair' => [
+			'length' => ['value' => 10, 'unit' => 'mm'],
+		],
+		'general' => ['gender' => 'man'],
+		'beard' => [
+			'color_id' => null,
+			'care' => 10,
+			'length' => [
+				'value' => null,
+				'unit' => null,
+			],
+		],
+		'hands' => [
+			'nails' => [
+				'length' => [
+					'value' => null,
+					'unit' => null,
 				],
 			],
-			(new Constraint\DemandRule())->apply(
+		],
+		'location' => [
+			'met_at' => [
+				'moment' => '2015-09-17T13:58:10+00:00',
+				'timeline_side' => 'sooner',
+				'approximation' => 'PT2H',
+			],
+		],
+	];
+
+	public function testApplicationWithAllReturnedValues() {
+		Assert::equal(self::BASE, (new Constraint\DemandRule())->apply(self::BASE));
+	}
+
+
+	/**
+	 * @throws \UnexpectedValueException location.met_at.timeline_side - "exactly" do not have approximation
+	 */
+	public function testThrowingOnExactlyTimeLineSideWithApproximation() {
+		(new Constraint\DemandRule())->apply(
+			array_replace_recursive(
+				self::BASE,
 				[
-					'body' => [
-						'breast_size' => null,
-						'height' => ['value' => 10, 'unit' => 'mm'],
-						'weight' => ['value' => 100, 'unit' => 'kg'],
-					],
-					'hair' => [
-						'length' => ['value' => 10, 'unit' => 'mm'],
-					],
-					'general' => ['gender' => 'man'],
-					'beard' => [
-						'color_id' => null,
-						'care' => 10,
-						'length' => [
-							'value' => null,
-							'unit' => null,
-						],
-					],
-					'hands' => [
-						'nails' => [
-							'length' => [
-								'value' => null,
-								'unit' => null,
-							],
-						],
-					],
 					'location' => [
 						'met_at' => [
 							'moment' => '2015-09-17T13:58:10+00:00',
+							'timeline_side' => 'exactly',
 							'approximation' => 'PT2H',
 						],
 					],

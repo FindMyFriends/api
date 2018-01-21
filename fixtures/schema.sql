@@ -112,6 +112,17 @@ CREATE TYPE printed_color AS (
 
 
 -- FUNCTIONS --
+CREATE FUNCTION validate_approximate_timestamptz(approximate_timestamptz) RETURNS boolean
+LANGUAGE plpgsql IMMUTABLE
+AS $$
+BEGIN
+  IF $1.timeline_side = 'exactly'::timeline_sides AND $1.approximation IS NOT NULL THEN
+    RAISE EXCEPTION '"Exactly" timeline_side can not have approximation';
+  END IF;
+  RETURN TRUE;
+END
+$$;
+
 CREATE FUNCTION validate_length(length) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $$
@@ -1009,7 +1020,8 @@ CREATE TABLE locations (
   id integer NOT NULL,
   coordinates point NOT NULL,
   place text,
-  met_at approximate_timestamptz NOT NULL
+  met_at approximate_timestamptz NOT NULL,
+  CONSTRAINT locations_met_at_check CHECK (validate_approximate_timestamptz(met_at))
 );
 ALTER TABLE locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME locations_id_seq

@@ -34,9 +34,9 @@ final class Demand {
 						'met_at' => [
 							'additionalProperties' => false,
 							'properties' => [
-								'moment' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+								'moment' => ['type' => ['string'], 'format' => 'date-time'],
 								'timeline_side' => [
-									'type' => ['string', 'null'],
+									'type' => ['string'],
 									'enum' => (new PostgresEnum('timeline_sides', $this->database))->values(),
 								],
 								'approximation' => ['type' => ['string', 'null']],
