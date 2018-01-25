@@ -22,6 +22,8 @@
 			<arg path="App"/>
 			<arg value="--exclude"/>
 			<arg path="V1/"/>
+			<arg value="--exclude"/>
+			<arg path="Sql/"/>
 		</exec>
 	</target>
 
