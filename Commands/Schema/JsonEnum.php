@@ -20,10 +20,8 @@ final class JsonEnum implements Enum {
 		unset($this->property['properties'][$this->old]);
 		$this->property['properties'] += [
 			$this->new => [
-				'type' => [
-					['integer', 'null'],
-					'enum' => array_merge([null], $this->origin->values()),
-				],
+				'type' => ['integer', 'null'],
+				'enum' => array_merge([null], $this->origin->values()),
 			],
 		];
 		unset($this->property['required'][array_search($this->old, $this->property['required'], true)]);

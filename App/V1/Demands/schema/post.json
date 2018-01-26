@@ -57,20 +57,18 @@
                     ]
                 },
                 "build_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
                 }
             },
             "required": [
@@ -121,35 +119,31 @@
                     ]
                 },
                 "color_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            12,
-                            10,
-                            8
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        10,
+                        8
+                    ]
                 },
                 "style_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ]
                 }
             },
             "required": [
@@ -200,17 +194,15 @@
                     ]
                 },
                 "color_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            12,
-                            8
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        8
+                    ]
                 }
             },
             "type": "object",
@@ -241,17 +233,15 @@
                     "$ref": "#/definitions/rating"
                 },
                 "color_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            12,
-                            8
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        8
+                    ]
                 }
             },
             "required": [
@@ -292,19 +282,17 @@
                     ]
                 },
                 "shape_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            1,
-                            2,
-                            3,
-                            4
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
                 }
             },
             "required": [
@@ -353,27 +341,25 @@
                     ]
                 },
                 "ethnic_group_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            10,
-                            11,
-                            12
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ]
                 }
             },
             "required": [
@@ -414,19 +400,17 @@
                             "$ref": "#/definitions/rating"
                         },
                         "color_id": {
-                            "type": {
-                                "0": [
-                                    "integer",
-                                    "null"
-                                ],
-                                "enum": [
-                                    null,
-                                    145,
-                                    12,
-                                    10,
-                                    8
-                                ]
-                            }
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                145,
+                                12,
+                                10,
+                                8
+                            ]
                         }
                     },
                     "required": [
@@ -456,17 +440,15 @@
                             ]
                         },
                         "color_id": {
-                            "type": {
-                                "0": [
-                                    "integer",
-                                    "null"
-                                ],
-                                "enum": [
-                                    null,
-                                    12,
-                                    8
-                                ]
-                            }
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                12,
+                                8
+                            ]
                         }
                     },
                     "required": [
@@ -577,18 +559,16 @@
                     ]
                 },
                 "color_id": {
-                    "type": {
-                        "0": [
-                            "integer",
-                            "null"
-                        ],
-                        "enum": [
-                            null,
-                            12,
-                            10,
-                            8
-                        ]
-                    }
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        10,
+                        8
+                    ]
                 }
             },
             "required": [
