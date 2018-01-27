@@ -111,6 +111,7 @@ echo (new class(
 											$this->database,
 											$user
 										),
+										'v1/evolutions [OPTIONS]' => new V1\Evolutions\Options($this->database),
 										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
 											$this->hashids['evolution']['hashid'],
 											$this->uri,
