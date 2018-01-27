@@ -81,6 +81,7 @@ echo (new class(
 										$this->database
 									))->enter((new Application\PlainRequest())->headers());
 									return [
+										'v1/demands [OPTIONS]' => new V1\Demands\Options($this->database),
 										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 											$this->hashids['demand']['hashid'],
 											$this->uri,

@@ -88,9 +88,9 @@
                     ],
                     "enum": [
                         null,
-                        12,
+                        8,
                         10,
-                        8
+                        12
                     ]
                 },
                 "highlights": {
@@ -166,8 +166,8 @@
                     ],
                     "enum": [
                         null,
-                        12,
-                        8
+                        8,
+                        12
                     ]
                 },
                 "length": {
@@ -180,15 +180,7 @@
                             ]
                         },
                         "unit": {
-                            "type": [
-                                "null",
-                                "string"
-                            ],
-                            "enum": [
-                                null,
-                                "mm",
-                                "cm"
-                            ]
+                            "$ref": "#/definitions/length_unit"
                         }
                     },
                     "type": "object",
@@ -233,8 +225,8 @@
                     ],
                     "enum": [
                         null,
-                        12,
-                        8
+                        8,
+                        12
                     ]
                 },
                 "care": {
@@ -360,10 +352,10 @@
                             ],
                             "enum": [
                                 null,
-                                145,
-                                12,
+                                8,
                                 10,
-                                8
+                                12,
+                                145
                             ]
                         },
                         "length": {
@@ -415,8 +407,8 @@
                             ],
                             "enum": [
                                 null,
-                                12,
-                                8
+                                8,
+                                12
                             ]
                         },
                         "amount": {
@@ -477,9 +469,9 @@
                     ],
                     "enum": [
                         null,
-                        12,
+                        8,
                         10,
-                        8
+                        12
                     ]
                 },
                 "lenses": {

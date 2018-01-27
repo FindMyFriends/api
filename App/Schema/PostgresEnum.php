@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Commands\Schema;
+namespace FindMyFriends\Schema;
 
 use Klapuch\Storage;
 

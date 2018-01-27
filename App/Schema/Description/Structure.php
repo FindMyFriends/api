@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Commands\Schema;
+namespace FindMyFriends\Schema\Description;
 
-final class Description {
+use FindMyFriends\Schema;
+
+final class Structure {
 	private $database;
 
 	public function __construct(\PDO $database) {
@@ -24,7 +26,7 @@ final class Description {
 					'properties' => [
 						'color_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new Colors('id', 'eye_colors', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('eye_colors', $this->database))->values())),
 						],
 						'lenses' => ['type' => ['boolean', 'null']],
 					],
@@ -33,11 +35,11 @@ final class Description {
 				],
 				'length_unit' => [
 					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
+					'enum' => array_merge([null], (new Schema\PostgresEnum('length_units', $this->database))->values()),
 				],
 				'mass_unit' => [
 					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new PostgresEnum('mass_units', $this->database))->values()),
+					'enum' => array_merge([null], (new Schema\PostgresEnum('mass_units', $this->database))->values()),
 				],
 				'age' => [
 					'type' => ['integer', 'null'],
@@ -52,7 +54,7 @@ final class Description {
 					'properties' => [
 						'build_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new PostgresTableEnum('id', 'body_builds', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\TableEnum('body_builds', $this->database))->values())),
 						],
 						'weight' => [
 							'additionalProperties' => false,
@@ -74,7 +76,7 @@ final class Description {
 						],
 						'breast_size' => [
 							'type' => ['string', 'null'],
-							'enum' => array_merge([null], (new PostgresEnum('breast_sizes', $this->database))->values()),
+							'enum' => array_merge([null], (new Schema\PostgresEnum('breast_sizes', $this->database))->values()),
 						],
 					],
 					'required' => [
@@ -89,7 +91,7 @@ final class Description {
 					'properties' => [
 						'color_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new Colors('id', 'hair_colors', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('hair_colors', $this->database))->values())),
 						],
 						'highlights' => ['type' => ['boolean', 'null']],
 						'length' => [
@@ -105,7 +107,7 @@ final class Description {
 						'roots' => ['type' => ['boolean', 'null']],
 						'style_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new PostgresTableEnum('id', 'hair_styles', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\TableEnum('hair_styles', $this->database))->values())),
 						],
 					],
 					'required' => [
@@ -123,16 +125,13 @@ final class Description {
 					'properties' => [
 						'color_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new Colors('id', 'beard_colors', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('beard_colors', $this->database))->values())),
 						],
 						'length' => [
 							'additionalProperties' => false,
 							'properties' => [
 								'value' => ['type' => ['number', 'null']],
-								'unit' => [
-									'type' => ['null', 'string'],
-									'enum' => array_merge([null], (new PostgresEnum('length_units', $this->database))->values()),
-								],
+								'unit' => ['$ref' => '#/definitions/length_unit'],
 							],
 							'type' => 'object',
 							'required' => ['value', 'unit'],
@@ -157,7 +156,7 @@ final class Description {
 					'properties' => [
 						'color_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new Colors('id', 'eyebrow_colors', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('eyebrow_colors', $this->database))->values())),
 						],
 						'care' => ['$ref' => '#/definitions/rating'],
 					],
@@ -180,7 +179,7 @@ final class Description {
 						'freckles' => ['type' => ['boolean', 'null']],
 						'shape_id' => [
 							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], (new PostgresTableEnum('id', 'face_shapes', $this->database))->values()),
+							'enum' => array_merge([null], array_keys((new Schema\TableEnum('face_shapes', $this->database))->values())),
 						],
 					],
 					'required' => ['shape_id', 'care', 'freckles'],
@@ -201,12 +200,12 @@ final class Description {
 						'firstname' => ['type' => ['string', 'null']],
 						'gender' => [
 							'type' => 'string',
-							'enum' => (new PostgresEnum('genders', $this->database))->values(),
+							'enum' => (new Schema\PostgresEnum('genders', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
 						'ethnic_group_id' => [
 							'type' => 'integer',
-							'enum' => (new PostgresTableEnum('id', 'ethnic_groups', $this->database))->values(),
+							'enum' => array_keys((new Schema\TableEnum('ethnic_groups', $this->database))->values()),
 						],
 					],
 					'required' => [
@@ -226,7 +225,7 @@ final class Description {
 							'properties' => [
 								'color_id' => [
 									'type' => ['integer', 'null'],
-									'enum' => array_merge([null], (new Colors('id', 'nail_colors', $this->database))->values()),
+									'enum' => array_merge([null], array_keys((new Schema\ColorEnum('nail_colors', $this->database))->values())),
 								],
 								'length' => [
 									'additionalProperties' => false,
@@ -250,7 +249,7 @@ final class Description {
 							'properties' => [
 								'color_id' => [
 									'type' => ['integer', 'null'],
-									'enum' => array_merge([null], (new Colors('id', 'hand_hair_colors', $this->database))->values()),
+									'enum' => array_merge([null], array_keys((new Schema\ColorEnum('hand_hair_colors', $this->database))->values())),
 								],
 								'amount' => ['type' => ['integer', 'null']],
 							],

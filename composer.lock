@@ -640,12 +640,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "89dded38eb86c82577d35c526d1ad7f8fc52183d"
+                "reference": "f534ba86fd9db6801981557f070cf05c46ff80ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/89dded38eb86c82577d35c526d1ad7f8fc52183d",
-                "reference": "89dded38eb86c82577d35c526d1ad7f8fc52183d",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/f534ba86fd9db6801981557f070cf05c46ff80ef",
+                "reference": "f534ba86fd9db6801981557f070cf05c46ff80ef",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-01-24T21:19:12+00:00"
+            "time": "2018-01-27T18:01:15+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -1690,16 +1690,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "579f4ce846734a1cf55d6a531d00ca07a43e3cda"
+                "reference": "e57b3a09784f846411aa7ed664eedb73e3399078"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/579f4ce846734a1cf55d6a531d00ca07a43e3cda",
-                "reference": "579f4ce846734a1cf55d6a531d00ca07a43e3cda",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e57b3a09784f846411aa7ed664eedb73e3399078",
+                "reference": "e57b3a09784f846411aa7ed664eedb73e3399078",
                 "shasum": ""
             },
             "require": {
@@ -1737,7 +1737,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2017-12-26T14:43:21+00:00"
+            "time": "2018-01-25T21:31:33+00:00"
         },
         {
             "name": "ocramius/package-versions",

@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Commands\Schema;
+namespace FindMyFriends\Schema\Evolution;
 
-final class Evolution {
+use FindMyFriends\Schema;
+
+final class Structure {
 	private $database;
 
 	public function __construct(\PDO $database) {
@@ -11,7 +13,7 @@ final class Evolution {
 	}
 
 	public function get(): array {
-		$description = (new Description($this->database))->get();
+		$description = (new Schema\Description\Structure($this->database))->get();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -26,7 +28,7 @@ final class Evolution {
 
 	public function put(): array {
 		$schema = $this->get();
-		$description = (new Description($this->database))->put();
+		$description = (new Schema\Description\Structure($this->database))->put();
 		$schema['properties'] = $description['properties'] + $schema['properties'];
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];

@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Commands\Schema;
+namespace FindMyFriends\Schema\Demand;
 
-final class Demand {
+use FindMyFriends\Schema;
+
+final class Structure {
 	private $database;
 
 	public function __construct(\PDO $database) {
@@ -11,7 +13,7 @@ final class Demand {
 	}
 
 	public function get(): array {
-		$description = (new Description($this->database))->get();
+		$description = (new Schema\Description\Structure($this->database))->get();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -37,7 +39,7 @@ final class Demand {
 								'moment' => ['type' => ['string'], 'format' => 'date-time'],
 								'timeline_side' => [
 									'type' => ['string'],
-									'enum' => (new PostgresEnum('timeline_sides', $this->database))->values(),
+									'enum' => (new Schema\PostgresEnum('timeline_sides', $this->database))->values(),
 								],
 								'approximation' => ['type' => ['string', 'null']],
 							],
@@ -56,7 +58,7 @@ final class Demand {
 
 	public function put(): array {
 		$schema = $this->get();
-		$description = (new Description($this->database))->put();
+		$description = (new Schema\Description\Structure($this->database))->put();
 		$schema['properties'] = $description['properties'] + $schema['properties'];
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
