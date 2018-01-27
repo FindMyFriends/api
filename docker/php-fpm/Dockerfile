@@ -3,6 +3,9 @@ FROM php:fpm-alpine
 RUN apk update  && apk add --no-cache git postgresql-dev zip unzip zlib-dev g++ make autoconf \
 	&& docker-php-ext-install pdo_pgsql zip bcmath
 
+RUN pecl install apcu
+RUN echo "extension=apcu" > /usr/local/etc/php/conf.d/apcu.ini
+
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 COPY .bash_aliases /root/.bash_aliases
