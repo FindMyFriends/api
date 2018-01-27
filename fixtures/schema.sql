@@ -102,11 +102,6 @@ CREATE TYPE flat_description AS (
   tooth_braces boolean
 );
 
-CREATE TYPE printed_color AS (
-  id smallint,
-  name text,
-  hex text
-);
 -----
 
 
@@ -1121,13 +1116,6 @@ CREATE VIEW complete_descriptions AS
       ROW(eyebrow.*)::eyebrows AS eyebrow,
       ROW(left_eye.*)::eyes AS left_eye,
       ROW(right_eye.*)::eyes AS right_eye,
-      ROW(left_eye_color.*)::colors AS left_eye_color,
-      ROW(right_eye_color.*)::colors AS right_eye_color,
-      ROW(beard_color.*)::colors AS beard_color,
-      ROW(hair_color.*)::colors AS hair_color,
-      ROW(eyebrow_color.*)::colors AS eyebrow_color,
-      ROW(hand_hair_color.*)::colors AS hand_hair_color,
-      ROW(nail_color.*)::colors AS nail_color,
       ROW(face_shape.*)::face_shapes AS face_shape
   FROM descriptions description
   LEFT JOIN hair ON hair.id = description.hair_id
@@ -1145,14 +1133,7 @@ CREATE VIEW complete_descriptions AS
   LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
   LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
   LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
-  LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id
-  LEFT JOIN colors left_eye_color ON left_eye_color.id = left_eye.color_id
-  LEFT JOIN colors right_eye_color ON right_eye_color.id = left_eye.color_id
-  LEFT JOIN colors beard_color ON beard_color.id = beard.color_id
-  LEFT JOIN colors hair_color ON hair_color.id = hair.color_id
-  LEFT JOIN colors eyebrow_color ON eyebrow_color.id = eyebrow.color_id
-  LEFT JOIN colors hand_hair_color ON hand_hair_color.id = hand_hair.color_id
-  LEFT JOIN colors nail_color ON nail_color.id = nail.color_id;
+  LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 
 
 CREATE VIEW printed_descriptions AS
@@ -1166,27 +1147,20 @@ CREATE VIEW printed_descriptions AS
     complete_descriptions.ethnic_group AS general_ethnic_group,
     complete_descriptions.body,
     complete_descriptions.body_build,
-      ROW((complete_descriptions.nail_color).id, (complete_descriptions.nail_color).name, (complete_descriptions.nail_color).hex)::printed_color AS hands_nails_color,
     (complete_descriptions.face).freckles AS face_freckles,
     (complete_descriptions.face).care AS face_care,
       ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS beard,
-      ROW((complete_descriptions.beard_color).id, (complete_descriptions.beard_color).name, (complete_descriptions.beard_color).hex)::printed_color AS beard_color,
     complete_descriptions.eyebrow,
     (complete_descriptions.face).shape_id AS face_shape_id,
     complete_descriptions.face_shape AS face_shape,
     complete_descriptions.tooth,
     complete_descriptions.left_eye,
     complete_descriptions.right_eye,
-      ROW((complete_descriptions.left_eye_color).id, (complete_descriptions.left_eye_color).name, (complete_descriptions.left_eye_color).hex)::printed_color AS left_eye_color,
-      ROW((complete_descriptions.right_eye_color).id, (complete_descriptions.right_eye_color).name, (complete_descriptions.right_eye_color).hex)::printed_color AS right_eye_color,
       ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, suited_length((complete_descriptions.nail).length), (complete_descriptions.nail).care)::nails AS hands_nails,
-      ROW((complete_descriptions.eyebrow_color).id, (complete_descriptions.eyebrow_color).name, (complete_descriptions.eyebrow_color).hex)::printed_color AS eyebrow_color,
     (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
     (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
     (complete_descriptions.hand).care AS hands_care,
-      ROW((complete_descriptions.hand_hair_color).id, (complete_descriptions.hand_hair_color).name, (complete_descriptions.hand_hair_color).hex)::printed_color AS hands_hair_color,
     complete_descriptions.hand_hair AS hands_hair,
-      ROW((complete_descriptions.hair_color).id, (complete_descriptions.hair_color).name, (complete_descriptions.hair_color).hex)::printed_color AS hair_color,
       ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style_id, (complete_descriptions.hair).color_id, suited_length((complete_descriptions.hair).length), (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair,
     complete_descriptions.hair_style
   FROM complete_descriptions;
@@ -1224,24 +1198,17 @@ CREATE VIEW flat_descriptions AS
     (printed_descriptions.right_eye).lenses AS right_eye_lenses,
     (printed_descriptions.hands_hair).color_id AS hands_hair_color_id,
     (printed_descriptions.hands_hair).amount AS hands_hair_amount,
-    printed_descriptions.hands_nails_color,
     printed_descriptions.face_freckles,
     printed_descriptions.face_care,
-    printed_descriptions.beard_color,
     printed_descriptions.eyebrow,
     printed_descriptions.face_shape,
     printed_descriptions.tooth,
     printed_descriptions.left_eye,
     printed_descriptions.right_eye,
-    printed_descriptions.left_eye_color,
-    printed_descriptions.right_eye_color,
     (printed_descriptions.hands_nails).length AS hands_nails_length,
-    printed_descriptions.eyebrow_color,
     printed_descriptions.hands_vein_visibility,
     printed_descriptions.hands_joint_visibility,
-    printed_descriptions.hands_care,
-    printed_descriptions.hands_hair_color,
-    printed_descriptions.hair_color
+    printed_descriptions.hands_care
   FROM printed_descriptions;
 
 
@@ -1440,16 +1407,12 @@ CREATE VIEW collective_evolutions AS
     printed_description.body_build,
     printed_description.face_shape,
     printed_description.face_shape_id,
-    printed_description.eyebrow_color,
     printed_description.hands_vein_visibility,
     printed_description.hands_joint_visibility,
     printed_description.hands_care,
-    printed_description.hands_hair_color,
     printed_description.hands_hair,
-    printed_description.hair_color,
     (printed_description.body).build_id AS body_build_id,
     printed_description.general_ethnic_group_id,
-    flat_description.beard_color,
     flat_description.general_firstname,
     flat_description.general_lastname,
     flat_description.general_gender,
@@ -1472,14 +1435,11 @@ CREATE VIEW collective_evolutions AS
     flat_description.right_eye_lenses,
     flat_description.hands_hair_color_id,
     flat_description.hands_hair_amount,
-    flat_description.hands_nails_color,
     flat_description.general_ethnic_group,
     flat_description.face_freckles,
     flat_description.face_care,
     flat_description.left_eye,
     flat_description.right_eye,
-    flat_description.left_eye_color,
-    flat_description.right_eye_color,
     flat_description.hair_color_id,
     flat_description.hair_style_id,
     flat_description.hair_length,
