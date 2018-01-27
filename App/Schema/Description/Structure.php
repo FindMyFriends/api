@@ -24,10 +24,7 @@ final class Structure {
 				'eye' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'color_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('eye_colors', $this->database))->values())),
-						],
+						'color_id' => ['type' => ['integer', 'null']],
 						'lenses' => ['type' => ['boolean', 'null']],
 					],
 					'required' => ['lenses', 'color_id'],
@@ -52,10 +49,7 @@ final class Structure {
 				'body' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'build_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\TableEnum('body_builds', $this->database))->values())),
-						],
+						'build_id' => ['type' => ['integer', 'null']],
 						'weight' => [
 							'additionalProperties' => false,
 							'properties' => [
@@ -89,10 +83,7 @@ final class Structure {
 				'hair' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'color_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('hair_colors', $this->database))->values())),
-						],
+						'color_id' => ['type' => ['integer', 'null']],
 						'highlights' => ['type' => ['boolean', 'null']],
 						'length' => [
 							'additionalProperties' => false,
@@ -105,10 +96,7 @@ final class Structure {
 						],
 						'nature' => ['type' => ['boolean', 'null']],
 						'roots' => ['type' => ['boolean', 'null']],
-						'style_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\TableEnum('hair_styles', $this->database))->values())),
-						],
+						'style_id' => ['type' => ['integer', 'null']],
 					],
 					'required' => [
 						'roots',
@@ -123,10 +111,7 @@ final class Structure {
 				'beard' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'color_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('beard_colors', $this->database))->values())),
-						],
+						'color_id' => ['type' => ['integer', 'null']],
 						'length' => [
 							'additionalProperties' => false,
 							'properties' => [
@@ -154,10 +139,7 @@ final class Structure {
 				'eyebrow' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'color_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\ColorEnum('eyebrow_colors', $this->database))->values())),
-						],
+						'color_id' => ['type' => ['integer', 'null']],
 						'care' => ['$ref' => '#/definitions/rating'],
 					],
 					'required' => ['color_id', 'care'],
@@ -177,10 +159,7 @@ final class Structure {
 					'properties' => [
 						'care' => ['$ref' => '#/definitions/rating'],
 						'freckles' => ['type' => ['boolean', 'null']],
-						'shape_id' => [
-							'type' => ['integer', 'null'],
-							'enum' => array_merge([null], array_keys((new Schema\TableEnum('face_shapes', $this->database))->values())),
-						],
+						'shape_id' => ['type' => ['integer', 'null']],
 					],
 					'required' => ['shape_id', 'care', 'freckles'],
 					'type' => 'object',
@@ -203,10 +182,7 @@ final class Structure {
 							'enum' => (new Schema\PostgresEnum('genders', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
-						'ethnic_group_id' => [
-							'type' => 'integer',
-							'enum' => array_keys((new Schema\TableEnum('ethnic_groups', $this->database))->values()),
-						],
+						'ethnic_group_id' => ['type' => 'integer'],
 					],
 					'required' => [
 						'lastname',
@@ -223,10 +199,7 @@ final class Structure {
 						'nails' => [
 							'additionalProperties' => false,
 							'properties' => [
-								'color_id' => [
-									'type' => ['integer', 'null'],
-									'enum' => array_merge([null], array_keys((new Schema\ColorEnum('nail_colors', $this->database))->values())),
-								],
+								'color_id' => ['type' => ['integer', 'null']],
 								'length' => [
 									'additionalProperties' => false,
 									'properties' => [
@@ -247,10 +220,7 @@ final class Structure {
 						'hair' => [
 							'additionalProperties' => false,
 							'properties' => [
-								'color_id' => [
-									'type' => ['integer', 'null'],
-									'enum' => array_merge([null], array_keys((new Schema\ColorEnum('hand_hair_colors', $this->database))->values())),
-								],
+								'color_id' => ['type' => ['integer', 'null']],
 								'amount' => ['type' => ['integer', 'null']],
 							],
 							'required' => ['color_id', 'amount'],

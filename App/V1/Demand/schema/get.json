@@ -78,14 +78,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
                     ]
                 },
                 "weight": {
@@ -154,12 +146,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        8,
-                        10,
-                        12
                     ]
                 },
                 "highlights": {
@@ -203,15 +189,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6
                     ]
                 }
             },
@@ -232,11 +209,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        8,
-                        12
                     ]
                 },
                 "length": {
@@ -291,11 +263,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        8,
-                        12
                     ]
                 },
                 "care": {
@@ -343,13 +310,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        1,
-                        2,
-                        3,
-                        4
                     ]
                 }
             },
@@ -399,21 +359,7 @@
                     ]
                 },
                 "ethnic_group_id": {
-                    "type": "integer",
-                    "enum": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        8,
-                        9,
-                        10,
-                        11,
-                        12
-                    ]
+                    "type": "integer"
                 }
             },
             "required": [
@@ -435,13 +381,6 @@
                             "type": [
                                 "integer",
                                 "null"
-                            ],
-                            "enum": [
-                                null,
-                                8,
-                                10,
-                                12,
-                                145
                             ]
                         },
                         "length": {
@@ -490,11 +429,6 @@
                             "type": [
                                 "integer",
                                 "null"
-                            ],
-                            "enum": [
-                                null,
-                                8,
-                                12
                             ]
                         },
                         "amount": {
@@ -546,12 +480,6 @@
                     "type": [
                         "integer",
                         "null"
-                    ],
-                    "enum": [
-                        null,
-                        8,
-                        10,
-                        12
                     ]
                 },
                 "lenses": {
