@@ -5,6 +5,20 @@
         "body": {
             "additionalProperties": false,
             "properties": {
+                "build_id": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
                 "weight": {
                     "additionalProperties": false,
                     "properties": {
@@ -55,32 +69,30 @@
                         "C",
                         "D"
                     ]
-                },
-                "build_id": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "enum": [
-                        null,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                    ]
                 }
             },
             "required": [
+                "build_id",
                 "weight",
-                "height",
-                "build_id"
+                "height"
             ],
             "type": "object"
         },
         "hair": {
             "additionalProperties": false,
             "properties": {
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        10,
+                        8
+                    ]
+                },
                 "highlights": {
                     "type": [
                         "boolean",
@@ -118,18 +130,6 @@
                         "null"
                     ]
                 },
-                "color_id": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "enum": [
-                        null,
-                        12,
-                        10,
-                        8
-                    ]
-                },
                 "style_id": {
                     "type": [
                         "integer",
@@ -150,8 +150,8 @@
                 "roots",
                 "length",
                 "highlights",
-                "nature",
                 "color_id",
+                "nature",
                 "style_id"
             ],
             "type": "object"
@@ -159,6 +159,17 @@
         "beard": {
             "additionalProperties": false,
             "properties": {
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        12,
+                        8
+                    ]
+                },
                 "length": {
                     "additionalProperties": false,
                     "properties": {
@@ -192,24 +203,13 @@
                         "string",
                         "null"
                     ]
-                },
-                "color_id": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "enum": [
-                        null,
-                        12,
-                        8
-                    ]
                 }
             },
             "type": "object",
             "required": [
+                "color_id",
                 "length",
-                "style",
-                "color_id"
+                "style"
             ]
         },
         "eye": {
@@ -226,12 +226,6 @@
         "eyebrow": {
             "additionalProperties": false,
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "care": {
-                    "$ref": "#/definitions/rating"
-                },
                 "color_id": {
                     "type": [
                         "integer",
@@ -242,11 +236,14 @@
                         12,
                         8
                     ]
+                },
+                "care": {
+                    "$ref": "#/definitions/rating"
                 }
             },
             "required": [
-                "care",
-                "color_id"
+                "color_id",
+                "care"
             ],
             "type": "object"
         },
@@ -296,9 +293,9 @@
                 }
             },
             "required": [
+                "shape_id",
                 "care",
-                "freckles",
-                "shape_id"
+                "freckles"
             ],
             "type": "object"
         },
@@ -341,12 +338,8 @@
                     ]
                 },
                 "ethnic_group_id": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
+                    "type": "integer",
                     "enum": [
-                        null,
                         1,
                         2,
                         3,
@@ -365,9 +358,9 @@
             "required": [
                 "lastname",
                 "firstname",
+                "ethnic_group_id",
                 "age",
-                "gender",
-                "ethnic_group_id"
+                "gender"
             ],
             "type": "object"
         },
@@ -377,6 +370,19 @@
                 "nails": {
                     "additionalProperties": false,
                     "properties": {
+                        "color_id": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "enum": [
+                                null,
+                                145,
+                                12,
+                                10,
+                                8
+                            ]
+                        },
                         "length": {
                             "additionalProperties": false,
                             "properties": {
@@ -398,25 +404,12 @@
                         },
                         "care": {
                             "$ref": "#/definitions/rating"
-                        },
-                        "color_id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                145,
-                                12,
-                                10,
-                                8
-                            ]
                         }
                     },
                     "required": [
+                        "color_id",
                         "length",
-                        "care",
-                        "color_id"
+                        "care"
                     ],
                     "type": "object"
                 },
@@ -432,13 +425,6 @@
                 "hair": {
                     "additionalProperties": false,
                     "properties": {
-                        "amount": {
-                            "additionalProperties": false,
-                            "type": [
-                                "integer",
-                                "null"
-                            ]
-                        },
                         "color_id": {
                             "type": [
                                 "integer",
@@ -449,11 +435,17 @@
                                 12,
                                 8
                             ]
+                        },
+                        "amount": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         }
                     },
                     "required": [
-                        "amount",
-                        "color_id"
+                        "color_id",
+                        "amount"
                     ],
                     "type": "object"
                 }
@@ -549,15 +541,6 @@
         "eye": {
             "additionalProperties": false,
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "lenses": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ]
-                },
                 "color_id": {
                     "type": [
                         "integer",
@@ -568,6 +551,12 @@
                         12,
                         10,
                         8
+                    ]
+                },
+                "lenses": {
+                    "type": [
+                        "boolean",
+                        "null"
                     ]
                 }
             },

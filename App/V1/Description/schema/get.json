@@ -12,55 +12,17 @@
         "eye": {
             "additionalProperties": false,
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "color": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                12,
-                                10,
-                                8
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "Brown",
-                                "Blue",
-                                "Black"
-                            ]
-                        },
-                        "hex": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "#a52a2a",
-                                "#0000ff",
-                                "#000000"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name",
-                        "hex"
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "type": "object"
+                    "enum": [
+                        null,
+                        12,
+                        10,
+                        8
+                    ]
                 },
                 "lenses": {
                     "type": [
@@ -71,7 +33,7 @@
             },
             "required": [
                 "lenses",
-                "color"
+                "color_id"
             ],
             "type": "object"
         },
@@ -110,43 +72,19 @@
         "body": {
             "additionalProperties": false,
             "properties": {
-                "build": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                1,
-                                2,
-                                3,
-                                4,
-                                5
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "muscular",
-                                "athletic",
-                                "slim",
-                                "large",
-                                "heavyset"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name"
+                "build_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "type": "object"
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
                 },
                 "weight": {
                     "additionalProperties": false,
@@ -201,7 +139,7 @@
                 }
             },
             "required": [
-                "build",
+                "build_id",
                 "weight",
                 "height"
             ],
@@ -210,52 +148,17 @@
         "hair": {
             "additionalProperties": false,
             "properties": {
-                "color": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                12,
-                                10,
-                                8
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "Brown",
-                                "Blue",
-                                "Black"
-                            ]
-                        },
-                        "hex": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "#a52a2a",
-                                "#0000ff",
-                                "#000000"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name",
-                        "hex"
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "type": "object"
+                    "enum": [
+                        null,
+                        12,
+                        10,
+                        8
+                    ]
                 },
                 "highlights": {
                     "type": [
@@ -294,44 +197,19 @@
                         "null"
                     ]
                 },
-                "style": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                1,
-                                2,
-                                3,
-                                4,
-                                5,
-                                6
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "short",
-                                "shoulder",
-                                "long",
-                                "shaved",
-                                "bald",
-                                "curvy"
-                            ]
-                        }
-                    },
-                    "type": "object",
-                    "required": [
-                        "id",
-                        "name"
+                "style_id": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
                     ]
                 }
             },
@@ -339,58 +217,25 @@
                 "roots",
                 "length",
                 "highlights",
-                "color",
+                "color_id",
                 "nature",
-                "style"
+                "style_id"
             ],
             "type": "object"
         },
         "beard": {
             "additionalProperties": false,
             "properties": {
-                "color": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                12,
-                                8
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "Brown",
-                                "Black"
-                            ]
-                        },
-                        "hex": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "#a52a2a",
-                                "#000000"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name",
-                        "hex"
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "type": "object"
+                    "enum": [
+                        null,
+                        12,
+                        8
+                    ]
                 },
                 "length": {
                     "additionalProperties": false,
@@ -429,7 +274,7 @@
             },
             "type": "object",
             "required": [
-                "color",
+                "color_id",
                 "length",
                 "style"
             ]
@@ -448,59 +293,23 @@
         "eyebrow": {
             "additionalProperties": false,
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "color": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                12,
-                                8
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "Brown",
-                                "Black"
-                            ]
-                        },
-                        "hex": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "#a52a2a",
-                                "#000000"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "id",
-                        "name",
-                        "hex"
+                "color_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "type": "object"
+                    "enum": [
+                        null,
+                        12,
+                        8
+                    ]
                 },
                 "care": {
                     "$ref": "#/definitions/rating"
                 }
             },
             "required": [
-                "color",
+                "color_id",
                 "care"
             ],
             "type": "object"
@@ -536,45 +345,22 @@
                         "null"
                     ]
                 },
-                "shape": {
-                    "type": "object",
-                    "required": [
-                        "id",
-                        "name"
+                "shape_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                1,
-                                2,
-                                3,
-                                4
-                            ]
-                        },
-                        "name": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "enum": [
-                                null,
-                                "oval",
-                                "long",
-                                "round",
-                                "square"
-                            ]
-                        }
-                    }
+                    "enum": [
+                        null,
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
                 }
             },
             "required": [
-                "shape",
+                "shape_id",
                 "care",
                 "freckles"
             ],
@@ -618,55 +404,28 @@
                         "null"
                     ]
                 },
-                "ethnic_group": {
-                    "type": "object",
-                    "required": [
-                        "id",
-                        "name"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "id": {
-                            "type": "integer",
-                            "enum": [
-                                1,
-                                2,
-                                3,
-                                4,
-                                5,
-                                6,
-                                7,
-                                8,
-                                9,
-                                10,
-                                11,
-                                12
-                            ]
-                        },
-                        "name": {
-                            "type": "string",
-                            "enum": [
-                                "white",
-                                "hispanic / latino",
-                                "black / african descent",
-                                "asian / pacific islander",
-                                "indian",
-                                "chinese",
-                                "native american",
-                                "arabic / middle eastern",
-                                "korean",
-                                "japanese",
-                                "mixed",
-                                "other"
-                            ]
-                        }
-                    }
+                "ethnic_group_id": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ]
                 }
             },
             "required": [
                 "lastname",
                 "firstname",
-                "ethnic_group",
+                "ethnic_group_id",
                 "age",
                 "gender"
             ],
@@ -678,55 +437,18 @@
                 "nails": {
                     "additionalProperties": false,
                     "properties": {
-                        "color": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        145,
-                                        12,
-                                        10,
-                                        8
-                                    ]
-                                },
-                                "name": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "White",
-                                        "Brown",
-                                        "Blue",
-                                        "Black"
-                                    ]
-                                },
-                                "hex": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "#ffffff",
-                                        "#a52a2a",
-                                        "#0000ff",
-                                        "#000000"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "hex"
+                        "color_id": {
+                            "type": [
+                                "integer",
+                                "null"
                             ],
-                            "type": "object"
+                            "enum": [
+                                null,
+                                145,
+                                12,
+                                10,
+                                8
+                            ]
                         },
                         "length": {
                             "additionalProperties": false,
@@ -752,7 +474,7 @@
                         }
                     },
                     "required": [
-                        "color",
+                        "color_id",
                         "length",
                         "care"
                     ],
@@ -770,52 +492,18 @@
                 "hair": {
                     "additionalProperties": false,
                     "properties": {
-                        "color": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "id": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        12,
-                                        8
-                                    ]
-                                },
-                                "name": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "Brown",
-                                        "Black"
-                                    ]
-                                },
-                                "hex": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "enum": [
-                                        null,
-                                        "#a52a2a",
-                                        "#000000"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "name",
-                                "hex"
+                        "color_id": {
+                            "type": [
+                                "integer",
+                                "null"
                             ],
-                            "type": "object"
+                            "enum": [
+                                null,
+                                12,
+                                8
+                            ]
                         },
                         "amount": {
-                            "additionalProperties": false,
                             "type": [
                                 "integer",
                                 "null"
@@ -823,7 +511,7 @@
                         }
                     },
                     "required": [
-                        "color",
+                        "color_id",
                         "amount"
                     ],
                     "type": "object"

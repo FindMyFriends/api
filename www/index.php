@@ -121,6 +121,7 @@ echo (new class(
 											$this->database,
 											$user
 										),
+										'v1/.+ [OPTIONS]' => new V1\Options()
 									];
 								}
 							},

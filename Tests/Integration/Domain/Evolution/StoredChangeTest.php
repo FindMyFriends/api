@@ -119,18 +119,18 @@ final class StoredChangeTest extends Tester\TestCase {
 							'unit' => 'mm',
 						],
 						'care' => null,
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+						'color_id' => 8,
 					],
 					'vein_visibility' => null,
 					'joint_visibility' => null,
 					'care' => null,
 					'hair' => [
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+						'color_id' => 8,
 						'amount' => null,
 					],
 				],
 				'body' => [
-					'build' => ['id' => 1, 'name' => 'muscular'],
+					'build_id' => 1,
 					'weight' => [
 						'value' => 120,
 						'unit' => 'kg',
@@ -147,37 +147,31 @@ final class StoredChangeTest extends Tester\TestCase {
 						'unit' => 'cm',
 					],
 					'style' => null,
-					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+					'color_id' => 8,
 				],
 				'eyebrow' => [
 					'care' => 5,
-					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+					'color_id' => 8,
 				],
 				'eye' => [
 					'left' => [
 						'lenses' => false,
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+						'color_id' => 8,
 					],
 					'right' => [
 						'lenses' => false,
-						'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+						'color_id' => 8,
 					],
 				],
 				'teeth' => ['care' => 10, 'braces' => true],
 				'face' => [
 					'care' => null,
 					'freckles' => null,
-					'shape' => [
-						'id' => 1,
-						'name' => 'oval',
-					],
+					'shape_id' => 1,
 				],
 				'hair' => [
-					'style' => [
-						'id' => 1,
-						'name' => 'short',
-					],
-					'color' => ['name' => 'Black', 'hex' => '#000000', 'id' => 8],
+					'style_id' => 1,
+					'color_id' => 8,
 					'length' => [
 						'value' => null,
 						'unit' => null,
@@ -191,7 +185,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'firstname' => null,
 					'lastname' => null,
 					'gender' => 'man',
-					'ethnic_group' => ['id' => 1, 'name' => 'white'],
+					'ethnic_group_id' => 1,
 				],
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,
