@@ -76,10 +76,7 @@
 			<arg value="php"/>
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
-			<arg path="Tests/Unit"/>
-			<arg path="Tests/Postgres"/>
-			<arg path="Tests/Integration"/>
-			<arg path="Tests/Functional"/>
+			<arg path="Tests/"/>
 		</exec>
 	</target>
 
@@ -94,9 +91,7 @@
 			<arg value="extension=xdebug.so"/>
 			<arg value="-c"/>
 			<arg path="Tests/php.ini"/>
-			<arg path="Tests/Unit"/>
-			<arg path="Tests/Integration"/>
-			<arg path="Tests/Functional"/>
+			<arg path="Tests/"/>
 			<arg value="--coverage"/>
 			<arg value="tester-coverage.xml"/>
 			<arg value="--coverage-src"/>
