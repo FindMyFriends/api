@@ -23,7 +23,7 @@ final class Options implements Application\View {
 			new Response\JsonResponse(
 				new Response\PlainResponse(
 					new Output\Json(
-						(new Schema\Description\ExplainedTableEnums(
+						(new Schema\Demand\ExplainedTableEnums(
 							$this->database,
 							$this->redis
 						))->values()
