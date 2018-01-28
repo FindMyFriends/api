@@ -15,34 +15,35 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class CachedEnumTest extends Tester\TestCase {
-	use TestCase\Mockery;
+	use TestCase\Redis;
 
-	public function testPersistenceInApcu() {
-		$origin = $this->mock(Schema\Enum::class);
+	public function testPersistenceInCache() {
+		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values')->once()->andReturn(['a', 'b', 'c']);
-		$enum = new Schema\CachedEnum($origin, 'genders', 'enum');
-		Assert::false(apcu_fetch('genders'));
+		$enum = new Schema\CachedEnum($origin, $this->redis, 'genders', 'enum');
+		Assert::falsey($this->redis->exists('genders-enum'));
 		Assert::same(['a', 'b', 'c'], $enum->values());
 		Assert::same(['a', 'b', 'c'], $enum->values());
-		Assert::same(['a', 'b', 'c'], apcu_fetch('genders-enum'));
+		Assert::same(['a', 'b', 'c'], json_decode($this->redis->get('postgres:type:meta:enums:enum:genders')));
 	}
 
 	public function testPersistingEnumToInfinite() {
-		$origin = $this->mock(Schema\Enum::class);
+		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values');
-		(new Schema\CachedEnum($origin, 'genders', 'enum'))->values();
-		['ttl' => $ttl, 'info' => $info] = apcu_cache_info()['cache_list'][0];
-		Assert::same(0, $ttl);
-		Assert::same('genders-enum', $info);
+		(new Schema\CachedEnum($origin, $this->redis, 'genders', 'enum'))->values();
+		Assert::same(-1, $this->redis->ttl('postgres:type:meta:enums:enum:genders'));
 	}
 
 	public function testPersistingTableForHour() {
-		$origin = $this->mock(Schema\Enum::class);
+		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values');
-		(new Schema\CachedEnum($origin, 'genders', 'table'))->values();
-		['ttl' => $ttl, 'info' => $info] = apcu_cache_info()['cache_list'][0];
-		Assert::same(3600, $ttl);
-		Assert::same('genders-table', $info);
+		(new Schema\CachedEnum($origin, $this->redis, 'genders', 'table'))->values();
+		Assert::same(3600, $this->redis->ttl('postgres:type:meta:enums:table:genders'));
+	}
+
+	protected function tearDown() {
+		parent::tearDown();
+		\Mockery::close();
 	}
 }
 

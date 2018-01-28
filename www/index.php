@@ -44,6 +44,8 @@ $configuration = (new Configuration\CombinedSource(
 		)
 ))->read();
 
+$redis = new Predis\Client($configuration['REDIS']['uri']);
+
 echo (new class(
 	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
 	new Routing\MatchingRoutes(
@@ -62,17 +64,20 @@ echo (new class(
 											$configuration['DATABASE']['password']
 										)
 									),
-									new Predis\Client($configuration['REDIS']['uri'])
+									$redis
 								),
+								$redis,
 								$configuration['HASHIDS']
 							) implements Routing\Routes {
 								private $uri;
 								private $database;
+								private $redis;
 								private $hashids;
 
-								public function __construct(Uri\Uri $uri, \PDO $database, array $hashids) {
+								public function __construct(Uri\Uri $uri, \PDO $database, Predis\ClientInterface $redis, array $hashids) {
 									$this->uri = $uri;
 									$this->database = $database;
+									$this->redis = $redis;
 									$this->hashids = $hashids;
 								}
 
@@ -81,7 +86,7 @@ echo (new class(
 										$this->database
 									))->enter((new Application\PlainRequest())->headers());
 									return [
-										'v1/demands [OPTIONS]' => new V1\Demands\Options($this->database),
+										'v1/demands [OPTIONS]' => new V1\Demands\Options($this->database, $this->redis),
 										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 											$this->hashids['demand']['hashid'],
 											$this->uri,
@@ -111,7 +116,7 @@ echo (new class(
 											$this->database,
 											$user
 										),
-										'v1/evolutions [OPTIONS]' => new V1\Evolutions\Options($this->database),
+										'v1/evolutions [OPTIONS]' => new V1\Evolutions\Options($this->database, $this->redis),
 										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
 											$this->hashids['evolution']['hashid'],
 											$this->uri,
