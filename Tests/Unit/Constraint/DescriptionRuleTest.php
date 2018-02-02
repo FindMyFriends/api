@@ -12,6 +12,7 @@ use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
+
 final class DescriptionRuleTest extends Tester\TestCase {
 	private const BASE = [
 		'body' => [
