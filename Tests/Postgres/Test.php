@@ -56,26 +56,39 @@ final class Test extends Tester\TestCase {
 				}
 			}
 
-			private function import(string $content, string $name): void {
+			private function import(string $content, string $identifier): void {
 				$this->database->exec($content);
-				$this->rename($content, $name);
+				$this->rename($content, $identifier);
 			}
 
 			private function rename(string $content, string $name): void {
+				foreach ($this->renamedFunctions($this->functions($content), $name) as $old => $new) {
+					$this->database->exec(
+						sprintf(
+							'ALTER FUNCTION unit_tests.%s() RENAME TO %s',
+							$old,
+							$new
+						)
+					);
+				}
+			}
+
+			private function renamedFunctions(array $functions, string $identifier): array {
+				return array_combine(
+					$functions,
+					array_map(function(string $function) use ($identifier): string {
+						return sprintf('__%s__%s', $identifier, $function);
+					}, $functions)
+				);
+			}
+
+			private function functions(string $content): array {
 				preg_match_all(
 					'~CREATE FUNCTION unit_tests\.(?P<functions>\w+)\(\)~',
 					$content,
 					$matches
 				);
-				foreach ($matches['functions'] as $function) {
-					$this->database->exec(
-						sprintf(
-							'ALTER FUNCTION unit_tests.%1$s() RENAME TO __%2$s__%1$s',
-							$function,
-							$name
-						)
-					);
-				}
+				return $matches['functions'];
 			}
 		})->assert();
 	}
