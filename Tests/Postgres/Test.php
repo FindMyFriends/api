@@ -48,11 +48,33 @@ final class Test extends Tester\TestCase {
 
 			private function output(\SplFileInfo $test): array {
 				$this->database->beginTransaction();
-				$this->database->exec(file_get_contents($test->getPathname()));
+				$this->import(file_get_contents($test->getPathname()), $test->getBasename('.sql'));
 				try {
 					return $this->database->query('SELECT * FROM unit_tests.begin()')->fetch();
 				} finally {
 					$this->database->rollBack();
+				}
+			}
+
+			private function import(string $content, string $name): void {
+				$this->database->exec($content);
+				$this->rename($content, $name);
+			}
+
+			private function rename(string $content, string $name): void {
+				preg_match_all(
+					'~CREATE FUNCTION unit_tests\.(?P<functions>\w+)\(\)~',
+					$content,
+					$matches
+				);
+				foreach ($matches['functions'] as $function) {
+					$this->database->exec(
+						sprintf(
+							'ALTER FUNCTION unit_tests.%1$s() RENAME TO __%2$s__%1$s',
+							$function,
+							$name
+						)
+					);
 				}
 			}
 		})->assert();
