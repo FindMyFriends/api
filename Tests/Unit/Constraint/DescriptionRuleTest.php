@@ -25,7 +25,6 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		'general' => ['gender' => 'woman'],
 		'beard' => [
 			'color_id' => null,
-			'care' => null,
 			'length' => [
 				'value' => null,
 				'unit' => null,
@@ -41,22 +40,39 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		],
 	];
 
-	/**
-	 * @throws \UnexpectedValueException Women do not have beards
-	 */
 	public function testThrowingOnWomanWithBeard() {
-		(new Constraint\DescriptionRule())->apply(
-			array_replace_recursive(
-				self::BASE,
-				[
-					'general' => ['gender' => 'woman'],
-					'beard' => [
-						'color_id' => 8,
-						'care' => null,
-					],
-				]
-			)
-		);
+		Assert::exception(function() {
+			(new Constraint\DescriptionRule())->apply(
+				array_replace_recursive(
+					self::BASE,
+					[
+						'general' => ['gender' => 'woman'],
+						'beard' => [
+							'color_id' => 8,
+							'care' => null,
+						],
+					]
+				)
+			);
+		}, \UnexpectedValueException::class, 'Women do not have beards');
+		Assert::exception(function() {
+			(new Constraint\DescriptionRule())->apply(
+				array_replace_recursive(
+					self::BASE,
+					[
+						'general' => ['gender' => 'woman'],
+						'beard' => [
+							'style' => 'cool',
+							'color_id' => null,
+							'length' => [
+								'value' => 2,
+								'unit' => 'mm',
+							],
+						],
+					]
+				)
+			);
+		}, \UnexpectedValueException::class, 'Women do not have beards');
 	}
 
 	/**

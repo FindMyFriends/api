@@ -51,7 +51,7 @@ final class DescriptionRule implements Validation\Rule {
 	}
 
 	private function womanWithBeard(string $gender, array $beard): bool {
-		return $gender === 'woman' && current(array_unique(array_values_recursive($beard))) !== null;
+		return $gender === 'woman' && count(array_unique(array_values_recursive($beard))) > 1;
 	}
 
 	private function manWithBreast(string $gender, ?string $breast): bool {
