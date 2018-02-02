@@ -55,7 +55,7 @@ final class Post implements Application\View {
 			);
 			return new Application\RawTemplate(
 				new Response\ConcurrentlyCreatedResponse(
-					new Response\JsonResponse(new Response\EmptyResponse()),
+					new Response\EmptyResponse(),
 					new Http\PostgresETag($this->database, $url),
 					$url
 				)

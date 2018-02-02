@@ -9,13 +9,6 @@ use Klapuch\Output;
 
 final class Options implements Application\View {
 	public function template(array $parameters): Output\Template {
-		return new Application\RawTemplate(
-			new Response\EmptyResponse(
-				[
-					'Content-Type' => 'text/plain',
-					'Content-Length' => 0,
-				]
-			)
-		);
+		return new Application\RawTemplate(new Response\EmptyResponse());
 	}
 }
