@@ -118,6 +118,17 @@ BEGIN
 END
 $$;
 
+CREATE FUNCTION validate_approximate_max_interval(approximate_timestamptz) RETURNS boolean
+LANGUAGE plpgsql IMMUTABLE
+AS $$
+BEGIN
+  IF $1.approximation > '2 days'::interval THEN
+    RAISE EXCEPTION 'Overstepped maximum of 2 days';
+  END IF;
+  RETURN TRUE;
+END
+$$;
+
 CREATE FUNCTION validate_length(length) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $$
@@ -1016,7 +1027,8 @@ CREATE TABLE locations (
   coordinates point NOT NULL,
   place text,
   met_at approximate_timestamptz NOT NULL,
-  CONSTRAINT locations_met_at_check CHECK (validate_approximate_timestamptz(met_at))
+  CONSTRAINT locations_met_at_approximation_mix_check CHECK (validate_approximate_timestamptz(met_at)),
+  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (validate_approximate_max_interval(met_at))
 );
 ALTER TABLE locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME locations_id_seq

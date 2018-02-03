@@ -26,9 +26,14 @@ final class DemandRule implements Validation\Rule {
 						'moment' => (new DateTimeRule(
 							'location.met_at'
 						))->apply($subject['location']['met_at']['moment']),
-						'approximation' => (new IntervalRule(
-							'location.met_at.approximation'
-						))->apply($subject['location']['met_at']['approximation']),
+						'approximation' => (new Validation\FriendlyRule(
+							new IntervalDiffRule('P2D'),
+							'location.met_at.approximation - overstepped maximum of 2 days'
+						))->apply(
+							(new IntervalRule(
+								'location.met_at.approximation'
+							))->apply($subject['location']['met_at']['approximation'])
+						),
 					],
 				],
 			],

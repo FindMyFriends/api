@@ -157,7 +157,7 @@ BEGIN
 	INSERT INTO locations (coordinates, place, met_at) VALUES (
 		POINT(random(), random()),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'place'),
-		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(0, 100)))::approximate_timestamptz
+		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(1, 48)))::approximate_timestamptz
 	)
 	RETURNING id
 	INTO v_id;
