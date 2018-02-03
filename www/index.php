@@ -28,17 +28,17 @@ $uri = new Uri\CachedUri(
 );
 
 $configuration = (new Configuration\CombinedSource(
-		new Configuration\ValidIni(new SplFileInfo(CONFIGURATION)),
-		new Configuration\ValidIni(new SplFileInfo(SECRET_CONFIGURATION)),
-		new Configuration\NamedSource(
-			'HASHIDS',
-			new CreatedHashids(
-				new Configuration\CombinedSource(
-					new Configuration\ValidJson(new SplFileInfo(HASHIDS_CONFIGURATION)),
-					new Configuration\ValidJson(new SplFileInfo(HASHIDS_SECRET_CONFIGURATION))
-				)
+	new Configuration\ValidIni(new SplFileInfo(CONFIGURATION)),
+	new Configuration\ValidIni(new SplFileInfo(SECRET_CONFIGURATION)),
+	new Configuration\NamedSource(
+		'HASHIDS',
+		new CreatedHashids(
+			new Configuration\CombinedSource(
+				new Configuration\ValidJson(new SplFileInfo(HASHIDS_CONFIGURATION)),
+				new Configuration\ValidJson(new SplFileInfo(HASHIDS_SECRET_CONFIGURATION))
 			)
 		)
+	)
 ))->read();
 
 $redis = new Predis\Client($configuration['REDIS']['uri']);
