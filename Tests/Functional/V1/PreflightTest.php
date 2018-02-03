@@ -7,7 +7,11 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1;
 
+use FindMyFriends\Routing;
 use FindMyFriends\TestCase;
+use Hashids\Hashids;
+use Klapuch\Uri;
+use Predis;
 use Tester;
 use Tester\Assert;
 
@@ -16,16 +20,11 @@ require __DIR__ . '/../../bootstrap.php';
 final class PreflightTest extends Tester\TestCase {
 	use TestCase\Page;
 
-	private const ENDPOINTS = [
-		'v1/demands',
-		'v1/evolutions',
-	];
-
 	/**
 	 * @dataProvider preflightHeaders
 	 */
 	public function testPreflightRequestsByMatchingHeaders(array $headers) {
-		foreach (self::ENDPOINTS as $endpoint) {
+		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint, $headers);
 			Assert::same('', $response['error']);
 			Assert::same(HTTP_NO_CONTENT, $response['info']['http_code']);
@@ -39,7 +38,7 @@ final class PreflightTest extends Tester\TestCase {
 	}
 
 	public function testDomainOptions() {
-		foreach (self::ENDPOINTS as $endpoint) {
+		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint);
 			Assert::same('', $response['error']);
 			Assert::same(HTTP_OK, $response['info']['http_code']);
@@ -49,7 +48,20 @@ final class PreflightTest extends Tester\TestCase {
 		}
 	}
 
-	public function response(string $endpoint, array $headers = []): array {
+	private function endpoints(): array {
+		$matches = (new Routing\ApplicationRoutes(
+			new Uri\FakeUri(),
+			new class extends \PDO {
+				public function __construct() {
+				}
+			},
+			new Predis\Client(),
+			['demand' => ['hashid' => new Hashids()], 'evolution' => ['hashid' => new Hashids()]]
+		))->matches();
+		return str_replace('[OPTIONS]', '', preg_grep('~^v1/\w+ \[OPTIONS\]$~', array_keys($matches)));
+	}
+
+	private function response(string $endpoint, array $headers = []): array {
 		try {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, sprintf('http://172.18.0.2/%s', $endpoint));
