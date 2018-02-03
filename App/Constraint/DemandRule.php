@@ -21,6 +21,11 @@ final class DemandRule implements Validation\Rule {
 		}
 		return array_replace_recursive(
 			[
+				'general' => [
+					'age' => (new AgeRangeRule(
+						'general.age'
+					))->apply($subject['general']['age']),
+				],
 				'location' => [
 					'met_at' => [
 						'moment' => (new DateTimeRule(

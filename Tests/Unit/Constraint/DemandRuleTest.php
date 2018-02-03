@@ -23,7 +23,13 @@ final class DemandRuleTest extends Tester\TestCase {
 		'hair' => [
 			'length' => ['value' => 10, 'unit' => 'mm'],
 		],
-		'general' => ['gender' => 'man'],
+		'general' => [
+			'gender' => 'man',
+			'age' => [
+				'from' => 20,
+				'to' => 30,
+			],
+		],
 		'beard' => [
 			'color_id' => null,
 			'care' => 10,
