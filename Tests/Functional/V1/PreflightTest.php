@@ -26,7 +26,6 @@ final class PreflightTest extends Tester\TestCase {
 	public function testPreflightRequestsByMatchingHeaders(array $headers) {
 		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint, $headers);
-			Assert::same('', $response['error']);
 			Assert::same(HTTP_NO_CONTENT, $response['info']['http_code']);
 			Assert::same('', $response['body']);
 			Assert::contains('Content-Length: 0', $response['headers']);
@@ -40,7 +39,6 @@ final class PreflightTest extends Tester\TestCase {
 	public function testDomainOptions() {
 		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint);
-			Assert::same('', $response['error']);
 			Assert::same(HTTP_OK, $response['info']['http_code']);
 			Assert::notSame([], json_decode($response['body'], true));
 			Assert::notContains('Content-Length: 0', $response['headers']);
@@ -64,17 +62,17 @@ final class PreflightTest extends Tester\TestCase {
 	private function response(string $endpoint, array $headers = []): array {
 		try {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, sprintf('http://172.18.0.2/%s', $endpoint));
+			curl_setopt($ch, CURLOPT_URL, sprintf('http://find-my-friends-nginx/%s', $endpoint));
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_HEADER, true);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			$response = curl_exec($ch);
 			$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+			Assert::same('', curl_error($ch));
 			return [
 				'headers' => substr($response, 0, $headerSize),
 				'body' => substr($response, $headerSize),
-				'error' => curl_error($ch),
 				'info' => curl_getinfo($ch),
 			];
 		} finally {
@@ -87,12 +85,12 @@ final class PreflightTest extends Tester\TestCase {
 			[[
 				'Access-Control-Request-Method: POST',
 				'Access-Control-Request-Headers: Authorization',
-				'Origin: http://172.18.0.2',
+				'Origin: http://find-my-friends-nginx',
 			]],
 			[[
 				'access-control-request-method: POST',
 				'access-control-request-headers: Authorization',
-				'origin: http://172.18.0.2',
+				'origin: http://find-my-friends-nginx',
 			]],
 		];
 	}
