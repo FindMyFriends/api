@@ -86,7 +86,10 @@ echo (new class(
 										$this->database
 									))->enter((new Application\PlainRequest())->headers());
 									return [
-										'v1/demands [OPTIONS]' => new V1\Demands\Options($this->database, $this->redis),
+										'v1/demands [OPTIONS]' => new V1\Preflight(
+											new V1\Demands\Options($this->database, $this->redis),
+											new Application\PlainRequest()
+										),
 										'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 											$this->hashids['demand']['hashid'],
 											$this->uri,
@@ -116,7 +119,10 @@ echo (new class(
 											$this->database,
 											$user
 										),
-										'v1/evolutions [OPTIONS]' => new V1\Evolutions\Options($this->database, $this->redis),
+										'v1/evolutions [OPTIONS]' => new V1\Preflight(
+											new V1\Evolutions\Options($this->database, $this->redis),
+											new Application\PlainRequest()
+										),
 										'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
 											$this->hashids['evolution']['hashid'],
 											$this->uri,
