@@ -2,6 +2,8 @@ FROM postgres:alpine
 
 ENV PGPASSWORD postgres;
 
+COPY postgresql.conf /etc/postgresql.conf
+
 COPY .bash_aliases /root/.bash_aliases
 COPY .psqlrc /root/.psqlrc
 

@@ -13,9 +13,8 @@ services:
       build: docker/postgres
       env_file: ./docker/.env.local
       volumes:
-        - fmf-postgres:/var/lib/postgresql/data
-        - ./docker/postgres/postgresql.conf:/etc/postgresql.conf
         - ./:/var/www/FindMyFriends
+        - fmf-postgres:/var/lib/postgresql/data
       command: postgres -c config_file=/etc/postgresql.conf
       ports:
         - 5433:5432
@@ -27,17 +26,14 @@ services:
       working_dir: /var/www/FindMyFriends
       volumes:
           - ./:/var/www/FindMyFriends
-          - ./docker/php-fpm/sendmail:/usr/sbin/fake-sendmail
-          - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
       networks:
         - fmf
 
     nginx:
-      image: nginx:alpine
+      build: docker/nginx
       container_name: find-my-friends-nginx
       volumes:
           - ./:/var/www/FindMyFriends:ro
-          - ./docker/nginx/site.conf:/etc/nginx/conf.d/default.conf
       ports:
         - 80:80
       networks:
