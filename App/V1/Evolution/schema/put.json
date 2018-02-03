@@ -438,8 +438,7 @@
         },
         "age": {
             "type": [
-                "integer",
-                "null"
+                "integer"
             ],
             "minimum": 15,
             "maximum": 130

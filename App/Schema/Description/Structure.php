@@ -39,7 +39,7 @@ final class Structure {
 					'enum' => array_merge([null], (new Schema\PostgresEnum('mass_units', $this->database))->values()),
 				],
 				'age' => [
-					'type' => ['integer', 'null'],
+					'type' => ['integer'],
 					'minimum' => 15,
 					'maximum' => 130,
 				],
