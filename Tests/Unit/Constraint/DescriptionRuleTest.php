@@ -122,23 +122,23 @@ final class DescriptionRuleTest extends Tester\TestCase {
 	/**
 	 * @dataProvider valuesWithoutUnits
 	 */
-	public function testThrowingOnValuesWithoutUnits(array $part, string $property) {
-		Assert::exception(
+	public function testThrowingOnValuesWithoutUnits(array $part) {
+		$ex = Assert::exception(
 			function() use ($part) {
 				(new Constraint\DescriptionRule())->apply(array_replace_recursive(self::BASE, $part));
 			},
-			\UnexpectedValueException::class,
-			sprintf('%s - filled value must have unit and vice versa', $property)
+			\UnexpectedValueException::class
 		);
+		Assert::contains(' is missing value or unit.', $ex->getMessage());
 	}
 
 	protected function valuesWithoutUnits(): array {
 		return [
-			[['body' => ['height' => ['value' => null, 'unit' => 'mm']]], 'body.height'],
-			[['body' => ['weight' => ['value' => null, 'unit' => 'mm']]], 'body.weight'],
-			[['hair' => ['length' => ['value' => null, 'unit' => 'mm']]], 'hair.length'],
-			[['beard' => ['length' => ['value' => null, 'unit' => 'mm']], 'general' => ['gender' => 'man']], 'beard.length'],
-			[['hands' => ['nails' => ['length' => ['value' => null, 'unit' => 'mm']]]], 'hands.nails.length'],
+			[['body' => ['height' => ['value' => null, 'unit' => 'mm']]]],
+			[['body' => ['weight' => ['value' => null, 'unit' => 'mm']]]],
+			[['hair' => ['length' => ['value' => null, 'unit' => 'mm']]]],
+			[['beard' => ['length' => ['value' => null, 'unit' => 'mm']], 'general' => ['gender' => 'man']]],
+			[['hands' => ['nails' => ['length' => ['value' => null, 'unit' => 'mm']]]]],
 		];
 	}
 }

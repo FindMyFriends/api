@@ -16,7 +16,10 @@ final class EvolutionRule implements Validation\Rule {
 	public function apply($subject): array {
 		return array_replace_recursive(
 			[
-				'evolved_at' => (new DateTimeRule('evolved_at'))->apply($subject['evolved_at']),
+				'evolved_at' => (new Validation\FriendlyRule(
+					new DateTimeRule(),
+					'Evolved at is not a valid datetime.'
+				))->apply($subject['evolved_at']),
 			],
 			(new DescriptionRule())->apply($subject)
 		);

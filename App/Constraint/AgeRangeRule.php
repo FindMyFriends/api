@@ -9,12 +9,6 @@ use Klapuch\Validation;
  * Age with "from" and "to" as range
  */
 final class AgeRangeRule implements Validation\Rule {
-	private $property;
-
-	public function __construct(string $property) {
-		$this->property = $property;
-	}
-
 	public function satisfied($subject): bool {
 		return $subject['from'] <= $subject['to'];
 	}
@@ -22,11 +16,6 @@ final class AgeRangeRule implements Validation\Rule {
 	public function apply($subject): array {
 		if ($this->satisfied($subject))
 			return $subject;
-		throw new \UnexpectedValueException(
-			sprintf(
-				'%s - "from" and "to" must be properly ordered as range',
-				$this->property
-			)
-		);
+		throw new \UnexpectedValueException('Age must be properly ordered as range');
 	}
 }

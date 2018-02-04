@@ -16,27 +16,27 @@ final class DemandRule implements Validation\Rule {
 	public function apply($subject): array {
 		if ($subject['location']['met_at']['timeline_side'] === 'exactly' && $subject['location']['met_at']['approximation'] !== null) {
 			throw new \UnexpectedValueException(
-				'location.met_at.timeline_side - "exactly" do not have approximation'
+				'Exactly timeline side does not have approximation.'
 			);
 		}
 		return array_replace_recursive(
 			[
 				'general' => [
-					'age' => (new AgeRangeRule(
-						'general.age'
-					))->apply($subject['general']['age']),
+					'age' => (new AgeRangeRule())->apply($subject['general']['age']),
 				],
 				'location' => [
 					'met_at' => [
-						'moment' => (new DateTimeRule(
-							'location.met_at'
+						'moment' => (new Validation\FriendlyRule(
+							new DateTimeRule(),
+							'Met at moment is not a valid datetime.'
 						))->apply($subject['location']['met_at']['moment']),
 						'approximation' => (new Validation\FriendlyRule(
 							new IntervalDiffRule('P2D'),
-							'location.met_at.approximation - overstepped maximum of 2 days'
+							'Overstepped maximum of 2 days as approximated met at interval.'
 						))->apply(
-							(new IntervalRule(
-								'location.met_at.approximation'
+							(new Validation\FriendlyRule(
+								new IntervalRule(),
+								'Approximation is not a valid interval.'
 							))->apply($subject['location']['met_at']['approximation'])
 						),
 					],

@@ -21,27 +21,32 @@ final class DescriptionRule implements Validation\Rule {
 		return array_replace_recursive(
 			[
 				'body' => [
-					'height' => (new ValueWithUnitRule(
-						'body.height'
+					'height' => (new Validation\FriendlyRule(
+						new ValueWithUnitRule(),
+						'Body height is missing value or unit.'
 					))->apply($subject['body']['height']),
-					'weight' => (new ValueWithUnitRule(
-						'body.weight'
+					'weight' => (new Validation\FriendlyRule(
+						new ValueWithUnitRule(),
+						'Body weight is missing value or unit.'
 					))->apply($subject['body']['weight']),
 				],
 				'hair' => [
-					'length' => (new ValueWithUnitRule(
-						'hair.length'
+					'length' => (new Validation\FriendlyRule(
+						new ValueWithUnitRule(),
+						'Hair length is missing value or unit.'
 					))->apply($subject['hair']['length']),
 				],
 				'beard' => [
-					'length' => (new ValueWithUnitRule(
-						'beard.length'
+					'length' => (new Validation\FriendlyRule(
+						new ValueWithUnitRule(),
+						'Beard length is missing value or unit.'
 					))->apply($subject['beard']['length']),
 				],
 				'hands' => [
 					'nails' => [
-						'length' => (new ValueWithUnitRule(
-							'hands.nails.length'
+						'length' => (new Validation\FriendlyRule(
+							new ValueWithUnitRule(),
+							'Nails length is missing value or unit.'
 						))->apply($subject['hands']['nails']['length']),
 					],
 				],

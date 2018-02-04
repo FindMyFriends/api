@@ -61,7 +61,7 @@ final class DemandRuleTest extends Tester\TestCase {
 
 
 	/**
-	 * @throws \UnexpectedValueException location.met_at.timeline_side - "exactly" do not have approximation
+	 * @throws \UnexpectedValueException Exactly timeline side does not have approximation.
 	 */
 	public function testThrowingOnExactlyTimeLineSideWithApproximation() {
 		(new Constraint\DemandRule())->apply(

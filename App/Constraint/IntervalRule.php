@@ -9,12 +9,6 @@ use Klapuch\Validation;
  * Rule interval in ISO8601 format
  */
 final class IntervalRule implements Validation\Rule {
-	private $property;
-
-	public function __construct(string $property) {
-		$this->property = $property;
-	}
-
 	public function satisfied($subject): bool {
 		try {
 			new \DateInterval($subject);
@@ -27,8 +21,6 @@ final class IntervalRule implements Validation\Rule {
 	public function apply($subject): string {
 		if ($this->satisfied($subject))
 			return $subject;
-		throw new \UnexpectedValueException(
-			sprintf('%s - interval must be in ISO8601', $this->property)
-		);
+		throw new \UnexpectedValueException('Interval must be in ISO8601');
 	}
 }
