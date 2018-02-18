@@ -16,7 +16,8 @@ const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
 	SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.secrets.ini',
 	HASHIDS_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.json',
 	HASHIDS_SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.secret.json',
-	LOGS = __DIR__ . '/../log';
+	LOGS = __DIR__ . '/../log',
+	LOG_FILE = LOGS . '/logs.log';
 
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
@@ -44,7 +45,10 @@ $configuration = (new Configuration\CombinedSource(
 $redis = new Predis\Client($configuration['REDIS']['uri']);
 
 echo (new class(
-	new Log\FilesystemLogs(new Log\DynamicLocation(new Log\DirectoryLocation(LOGS))),
+	new Log\ChainedLogs(
+		new Log\FilesystemLogs(new Log\DynamicLocation(LOGS)),
+		new Log\FilesystemLogs(new \SplFileInfo(LOG_FILE))
+	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
 			new Routing\QueryRoutes(
@@ -110,7 +114,6 @@ echo (new class(
 				new FindMyFriends\Response\JsonError($ex, [])
 			))->render();
 		} catch (\Throwable $ex) {
-			var_dump($ex->getMessage());
 			$this->logs->put(
 				new Log\PrettyLog(
 					$ex,
