@@ -154,10 +154,10 @@ final class IndividualDemandsTest extends Tester\TestCase {
 			$this->database
 		))->all(new Dataset\FakeSelection('', []));
 		$demand = $demands->current();
-		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json)->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json())->serialization());
 		$demands->next();
 		$demand = $demands->current();
-		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json)->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json())->serialization());
 		$demands->next();
 		Assert::null($demands->current());
 	}

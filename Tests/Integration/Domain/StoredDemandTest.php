@@ -227,7 +227,7 @@ final class StoredDemandTest extends Tester\TestCase {
 				'seeker_id' => $seeker,
 				'id' => 1,
 			],
-			json_decode($demand->print(new Output\Json)->serialization(), true)
+			json_decode($demand->print(new Output\Json())->serialization(), true)
 		);
 	}
 }

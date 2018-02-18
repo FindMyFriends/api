@@ -47,7 +47,7 @@ $redis = new Predis\Client($configuration['REDIS']['uri']);
 echo (new class(
 	new Log\ChainedLogs(
 		new Log\FilesystemLogs(new Log\DynamicLocation(LOGS)),
-		new Log\FilesystemLogs(new \SplFileInfo(LOG_FILE))
+		new Log\FilesystemLogs(new SplFileInfo(LOG_FILE))
 	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(

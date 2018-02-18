@@ -19,7 +19,7 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
 				throw new \DomainException('ABC', 100);
 			});
-		}, new \DomainException, 'ABC', HTTP_FORBIDDEN);
+		}, new \DomainException(), 'ABC', HTTP_FORBIDDEN);
 		Assert::type(\DomainException::class, $ex->getPrevious());
 	}
 

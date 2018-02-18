@@ -52,7 +52,7 @@ final class Get implements Application\View {
 											new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 										),
 										$this->hashids
-									))->print(new Output\Json)
+									))->print(new Output\Json())
 								),
 								$this->role
 							)

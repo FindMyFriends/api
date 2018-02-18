@@ -94,4 +94,4 @@ final class Test extends Tester\TestCase {
 	}
 }
 
-(new Test)->run();
+(new Test())->run();

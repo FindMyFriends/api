@@ -6,7 +6,7 @@ namespace FindMyFriends\Http;
 final class FakeRole implements Role {
 	private $allowed;
 
-	public function __construct(bool $allowed = null) {
+	public function __construct(?bool $allowed = null) {
 		$this->allowed = $allowed;
 	}
 

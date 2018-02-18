@@ -190,7 +190,7 @@ final class StoredChangeTest extends Tester\TestCase {
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'id' => 1,
 			],
-			json_decode($evolution->print(new Output\Json)->serialization(), true)
+			json_decode($evolution->print(new Output\Json())->serialization(), true)
 		);
 	}
 

@@ -7,7 +7,7 @@ final class FakeETag implements ETag {
 	private $exists;
 	private $get;
 
-	public function __construct(bool $exists = null, string $get = null) {
+	public function __construct(?bool $exists = null, ?string $get = null) {
 		$this->exists = $exists;
 		$this->get = $get;
 	}
@@ -21,6 +21,6 @@ final class FakeETag implements ETag {
 	}
 
 	public function set(object $entity): ETag {
-		return new self;
+		return new self();
 	}
 }
