@@ -14,6 +14,7 @@
 	],
 	"require": {
 		"php": ">=7.2",
+        "elasticsearch/elasticsearch": "^6.0",
 		"klapuch/access": "^2.17.1",
 		"klapuch/application": "@dev",
 		"klapuch/dataset": "@dev",

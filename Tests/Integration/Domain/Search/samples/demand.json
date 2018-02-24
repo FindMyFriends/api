@@ -1,0 +1,94 @@
+{
+  "general": {
+    "age": {
+      "from": 16,
+      "to": 20
+    },
+    "gender": "man",
+    "ethnic_group_id": 2,
+    "firstname": "Dominik",
+    "lastname": "Klapuch"
+  },
+  "hair": {
+    "style_id": 1,
+    "color_id": 8,
+    "length": {
+      "value": 20,
+      "unit": "mm"
+    },
+    "highlights": false,
+    "roots": true,
+    "nature": false
+  },
+  "teeth": {
+    "care": 5,
+    "braces": false
+  },
+  "beard": {
+    "color_id": 8,
+    "length": {
+      "value": 2,
+      "unit": "mm"
+    },
+    "style": "none"
+  },
+  "eyebrow": {
+    "color_id": 8,
+    "care": 2
+  },
+  "eye": {
+    "left": {
+      "color_id": 8,
+      "lenses": false
+    },
+    "right": {
+      "color_id": 8,
+      "lenses": false
+    }
+  },
+  "face": {
+    "freckles": false,
+    "shape_id": 1,
+    "care": 10
+  },
+  "body": {
+    "build_id": 1,
+    "weight": {
+      "value": 60,
+      "unit": "kg"
+    },
+    "height": {
+      "value": 181,
+      "unit": "cm"
+    },
+    "breast_size": null
+  },
+  "location": {
+    "coordinates": {
+      "latitude": 50.1,
+      "longitude": 50.2
+    },
+    "met_at": {
+      "moment": "2017-01-01T13:58:10+00:00",
+      "timeline_side": "sooner",
+      "approximation": "PT3H"
+    }
+  },
+  "hands": {
+    "nails": {
+      "color_id": null,
+      "length": {
+        "value": 5,
+        "unit": "mm"
+      },
+      "care": null
+    },
+    "care": 10,
+    "vein_visibility": 5,
+    "joint_visibility": 1,
+    "hair": {
+      "color_id": 8,
+      "amount": 5
+    }
+  }
+}
