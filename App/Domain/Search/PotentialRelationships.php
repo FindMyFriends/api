@@ -7,10 +7,10 @@ use Elasticsearch;
 use Klapuch\Storage;
 
 /**
- * Counterparts suggested using Elasticsearch
+ * All future potential relationships
  */
-final class SuggestedCounterparts implements Counterparts {
-	private const INDEX = 'counterparts',
+final class PotentialRelationships implements Relationships {
+	private const INDEX = 'relationships',
 		TYPE = 'evolutions';
 	private $demand;
 	private $elastic;
@@ -79,7 +79,7 @@ final class SuggestedCounterparts implements Counterparts {
 		(new Storage\NativeQuery(
 			$this->database,
 			(new Storage\Clauses\AnsiMultiInsertInto(
-				'counterparts',
+				'relationships',
 				[
 					'evolution_id' => array_fill(0, count($evolutions), '?'),
 					'demand_id' => array_fill(0, count($demands), '?'),

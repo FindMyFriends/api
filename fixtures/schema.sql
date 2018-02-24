@@ -1086,25 +1086,25 @@ CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECU
 CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
 
-CREATE TABLE counterparts (
+CREATE TABLE relationships (
   id integer NOT NULL,
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
   score numeric NOT NULL
 );
 
-ALTER TABLE counterparts ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME counterparts_id_seq
+ALTER TABLE relationships ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+  SEQUENCE NAME relationships_id_seq
   START WITH 1
   INCREMENT BY 1
   NO MINVALUE
   NO MAXVALUE
   CACHE 1
 );
-ALTER TABLE ONLY counterparts ADD CONSTRAINT counterparts_pkey PRIMARY KEY(id);
-CREATE UNIQUE INDEX counterparts_demand_id_evolution_id_uindex ON counterparts USING btree (demand_id, evolution_id);
-ALTER TABLE ONLY counterparts ADD CONSTRAINT counterparts_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
-ALTER TABLE ONLY counterparts ADD CONSTRAINT counterparts_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
+ALTER TABLE ONLY relationships ADD CONSTRAINT relationships_pkey PRIMARY KEY(id);
+CREATE UNIQUE INDEX relationships_demand_id_evolution_id_uindex ON relationships USING btree (demand_id, evolution_id);
+ALTER TABLE ONLY relationships ADD CONSTRAINT relationships_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
+ALTER TABLE ONLY relationships ADD CONSTRAINT relationships_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
 
 
 

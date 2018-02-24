@@ -21,7 +21,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class SuggestedCounterpartsTest extends Tester\TestCase {
+final class PotentialRelationshipsTest extends Tester\TestCase {
 	use TestCase\Search;
 
 	public function testPersistingMatches() {
@@ -42,13 +42,13 @@ final class SuggestedCounterpartsTest extends Tester\TestCase {
 		$evolution();
 		static $params = [
 			'refresh' => true,
-			'index' => 'counterparts',
+			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['gender' => 'man']]]);
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuggestedCounterparts($id, $this->elasticsearch, $this->database))->find();
+		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2],
@@ -56,7 +56,7 @@ final class SuggestedCounterpartsTest extends Tester\TestCase {
 			],
 			(new NativeQuery(
 				$this->database,
-				'SELECT demand_id, evolution_id FROM counterparts ORDER BY evolution_id'
+				'SELECT demand_id, evolution_id FROM relationships ORDER BY evolution_id'
 			))->rows()
 		);
 	}
@@ -75,15 +75,15 @@ final class SuggestedCounterpartsTest extends Tester\TestCase {
 		$this->elasticsearch->index(
 			[
 				'refresh' => true,
-				'index' => 'counterparts',
+				'index' => 'relationships',
 				'type' => 'evolutions',
 				'body' => ['id' => 2, 'general' => ['gender' => 'man'], 'seeker_id' => 1],
 			]
 		);
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuggestedCounterparts($id, $this->elasticsearch, $this->database))->find();
-		Assert::same([], (new NativeQuery($this->database, 'SELECT * FROM counterparts'))->rows());
+		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
+		Assert::same([], (new NativeQuery($this->database, 'SELECT * FROM relationships'))->rows());
 	}
 }
 
-(new SuggestedCounterpartsTest())->run();
+(new PotentialRelationshipsTest())->run();

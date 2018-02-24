@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
-interface Counterparts {
+interface Relationships {
 	/**
-	 * Find all counterparts to your demand
+	 * Find all relationships to your demand
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
