@@ -52,6 +52,9 @@ final class PotentialRelationships implements Relationships {
 					['term' => ['hair.highlights' => $demand['hair_highlights']]],
 					['term' => ['hair.roots' => $demand['hair_roots']]],
 					['term' => ['hair.nature' => $demand['hair_nature']]],
+					['term' => ['face.freckles' => $demand['face_freckles']]],
+					['range' => ['face.care' => ['gte' => $demand['face_care'][0], 'lte' => $demand['face_care'][1]]]],
+					['term' => ['face.shape_id' => $demand['face_shape_id']]],
 				];
 				$should[] = $demand['breast_size'] ? ['range' => ['body.breast_size' => ['gte' => $demand['breast_size'][0], 'lte' => $demand['breast_size'][1]]]] : [];
 				return $should;
@@ -108,6 +111,9 @@ final class PotentialRelationships implements Relationships {
 					'(hair).highlights AS hair_highlights',
 					'(hair).roots AS hair_roots',
 					'(hair).nature AS hair_nature',
+					'(face).freckles AS face_freckles',
+					'(face).care AS face_care',
+					'(face).shape_id AS face_shape_id',
 				]
 			))->from(['elasticsearch_demands'])
 				->where('id = ?')

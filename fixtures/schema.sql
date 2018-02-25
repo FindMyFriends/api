@@ -1318,6 +1318,12 @@ CREATE TYPE elasticsearch_hair AS (
   nature boolean
 );
 
+CREATE TYPE elasticsearch_face AS (
+  freckles boolean,
+  care int4range,
+  shape_id smallint
+);
+
 CREATE VIEW elasticsearch_demands AS
   SELECT demands.id,
     ROW((complete_descriptions.general).*)::general AS general,
@@ -1335,7 +1341,12 @@ CREATE VIEW elasticsearch_demands AS
       (complete_descriptions.hair).highlights,
       (complete_descriptions.hair).roots,
       (complete_descriptions.hair).nature
-    )::elasticsearch_hair AS hair
+    )::elasticsearch_hair AS hair,
+    ROW(
+      (complete_descriptions.face).freckles,
+      approximated_rating((complete_descriptions.face).care),
+      (complete_descriptions.face).shape_id
+    )::elasticsearch_face AS face
   FROM demands
   JOIN complete_descriptions ON complete_descriptions.id = demands.description_id;
 
