@@ -113,10 +113,12 @@ AS $$
 BEGIN
   RETURN array_agg(colors.color_id)
   FROM (
-    SELECT similar_color_id AS color_id FROM similar_colors
+    SELECT similar_color_id AS color_id
+    FROM similar_colors
     WHERE color_id = $1
     UNION ALL
-    SELECT color_id FROM similar_colors
+    SELECT color_id
+    FROM similar_colors
     WHERE similar_color_id = $1
   ) AS colors;
 END
@@ -230,6 +232,16 @@ BEGIN
   RETURN int4range(0, 10, '[]') @> $1;
 END
 $$;
+
+
+CREATE FUNCTION approximated_rating(integer) RETURNS int4range
+LANGUAGE plpgsql IMMUTABLE STRICT
+AS $$
+BEGIN
+  RETURN int4range(abs($1 - 2), least($1 + 2, 10), '[]');
+END
+$$;
+
 
 CREATE FUNCTION suited_length(length) RETURNS length
 LANGUAGE plpgsql IMMUTABLE
