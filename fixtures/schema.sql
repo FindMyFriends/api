@@ -1300,7 +1300,7 @@ CREATE TYPE elasticsearch_hair AS (
   style_id smallint,
   color_id smallint,
   similar_colors_id smallint[],
-  "length" smallint,
+  "length" smallint, -- TODO: int4range based on genre
   highlights boolean,
   roots boolean,
   nature boolean

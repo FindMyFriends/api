@@ -798,12 +798,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "4e015111b3fae83486d31d4d97207c1191516861"
+                "reference": "2d2b56a5808920fe419bce93df74b756b26fb631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/4e015111b3fae83486d31d4d97207c1191516861",
-                "reference": "4e015111b3fae83486d31d4d97207c1191516861",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/2d2b56a5808920fe419bce93df74b756b26fb631",
+                "reference": "2d2b56a5808920fe419bce93df74b756b26fb631",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +846,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-02-24T15:30:14+00:00"
+            "time": "2018-02-25T19:31:49+00:00"
         },
         {
             "name": "klapuch/ui",

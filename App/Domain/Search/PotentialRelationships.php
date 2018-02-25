@@ -44,10 +44,14 @@ final class PotentialRelationships implements Relationships {
 						'bool' => [
 							'should' => [
 								['term' => ['hair.color_id^2' => $demand['hair_color_id']]],
-//								['terms' => ['hair.color_id' => $demand['hair_similar_colors_id']]],
+								['terms' => ['hair.color_id' => $demand['hair_similar_colors_id']]],
 							],
 						],
 					],
+					['term' => ['hair.length' => $demand['hair_length']]],
+					['term' => ['hair.highlights' => $demand['hair_highlights']]],
+					['term' => ['hair.roots' => $demand['hair_roots']]],
+					['term' => ['hair.nature' => $demand['hair_nature']]],
 				];
 				$should[] = $demand['breast_size'] ? ['range' => ['body.breast_size' => ['gte' => $demand['breast_size'][0], 'lte' => $demand['breast_size'][1]]]] : [];
 				return $should;
@@ -100,6 +104,10 @@ final class PotentialRelationships implements Relationships {
 					'(hair).style_id',
 					'(hair).color_id AS hair_color_id',
 					'(hair).similar_colors_id AS hair_similar_colors_id',
+					'(hair).length AS hair_length',
+					'(hair).highlights AS hair_highlights',
+					'(hair).roots AS hair_roots',
+					'(hair).nature AS hair_nature',
 				]
 			))->from(['elasticsearch_demands'])
 				->where('id = ?')
