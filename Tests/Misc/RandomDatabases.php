@@ -27,11 +27,9 @@ final class RandomDatabases implements Databases {
 	}
 
 	public function drop(): void {
-		(new Storage\SafePDO(
-			sprintf($this->credentials['dsn'], 'postgres'),
-			$this->credentials['user'],
-			$this->credentials['password']
-		))->exec(sprintf('DROP DATABASE %s', $this->name));
+		$this->database('postgres')->exec(
+			sprintf('DROP DATABASE %s', $this->name)
+		);
 	}
 
 	private function database(string $name): Storage\MetaPDO {
