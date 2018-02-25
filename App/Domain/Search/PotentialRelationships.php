@@ -22,16 +22,84 @@ final class PotentialRelationships implements Relationships {
 		$this->database = $database;
 	}
 
+	private function query(array $demand): array {
+		$bool = (new class($demand, $this->database) {
+			private $demand;
+			private $database;
+
+			public function __construct(array $demand, \PDO $database) {
+				$this->demand = $demand;
+				$this->database = $database;
+			}
+
+			private function should(array $demand): array {
+				$should = [
+					['term' => ['general.ethnic_group_id' => $demand['ethnic_group_id']]],
+					['match' => ['general.firstname^2' => $demand['firstname']]],
+					['match' => ['general.lastname^3' => $demand['lastname']]],
+					['range' => ['general.birth_year' => ['gte' => $demand['birth_year'][0], 'lte' => $demand['birth_year'][1]]]],
+					['term' => ['body.build_id' => $demand['build_id']]],
+					['term' => ['hair.style_id' => $demand['style_id']]],
+					[
+						'bool' => [
+							'should' => [
+								['term' => ['hair.color_id^2' => $demand['hair_color_id']]],
+//								['terms' => ['hair.color_id' => $demand['hair_similar_colors_id']]],
+							],
+						],
+					],
+				];
+				$should[] = $demand['breast_size'] ? ['range' => ['body.breast_size' => ['gte' => $demand['breast_size'][0], 'lte' => $demand['breast_size'][1]]]] : [];
+				return $should;
+			}
+
+			private function must(array $demand): array {
+				return [
+					['term' => ['general.gender' => $demand['gender']]],
+				];
+			}
+
+			private function mustNot(array $demand): array {
+				return [
+					[
+						'term' => [
+							'seeker_id' => (new Storage\NativeQuery(
+								$this->database,
+								'SELECT seeker_id FROM demands WHERE id = ?',
+								[$demand['id']]
+							))->field(),
+						],
+					],
+				];
+			}
+
+			public function bool(): array {
+				return [
+					'must_not' => $this->mustNot($this->demand),
+					'must' => $this->must($this->demand),
+					'should' => array_filter($this->should($this->demand)),
+				];
+			}
+		})->bool();
+		return ['query' => ['bool' => $bool]];
+	}
+
 	public function find(): void {
 		$demand = (new Storage\TypedQuery(
 			$this->database,
 			(new Storage\Clauses\AnsiSelect(
 				[
+					'id',
 					'(general).gender',
 					'(general).ethnic_group_id',
 					'(general).firstname',
 					'(general).lastname',
 					'(general).birth_year',
+					'(body).build_id',
+					'(body).breast_size',
+					'(hair).style_id',
+					'(hair).color_id AS hair_color_id',
+					'(hair).similar_colors_id AS hair_similar_colors_id',
 				]
 			))->from(['elasticsearch_demands'])
 				->where('id = ?')
@@ -42,32 +110,7 @@ final class PotentialRelationships implements Relationships {
 			[
 				'index' => self::INDEX,
 				'type' => self::TYPE,
-				'body' => [
-					'query' => [
-						'bool' => [
-							'must_not' => [
-								[
-									'term' => [
-										'seeker_id' => (new Storage\NativeQuery(
-											$this->database,
-											'SELECT seeker_id FROM demands WHERE id = ?',
-											[$this->demand]
-										))->field(),
-									],
-								],
-							],
-							'must' => [
-								['term' => ['general.gender' => $demand['gender']]],
-							],
-							'should' => [
-								['term' => ['general.ethnic_group_id' => $demand['ethnic_group_id']]],
-								['term' => ['general.firstname^2' => $demand['firstname']]],
-								['term' => ['general.lastname^3' => $demand['lastname']]],
-								['range' => ['general.birth_year' => ['gte' => $demand['birth_year'][0], 'lte' => $demand['birth_year'][1]]]],
-							],
-						],
-					],
-				],
+				'body' => $this->query($demand),
 			]
 		);
 		if (!$response['hits']['total']) {

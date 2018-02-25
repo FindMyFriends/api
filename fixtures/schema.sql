@@ -107,6 +107,21 @@ CREATE TYPE flat_description AS (
 
 
 -- FUNCTIONS --
+CREATE FUNCTION similar_colors(integer) RETURNS integer[]
+LANGUAGE plpgsql VOLATILE STRICT
+AS $$
+BEGIN
+  RETURN array_agg(colors.color_id)
+  FROM (
+    SELECT similar_color_id AS color_id FROM similar_colors
+    WHERE color_id = $1
+    UNION ALL
+    SELECT color_id FROM similar_colors
+    WHERE similar_color_id = $1
+  ) AS colors;
+END
+$$;
+
 CREATE FUNCTION validate_approximate_timestamptz(approximate_timestamptz) RETURNS boolean
 LANGUAGE plpgsql IMMUTABLE
 AS $$
@@ -115,6 +130,16 @@ BEGIN
     RAISE EXCEPTION '"Exactly" timeline_side can not have approximation';
   END IF;
   RETURN TRUE;
+END
+$$;
+
+CREATE FUNCTION approximated_breast_size(breast_sizes) RETURNS int4range
+LANGUAGE plpgsql IMMUTABLE STRICT
+AS $$
+DECLARE
+  size CONSTANT integer DEFAULT 'A=>1,B=>2,C=>3,D=>4'::hstore -> $1::char;
+BEGIN
+  RETURN int4range(greatest(size - 1, 1), least(size + 1, 4), '[]');
 END
 $$;
 
@@ -565,6 +590,24 @@ ALTER TABLE colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   CACHE 1
 );
 ALTER TABLE ONLY colors ADD CONSTRAINT colors_pkey PRIMARY KEY(id);
+
+
+CREATE TABLE similar_colors (
+  id smallint NOT NULL,
+  color_id smallint NOT NULL,
+  similar_color_id smallint NOT NULL
+);
+ALTER TABLE similar_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+  SEQUENCE NAME similar_colors_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  NO MINVALUE
+  NO MAXVALUE
+  CACHE 1
+);
+ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_pkey PRIMARY KEY(id);
+ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_similar_color_id_fk FOREIGN KEY (similar_color_id) REFERENCES colors(id);
 
 
 CREATE TABLE body_builds (
@@ -1090,7 +1133,8 @@ CREATE TABLE relationships (
   id integer NOT NULL,
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
-  score numeric NOT NULL
+  score numeric NOT NULL,
+  related_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
 ALTER TABLE relationships ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -1245,9 +1289,41 @@ CREATE VIEW flat_descriptions AS
     printed_descriptions.hands_care
   FROM printed_descriptions;
 
+CREATE TYPE elasticsearch_body AS (
+  build_id smallint,
+  weight smallint, -- TODO: int4range based on build and genre
+  height smallint, -- TODO: int4range based on build and genre
+  breast_size int4range
+);
+
+CREATE TYPE elasticsearch_hair AS (
+  style_id smallint,
+  color_id smallint,
+  similar_colors_id smallint[],
+  "length" smallint,
+  highlights boolean,
+  roots boolean,
+  nature boolean
+);
+
 CREATE VIEW elasticsearch_demands AS
   SELECT demands.id,
-    ROW((complete_descriptions.general).*)::general AS general
+    ROW((complete_descriptions.general).*)::general AS general,
+    ROW(
+      (complete_descriptions.body).build_id,
+      (complete_descriptions.body).weight.value,
+      (united_length((complete_descriptions.body).height)).value,
+      approximated_breast_size((complete_descriptions.body).breast_size)
+    )::elasticsearch_body AS body,
+    ROW(
+      (complete_descriptions.hair).style_id,
+      (complete_descriptions.hair).color_id,
+      similar_colors((complete_descriptions.hair).color_id),
+      (united_length((complete_descriptions.hair).length)).value,
+      (complete_descriptions.hair).highlights,
+      (complete_descriptions.hair).roots,
+      (complete_descriptions.hair).nature
+    )::elasticsearch_hair AS hair
   FROM demands
   JOIN complete_descriptions ON complete_descriptions.id = demands.description_id;
 

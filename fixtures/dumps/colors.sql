@@ -155,3 +155,12 @@ INSERT INTO nail_colors (color_id) VALUES (8), (10), (12), (145);
 INSERT INTO hand_hair_colors (color_id) VALUES (8), (12);
 INSERT INTO eyebrow_colors (color_id) VALUES (8), (12);
 INSERT INTO beard_colors (color_id) VALUES (8), (12);
+
+INSERT INTO similar_colors (color_id, similar_color_id) VALUES
+  (8, 12),
+  (1, 145),
+  (3, 10),
+  (4, 56),
+  (22, 8),
+  (22, 10),
+  (149, 145);
