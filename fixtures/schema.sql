@@ -180,29 +180,29 @@ BEGIN
 END
 $$;
 
-CREATE FUNCTION birth_year_in_range(range int4range) RETURNS boolean
+CREATE FUNCTION birth_year_in_range(int4range) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 BEGIN
-  RETURN range <@ int4range(1850, date_part('year', CURRENT_DATE)::INTEGER);
+  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::INTEGER);
 END
 $$;
 
 
-CREATE FUNCTION is_hex_color(color text) RETURNS boolean
+CREATE FUNCTION is_hex(text) RETURNS boolean
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  RETURN color ~ '^#[a-f0-9]{6}';
+  RETURN $1 ~ '^#[a-f0-9]{6}';
 END
 $$;
 
 
-CREATE FUNCTION is_rating(rating integer) RETURNS boolean
+CREATE FUNCTION is_rating(integer) RETURNS boolean
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  RETURN int4range(0, 10, '[]') @> rating;
+  RETURN int4range(0, 10, '[]') @> $1;
 END
 $$;
 
@@ -554,7 +554,7 @@ CREATE TABLE colors (
   id smallint NOT NULL,
   name text NOT NULL,
   hex text NOT NULL,
-  CONSTRAINT colors_hex_check CHECK ((is_hex_color(hex) AND (lower(hex) = hex)))
+  CONSTRAINT colors_hex_check CHECK ((is_hex(hex) AND (lower(hex) = hex)))
 );
 ALTER TABLE colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME colors_id_seq
