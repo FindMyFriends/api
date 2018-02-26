@@ -781,6 +781,14 @@ ALTER TABLE eyes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 ALTER TABLE ONLY eyes ADD CONSTRAINT eyes_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY eyes ADD CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id);
 
+CREATE FUNCTION heterochromic_eyes(eyes, eyes) RETURNS boolean
+LANGUAGE plpgsql IMMUTABLE
+AS $$
+BEGIN
+  RETURN (row_to_json($1)::jsonb - 'id') != (row_to_json($2)::jsonb - 'id');
+END
+$$;
+
 
 CREATE TABLE faces (
   id integer NOT NULL,
@@ -1324,6 +1332,50 @@ CREATE TYPE elasticsearch_face AS (
   shape_id smallint
 );
 
+CREATE TYPE elasticsearch_nail AS (
+  color_id smallint,
+  similar_colors_id smallint[],
+  "length" smallint, -- TODO: int4range based on genre
+  care int4range
+);
+
+CREATE TYPE elasticsearch_hand_hair AS (
+  color_id smallint,
+  similar_colors_id smallint[],
+  amount int4range
+);
+
+CREATE TYPE elasticsearch_hand AS (
+  nail elasticsearch_nail,
+  care int4range,
+  vein_visibility int4range,
+  joint_visibility int4range,
+  hair elasticsearch_hand_hair
+);
+
+CREATE TYPE elasticsearch_beard AS (
+  color_id smallint,
+  similar_colors_id smallint[],
+  "length" smallint
+);
+
+CREATE TYPE elasticsearch_eyebrow AS (
+  color_id smallint,
+  similar_colors_id smallint[],
+  care int4range
+);
+
+CREATE TYPE elasticsearch_tooth AS (
+  care int4range,
+  braces boolean
+);
+
+CREATE TYPE elasticsearch_eye AS (
+  color_id smallint,
+  similar_colors_id smallint[],
+  lenses boolean
+);
+
 CREATE VIEW elasticsearch_demands AS
   SELECT demands.id,
     ROW((complete_descriptions.general).*)::general AS general,
@@ -1346,7 +1398,48 @@ CREATE VIEW elasticsearch_demands AS
       (complete_descriptions.face).freckles,
       approximated_rating((complete_descriptions.face).care),
       (complete_descriptions.face).shape_id
-    )::elasticsearch_face AS face
+    )::elasticsearch_face AS face,
+    ROW(
+      ROW(
+        (complete_descriptions.nail).color_id,
+        similar_colors((complete_descriptions.nail).color_id),
+        (united_length((complete_descriptions.nail).length)).value,
+        approximated_rating((complete_descriptions.nail).care)
+      )::elasticsearch_nail,
+      approximated_rating((complete_descriptions.hand).care),
+      approximated_rating((complete_descriptions.hand).vein_visibility),
+      approximated_rating((complete_descriptions.hand).joint_visibility),
+      ROW(
+        (complete_descriptions.hand_hair).color_id,
+        similar_colors((complete_descriptions.hand_hair).color_id),
+        approximated_rating((complete_descriptions.hand_hair).amount)
+      )::elasticsearch_hand_hair
+    )::elasticsearch_hand AS hand,
+    ROW(
+      (complete_descriptions.beard).color_id,
+      similar_colors((complete_descriptions.beard).color_id),
+      (united_length((complete_descriptions.beard).length)).value
+    )::elasticsearch_beard AS beard,
+    ROW(
+      (complete_descriptions.eyebrow).color_id,
+      similar_colors((complete_descriptions.eyebrow).color_id),
+      approximated_rating((complete_descriptions.eyebrow).care)
+    )::elasticsearch_eyebrow AS eyebrow,
+    ROW(
+      approximated_rating((complete_descriptions.tooth).care),
+      (complete_descriptions.tooth).braces
+    )::elasticsearch_tooth AS tooth,
+    heterochromic_eyes(complete_descriptions.right_eye, complete_descriptions.left_eye) AS heterochromic_eyes,
+    ROW(
+       (complete_descriptions.left_eye).color_id,
+       similar_colors((complete_descriptions.left_eye).color_id),
+       (complete_descriptions.left_eye).lenses
+     )::elasticsearch_eye AS left_eye,
+     ROW(
+       (complete_descriptions.right_eye).color_id,
+       similar_colors((complete_descriptions.right_eye).color_id),
+       (complete_descriptions.right_eye).lenses
+     )::elasticsearch_eye AS right_eye
   FROM demands
   JOIN complete_descriptions ON complete_descriptions.id = demands.description_id;
 
