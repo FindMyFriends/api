@@ -76,12 +76,12 @@
   },
   "hands": {
     "nails": {
-      "color_id": null,
+      "color_id": 8,
       "length": {
         "value": 5,
         "unit": "mm"
       },
-      "care": null
+      "care": 4
     },
     "care": 10,
     "vein_visibility": 5,

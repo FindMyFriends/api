@@ -1356,7 +1356,7 @@ CREATE TYPE elasticsearch_hand AS (
 CREATE TYPE elasticsearch_beard AS (
   color_id smallint,
   similar_colors_id smallint[],
-  "length" smallint
+  "length" smallint -- TODO: int4range based on genre
 );
 
 CREATE TYPE elasticsearch_eyebrow AS (
