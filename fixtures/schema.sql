@@ -572,6 +572,18 @@ BEGIN
 END $$;
 -----
 
+-- DOMAINS --
+CREATE DOMAIN hex_color AS text
+  CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
+
+CREATE DOMAIN real_birth_year AS int4range
+  CHECK (birth_year_in_range(VALUE));
+
+
+CREATE DOMAIN rating AS smallint
+  CHECK (is_rating((VALUE)::integer));
+-----
+
 -- TABLES --
 CREATE TABLE face_shapes (
   id smallint NOT NULL,
@@ -590,8 +602,7 @@ ALTER TABLE ONLY face_shapes ADD CONSTRAINT face_shapes_pkey PRIMARY KEY(id);
 CREATE TABLE colors (
   id smallint NOT NULL,
   name text NOT NULL,
-  hex text NOT NULL,
-  CONSTRAINT colors_hex_check CHECK ((is_hex(hex) AND (lower(hex) = hex)))
+  hex hex_color NOT NULL
 );
 ALTER TABLE colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME colors_id_seq
@@ -656,10 +667,9 @@ CREATE TABLE general (
   id integer NOT NULL,
   gender genders NOT NULL,
   ethnic_group_id smallint NOT NULL,
-  birth_year int4range NOT NULL,
+  birth_year real_birth_year NOT NULL,
   firstname text,
-  lastname text,
-  CONSTRAINT general_birth_year_check CHECK (birth_year_in_range(birth_year))
+  lastname text
 );
 ALTER TABLE general ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME general_id_seq
@@ -793,9 +803,8 @@ $$;
 CREATE TABLE faces (
   id integer NOT NULL,
   freckles boolean,
-  care smallint,
-  shape_id smallint,
-  CONSTRAINT faces_care_check CHECK (is_rating((care)::integer))
+  care rating,
+  shape_id smallint
 );
 ALTER TABLE faces ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME faces_id_seq
@@ -885,8 +894,7 @@ ALTER TABLE ONLY hand_hair_colors ADD CONSTRAINT hand_hair_colors_colors_id_fk F
 CREATE TABLE hand_hair (
   id integer NOT NULL,
   color_id smallint,
-  amount smallint,
-  CONSTRAINT hand_hair_amount_check CHECK (is_rating((amount)::integer))
+  amount rating
 );
 ALTER TABLE hand_hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME hand_hair_id_seq
@@ -921,8 +929,7 @@ CREATE TABLE nails (
   id integer NOT NULL,
   color_id smallint,
   length length,
-  care smallint,
-  CONSTRAINT nails_care_check CHECK (is_rating((care)::integer)),
+  care rating,
   CONSTRAINT nails_length_check CHECK (validate_length(length))
 );
 ALTER TABLE nails ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -941,13 +948,10 @@ ALTER TABLE ONLY nails ADD CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY 
 CREATE TABLE hands (
   id integer NOT NULL,
   nail_id integer,
-  care smallint,
-  vein_visibility smallint,
-  joint_visibility smallint,
-  hand_hair_id integer,
-  CONSTRAINT hands_care_check CHECK (is_rating((care)::integer)),
-  CONSTRAINT hands_joint_visibility_check CHECK (is_rating((joint_visibility)::integer)),
-  CONSTRAINT hands_vein_visibility_check CHECK (is_rating((vein_visibility)::integer))
+  care rating,
+  vein_visibility rating,
+  joint_visibility rating,
+  hand_hair_id integer
 );
 ALTER TABLE hands ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME hands_id_seq
@@ -965,9 +969,8 @@ ALTER TABLE ONLY hands ADD CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) RE
 
 CREATE TABLE teeth (
   id integer NOT NULL,
-  care smallint,
-  braces boolean,
-  CONSTRAINT teeth_care_check CHECK (is_rating((care)::integer))
+  care rating,
+  braces boolean
 );
 ALTER TABLE teeth ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
   SEQUENCE NAME teeth_id_seq
@@ -1083,7 +1086,6 @@ $$;
 
 CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_ad();
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
-
 
 CREATE TABLE locations (
   id integer NOT NULL,
