@@ -579,7 +579,6 @@ CREATE DOMAIN hex_color AS text
 CREATE DOMAIN real_birth_year AS int4range
   CHECK (birth_year_in_range(VALUE));
 
-
 CREATE DOMAIN rating AS smallint
   CHECK (is_rating((VALUE)::integer));
 -----
