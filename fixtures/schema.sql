@@ -1155,6 +1155,7 @@ CREATE TABLE relationships (
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
   score numeric NOT NULL,
+  version smallint NOT NULL DEFAULT 1,
   related_at timestamp with time zone NOT NULL DEFAULT now()
 );
 

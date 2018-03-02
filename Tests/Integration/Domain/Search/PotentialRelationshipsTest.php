@@ -51,12 +51,12 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
 		Assert::same(
 			[
-				['demand_id' => $id, 'evolution_id' => 2],
-				['demand_id' => $id, 'evolution_id' => 3],
+				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
+				['demand_id' => $id, 'evolution_id' => 3, 'version' => 1],
 			],
 			(new NativeQuery(
 				$this->database,
-				'SELECT demand_id, evolution_id FROM relationships ORDER BY evolution_id'
+				'SELECT demand_id, evolution_id, version FROM relationships ORDER BY evolution_id'
 			))->rows()
 		);
 	}
@@ -83,6 +83,36 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
 		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
 		Assert::same([], (new NativeQuery($this->database, 'SELECT * FROM relationships'))->rows());
+	}
+
+	public function testMultiMatchCausingIncrementingVersion() {
+		(new SamplePostgresData($this->database, 'seeker'))->try();
+		(new SamplePostgresData($this->database, 'seeker'))->try();
+		(new SampleEvolution($this->database, ['seeker_id' => 2]))->try();
+		(new Domain\IndividualDemands(
+			new Access\FakeUser('1'),
+			$this->database
+		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
+		(new Evolution\IndividualChain(
+			new Access\FakeUser('2'),
+			$this->database
+		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
+		static $params = [
+			'refresh' => true,
+			'index' => 'relationships',
+			'type' => 'evolutions',
+		];
+		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
+		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
+		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
+		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
+		Assert::same(
+			[['demand_id' => $id, 'evolution_id' => 2, 'version' => 2]],
+			(new NativeQuery(
+				$this->database,
+				'SELECT demand_id, evolution_id, version FROM relationships'
+			))->rows()
+		);
 	}
 }
 

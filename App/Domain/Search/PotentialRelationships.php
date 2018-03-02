@@ -232,7 +232,7 @@ final class PotentialRelationships implements Relationships {
 					'demand_id' => array_fill(0, count($demands), '?'),
 					'score' => array_fill(0, count($scores), '?'),
 				]
-			))->sql(),
+			))->onConflict(['evolution_id', 'demand_id'])->doUpdate(['version' => 'EXCLUDED.version + 1'])->sql(),
 			array_merge(...array_map(null, $evolutions, $demands, $scores))
 		))->execute();
 	}

@@ -5,6 +5,7 @@ namespace FindMyFriends\Sql\Evolution;
 
 use FindMyFriends\Sql\Description;
 use Klapuch\Storage\Clauses;
+use Klapuch\Storage\Clauses\Conflict;
 use Klapuch\Storage\Clauses\Returning;
 
 final class InsertInto implements Clauses\InsertInto {
@@ -23,6 +24,11 @@ final class InsertInto implements Clauses\InsertInto {
 	public function returning(array $columns): Returning {
 		return $this->insert->returning($columns);
 	}
+
+	public function onConflict(array $target = []): Conflict {
+		return $this->insert->onConflict($target);
+	}
+
 
 	public function sql(): string {
 		return $this->insert->sql();
