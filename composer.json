@@ -31,7 +31,7 @@
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
-		"jakub-onderka/php-parallel-lint": "^0.9.2",
+		"jakub-onderka/php-parallel-lint": "^1.0.0",
 		"slevomat/coding-standard": "^4.0",
 		"sebastian/phpcpd": "^4.0.0",
 		"phing/phing": "^2.16",
