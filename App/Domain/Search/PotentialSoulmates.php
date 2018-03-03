@@ -9,8 +9,8 @@ use Klapuch\Storage;
 /**
  * All future potential soulmates
  */
-final class PotentialSoulMates implements SoulMates {
-	private const INDEX = 'soul_mates',
+final class PotentialSoulmates implements Soulmates {
+	private const INDEX = 'soulmates',
 		TYPE = 'evolutions';
 	private $demand;
 	private $elastic;
@@ -226,7 +226,7 @@ final class PotentialSoulMates implements SoulMates {
 		(new Storage\NativeQuery(
 			$this->database,
 			(new Storage\Clauses\AnsiMultiInsertInto(
-				'soul_mates',
+				'soulmates',
 				[
 					'evolution_id' => array_fill(0, count($evolutions), '?'),
 					'demand_id' => array_fill(0, count($demands), '?'),
