@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
-interface Relationships {
+interface SoulMates {
 	/**
-	 * Find all relationships to your demand
+	 * Find all soul mates to your demand
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */

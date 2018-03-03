@@ -7,10 +7,10 @@ use Elasticsearch;
 use Klapuch\Storage;
 
 /**
- * All future potential relationships
+ * All future potential soulmates
  */
-final class PotentialRelationships implements Relationships {
-	private const INDEX = 'relationships',
+final class PotentialSoulMates implements SoulMates {
+	private const INDEX = 'soul_mates',
 		TYPE = 'evolutions';
 	private $demand;
 	private $elastic;
@@ -226,7 +226,7 @@ final class PotentialRelationships implements Relationships {
 		(new Storage\NativeQuery(
 			$this->database,
 			(new Storage\Clauses\AnsiMultiInsertInto(
-				'relationships',
+				'soul_mates',
 				[
 					'evolution_id' => array_fill(0, count($evolutions), '?'),
 					'demand_id' => array_fill(0, count($demands), '?'),

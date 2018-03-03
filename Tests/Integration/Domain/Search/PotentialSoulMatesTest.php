@@ -21,7 +21,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class PotentialRelationshipsTest extends Tester\TestCase {
+final class PotentialSoulMatesTest extends Tester\TestCase {
 	use TestCase\Search;
 
 	public function testPersistingMatches() {
@@ -42,13 +42,13 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 		$evolution();
 		static $params = [
 			'refresh' => true,
-			'index' => 'relationships',
+			'index' => 'soul_mates',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['gender' => 'man']]]);
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
+		(new Search\PotentialSoulMates($id, $this->elasticsearch, $this->database))->find();
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
@@ -56,7 +56,7 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 			],
 			(new NativeQuery(
 				$this->database,
-				'SELECT demand_id, evolution_id, version FROM relationships ORDER BY evolution_id'
+				'SELECT demand_id, evolution_id, version FROM soul_mates ORDER BY evolution_id'
 			))->rows()
 		);
 	}
@@ -75,14 +75,14 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 		$this->elasticsearch->index(
 			[
 				'refresh' => true,
-				'index' => 'relationships',
+				'index' => 'soul_mates',
 				'type' => 'evolutions',
 				'body' => ['id' => 2, 'general' => ['gender' => 'man'], 'seeker_id' => 1],
 			]
 		);
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
-		Assert::same([], (new NativeQuery($this->database, 'SELECT * FROM relationships'))->rows());
+		(new Search\PotentialSoulMates($id, $this->elasticsearch, $this->database))->find();
+		Assert::same([], (new NativeQuery($this->database, 'SELECT * FROM soul_mates'))->rows());
 	}
 
 	public function testMultiMatchCausingIncrementingVersion() {
@@ -99,21 +99,21 @@ final class PotentialRelationshipsTest extends Tester\TestCase {
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		static $params = [
 			'refresh' => true,
-			'index' => 'relationships',
+			'index' => 'soul_mates',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$id = (new NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
-		(new Search\PotentialRelationships($id, $this->elasticsearch, $this->database))->find();
+		(new Search\PotentialSoulMates($id, $this->elasticsearch, $this->database))->find();
+		(new Search\PotentialSoulMates($id, $this->elasticsearch, $this->database))->find();
 		Assert::same(
 			[['demand_id' => $id, 'evolution_id' => 2, 'version' => 2]],
 			(new NativeQuery(
 				$this->database,
-				'SELECT demand_id, evolution_id, version FROM relationships'
+				'SELECT demand_id, evolution_id, version FROM soul_mates'
 			))->rows()
 		);
 	}
 }
 
-(new PotentialRelationshipsTest())->run();
+(new PotentialSoulMatesTest())->run();
