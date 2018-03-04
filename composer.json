@@ -24,6 +24,7 @@
 		"klapuch/output": "dev-master as 2.6.0",
 		"klapuch/routing": "dev-master as 0.0.12",
 		"klapuch/storage": "dev-master as 2.0.0",
+		"klapuch/sql": "dev-master",
 		"klapuch/validation": "dev-master as 2.6.0",
 		"justinrainbow/json-schema": "^5.2",
 		"klapuch/ui": "dev-master as 0.0.3",

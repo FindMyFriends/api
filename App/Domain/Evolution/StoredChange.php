@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use FindMyFriends;
 use FindMyFriends\Domain;
-use FindMyFriends\Sql;
 use Klapuch\Output;
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 /**
@@ -23,8 +24,8 @@ final class StoredChange implements Change {
 	public function affect(array $changes): void {
 		(new Storage\FlatQuery(
 			$this->database,
-			(new Sql\Evolution\Set(
-				new Storage\Clauses\AnsiUpdate('collective_evolutions')
+			(new FindMyFriends\Sql\Evolution\Set(
+				new Sql\AnsiUpdate('collective_evolutions')
 			))->where('id = :id')->sql(),
 			['id' => $this->id] + $changes
 		))->execute();
@@ -33,7 +34,7 @@ final class StoredChange implements Change {
 	public function print(Output\Format $format): Output\Format {
 		$evolution = (new Storage\TypedQuery(
 			$this->database,
-			(new Sql\Evolution\Select())
+			(new FindMyFriends\Sql\Evolution\Select())
 				->from(['collective_evolutions'])
 				->where('id = ?')
 				->sql(),

@@ -3,14 +3,13 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Sql\Description;
 
-use Klapuch\Storage\Clauses;
-use Klapuch\Storage\Clauses\Where;
+use Klapuch\Sql;
 
-final class Set implements Clauses\Set {
+final class Set implements Sql\Set {
 	private $set;
 
-	public function __construct(Clauses\Clause $clause, array $additionalParameters = []) {
-		$this->set = new Clauses\AnsiSet(
+	public function __construct(Sql\Clause $clause, array $additionalParameters = []) {
+		$this->set = new Sql\AnsiSet(
 			$clause,
 			$additionalParameters + [
 				'general_ethnic_group_id' => ':general_ethnic_group_id',
@@ -53,7 +52,7 @@ final class Set implements Clauses\Set {
 		);
 	}
 
-	public function where(string $comparison): Where {
+	public function where(string $comparison): Sql\Where {
 		return $this->set->where($comparison);
 	}
 

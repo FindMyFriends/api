@@ -6,6 +6,7 @@ namespace FindMyFriends\Domain\Search;
 use Elasticsearch;
 use Klapuch\Access;
 use Klapuch\Dataset;
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 /**
@@ -31,7 +32,7 @@ final class SuitedSoulmates implements Soulmates {
 	public function find(int $id): void {
 		$demand = (new Storage\TypedQuery(
 			$this->database,
-			(new Storage\Clauses\AnsiSelect(
+			(new Sql\AnsiSelect(
 				[
 					'id',
 					'(general).gender',
@@ -93,7 +94,7 @@ final class SuitedSoulmates implements Soulmates {
 		$scores = array_column($response['hits']['hits'], '_score');
 		(new Storage\NativeQuery(
 			$this->database,
-			(new Storage\Clauses\AnsiMultiInsertInto(
+			(new Sql\AnsiMultiInsertInto(
 				'soulmates',
 				[
 					'evolution_id' => array_fill(0, count($evolutions), '?'),
@@ -109,7 +110,7 @@ final class SuitedSoulmates implements Soulmates {
 		$matches = (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression(
-				(new Storage\Clauses\AnsiSelect(
+				(new Sql\AnsiSelect(
 					[
 						'id',
 						'evolution_id',
@@ -137,7 +138,7 @@ final class SuitedSoulmates implements Soulmates {
 		return (new Storage\TypedQuery(
 			$this->database,
 			$selection->expression(
-				(new Storage\Clauses\AnsiSelect(['COUNT(*)']))
+				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['suited_soulmates'])
 					->where('seeker_id = :seeker')
 					->sql()

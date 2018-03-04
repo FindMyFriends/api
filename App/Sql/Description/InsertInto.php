@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Sql\Description;
 
-use Klapuch\Storage\Clauses;
-use Klapuch\Storage\Clauses\Conflict;
-use Klapuch\Storage\Clauses\Returning;
+use Klapuch\Sql;
 
-final class InsertInto implements Clauses\InsertInto {
+final class InsertInto implements Sql\InsertInto {
 	private $insert;
 
 	public function __construct(string $table, array $additionalParameters = []) {
-		$this->insert = new Clauses\AnsiInsertInto(
+		$this->insert = new Sql\PgInsertInto(
 			$table,
 			$additionalParameters + [
 				'general_ethnic_group_id' => ':general_ethnic_group_id',
@@ -54,11 +52,11 @@ final class InsertInto implements Clauses\InsertInto {
 		);
 	}
 
-	public function returning(array $columns): Returning {
+	public function returning(array $columns): Sql\Returning {
 		return $this->insert->returning($columns);
 	}
 
-	public function onConflict(array $target = []): Conflict {
+	public function onConflict(array $target = []): Sql\Conflict {
 		return $this->insert->onConflict($target);
 	}
 

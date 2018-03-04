@@ -3,8 +3,9 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain;
 
-use FindMyFriends\Sql;
+use FindMyFriends;
 use Klapuch\Output;
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class StoredDemand implements Demand {
@@ -19,7 +20,7 @@ final class StoredDemand implements Demand {
 	public function print(Output\Format $format): Output\Format {
 		$demand = (new Storage\TypedQuery(
 			$this->database,
-			(new Sql\Demand\Select())
+			(new FindMyFriends\Sql\Demand\Select())
 				->from(['collective_demands'])
 				->where('id = ?')
 				->sql(),
@@ -52,8 +53,8 @@ final class StoredDemand implements Demand {
 	public function reconsider(array $description): void {
 		(new Storage\FlatQuery(
 			$this->database,
-			(new Sql\Demand\Set(
-				new Storage\Clauses\AnsiUpdate('collective_demands')
+			(new FindMyFriends\Sql\Demand\Set(
+				new Sql\AnsiUpdate('collective_demands')
 			))->where('id = :id')->sql(),
 			['id' => $this->id] + $description
 		))->execute();

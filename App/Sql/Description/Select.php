@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Sql\Description;
 
-use Klapuch\Storage\Clauses;
+use Klapuch\Sql;
 
-final class Select implements Clauses\Select {
+final class Select implements Sql\Select {
 	private $select;
 
 	public function __construct(array $additionalColumns = []) {
-		$this->select = new Clauses\AnsiSelect(
+		$this->select = new Sql\AnsiSelect(
 			array_merge(
 				[
 					'id',
@@ -56,7 +56,7 @@ final class Select implements Clauses\Select {
 		);
 	}
 
-	public function from(array $tables): Clauses\From {
+	public function from(array $tables): Sql\From {
 		return $this->select->from($tables);
 	}
 

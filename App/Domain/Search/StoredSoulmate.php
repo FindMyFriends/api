@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Search;
 
 use Klapuch\Output;
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 /**
@@ -21,7 +22,7 @@ final class StoredSoulmate implements Soulmate {
 	public function print(Output\Format $format): Output\Format {
 		$soulmate = (new Storage\TypedQuery(
 			$this->database,
-			(new Storage\Clauses\AnsiSelect(
+			(new Sql\AnsiSelect(
 				[
 					'id',
 					'evolution_id',

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbd2251e184e5e587227abaec5d6b628",
+    "content-hash": "975d9767cc27b58a4d6a8770475d3693",
     "packages": [
         {
             "name": "elasticsearch/elasticsearch",
@@ -793,17 +793,69 @@
             "time": "2018-01-15T20:16:48+00:00"
         },
         {
+            "name": "klapuch/sql",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Sql.git",
+                "reference": "c120dcd4e55775e74c7a7fee6abbb10758276b08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/c120dcd4e55775e74c7a7fee6abbb10758276b08",
+                "reference": "c120dcd4e55775e74c7a7fee6abbb10758276b08",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^2.2",
+                "jakub-onderka/php-parallel-lint": "^1.0.0",
+                "nette/tester": "^2.0",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.9.0",
+                "sebastian/phpcpd": "^4.0",
+                "slevomat/coding-standard": "^4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Sql\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easy way how to work with SQL queries",
+            "homepage": "https://github.com/klapuch/Sql",
+            "keywords": [
+                "SQL Builder",
+                "fluent",
+                "sql"
+            ],
+            "time": "2018-03-04T15:42:06+00:00"
+        },
+        {
             "name": "klapuch/storage",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1"
+                "reference": "b8c3c6886c709b33411c68fd31ae8d4e19ebef18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1",
-                "reference": "43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/b8c3c6886c709b33411c68fd31ae8d4e19ebef18",
+                "reference": "b8c3c6886c709b33411c68fd31ae8d4e19ebef18",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +898,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-03-03T19:03:25+00:00"
+            "time": "2018-03-04T15:48:12+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -2895,6 +2947,7 @@
         "klapuch/output": 20,
         "klapuch/routing": 20,
         "klapuch/storage": 20,
+        "klapuch/sql": 20,
         "klapuch/validation": 20,
         "klapuch/ui": 20,
         "klapuch/uri": 20
