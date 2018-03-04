@@ -1155,7 +1155,7 @@ CREATE TABLE soulmates (
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
   score numeric NOT NULL,
-  version smallint NOT NULL DEFAULT 1,
+  version integer NOT NULL DEFAULT 1,
   related_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
@@ -1191,6 +1191,15 @@ ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREI
 -----
 
 -- VIEWS --
+CREATE VIEW suited_soulmates AS
+  SELECT soulmates.*,
+    version = 1 AS new,
+    row_number() OVER (PARTITION BY demand_id ORDER BY score DESC) AS position,
+    (SELECT seeker_id FROM demands WHERE id = soulmates.demand_id) AS seeker_id
+  FROM soulmates
+  ORDER BY position ASC;
+
+
 CREATE VIEW base_evolution AS
   SELECT general.birth_year,
   general.id AS general_id,
@@ -1198,6 +1207,7 @@ CREATE VIEW base_evolution AS
   FROM general
   JOIN descriptions ON descriptions.general_id = general.id
   JOIN evolutions ON evolutions.description_id = descriptions.id;
+
 
 CREATE VIEW complete_descriptions AS
   SELECT description.id,
@@ -1379,7 +1389,7 @@ CREATE TYPE elasticsearch_eye AS (
 );
 
 CREATE VIEW elasticsearch_demands AS
-  SELECT demands.id,
+  SELECT demands.id, demands.seeker_id,
     ROW((complete_descriptions.general).*)::general AS general,
     ROW(
       (complete_descriptions.body).build_id,

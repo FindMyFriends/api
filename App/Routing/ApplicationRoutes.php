@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Routing;
 
+use Elasticsearch;
 use FindMyFriends\Http;
 use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Routing;
+use Klapuch\Storage;
 use Klapuch\Uri;
 use Predis;
 
@@ -18,12 +20,20 @@ final class ApplicationRoutes implements Routing\Routes {
 	private $uri;
 	private $database;
 	private $redis;
+	private $elasticsearch;
 	private $hashids;
 
-	public function __construct(Uri\Uri $uri, \PDO $database, Predis\ClientInterface $redis, array $hashids) {
+	public function __construct(
+		Uri\Uri $uri,
+		Storage\MetaPDO $database,
+		Predis\ClientInterface $redis,
+		Elasticsearch\Client $elasticsearch,
+		array $hashids
+	) {
 		$this->uri = $uri;
 		$this->database = $database;
 		$this->redis = $redis;
+		$this->elasticsearch = $elasticsearch;
 		$this->hashids = $hashids;
 	}
 
@@ -79,6 +89,14 @@ final class ApplicationRoutes implements Routing\Routes {
 			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
 				$this->database,
 				$user
+			),
+			'v1/soulmates?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Soulmates\Get(
+				$this->hashids,
+				$this->uri,
+				$this->database,
+				$user,
+				new Http\ChosenRole($user, ['member', 'guest']),
+				$this->elasticsearch
 			),
 			'v1/.+ [OPTIONS]' => new V1\Options(),
 		];

@@ -46,7 +46,7 @@ final class ExistingChange implements Change {
 		))->field();
 	}
 
-	private function exception(int $id): \Throwable {
+	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
 			'Evolution change does not exist',
 			0,

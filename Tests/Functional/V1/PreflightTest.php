@@ -10,6 +10,7 @@ namespace FindMyFriends\Functional\V1;
 use FindMyFriends\Routing;
 use FindMyFriends\TestCase;
 use Hashids\Hashids;
+use Klapuch\Storage;
 use Klapuch\Uri;
 use Predis;
 use Tester;
@@ -49,12 +50,17 @@ final class PreflightTest extends Tester\TestCase {
 	private function endpoints(): array {
 		$matches = (new Routing\ApplicationRoutes(
 			new Uri\FakeUri(),
-			new class extends \PDO {
+			new class extends Storage\MetaPDO {
 				public function __construct() {
 				}
 			},
 			new Predis\Client(),
-			['demand' => ['hashid' => new Hashids()], 'evolution' => ['hashid' => new Hashids()]]
+			$this->elasticsearch,
+			[
+				'demand' => ['hashid' => new Hashids()],
+				'evolution' => ['hashid' => new Hashids()],
+				'soulmate' => ['hashid' => new Hashids()],
+			]
 		))->matches();
 		return str_replace('[OPTIONS]', '', preg_grep('~^v1/\w+ \[OPTIONS\]$~', array_keys($matches)));
 	}

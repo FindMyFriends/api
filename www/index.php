@@ -43,6 +43,9 @@ $configuration = (new Configuration\CombinedSource(
 ))->read();
 
 $redis = new Predis\Client($configuration['REDIS']['uri']);
+$elasticsearch = Elasticsearch\ClientBuilder::create()
+	->setHosts($configuration['ELASTICSEARCH']['hosts'])
+	->build();
 
 echo (new class(
 	new Log\ChainedLogs(
@@ -68,6 +71,7 @@ echo (new class(
 									$redis
 								),
 								$redis,
+								$elasticsearch,
 								$configuration['HASHIDS']
 							),
 							$_SERVER['REQUEST_METHOD']

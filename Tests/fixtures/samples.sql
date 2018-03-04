@@ -34,7 +34,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
-    (SELECT id FROM hair_styles ORDER BY random() LIMIT 1),
+		(SELECT id FROM hair_styles ORDER BY random() LIMIT 1),
 		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
 		ROW(test_utils.better_random('smallint'), 'mm')::length,
 		random() > 0.5,
@@ -245,7 +245,7 @@ BEGIN
 	INSERT INTO faces (freckles, care, shape_id) VALUES (
 		random() > 0.5,
 		test_utils.better_random(0, 10),
-    (SELECT id FROM face_shapes ORDER BY random() LIMIT 1)
+		(SELECT id FROM face_shapes ORDER BY random() LIMIT 1)
 	)
 	RETURNING id
 	INTO v_id;
@@ -277,20 +277,54 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.demand() RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.demand(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
-		(SELECT seeker FROM samples.seeker()),
+		samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
 		(SELECT description FROM samples.description()),
 		NOW(),
 		(SELECT location FROM samples.location())
 	)
 	RETURNING id
 	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.evolution() RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id integer;
+BEGIN
+	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
+		(SELECT seeker FROM samples.seeker()),
+		(SELECT description FROM samples.description()),
+		 NOW()
+	)
+	RETURNING id
+	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.soulmate(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id integer;
+BEGIN
+	INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (
+		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
+		samples.random_if_not_exists((SELECT evolution FROM samples.evolution()), replacements, 'evolution_id')::integer,
+		test_utils.better_random('integer')
+	)
+	RETURNING id
+		INTO v_id;
 	RETURN v_id;
 END;
 $$;

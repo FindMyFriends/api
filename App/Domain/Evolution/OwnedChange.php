@@ -57,7 +57,7 @@ final class OwnedChange implements Change {
 		))->field();
 	}
 
-	private function exception(int $id): \Throwable {
+	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
 			'This evolution change does not belong to you',
 			0,

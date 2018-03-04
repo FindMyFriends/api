@@ -462,12 +462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "bddece603177ebf42c820d47b042ee658e8b0ce9"
+                "reference": "1c591a088fcb53f5efd2c2afbe338c13d736c4c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/bddece603177ebf42c820d47b042ee658e8b0ce9",
-                "reference": "bddece603177ebf42c820d47b042ee658e8b0ce9",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/1c591a088fcb53f5efd2c2afbe338c13d736c4c9",
+                "reference": "1c591a088fcb53f5efd2c2afbe338c13d736c4c9",
                 "shasum": ""
             },
             "require": {
@@ -502,7 +502,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2017-10-05T20:20:50+00:00"
+            "time": "2018-03-03T20:55:54+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -798,12 +798,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "af94398856cec6329608701eaabe644dc1cc147f"
+                "reference": "43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/af94398856cec6329608701eaabe644dc1cc147f",
-                "reference": "af94398856cec6329608701eaabe644dc1cc147f",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1",
+                "reference": "43a7ac0a76df3c8d2b7a7272f7d5be971b833ae1",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +846,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-03-02T20:11:10+00:00"
+            "time": "2018-03-03T19:03:25+00:00"
         },
         {
             "name": "klapuch/ui",

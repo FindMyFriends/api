@@ -9,6 +9,7 @@ use Klapuch\Storage;
 
 $schemas = new class {
 	public function save(array $json, SplFileInfo $file): void {
+		@mkdir($file->getPath(), 0777, true); // @ directory may exists
 		file_put_contents(
 			$file->getPathname(),
 			json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
@@ -39,3 +40,6 @@ $description = new Schema\Description\Structure($database);
 $schemas->save($description->get(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/get.json'));
 $schemas->save($description->put(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/put.json'));
 $schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descriptions/schema/post.json'));
+
+$soulmate = new Schema\Soulmate\Structure();
+$schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmates/schema/get.json'));

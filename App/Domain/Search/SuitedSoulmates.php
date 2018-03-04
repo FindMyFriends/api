@@ -4,23 +4,144 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
+use Klapuch\Access;
+use Klapuch\Dataset;
 use Klapuch\Storage;
 
 /**
- * All future potential soulmates
+ * Soulmates suited for the particular seeker
  */
-final class PotentialSoulmates implements Soulmates {
+final class SuitedSoulmates implements Soulmates {
 	private const INDEX = 'soulmates',
 		TYPE = 'evolutions';
-	private $demand;
-	private $elastic;
+	private $seeker;
+	private $elasticsearch;
 	private $database;
 
-	public function __construct(int $demand, Elasticsearch\Client $elastic, Storage\MetaPDO $database) {
-		$this->demand = $demand;
-		$this->elastic = $elastic;
+	public function __construct(Access\User $seeker, Elasticsearch\Client $elasticsearch, Storage\MetaPDO $database) {
+		$this->seeker = $seeker;
+		$this->elasticsearch = $elasticsearch;
 		$this->database = $database;
 	}
+
+	public function find(int $id): void {
+		$demand = (new Storage\TypedQuery(
+			$this->database,
+			(new Storage\Clauses\AnsiSelect(
+				[
+					'id',
+					'(general).gender',
+					'(general).ethnic_group_id',
+					'(general).firstname',
+					'(general).lastname',
+					'(general).birth_year',
+					'(body).build_id',
+					'(body).breast_size',
+					'(hair).style_id',
+					'(hair).color_id AS hair_color_id',
+					'(hair).similar_colors_id AS hair_similar_colors_id',
+					'(hair).length AS hair_length',
+					'(hair).highlights AS hair_highlights',
+					'(hair).roots AS hair_roots',
+					'(hair).nature AS hair_nature',
+					'(face).freckles AS face_freckles',
+					'(face).care AS face_care',
+					'(face).shape_id AS face_shape_id',
+					'(hand).nail AS hand_nail',
+					'(hand).hair AS hand_hair',
+					'(hand).care AS hand_care',
+					'(hand).vein_visibility AS hand_vein_visibility',
+					'(hand).joint_visibility AS hand_joint_visibility',
+					'(beard).color_id AS beard_color_id',
+					'(beard).similar_colors_id AS beard_similar_colors_id',
+					'(beard).length AS beard_length',
+					'(eyebrow).color_id AS eyebrow_color_id',
+					'(eyebrow).similar_colors_id AS eyebrow_similar_colors_id',
+					'(tooth).care AS tooth_care',
+					'(tooth).braces AS tooth_braces',
+					'heterochromic_eyes',
+					'(left_eye).color_id AS left_eye_color_id',
+					'(left_eye).similar_colors_id left_eye_similar_colors_id',
+					'(left_eye).lenses left_eye_lenses',
+					'(right_eye).color_id AS right_eye_color_id',
+					'(right_eye).similar_colors_id AS right_eye_similar_colors_id',
+					'(right_eye).lenses AS right_eye_lenses',
+				]
+			))
+				->from(['elasticsearch_demands'])
+				->where('id = ?')
+				->where('seeker_id = ?')
+				->sql(),
+			[$id, $this->seeker->id()]
+		))->row();
+		$response = $this->elasticsearch->search(
+			[
+				'index' => self::INDEX,
+				'type' => self::TYPE,
+				'body' => $this->query($demand),
+			]
+		);
+		if (!$response['hits']['total']) {
+			return;
+		}
+		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
+		$demands = array_fill(0, count($evolutions), $id);
+		$scores = array_column($response['hits']['hits'], '_score');
+		(new Storage\NativeQuery(
+			$this->database,
+			(new Storage\Clauses\AnsiMultiInsertInto(
+				'soulmates',
+				[
+					'evolution_id' => array_fill(0, count($evolutions), '?'),
+					'demand_id' => array_fill(0, count($demands), '?'),
+					'score' => array_fill(0, count($scores), '?'),
+				]
+			))->onConflict(['evolution_id', 'demand_id'])->doUpdate(['version' => 'EXCLUDED.version + 1'])->sql(),
+			array_merge(...array_map(null, $evolutions, $demands, $scores))
+		))->execute();
+	}
+
+	public function matches(Dataset\Selection $selection): \Iterator {
+		$matches = (new Storage\TypedQuery(
+			$this->database,
+			$selection->expression(
+				(new Storage\Clauses\AnsiSelect(
+					[
+						'id',
+						'evolution_id',
+						'demand_id',
+						'position',
+						'seeker_id',
+						'new',
+					]
+				))
+					->from(['suited_soulmates'])
+					->where('seeker_id = :seeker')
+					->sql()
+			),
+			$selection->criteria([':seeker' => $this->seeker->id()])
+		))->rows();
+		foreach ($matches as $match) {
+			yield new StoredSoulmate(
+				$match['id'],
+				new Storage\MemoryPDO($this->database, $match)
+			);
+		}
+	}
+
+	public function count(Dataset\Selection $selection): int {
+		return (new Storage\TypedQuery(
+			$this->database,
+			$selection->expression(
+				(new Storage\Clauses\AnsiSelect(['COUNT(*)']))
+					->from(['suited_soulmates'])
+					->where('seeker_id = :seeker')
+					->sql()
+			),
+			$selection->criteria([':seeker' => $this->seeker->id()])
+		))->field();
+	}
+
 
 	private function query(array $demand): array {
 		$bool = (new class($demand, $this->database) {
@@ -160,80 +281,5 @@ final class PotentialSoulmates implements Soulmates {
 			}
 		})->bool();
 		return ['query' => ['bool' => $bool]];
-	}
-
-	public function find(): void {
-		$demand = (new Storage\TypedQuery(
-			$this->database,
-			(new Storage\Clauses\AnsiSelect(
-				[
-					'id',
-					'(general).gender',
-					'(general).ethnic_group_id',
-					'(general).firstname',
-					'(general).lastname',
-					'(general).birth_year',
-					'(body).build_id',
-					'(body).breast_size',
-					'(hair).style_id',
-					'(hair).color_id AS hair_color_id',
-					'(hair).similar_colors_id AS hair_similar_colors_id',
-					'(hair).length AS hair_length',
-					'(hair).highlights AS hair_highlights',
-					'(hair).roots AS hair_roots',
-					'(hair).nature AS hair_nature',
-					'(face).freckles AS face_freckles',
-					'(face).care AS face_care',
-					'(face).shape_id AS face_shape_id',
-					'(hand).nail AS hand_nail',
-					'(hand).hair AS hand_hair',
-					'(hand).care AS hand_care',
-					'(hand).vein_visibility AS hand_vein_visibility',
-					'(hand).joint_visibility AS hand_joint_visibility',
-					'(beard).color_id AS beard_color_id',
-					'(beard).similar_colors_id AS beard_similar_colors_id',
-					'(beard).length AS beard_length',
-					'(eyebrow).color_id AS eyebrow_color_id',
-					'(eyebrow).similar_colors_id AS eyebrow_similar_colors_id',
-					'(tooth).care AS tooth_care',
-					'(tooth).braces AS tooth_braces',
-					'heterochromic_eyes',
-					'(left_eye).color_id AS left_eye_color_id',
-					'(left_eye).similar_colors_id left_eye_similar_colors_id',
-					'(left_eye).lenses left_eye_lenses',
-					'(right_eye).color_id AS right_eye_color_id',
-					'(right_eye).similar_colors_id AS right_eye_similar_colors_id',
-					'(right_eye).lenses AS right_eye_lenses',
-				]
-			))->from(['elasticsearch_demands'])
-				->where('id = ?')
-				->sql(),
-			[$this->demand]
-		))->row();
-		$response = $this->elastic->search(
-			[
-				'index' => self::INDEX,
-				'type' => self::TYPE,
-				'body' => $this->query($demand),
-			]
-		);
-		if (!$response['hits']['total']) {
-			return;
-		}
-		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
-		$demands = array_fill(0, count($evolutions), $this->demand);
-		$scores = array_column($response['hits']['hits'], '_score');
-		(new Storage\NativeQuery(
-			$this->database,
-			(new Storage\Clauses\AnsiMultiInsertInto(
-				'soulmates',
-				[
-					'evolution_id' => array_fill(0, count($evolutions), '?'),
-					'demand_id' => array_fill(0, count($demands), '?'),
-					'score' => array_fill(0, count($scores), '?'),
-				]
-			))->onConflict(['evolution_id', 'demand_id'])->doUpdate(['version' => 'EXCLUDED.version + 1'])->sql(),
-			array_merge(...array_map(null, $evolutions, $demands, $scores))
-		))->execute();
 	}
 }

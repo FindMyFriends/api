@@ -57,7 +57,7 @@ final class OwnedDemand implements Demand {
 		))->field();
 	}
 
-	private function exception(int $id): \Throwable {
+	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
 			'This is not your demand',
 			0,
