@@ -18,7 +18,11 @@ final class SuitedSoulmates implements Soulmates {
 	private $elasticsearch;
 	private $database;
 
-	public function __construct(Access\User $seeker, Elasticsearch\Client $elasticsearch, Storage\MetaPDO $database) {
+	public function __construct(
+		Access\User $seeker,
+		Elasticsearch\Client $elasticsearch,
+		Storage\MetaPDO $database
+	) {
 		$this->seeker = $seeker;
 		$this->elasticsearch = $elasticsearch;
 		$this->database = $database;
