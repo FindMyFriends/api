@@ -3,20 +3,15 @@ declare(strict_types = 1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use FindMyFriends\Configuration\CreatedHashids;
+use FindMyFriends\Configuration;
 use Klapuch\Application;
-use Klapuch\Configuration;
 use Klapuch\Log;
 use Klapuch\Output;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
-const CONFIGURATION = __DIR__ . '/../App/Configuration/.config.ini',
-	SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.secrets.ini',
-	HASHIDS_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.json',
-	HASHIDS_SECRET_CONFIGURATION = __DIR__ . '/../App/Configuration/.hashids.secret.json',
-	LOGS = __DIR__ . '/../log',
+const LOGS = __DIR__ . '/../log',
 	LOG_FILE = LOGS . '/logs.log';
 
 $uri = new Uri\CachedUri(
@@ -28,19 +23,7 @@ $uri = new Uri\CachedUri(
 	)
 );
 
-$configuration = (new Configuration\CombinedSource(
-	new Configuration\ValidIni(new SplFileInfo(CONFIGURATION)),
-	new Configuration\ValidIni(new SplFileInfo(SECRET_CONFIGURATION)),
-	new Configuration\NamedSource(
-		'HASHIDS',
-		new CreatedHashids(
-			new Configuration\CombinedSource(
-				new Configuration\ValidJson(new SplFileInfo(HASHIDS_CONFIGURATION)),
-				new Configuration\ValidJson(new SplFileInfo(HASHIDS_SECRET_CONFIGURATION))
-			)
-		)
-	)
-))->read();
+$configuration = (new Configuration\ApplicationConfiguration())->read();
 
 $redis = new Predis\Client($configuration['REDIS']['uri']);
 $elasticsearch = Elasticsearch\ClientBuilder::create()

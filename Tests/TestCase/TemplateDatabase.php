@@ -10,18 +10,15 @@ trait TemplateDatabase {
 	/** @var \Klapuch\Storage\MetaPDO */
 	protected $database;
 
-	/** @var mixed[] */
-	protected $credentials;
-
 	/** @var \FindMyFriends\Misc\Databases */
 	private $databases;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->credentials = (new Configuration\ValidIni(
+		$credentials = (new Configuration\ValidIni(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
 		))->read();
-		$this->databases = new Misc\RandomDatabases($this->credentials['DATABASE']);
+		$this->databases = new Misc\RandomDatabases($credentials['DATABASE']);
 		$this->database = $this->databases->create();
 	}
 
