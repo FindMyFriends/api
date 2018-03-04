@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\TestCase;
 
-use Hashids\Hashids;
+use FindMyFriends;
+use Klapuch\Configuration;
 
 trait Page {
 	use TemplateDatabase {
@@ -13,17 +14,17 @@ trait Page {
 		Elasticsearch::setUp as elasticsearchSetUp;
 	}
 
+	/** @var mixed[] */
 	private $configuration;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->configuration = [
-			'HASHIDS' => [
-				'demand' => ['hashid' => new Hashids()],
-				'soulmate' => ['hashid' => new Hashids()],
-				'evolution' => ['hashid' => new Hashids()],
-			],
-		];
+		$this->configuration = (new Configuration\CombinedSource(
+			new FindMyFriends\Configuration\ApplicationConfiguration(),
+			new Configuration\ValidIni(
+				new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
+			)
+		))->read();
 		$this->databaseSetUp();
 		$this->elasticsearchSetUp();
 	}

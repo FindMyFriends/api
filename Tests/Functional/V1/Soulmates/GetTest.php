@@ -22,11 +22,9 @@ final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		$seeker = new Access\FakeUser(
-			(string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try())
-		);
-		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker->id()]))->try());
-		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker->id()]))->try());
+		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
+		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
+		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
 		$soulmates = json_decode(
@@ -34,7 +32,7 @@ final class GetTest extends Tester\TestCase {
 				$this->configuration['HASHIDS'],
 				new Uri\FakeUri('/', 'v1/soulmates', []),
 				$this->database,
-				$seeker,
+				new Access\FakeUser($seeker),
 				new Http\FakeRole(true),
 				$this->elasticsearch
 			))->template(['page' => 1, 'per_page' => 10])->render()
@@ -43,17 +41,15 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function testMatchingSchema() {
-		$seeker = new Access\FakeUser(
-			(string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try())
-		);
-		$demand = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker->id()]))->try());
+		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
+		$demand = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		$soulmates = json_decode(
 			(new V1\Soulmates\Get(
 				$this->configuration['HASHIDS'],
 				new Uri\FakeUri('/', 'v1/soulmates', []),
 				$this->database,
-				$seeker,
+				new Access\FakeUser($seeker),
 				new Http\FakeRole(true),
 				$this->elasticsearch
 			))->template(['page' => 1, 'per_page' => 10])->render()
@@ -64,12 +60,10 @@ final class GetTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function testUsingFilterToShowByDemand() {
-		$seeker = new Access\FakeUser(
-			(string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try())
-		);
-		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker->id()]))->try());
-		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker->id()]))->try());
+	public function testUsingFilterByDemand() {
+		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
+		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
+		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
 		$soulmates = json_decode(
@@ -77,7 +71,7 @@ final class GetTest extends Tester\TestCase {
 				$this->configuration['HASHIDS'],
 				new Uri\FakeUri('/', 'v1/soulmates', []),
 				$this->database,
-				$seeker,
+				new Access\FakeUser($seeker),
 				new Http\FakeRole(true),
 				$this->elasticsearch
 			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1])->render()
@@ -88,7 +82,7 @@ final class GetTest extends Tester\TestCase {
 	public function testSuccessOnNoSoulmates() {
 		$soulmates = json_decode(
 			(new V1\Soulmates\Get(
-				[],
+				$this->configuration['HASHIDS'],
 				new Uri\FakeUri('/', 'v1/soulmates', []),
 				$this->database,
 				new Access\FakeUser('1'),
