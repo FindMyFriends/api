@@ -94,7 +94,7 @@ final class SuitedSoulmates implements Soulmates {
 		$scores = array_column($response['hits']['hits'], '_score');
 		(new Storage\NativeQuery(
 			$this->database,
-			(new Sql\AnsiMultiInsertInto(
+			(new Sql\PgMultiInsertInto(
 				'soulmates',
 				[
 					'evolution_id' => array_fill(0, count($evolutions), '?'),
