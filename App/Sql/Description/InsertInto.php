@@ -52,8 +52,8 @@ final class InsertInto implements Sql\InsertInto {
 		);
 	}
 
-	public function returning(array $columns): Sql\Returning {
-		return $this->insert->returning($columns);
+	public function returning(array $columns, array $parameters = []): Sql\Returning {
+		return $this->insert->returning($columns, $parameters);
 	}
 
 	public function onConflict(array $target = []): Sql\Conflict {
@@ -62,5 +62,9 @@ final class InsertInto implements Sql\InsertInto {
 
 	public function sql(): string {
 		return $this->insert->sql();
+	}
+
+	public function parameters(): Sql\Parameters {
+		return $this->insert->parameters();
 	}
 }

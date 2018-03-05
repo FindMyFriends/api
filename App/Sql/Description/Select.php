@@ -63,4 +63,8 @@ final class Select implements Sql\Select {
 	public function sql(): string {
 		return $this->select->sql();
 	}
+
+	public function parameters(): Sql\Parameters {
+		return $this->select->parameters();
+	}
 }

@@ -52,11 +52,15 @@ final class Set implements Sql\Set {
 		);
 	}
 
-	public function where(string $comparison): Sql\Where {
-		return $this->set->where($comparison);
+	public function where(string $comparison, array $parameters = []): Sql\Where {
+		return $this->set->where($comparison, $parameters);
 	}
 
 	public function sql(): string {
 		return $this->set->sql();
+	}
+
+	public function parameters(): Sql\Parameters {
+		return $this->set->parameters();
 	}
 }
