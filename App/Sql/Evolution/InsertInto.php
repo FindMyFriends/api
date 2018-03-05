@@ -19,7 +19,6 @@ final class InsertInto implements Sql\InsertInto {
 		);
 	}
 
-
 	public function returning(array $columns, array $parameters = []): Sql\Returning {
 		return $this->insert->returning($columns, $parameters);
 	}
