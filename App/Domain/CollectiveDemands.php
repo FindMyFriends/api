@@ -3,8 +3,9 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain;
 
-use FindMyFriends\Sql;
+use FindMyFriends;
 use Klapuch\Dataset;
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 /**
@@ -24,14 +25,14 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
+		$clause = new Dataset\SelectiveClause(
+			(new FindMyFriends\Sql\Demand\Select())->from(['collective_demands']),
+			$selection
+		);
 		$demands = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression(
-				(new Sql\Demand\Select())
-					->from(['collective_demands'])
-					->sql()
-			),
-			$selection->criteria([])
+			$clause->sql(),
+			$clause->parameters()->binds()
 		))->rows();
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
@@ -42,10 +43,14 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function count(Dataset\Selection $selection): int {
+		$clause = new Dataset\SelectiveClause(
+			(new Sql\AnsiSelect(['COUNT(*)']))->from(['demands']),
+			$selection
+		);
 		return (new Storage\NativeQuery(
 			$this->database,
-			$selection->expression('SELECT COUNT(*) FROM demands'),
-			$selection->criteria([])
+			$clause->sql(),
+			$clause->parameters()->binds()
 		))->field();
 	}
 }

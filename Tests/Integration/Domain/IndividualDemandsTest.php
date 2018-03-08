@@ -152,7 +152,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		$demands = (new Domain\IndividualDemands(
 			new Access\FakeUser((string) $seeker),
 			$this->database
-		))->all(new Dataset\FakeSelection('', []));
+		))->all(new Dataset\FakeSelection([]));
 		$demand = $demands->current();
 		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json())->serialization());
 		$demands->next();
@@ -174,7 +174,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 			(new Domain\IndividualDemands(
 				new Access\FakeUser((string) $seeker),
 				$this->database
-			))->count(new Dataset\FakeSelection(null, []))
+			))->count(new Dataset\FakeSelection([]))
 		);
 	}
 }

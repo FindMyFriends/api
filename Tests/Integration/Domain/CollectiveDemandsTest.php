@@ -27,7 +27,7 @@ final class CollectiveDemandsTest extends Tester\TestCase {
 		$demands = (new Domain\CollectiveDemands(
 			new Domain\IndividualDemands(new Access\FakeUser('1'), $this->database),
 			$this->database
-		))->all(new Dataset\FakeSelection('', []));
+		))->all(new Dataset\FakeSelection([]));
 		$demand = $demands->current();
 		Assert::contains('"gender": "man"', $demand->print(new Output\Json())->serialization());
 		$demands->next();
@@ -46,7 +46,7 @@ final class CollectiveDemandsTest extends Tester\TestCase {
 			(new Domain\CollectiveDemands(
 				new Domain\FakeDemands(),
 				$this->database
-			))->count(new Dataset\FakeSelection(null, []))
+			))->count(new Dataset\FakeSelection([]))
 		);
 	}
 }

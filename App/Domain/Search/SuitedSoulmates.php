@@ -107,24 +107,25 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	public function matches(Dataset\Selection $selection): \Iterator {
+		$clause = new Dataset\SelectiveClause(
+			(new Sql\AnsiSelect(
+				[
+					'id',
+					'evolution_id',
+					'demand_id',
+					'position',
+					'seeker_id',
+					'new',
+				]
+			))
+				->from(['suited_soulmates'])
+				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+			$selection
+		);
 		$matches = (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression(
-				(new Sql\AnsiSelect(
-					[
-						'id',
-						'evolution_id',
-						'demand_id',
-						'position',
-						'seeker_id',
-						'new',
-					]
-				))
-					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker')
-					->sql()
-			),
-			$selection->criteria([':seeker' => $this->seeker->id()])
+			$clause->sql(),
+			$clause->parameters()->binds()
 		))->rows();
 		foreach ($matches as $match) {
 			yield new StoredSoulmate(
@@ -135,15 +136,16 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	public function count(Dataset\Selection $selection): int {
+		$clause = new Dataset\SelectiveClause(
+			(new Sql\AnsiSelect(['COUNT(*)']))
+				->from(['suited_soulmates'])
+				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+			$selection
+		);
 		return (new Storage\TypedQuery(
 			$this->database,
-			$selection->expression(
-				(new Sql\AnsiSelect(['COUNT(*)']))
-					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker')
-					->sql()
-			),
-			$selection->criteria([':seeker' => $this->seeker->id()])
+			$clause->sql(),
+			$clause->parameters()->binds()
 		))->field();
 	}
 

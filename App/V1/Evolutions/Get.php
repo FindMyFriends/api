@@ -49,7 +49,7 @@ final class Get implements Application\View {
 									...iterator_to_array(
 										$evolution->changes(
 											new Dataset\CombinedSelection(
-												new Dataset\SqlPaging(
+												new Dataset\RestPaging(
 													$parameters['page'],
 													$parameters['per_page']
 												)

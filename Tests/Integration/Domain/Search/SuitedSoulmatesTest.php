@@ -144,7 +144,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			$this->elasticsearch,
 			$this->database
 		);
-		$selection = new Dataset\SqlFilter(['demand_id' => $demand]);
+		$selection = new Dataset\FakeSelection(['filter' => ['demand_id' => $demand]]);
 		$matches = $soulmates->matches($selection);
 		Assert::same(2, $soulmates->count($selection));
 		$soulmate = $matches->current();

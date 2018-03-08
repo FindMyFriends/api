@@ -46,11 +46,11 @@ final class Get implements Application\View {
 									...iterator_to_array(
 										$demands->all(
 											new Dataset\CombinedSelection(
-												new Dataset\SqlRestSort(
+												new Dataset\RestSort(
 													$parameters['sort'],
 													self::ALLOWED_SORTS
 												),
-												new Dataset\SqlPaging(
+												new Dataset\RestPaging(
 													$parameters['page'],
 													$parameters['per_page']
 												)

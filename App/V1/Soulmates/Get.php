@@ -60,11 +60,11 @@ final class Get implements Application\View {
 									...iterator_to_array(
 										$soulmates->matches(
 											new Dataset\CombinedSelection(
-												new Dataset\SqlRestFilter(
+												new Dataset\RestFilter(
 													$parameters,
 													self::ALLOWED_FILTERS
 												),
-												new Dataset\SqlPaging(
+												new Dataset\RestPaging(
 													$parameters['page'],
 													$parameters['per_page']
 												)
@@ -81,7 +81,7 @@ final class Get implements Application\View {
 						$parameters['page'],
 						$parameters['per_page'],
 						$soulmates->count(
-							new Dataset\SqlRestFilter(
+							new Dataset\RestFilter(
 								$parameters,
 								self::ALLOWED_FILTERS
 							)
