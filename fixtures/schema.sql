@@ -1173,6 +1173,25 @@ ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_demands_demand_id_fk FOREIGN
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
 
 
+CREATE TABLE soulmate_searches (
+  id integer NOT NULL,
+  demand_id integer NOT NULL,
+  searched_at timestamp with time zone NOT NULL DEFAULT now()
+);
+
+ALTER TABLE soulmate_searches ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+  SEQUENCE NAME soulmate_searches_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  NO MINVALUE
+  NO MAXVALUE
+  CACHE 1
+);
+ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_pkey PRIMARY KEY(id);
+CREATE INDEX soulmate_searches_demand_id_index ON soulmate_searches USING btree (demand_id);
+ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
+
+
 
 CREATE TABLE eyebrow_colors (
   id smallint NOT NULL,

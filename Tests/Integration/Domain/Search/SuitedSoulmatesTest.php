@@ -161,6 +161,33 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$matches->next();
 		Assert::null($matches->current());
 	}
+
+	public function testAddingToSearchLog() {
+		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => 2]))->try();
+		$seeker = new Access\FakeUser('1');
+		(new Domain\IndividualDemands(
+			$seeker,
+			$this->database
+		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
+		(new Evolution\IndividualChain(
+			new Access\FakeUser('2'),
+			$this->database
+		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
+		static $params = [
+			'refresh' => true,
+			'index' => 'soulmates',
+			'type' => 'evolutions',
+		];
+		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
+		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
+		(new Search\SuitedSoulmates($seeker, $this->elasticsearch, $this->database))->find($id);
+		Assert::same(
+			[['demand_id' => $id]],
+			(new Storage\NativeQuery($this->database, 'SELECT demand_id FROM soulmate_searches'))->rows()
+		);
+	}
 }
 
 (new SuitedSoulmatesTest())->run();

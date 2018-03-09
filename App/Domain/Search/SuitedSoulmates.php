@@ -86,6 +86,11 @@ final class SuitedSoulmates implements Soulmates {
 				'body' => $this->query($demand),
 			]
 		);
+		(new Storage\TypedQuery(
+			$this->database,
+			'INSERT INTO soulmate_searches (demand_id) VALUES (?)',
+			[$id]
+		))->execute();
 		if (!$response['hits']['total']) {
 			return;
 		}
