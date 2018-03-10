@@ -409,12 +409,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Configuration.git",
-                "reference": "1f535a0e0f83f6c60bb685c7d065b2f0f3d96567"
+                "reference": "80340ae52b370bac9b5d55eb652c86ab37bc4234"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Configuration/zipball/1f535a0e0f83f6c60bb685c7d065b2f0f3d96567",
-                "reference": "1f535a0e0f83f6c60bb685c7d065b2f0f3d96567",
+                "url": "https://api.github.com/repos/klapuch/Configuration/zipball/80340ae52b370bac9b5d55eb652c86ab37bc4234",
+                "reference": "80340ae52b370bac9b5d55eb652c86ab37bc4234",
                 "shasum": ""
             },
             "require": {
@@ -454,7 +454,7 @@
                 "read",
                 "write"
             ],
-            "time": "2018-01-19T20:52:29+00:00"
+            "time": "2018-03-10T09:19:53+00:00"
         },
         {
             "name": "klapuch/dataset",
