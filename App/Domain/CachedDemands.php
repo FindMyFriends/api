@@ -17,7 +17,7 @@ final class CachedDemands implements Demands {
 		$this->origin = $origin;
 	}
 
-	public function ask(array $description): Demand {
+	public function ask(array $description): int {
 		return $this->origin->ask($description);
 	}
 

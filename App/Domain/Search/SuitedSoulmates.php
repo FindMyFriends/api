@@ -13,7 +13,7 @@ use Klapuch\Storage;
  * Soulmates suited for the particular seeker
  */
 final class SuitedSoulmates implements Soulmates {
-	private const INDEX = 'soulmates',
+	private const INDEX = 'relationships',
 		TYPE = 'evolutions';
 	private $seeker;
 	private $elasticsearch;

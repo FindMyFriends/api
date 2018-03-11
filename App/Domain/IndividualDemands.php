@@ -41,13 +41,12 @@ final class IndividualDemands implements Demands {
 		}
 	}
 
-	public function ask(array $description): Demand {
-		$id = (new Storage\FlatQuery(
+	public function ask(array $description): int {
+		return (new Storage\FlatQuery(
 			$this->database,
 			(new FindMyFriends\Sql\Demand\InsertInto('collective_demands'))->returning(['id'])->sql(),
 			['seeker' => $this->seeker->id()] + $description
 		))->field();
-		return new StoredDemand($id, $this->database);
 	}
 
 	public function count(Dataset\Selection $selection): int {

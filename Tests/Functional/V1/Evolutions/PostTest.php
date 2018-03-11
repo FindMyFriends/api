@@ -11,6 +11,7 @@ namespace FindMyFriends\Functional\V1\Evolutions;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
+use Hashids\Hashids;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
@@ -28,6 +29,7 @@ final class PostTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$demand = json_decode(
 			(new V1\Evolutions\Post(
+				new Hashids(),
 				new Application\FakeRequest(
 					new Output\FakeFormat(
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/post.json')
@@ -35,6 +37,7 @@ final class PostTest extends Tester\TestCase {
 				),
 				new FakeUri('/', 'v1/evolutions', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser((string) $seeker, ['role' => 'member'])
 			))->template([])->render(),
 			true
@@ -46,9 +49,11 @@ final class PostTest extends Tester\TestCase {
 	public function test400OnBadInput() {
 		$demand = json_decode(
 			(new V1\Evolutions\Post(
+				new Hashids(),
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'v1/evolutions', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser('1', ['role' => 'member'])
 			))->template([])->render(),
 			true

@@ -10,9 +10,9 @@ interface Demands {
 	 * Add a new demand within specified person
 	 * @param mixed[] $description
 	 * @throws \UnexpectedValueException
-	 * @return \FindMyFriends\Domain\Demand
+	 * @return int
 	 */
-	public function ask(array $description): Demand;
+	public function ask(array $description): int;
 
 	/**
 	 * Go through all the demands

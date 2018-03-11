@@ -8,7 +8,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
-use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
 use Tester;
 use Tester\Assert;
@@ -16,16 +15,12 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class CreatedResourceUrlTest extends Tester\TestCase {
-	public function testPathWithoutPlaceholders() {
+	public function testPlaceholderReplacedByArrayKeyValue() {
 		Assert::same(
 			'demands/5',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, 'demands/{id}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5);
-					}
-				}
+				['id' => 5]
 			))->path()
 		);
 	}
@@ -35,11 +30,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 			'demands/5',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, '/demands/{id}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5);
-					}
-				}
+				['id' => 5]
 			))->path()
 		);
 	}
@@ -49,25 +40,17 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 			'demands/5/',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, 'demands/{id}/'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5);
-					}
-				}
+				['id' => 5]
 			))->path()
 		);
 	}
 
-	public function testInjectingMultipleSameParameters() {
+	public function testInjectingMultipleSameParametersWithSameValue() {
 		Assert::same(
 			'demands/5/foo/5',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, 'demands/{id}/foo/{id}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5);
-					}
-				}
+				['id' => 5]
 			))->path()
 		);
 	}
@@ -77,12 +60,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 			'demands/5/foo/bar',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, 'demands/{id}/foo/{name}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5)
-							->with('name', 'bar');
-					}
-				}
+				['id' => 5, 'name' => 'bar']
 			))->path()
 		);
 	}
@@ -93,11 +71,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 	public function testThrowingOnMissingPlaceholder() {
 		(new Http\CreatedResourceUrl(
 			new FakeUri(null, 'demands/{id}/foo/{name}'),
-			new class {
-				public function print(Output\Format $format): Output\Format {
-					return $format->with('id', 5);
-				}
-			}
+			['id' => 5]
 		))->path();
 	}
 
@@ -107,11 +81,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 	public function testThrowingOnMultipleMissedPlaceholders() {
 		(new Http\CreatedResourceUrl(
 			new FakeUri(null, 'demands/{id}/foo/{name}'),
-			new class {
-				public function print(Output\Format $format): Output\Format {
-					return $format;
-				}
-			}
+			[]
 		))->path();
 	}
 
@@ -120,12 +90,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 			'demands/5',
 			(new Http\CreatedResourceUrl(
 				new FakeUri(null, 'demands/{id}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5)
-							->with('name', 'bar');
-					}
-				}
+				['id' => 5, 'name' => 'bar']
 			))->path()
 		);
 	}
@@ -135,11 +100,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 			'http://localhost/demands/5',
 			(new Http\CreatedResourceUrl(
 				new FakeUri('http://localhost/', 'demands/{id}'),
-				new class {
-					public function print(Output\Format $format): Output\Format {
-						return $format->with('id', 5);
-					}
-				}
+				['id' => 5]
 			))->reference()
 		);
 	}

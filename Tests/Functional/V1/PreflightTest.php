@@ -56,6 +56,7 @@ final class PreflightTest extends Tester\TestCase {
 			},
 			new Predis\Client(),
 			$this->elasticsearch,
+			$this->rabbitMq,
 			[
 				'demand' => ['hashid' => new Hashids()],
 				'evolution' => ['hashid' => new Hashids()],

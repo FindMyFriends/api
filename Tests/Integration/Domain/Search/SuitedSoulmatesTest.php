@@ -44,7 +44,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$evolution();
 		static $params = [
 			'refresh' => true,
-			'index' => 'soulmates',
+			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
@@ -78,7 +78,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index(
 			[
 				'refresh' => true,
-				'index' => 'soulmates',
+				'index' => 'relationships',
 				'type' => 'evolutions',
 				'body' => ['id' => 2, 'general' => ['gender' => 'man'], 'seeker_id' => 1],
 			]
@@ -103,7 +103,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		static $params = [
 			'refresh' => true,
-			'index' => 'soulmates',
+			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
@@ -177,7 +177,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		static $params = [
 			'refresh' => true,
-			'index' => 'soulmates',
+			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);

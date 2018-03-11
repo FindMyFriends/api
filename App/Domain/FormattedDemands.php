@@ -19,7 +19,7 @@ final class FormattedDemands implements Demands {
 		$this->hashids = $hashids;
 	}
 
-	public function ask(array $description): Demand {
+	public function ask(array $description): int {
 		return $this->origin->ask($description);
 	}
 

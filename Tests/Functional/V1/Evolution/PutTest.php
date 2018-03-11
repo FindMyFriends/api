@@ -27,6 +27,7 @@ final class PutTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		$this->elasticsearch->index(['index' => 'relationships', 'type' => 'evolutions', 'id' => $id, 'body' => []]);
 		$evolution = json_decode(
 			(new V1\Evolution\Put(
 				new Application\FakeRequest(
@@ -36,6 +37,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true
@@ -51,6 +53,7 @@ final class PutTest extends Tester\TestCase {
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser()
 			))->template(['id' => 1])->render(),
 			true
@@ -69,6 +72,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser()
 			))->template(['id' => 1])->render(),
 			true
@@ -89,6 +93,7 @@ final class PutTest extends Tester\TestCase {
 				),
 				new Uri\FakeUri('/', 'v1/evolutions/1', []),
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true

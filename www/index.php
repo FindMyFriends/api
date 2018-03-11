@@ -11,9 +11,6 @@ use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
-const LOGS = __DIR__ . '/../log',
-	LOG_FILE = LOGS . '/logs.log';
-
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
 		$_SERVER['SCRIPT_NAME'],
@@ -29,11 +26,28 @@ $redis = new Predis\Client($configuration['REDIS']['uri']);
 $elasticsearch = Elasticsearch\ClientBuilder::create()
 	->setHosts($configuration['ELASTICSEARCH']['hosts'])
 	->build();
+$database = new Storage\MetaPDO(
+	new Storage\SideCachedPDO(
+		new Storage\SafePDO(
+			$configuration['DATABASE']['dsn'],
+			$configuration['DATABASE']['user'],
+			$configuration['DATABASE']['password']
+		)
+	),
+	$redis
+);
+$rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
+	$configuration['RABBITMQ']['host'],
+	$configuration['RABBITMQ']['port'],
+	$configuration['RABBITMQ']['user'],
+	$configuration['RABBITMQ']['pass'],
+	$configuration['RABBITMQ']['vhost']
+);
 
 echo (new class(
 	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation(LOGS)),
-		new Log\FilesystemLogs(new SplFileInfo(LOG_FILE))
+		new Log\FilesystemLogs(new Log\DynamicLocation($configuration['LOGS']['directory'])),
+		new Log\FilesystemLogs(new SplFileInfo($configuration['LOGS']['file']))
 	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
@@ -43,18 +57,10 @@ echo (new class(
 						new Routing\HttpMethodRoutes(
 							new FindMyFriends\Routing\ApplicationRoutes(
 								$uri,
-								new Storage\MetaPDO(
-									new Storage\SideCachedPDO(
-										new Storage\SafePDO(
-											$configuration['DATABASE']['dsn'],
-											$configuration['DATABASE']['user'],
-											$configuration['DATABASE']['password']
-										)
-									),
-									$redis
-								),
+								$database,
 								$redis,
 								$elasticsearch,
+								$rabbitMq,
 								$configuration['HASHIDS']
 							),
 							$_SERVER['REQUEST_METHOD']

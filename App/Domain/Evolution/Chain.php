@@ -10,9 +10,9 @@ interface Chain {
 	 * Extend chain with a new change
 	 * @param mixed[] $progress
 	 * @throws \UnexpectedValueException
-	 * @return \FindMyFriends\Domain\Evolution\Change
+	 * @return int
 	 */
-	public function extend(array $progress): Change;
+	public function extend(array $progress): int;
 
 	/**
 	 * The whole history in evolution chain

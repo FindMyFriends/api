@@ -13,6 +13,9 @@ trait Page {
 	use Elasticsearch {
 		Elasticsearch::setUp as elasticsearchSetUp;
 	}
+	use RabbitMq {
+		RabbitMq::setUp as rabbitMqSetUp;
+	}
 
 	/** @var mixed[] */
 	private $configuration;
@@ -27,5 +30,6 @@ trait Page {
 		))->read();
 		$this->databaseSetUp();
 		$this->elasticsearchSetUp();
+		$this->rabbitMqSetUp();
 	}
 }

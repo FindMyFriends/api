@@ -25,9 +25,11 @@ final class DeleteTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		$this->elasticsearch->index(['index' => 'relationships', 'type' => 'evolutions', 'id' => $id, 'body' => []]);
 		$evolution = json_decode(
 			(new V1\Evolution\Delete(
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true
@@ -40,6 +42,7 @@ final class DeleteTest extends Tester\TestCase {
 		$evolution = json_decode(
 			(new V1\Evolution\Delete(
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser()
 			))->template(['id' => 1])->render(),
 			true
@@ -54,6 +57,7 @@ final class DeleteTest extends Tester\TestCase {
 		$evolution = json_decode(
 			(new V1\Evolution\Delete(
 				$this->database,
+				$this->elasticsearch,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true

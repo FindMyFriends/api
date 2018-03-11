@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Http;
 
-use Klapuch\Output;
 use Klapuch\Uri;
 
 /**
@@ -12,21 +11,18 @@ use Klapuch\Uri;
 final class CreatedResourceUrl implements Uri\Uri {
 	private const DELIMITER = '/';
 	private $origin;
-	private $object;
+	private $parameters;
 
-	public function __construct(Uri\Uri $origin, object $object) {
+	public function __construct(Uri\Uri $origin, array $parameters) {
 		$this->origin = $origin;
-		$this->object = $object;
+		$this->parameters = $parameters;
 	}
 
 	public function path(): string {
 		$parts = explode(self::DELIMITER, $this->origin->path());
 		$replacements = $this->replacements(
 			$this->placeholders($parts),
-			json_decode(
-				$this->object->print(new Output\Json())->serialization(),
-				true
-			)
+			$this->parameters
 		) + $parts;
 		ksort($replacements);
 		return ltrim(implode(self::DELIMITER, $replacements), self::DELIMITER);
@@ -58,7 +54,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	}
 
 	/**
-	 * Placeholders replaced in parameters
+	 * Placeholders replaced by parameters
 	 * @param array $placeholders
 	 * @param array $parameters
 	 * @return array

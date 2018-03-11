@@ -11,16 +11,13 @@ trait Redis {
 	/** @var \Predis\Client */
 	protected $redis;
 
-	/** @var mixed[] */
-	protected $credentials;
-
 	protected function setUp(): void {
 		parent::setUp();
 		Tester\Environment::lock('redis', __DIR__ . '/../temp');
-		$this->credentials = (new Configuration\ValidIni(
+		$credentials = (new Configuration\ValidIni(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
 		))->read();
-		$this->redis = new Predis\Client($this->credentials['REDIS']['uri']);
+		$this->redis = new Predis\Client($credentials['REDIS']['uri']);
 		$this->redis->flushall();
 	}
 }

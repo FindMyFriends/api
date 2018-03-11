@@ -21,13 +21,12 @@ final class IndividualChain implements Chain {
 		$this->database = $database;
 	}
 
-	public function extend(array $progress): Change {
-		$id = (new Storage\FlatQuery(
+	public function extend(array $progress): int {
+		return (new Storage\FlatQuery(
 			$this->database,
 			(new FindMyFriends\Sql\Evolution\InsertInto('collective_evolutions'))->returning(['id'])->sql(),
 			['seeker' => $this->seeker->id()] + $progress
 		))->field();
-		return new StoredChange($id, $this->database);
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {

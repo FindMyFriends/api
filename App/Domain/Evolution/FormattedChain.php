@@ -19,7 +19,7 @@ final class FormattedChain implements Chain {
 		$this->hashids = $hashids;
 	}
 
-	public function extend(array $progress): Change {
+	public function extend(array $progress): int {
 		return $this->origin->extend($progress);
 	}
 

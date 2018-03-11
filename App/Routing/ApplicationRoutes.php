@@ -11,6 +11,7 @@ use Klapuch\Application;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use PhpAmqpLib;
 use Predis;
 
 /**
@@ -21,6 +22,7 @@ final class ApplicationRoutes implements Routing\Routes {
 	private $database;
 	private $redis;
 	private $elasticsearch;
+	private $rabbitMq;
 	private $hashids;
 
 	public function __construct(
@@ -28,12 +30,14 @@ final class ApplicationRoutes implements Routing\Routes {
 		Storage\MetaPDO $database,
 		Predis\ClientInterface $redis,
 		Elasticsearch\Client $elasticsearch,
+		PhpAmqpLib\Connection\AMQPLazyConnection $rabbitMq,
 		array $hashids
 	) {
 		$this->uri = $uri;
 		$this->database = $database;
 		$this->redis = $redis;
 		$this->elasticsearch = $elasticsearch;
+		$this->rabbitMq = $rabbitMq;
 		$this->hashids = $hashids;
 	}
 
@@ -63,6 +67,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Application\PlainRequest(),
 				$this->uri,
 				$this->database,
+				$this->rabbitMq,
 				$user
 			),
 			'v1/demands/{id} [PUT]' => new V1\Demand\Put(
@@ -79,6 +84,14 @@ final class ApplicationRoutes implements Routing\Routes {
 				new V1\Evolutions\Options($this->database, $this->redis),
 				new Application\PlainRequest()
 			),
+			'v1/evolutions [POST]' => new V1\Evolutions\Post(
+				$this->hashids['evolution']['hashid'],
+				new Application\PlainRequest(),
+				$this->uri,
+				$this->database,
+				$this->elasticsearch,
+				$user
+			),
 			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
 				$this->hashids['evolution']['hashid'],
 				$this->uri,
@@ -88,6 +101,14 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
 				$this->database,
+				$this->elasticsearch,
+				$user
+			),
+			'v1/evolutions/{id} [PUT]' => new V1\Evolution\Put(
+				new Application\PlainRequest(),
+				$this->uri,
+				$this->database,
+				$this->elasticsearch,
 				$user
 			),
 			'v1/soulmates?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Soulmates\Get(

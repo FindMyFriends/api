@@ -23,7 +23,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 
 	public function testAskingForFirstDemand() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		$demand = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
+		$id = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
 			[
 				'general' => [
 					'age' => [
@@ -119,7 +119,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				],
 			]
 		);
-		Assert::equal(new Domain\StoredDemand(1, $this->database), $demand);
+		Assert::same(1, $id);
 		(new Misc\TableCounts(
 			$this->database,
 			[

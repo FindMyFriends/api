@@ -50,7 +50,7 @@
 
 	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
 		<properties>
-			<property name="usefulAnnotations" type="array" value="@dataProvider,@throws"/>
+			<property name="usefulAnnotations" type="array" value="@dataProvider,@throws,@internal"/>
 		</properties>
 	</rule>
 

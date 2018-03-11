@@ -20,7 +20,7 @@ final class CollectiveDemands implements Demands {
 		$this->database = $database;
 	}
 
-	public function ask(array $description): Demand {
+	public function ask(array $description): int {
 		return $this->origin->ask($description);
 	}
 

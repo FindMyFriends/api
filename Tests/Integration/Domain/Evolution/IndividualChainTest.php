@@ -29,7 +29,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		$change = (new Evolution\IndividualChain(
+		$changeId = (new Evolution\IndividualChain(
 			new Access\FakeUser((string) $seeker),
 			$this->database
 		))->extend(
@@ -114,9 +114,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				],
 			]
 		);
-		$change = json_decode($change->print(new Output\Json())->serialization(), true);
-		Assert::same(15, $change['general']['age']['from']);
-		Assert::same(16, $change['general']['age']['to']);
+		Assert::same(7, $changeId);
 		(new Misc\TableCounts(
 			$this->database,
 			[

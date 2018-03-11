@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "975d9767cc27b58a4d6a8770475d3693",
+    "content-hash": "2d8b376c07fe8b282870f628754f4dae",
     "packages": [
         {
             "name": "elasticsearch/elasticsearch",
@@ -701,12 +701,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Output.git",
-                "reference": "26722b6a089606e982f4a0b20209b5cdebb44ab4"
+                "reference": "9c38d38ff8f93084868853d70e2b09ce00cc3fae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Output/zipball/26722b6a089606e982f4a0b20209b5cdebb44ab4",
-                "reference": "26722b6a089606e982f4a0b20209b5cdebb44ab4",
+                "url": "https://api.github.com/repos/klapuch/Output/zipball/9c38d38ff8f93084868853d70e2b09ce00cc3fae",
+                "reference": "9c38d38ff8f93084868853d70e2b09ce00cc3fae",
                 "shasum": ""
             },
             "require": {
@@ -740,7 +740,7 @@
             ],
             "description": "printers, output, xml, json",
             "homepage": "https://github.com/klapuch/Output",
-            "time": "2018-01-02T19:01:45+00:00"
+            "time": "2018-03-10T17:25:47+00:00"
         },
         {
             "name": "klapuch/routing",
@@ -1049,6 +1049,77 @@
             "description": "Broad variation of validation",
             "homepage": "https://www.github.com/klapuch/Validation",
             "time": "2017-10-08T10:49:11+00:00"
+        },
+        {
+            "name": "php-amqplib/php-amqplib",
+            "version": "v2.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-amqplib/php-amqplib.git",
+                "reference": "dfd3694a86f1a7394d3693485259d4074a6ec79b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/dfd3694a86f1a7394d3693485259d4074a6ec79b",
+                "reference": "dfd3694a86f1a7394d3693485259d4074a6ec79b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "videlalvaro/php-amqplib": "self.version"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "^4.8",
+                "scrutinizer/ocular": "^1.1",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpAmqpLib\\": "PhpAmqpLib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla",
+                    "role": "Original Maintainer"
+                },
+                {
+                    "name": "John Kelly",
+                    "email": "johnmkelly86@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Raúl Araya",
+                    "email": "nubeiro@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Formerly videlalvaro/php-amqplib.  This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/php-amqplib/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2018-02-11T19:28:00+00:00"
         },
         {
             "name": "predis/predis",

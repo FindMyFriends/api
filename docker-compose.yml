@@ -70,3 +70,12 @@ services:
         - 9200:9200
       networks:
         - fmf
+
+    rabbitmq:
+      image: rabbitmq:management
+      container_name: find-my-friends-rabbitmq
+      ports:
+        - 15672:15672
+        - 5672:5672
+      networks:
+        - fmf
