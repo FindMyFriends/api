@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class FormattedChangeTest extends Tester\TestCase {
+final class PublicChangeTest extends Tester\TestCase {
 	public function testFormatting() {
 		Assert::equal(
 			[
@@ -23,7 +23,7 @@ final class FormattedChangeTest extends Tester\TestCase {
 				'evolved_at' => '2017-09-17T13:58:10+00:00',
 			],
 			json_decode(
-				(new Evolution\FormattedChange(
+				(new Evolution\PublicChange(
 					new Evolution\FakeChange(),
 					new Hashids()
 				))->print(
@@ -40,4 +40,4 @@ final class FormattedChangeTest extends Tester\TestCase {
 	}
 }
 
-(new FormattedChangeTest())->run();
+(new PublicChangeTest())->run();

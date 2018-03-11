@@ -6,9 +6,9 @@ namespace FindMyFriends\Domain\Search;
 use Klapuch\Output;
 
 /**
- * Soulmate formatted to be used in output
+ * Soulmate formatted to be used for public representation
  */
-final class FormattedSoulmate implements Soulmate {
+final class PublicSoulmate implements Soulmate {
 	private $origin;
 	private $hashids;
 

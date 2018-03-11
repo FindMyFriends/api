@@ -38,7 +38,7 @@ final class Get implements Application\View {
 						new Response\CachedResponse(
 							new Response\JsonApiAuthentication(
 								new Response\PlainResponse(
-									(new Domain\FormattedDemand(
+									(new Domain\PublicDemand(
 										new Domain\HarnessedDemand(
 											new Domain\ExistingDemand(
 												new Domain\StoredDemand(

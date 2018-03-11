@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class FormattedDemandTest extends Tester\TestCase {
+final class PublicDemandTest extends Tester\TestCase {
 	public function testFormatting() {
 		Assert::equal(
 			[
@@ -29,7 +29,7 @@ final class FormattedDemandTest extends Tester\TestCase {
 				],
 			],
 			json_decode(
-				(new Domain\FormattedDemand(
+				(new Domain\PublicDemand(
 					new Domain\FakeDemand(),
 					new Hashids()
 				))->print(
@@ -52,4 +52,4 @@ final class FormattedDemandTest extends Tester\TestCase {
 	}
 }
 
-(new FormattedDemandTest())->run();
+(new PublicDemandTest())->run();

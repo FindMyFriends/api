@@ -30,7 +30,7 @@ final class Get implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$demands = new Domain\FormattedDemands(
+			$demands = new Domain\PublicDemands(
 				new Domain\CollectiveDemands(
 					new Domain\FakeDemands(),
 					$this->database

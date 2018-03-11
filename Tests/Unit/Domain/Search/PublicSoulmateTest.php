@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class FormattedSoulmateTest extends Tester\TestCase {
+final class PublicSoulmateTest extends Tester\TestCase {
 	public function testFormatting() {
 		Assert::equal(
 			[
@@ -25,7 +25,7 @@ final class FormattedSoulmateTest extends Tester\TestCase {
 				'seeker_id' => 1,
 			],
 			json_decode(
-				(new Search\FormattedSoulmate(
+				(new Search\PublicSoulmate(
 					new Search\FakeSoulmate(),
 					[
 						'demand' => ['hashid' => new Hashids('a')],
@@ -48,4 +48,4 @@ final class FormattedSoulmateTest extends Tester\TestCase {
 	}
 }
 
-(new FormattedSoulmateTest())->run();
+(new PublicSoulmateTest())->run();

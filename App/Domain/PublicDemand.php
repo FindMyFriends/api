@@ -7,9 +7,9 @@ use Hashids\HashidsInterface;
 use Klapuch\Output;
 
 /**
- * Demand formatted to be used in output
+ * Demand formatted to be used for public representation
  */
-final class FormattedDemand implements Demand {
+final class PublicDemand implements Demand {
 	private $origin;
 	private $hashids;
 

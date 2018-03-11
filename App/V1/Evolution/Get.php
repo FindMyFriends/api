@@ -39,7 +39,7 @@ final class Get implements Application\View {
 						new Response\CachedResponse(
 							new Response\JsonApiAuthentication(
 								new Response\PlainResponse(
-									(new Evolution\FormattedChange(
+									(new Evolution\PublicChange(
 										new Evolution\HarnessedChange(
 											new Evolution\ExistingChange(
 												new Evolution\StoredChange(

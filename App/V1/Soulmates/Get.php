@@ -43,7 +43,7 @@ final class Get implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$soulmates = new Domain\Search\FormattedSoulmates(
+			$soulmates = new Domain\Search\PublicSoulmates(
 				new Domain\Search\SuitedSoulmates(
 					$this->seeker,
 					$this->elasticsearch,

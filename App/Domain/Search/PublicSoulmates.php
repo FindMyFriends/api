@@ -7,9 +7,9 @@ use Klapuch\Dataset;
 use Klapuch\Iterator;
 
 /**
- * Soulmates formatted to be used for input/output
+ * Soulmates formatted to be used for public representation
  */
-final class FormattedSoulmates implements Soulmates {
+final class PublicSoulmates implements Soulmates {
 	private $origin;
 	private $hashids;
 
@@ -26,7 +26,7 @@ final class FormattedSoulmates implements Soulmates {
 		return new Iterator\Mapped(
 			$this->origin->matches($selection),
 			function(Soulmate $soulmate): Soulmate {
-				return new FormattedSoulmate($soulmate, $this->hashids);
+				return new PublicSoulmate($soulmate, $this->hashids);
 			}
 		);
 	}

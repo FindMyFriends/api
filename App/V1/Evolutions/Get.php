@@ -33,7 +33,7 @@ final class Get implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			$evolution = new Evolution\FormattedChain(
+			$evolution = new Evolution\PublicChain(
 				new Evolution\IndividualChain(
 					$this->user,
 					$this->database

@@ -8,9 +8,9 @@ use Klapuch\Dataset;
 use Klapuch\Iterator;
 
 /**
- * Demands formatted to be used for input/output
+ * Demand formatted to be used for public representation
  */
-final class FormattedDemands implements Demands {
+final class PublicDemands implements Demands {
 	private $origin;
 	private $hashids;
 
@@ -27,7 +27,7 @@ final class FormattedDemands implements Demands {
 		return new Iterator\Mapped(
 			$this->origin->all($selection),
 			function(Demand $demand): Demand {
-				return new FormattedDemand($demand, $this->hashids);
+				return new PublicDemand($demand, $this->hashids);
 			}
 		);
 	}

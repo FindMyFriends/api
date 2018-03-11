@@ -7,9 +7,9 @@ use Hashids\HashidsInterface;
 use Klapuch\Output;
 
 /**
- * Change formatted to be used in output
+ * Evolution change formatted to be used for public representation
  */
-final class FormattedChange implements Change {
+final class PublicChange implements Change {
 	private $origin;
 	private $hashids;
 

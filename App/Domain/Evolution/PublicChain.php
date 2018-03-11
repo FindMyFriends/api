@@ -8,9 +8,9 @@ use Klapuch\Dataset;
 use Klapuch\Iterator;
 
 /**
- * Chain formatted to be used for input/output
+ * Evolution chain formatted to be used for public representation
  */
-final class FormattedChain implements Chain {
+final class PublicChain implements Chain {
 	private $origin;
 	private $hashids;
 
@@ -27,7 +27,7 @@ final class FormattedChain implements Chain {
 		return new Iterator\Mapped(
 			$this->origin->changes($selection),
 			function(Change $demand): Change {
-				return new FormattedChange($demand, $this->hashids);
+				return new PublicChange($demand, $this->hashids);
 			}
 		);
 	}
