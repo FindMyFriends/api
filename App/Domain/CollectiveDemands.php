@@ -25,14 +25,12 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
-		$clause = new Dataset\SelectiveClause(
-			(new FindMyFriends\Sql\Demand\Select())->from(['collective_demands']),
-			$selection
-		);
-		$demands = (new Storage\TypedQuery(
+		$demands = (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new FindMyFriends\Sql\Demand\Select())->from(['collective_demands']),
+				$selection
+			)
 		))->rows();
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
@@ -43,14 +41,12 @@ final class CollectiveDemands implements Demands {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		$clause = new Dataset\SelectiveClause(
-			(new Sql\AnsiSelect(['COUNT(*)']))->from(['demands']),
-			$selection
-		);
-		return (new Storage\NativeQuery(
+		return (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new Sql\AnsiSelect(['COUNT(*)']))->from(['demands']),
+				$selection
+			)
 		))->field();
 	}
 }

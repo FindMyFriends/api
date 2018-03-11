@@ -30,7 +30,7 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	public function find(int $id): void {
-		$demand = (new Storage\TypedQuery(
+		$demand = (new Storage\BuiltQuery(
 			$this->database,
 			(new Sql\AnsiSelect(
 				[
@@ -74,10 +74,8 @@ final class SuitedSoulmates implements Soulmates {
 				]
 			))
 				->from(['elasticsearch_demands'])
-				->where('id = ?')
-				->where('seeker_id = ?')
-				->sql(),
-			[$id, $this->seeker->id()]
+				->where('id = ?', [$id])
+				->where('seeker_id = ?', [$this->seeker->id()])
 		))->row();
 		$response = $this->elasticsearch->search(
 			[
@@ -112,25 +110,23 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	public function matches(Dataset\Selection $selection): \Iterator {
-		$clause = new Dataset\SelectiveClause(
-			(new Sql\AnsiSelect(
-				[
-					'id',
-					'evolution_id',
-					'demand_id',
-					'position',
-					'seeker_id',
-					'new',
-				]
-			))
-				->from(['suited_soulmates'])
-				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
-			$selection
-		);
-		$matches = (new Storage\TypedQuery(
+		$matches = (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new Sql\AnsiSelect(
+					[
+						'id',
+						'evolution_id',
+						'demand_id',
+						'position',
+						'seeker_id',
+						'new',
+					]
+				))
+					->from(['suited_soulmates'])
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+				$selection
+			)
 		))->rows();
 		foreach ($matches as $match) {
 			yield new StoredSoulmate(
@@ -141,16 +137,14 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		$clause = new Dataset\SelectiveClause(
-			(new Sql\AnsiSelect(['COUNT(*)']))
-				->from(['suited_soulmates'])
-				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
-			$selection
-		);
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new Sql\AnsiSelect(['COUNT(*)']))
+					->from(['suited_soulmates'])
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+				$selection
+			)
 		))->field();
 	}
 

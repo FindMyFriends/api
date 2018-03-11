@@ -32,13 +32,11 @@ final class StoredChange implements Change {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$evolution = (new Storage\TypedQuery(
+		$evolution = (new Storage\BuiltQuery(
 			$this->database,
 			(new FindMyFriends\Sql\Evolution\Select())
 				->from(['collective_evolutions'])
-				->where('id = ?')
-				->sql(),
-			[$this->id]
+				->where('id = ?', [$this->id])
 		))->row();
 		return (new Domain\CompleteDescription($format, $evolution))
 			->with('id', $evolution['id'])

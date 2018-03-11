@@ -20,7 +20,7 @@ final class StoredSoulmate implements Soulmate {
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$soulmate = (new Storage\TypedQuery(
+		$soulmate = (new Storage\BuiltQuery(
 			$this->database,
 			(new Sql\AnsiSelect(
 				[
@@ -32,9 +32,7 @@ final class StoredSoulmate implements Soulmate {
 					'new',
 				]
 			))->from(['suited_soulmates'])
-				->where('id = ?')
-				->sql(),
-			[$this->id]
+				->where('id = ?', [$this->id])
 		))->row();
 		return new Output\FilledFormat($format, $soulmate);
 	}

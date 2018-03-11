@@ -849,18 +849,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "b8c3c6886c709b33411c68fd31ae8d4e19ebef18"
+                "reference": "130c52ba3dd6a81d71a1a55630a6ccb66e962a36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/b8c3c6886c709b33411c68fd31ae8d4e19ebef18",
-                "reference": "b8c3c6886c709b33411c68fd31ae8d4e19ebef18",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/130c52ba3dd6a81d71a1a55630a6ccb66e962a36",
+                "reference": "130c52ba3dd6a81d71a1a55630a6ccb66e962a36",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "klapuch/log": "^1.0.0",
-                "php": ">=7.1",
+                "klapuch/sql": "dev-master",
+                "php": ">=7.2",
                 "predis/predis": "^1.1"
             },
             "require-dev": {
@@ -897,7 +897,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-03-04T15:48:12+00:00"
+            "time": "2018-03-11T16:39:18+00:00"
         },
         {
             "name": "klapuch/ui",

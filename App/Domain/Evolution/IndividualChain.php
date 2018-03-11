@@ -30,16 +30,14 @@ final class IndividualChain implements Chain {
 	}
 
 	public function changes(Dataset\Selection $selection): \Iterator {
-		$clause = new Dataset\SelectiveClause(
-			(new FindMyFriends\Sql\Evolution\Select())
-				->from(['collective_evolutions'])
-				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
-			$selection
-		);
-		$evolutions = (new Storage\TypedQuery(
+		$evolutions = (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new FindMyFriends\Sql\Evolution\Select())
+					->from(['collective_evolutions'])
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+				$selection
+			)
 		))->rows();
 		foreach ($evolutions as $change) {
 			yield new StoredChange(
@@ -50,16 +48,14 @@ final class IndividualChain implements Chain {
 	}
 
 	public function count(Dataset\Selection $selection): int {
-		$clause = new Dataset\SelectiveClause(
-			(new Sql\AnsiSelect(['COUNT(*)']))
-				->from(['evolutions'])
-				->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
-			$selection
-		);
-		return (new Storage\NativeQuery(
+		return (new Storage\BuiltQuery(
 			$this->database,
-			$clause->sql(),
-			$clause->parameters()->binds()
+			new Dataset\SelectiveClause(
+				(new Sql\AnsiSelect(['COUNT(*)']))
+					->from(['evolutions'])
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+				$selection
+			)
 		))->field();
 	}
 }
