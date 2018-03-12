@@ -41,8 +41,8 @@ final class SyncChangeTest extends Tester\TestCase {
 
 	public function testIndexingWithSuccess() {
 		$elasticsearch = $this->mock(Elasticsearch\Client::class);
-		$elasticsearch->shouldReceive('delete')->once();
-		$elasticsearch->shouldReceive('update')->once();
+		$elasticsearch->shouldReceive('delete')->once()->andReturn([]);
+		$elasticsearch->shouldReceive('update')->once()->andReturn([]);
 		$origin = $this->mock(Evolution\Change::class);
 		$origin->shouldReceive('revert')->once();
 		$origin->shouldReceive('affect')->once();

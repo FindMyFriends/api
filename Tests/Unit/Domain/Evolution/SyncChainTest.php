@@ -33,7 +33,7 @@ final class SyncChainTest extends Tester\TestCase {
 
 	public function testIndexingWithSuccess() {
 		$elasticsearch = $this->mock(Elasticsearch\Client::class);
-		$elasticsearch->shouldReceive('index')->once();
+		$elasticsearch->shouldReceive('index')->once()->andReturn([]);
 		$origin = $this->mock(Evolution\Chain::class);
 		$origin->shouldReceive('extend')->once()->andReturn(10);
 		Assert::noError(function () use ($origin, $elasticsearch) {

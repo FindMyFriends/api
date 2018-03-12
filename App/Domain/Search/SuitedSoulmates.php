@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
+use FindMyFriends;
 use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
@@ -13,8 +14,6 @@ use Klapuch\Storage;
  * Soulmates suited for the particular seeker
  */
 final class SuitedSoulmates implements Soulmates {
-	private const INDEX = 'relationships',
-		TYPE = 'evolutions';
 	private $seeker;
 	private $elasticsearch;
 	private $database;
@@ -25,7 +24,7 @@ final class SuitedSoulmates implements Soulmates {
 		Storage\MetaPDO $database
 	) {
 		$this->seeker = $seeker;
-		$this->elasticsearch = $elasticsearch;
+		$this->elasticsearch = new FindMyFriends\Elasticsearch\RelationshipEvolutions($elasticsearch);
 		$this->database = $database;
 	}
 
@@ -77,13 +76,7 @@ final class SuitedSoulmates implements Soulmates {
 				->where('id = ?', [$id])
 				->where('seeker_id = ?', [$this->seeker->id()])
 		))->row();
-		$response = $this->elasticsearch->search(
-			[
-				'index' => self::INDEX,
-				'type' => self::TYPE,
-				'body' => $this->query($demand),
-			]
-		);
+		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
 		(new Storage\TypedQuery(
 			$this->database,
 			'INSERT INTO soulmate_searches (demand_id) VALUES (?)',
