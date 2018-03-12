@@ -32,7 +32,7 @@ final class Consumer {
 
 	public function consume(): void {
 		$channel = $this->connection->channel();
-		$channel->queue_declare(self::QUEUE, false, false, false, false);
+		$channel->queue_declare(self::QUEUE, false, true, false, false);
 		$channel->queue_bind(self::QUEUE, self::EXCHANGE, self::ROUTING_KEY);
 		$channel->basic_consume(self::QUEUE, '', false, false, false, false, [$this, 'action']);
 		while (count($channel->callbacks)) {

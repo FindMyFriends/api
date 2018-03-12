@@ -21,7 +21,10 @@ final class Publisher {
 		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
 		$message = new PhpAmqpLib\Message\AMQPMessage(
 			(new Domain\AmqpDemand($demand))->print(new Output\Json())->serialization(),
-			['content_type' => 'application/json']
+			[
+				'content_type' => 'application/json',
+				'delivery_mode' => PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT,
+			]
 		);
 		$channel->basic_publish($message, self::EXCHANGE, self::ROUTING_KEY);
 	}
