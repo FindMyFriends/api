@@ -585,47 +585,23 @@ CREATE DOMAIN rating AS smallint
 
 -- TABLES --
 CREATE TABLE face_shapes (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   name text NOT NULL
-);
-ALTER TABLE face_shapes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME face_shapes_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY face_shapes ADD CONSTRAINT face_shapes_pkey PRIMARY KEY(id);
 
 CREATE TABLE colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   name text NOT NULL,
   hex hex_color NOT NULL
-);
-ALTER TABLE colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY colors ADD CONSTRAINT colors_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE similar_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL,
   similar_color_id smallint NOT NULL
-);
-ALTER TABLE similar_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME similar_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
@@ -633,66 +609,34 @@ ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_similar_col
 
 
 CREATE TABLE body_builds (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   name text NOT NULL
-);
-ALTER TABLE body_builds ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME body_builds_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY body_builds ADD CONSTRAINT body_builds_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE ethnic_groups (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   name text NOT NULL
-);
-ALTER TABLE ethnic_groups ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME ethnic_groups_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY ethnic_groups ADD CONSTRAINT ethnic_groups_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE general (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   gender genders NOT NULL,
   ethnic_group_id smallint NOT NULL,
   birth_year real_birth_year NOT NULL,
   firstname text,
   lastname text
 );
-ALTER TABLE general ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME general_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY general ADD CONSTRAINT general_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY general ADD CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id);
 
 
 CREATE TABLE beard_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE beard_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME beard_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 CREATE UNIQUE INDEX beard_colors_color_id_uindex ON beard_colors USING btree (color_id);
 ALTER TABLE ONLY beard_colors ADD CONSTRAINT beard_colors_pkey PRIMARY KEY(id);
@@ -701,19 +645,11 @@ ALTER TABLE ONLY beard_colors ADD CONSTRAINT beard_colors_colors_id_fk FOREIGN K
 
 
 CREATE TABLE beards (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint,
   length length,
   style text,
   CONSTRAINT beards_length_check CHECK (validate_length(length))
-);
-ALTER TABLE beards ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME beards_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY beards ADD CONSTRAINT beards_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY beards ADD CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id);
@@ -721,7 +657,7 @@ CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EAC
 
 
 CREATE TABLE bodies (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   build_id smallint,
   weight mass,
   height length,
@@ -729,45 +665,21 @@ CREATE TABLE bodies (
   CONSTRAINT bodies_height_check CHECK (validate_length(height)),
   CONSTRAINT bodies_weight_check CHECK (validate_mass(weight))
 );
-ALTER TABLE bodies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME bodies_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id);
 
 
 CREATE TABLE eyebrows (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint,
   care smallint,
   CONSTRAINT eyebrows_care_check CHECK (is_rating((care)::integer))
 );
-ALTER TABLE eyebrows ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME eyebrows_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY eyebrows ADD CONSTRAINT eyebrows_pkey PRIMARY KEY(id);
 
 CREATE TABLE eye_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE eye_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME eye_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY eye_colors ADD CONSTRAINT eye_colors_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX eye_colors_color_id_uindex ON eye_colors USING btree (color_id);
@@ -775,17 +687,9 @@ ALTER TABLE ONLY eye_colors ADD CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (
 
 
 CREATE TABLE eyes (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint,
   lenses boolean
-);
-ALTER TABLE eyes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME eyes_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY eyes ADD CONSTRAINT eyes_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY eyes ADD CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id);
@@ -800,49 +704,25 @@ $$;
 
 
 CREATE TABLE faces (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   freckles boolean,
   care rating,
   shape_id smallint
-);
-ALTER TABLE faces ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME faces_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY faces ADD CONSTRAINT faces_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY faces ADD CONSTRAINT faces_face_shapes_id_fk FOREIGN KEY (shape_id) REFERENCES face_shapes(id);
 
 
 CREATE TABLE hair_styles (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   name text NOT NULL
-);
-ALTER TABLE hair_styles ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hair_styles_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY hair_styles ADD CONSTRAINT hair_styles_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE hair_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE hair_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hair_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY hair_colors ADD CONSTRAINT hair_colors_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX hair_colors_color_id_uindex ON hair_colors USING btree (color_id);
@@ -850,7 +730,7 @@ ALTER TABLE ONLY hair_colors ADD CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY
 
 
 CREATE TABLE hair (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   style_id smallint,
   color_id smallint,
   length length,
@@ -859,14 +739,6 @@ CREATE TABLE hair (
   nature boolean,
   CONSTRAINT hair_length_check CHECK (validate_length(length))
 );
-ALTER TABLE hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hair_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY hair ADD CONSTRAINT hair_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY hair ADD CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id);
 ALTER TABLE ONLY hair ADD CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id);
@@ -874,16 +746,8 @@ CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH RO
 
 
 CREATE TABLE hand_hair_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE hand_hair_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hand_hair_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY hand_hair_colors ADD CONSTRAINT hand_hair_colors_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX hand_hair_colors_color_id_uindex ON hand_hair_colors USING btree (color_id);
@@ -891,33 +755,17 @@ ALTER TABLE ONLY hand_hair_colors ADD CONSTRAINT hand_hair_colors_colors_id_fk F
 
 
 CREATE TABLE hand_hair (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint,
   amount rating
-);
-ALTER TABLE hand_hair ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hand_hair_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY hand_hair ADD CONSTRAINT hand_hair_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY hand_hair ADD CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id);
 
 
 CREATE TABLE nail_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE nail_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME nail_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY nail_colors ADD CONSTRAINT nail_colors_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX nail_colors_color_id_uindex ON nail_colors USING btree (color_id);
@@ -925,19 +773,11 @@ ALTER TABLE ONLY nail_colors ADD CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY
 
 
 CREATE TABLE nails (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint,
   length length,
   care rating,
   CONSTRAINT nails_length_check CHECK (validate_length(length))
-);
-ALTER TABLE nails ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME nails_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY nails ADD CONSTRAINT nails_pkey PRIMARY KEY(id);
 CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
@@ -945,20 +785,12 @@ ALTER TABLE ONLY nails ADD CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY 
 
 
 CREATE TABLE hands (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   nail_id integer,
   care rating,
   vein_visibility rating,
   joint_visibility rating,
   hand_hair_id integer
-);
-ALTER TABLE hands ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME hands_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY hands ADD CONSTRAINT hands_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX hands_id_uindex ON hands USING btree (id);
@@ -967,23 +799,15 @@ ALTER TABLE ONLY hands ADD CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) RE
 
 
 CREATE TABLE teeth (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   care rating,
   braces boolean
-);
-ALTER TABLE teeth ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME teeth_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY teeth ADD CONSTRAINT teeth_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE descriptions (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   general_id integer NOT NULL,
   body_id integer NOT NULL,
   face_id integer NOT NULL,
@@ -994,14 +818,6 @@ CREATE TABLE descriptions (
   tooth_id integer NOT NULL,
   left_eye_id integer NOT NULL,
   right_eye_id integer NOT NULL
-);
-ALTER TABLE descriptions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME descriptions_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX descriptions_beard_id_uindex ON descriptions USING btree (beard_id);
@@ -1027,35 +843,19 @@ ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_teeth_id_fk FOREIGN KE
 
 
 CREATE TABLE seekers (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   email citext NOT NULL,
   password text NOT NULL
-);
-ALTER TABLE seekers ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME seekers_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY seekers ADD CONSTRAINT seekers_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
 
 
 CREATE TABLE evolutions (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
   evolved_at timestamp with time zone NOT NULL
-);
-ALTER TABLE evolutions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME evolutions_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY evolutions ADD CONSTRAINT evolutions_pkey PRIMARY KEY(id);
 CREATE INDEX evolutions_description_id_index ON evolutions USING btree (description_id);
@@ -1087,38 +887,22 @@ CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
 
 CREATE TABLE locations (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   coordinates point NOT NULL,
   place text,
   met_at approximate_timestamptz NOT NULL,
   CONSTRAINT locations_met_at_approximation_mix_check CHECK (validate_approximate_timestamptz(met_at)),
   CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (validate_approximate_max_interval(met_at))
 );
-ALTER TABLE locations ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME locations_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY locations ADD CONSTRAINT locations_pkey PRIMARY KEY(id);
 
 
 CREATE TABLE demands (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
   location_id integer NOT NULL
-);
-ALTER TABLE demands ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME demands_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY demands ADD CONSTRAINT demands_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX demands_description_id_uindex ON demands USING btree (description_id);
@@ -1151,7 +935,7 @@ CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR
 
 
 CREATE TABLE soulmates (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
   score numeric NOT NULL,
@@ -1159,14 +943,6 @@ CREATE TABLE soulmates (
   related_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
-ALTER TABLE soulmates ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME soulmates_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_pkey PRIMARY KEY(id);
 CREATE UNIQUE INDEX soulmates_demand_id_evolution_id_uindex ON soulmates USING btree (demand_id, evolution_id);
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
@@ -1174,19 +950,11 @@ ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_evolutions_evolution_id_fk F
 
 
 CREATE TABLE soulmate_searches (
-  id integer NOT NULL,
+  id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
   demand_id integer NOT NULL,
   searched_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
-ALTER TABLE soulmate_searches ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME soulmate_searches_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
-);
 ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_pkey PRIMARY KEY(id);
 CREATE INDEX soulmate_searches_demand_id_index ON soulmate_searches USING btree (demand_id);
 ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
@@ -1194,16 +962,8 @@ ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_demands_dema
 
 
 CREATE TABLE eyebrow_colors (
-  id smallint NOT NULL,
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
   color_id smallint NOT NULL
-);
-ALTER TABLE eyebrow_colors ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME eyebrow_colors_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_pkey PRIMARY KEY(id);
 ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
@@ -1893,18 +1653,10 @@ SET default_with_oids = false;
 
 -- TABLES --
 CREATE TABLE etags (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     entity text NOT NULL,
     tag text NOT NULL,
     created_at timestamp with time zone NOT NULL
-);
-ALTER TABLE etags ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-  SEQUENCE NAME etags_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1
 );
 ALTER TABLE ONLY etags ADD CONSTRAINT etags_pkey PRIMARY KEY (id);
 CREATE UNIQUE INDEX etags_entity_uindex ON etags USING btree (lower((entity)::text));
