@@ -3,9 +3,29 @@
 
 	<resolvepath propertyName="base_path" file="."/>
 
-	<target name="check" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, generate-schemas, tests"/>
-	<target name="ci" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests, tester-coverage"/> <!-- Everything in CHECK except generate-schemas -->
+	<target name="check" depends="composer-outdated-packages, composer-validate-composer.lock, lint, phpcpd, phpstan, phpcs, generate-schemas, tests"/>
+	<target name="ci" depends="composer-install, composer-outdated-packages, composer-validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests, tester-coverage"/> <!-- Everything in CHECK except generate-schemas -->
 	<target name="init" depends="lint, move-schemas"/>
+
+	<target name="composer-install">
+		<exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
+			<arg value="install"/>
+			<arg value="--no-interaction"/>
+			<arg value="--prefer-dist"/>
+			<arg value="--no-scripts"/>
+			<arg value="--no-progress"/>
+			<arg value="--no-suggest"/>
+			<arg value="--optimize-autoloader"/>
+			<arg value="--classmap-authoritative"/>
+		</exec>
+	</target>
+
+	<target name="composer-outdated-packages">
+		<exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
+			<arg value="outdated"/>
+			<arg value="--direct"/>
+		</exec>
+	</target>
 
 	<target name="lint">
 		<exec executable="vendor/bin/parallel-lint" logoutput="true" passthru="true" checkreturn="true">
@@ -102,7 +122,7 @@
 		</exec>
 	</target>
 
-	<target name="validate-composer.lock">
+	<target name="composer-validate-composer.lock">
 		<exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
 			<arg value="validate"/>
 			<arg value="--no-check-all"/>
@@ -124,7 +144,7 @@
 		<symlink target="${base_path}/App/V1/Description/schema/get.json" link="${base_path}/www/schema/v1/description/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Description/schema/put.json" link="${base_path}/www/schema/v1/description/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Descriptions/schema/post.json" link="${base_path}/www/schema/v1/description/post.json" overwrite="true"/>
-        <symlink target="${base_path}/App/V1/Soulmate/schema/get.json" link="${base_path}/www/schema/v1/soulmate/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Soulmate/schema/get.json" link="${base_path}/www/schema/v1/soulmate/get.json" overwrite="true"/>
 	</target>
 
 	<target name="generate-schemas">

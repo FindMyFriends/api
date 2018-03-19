@@ -22,7 +22,6 @@ install:
   - docker-compose -p fmf up -d --build
 
 before_script:
-  - docker exec fmf_php-fpm_1 composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
   - docker exec find-my-friends-postgres test_import
   - docker exec find-my-friends-postgres import
 
