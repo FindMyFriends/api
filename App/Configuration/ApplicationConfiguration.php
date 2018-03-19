@@ -12,8 +12,7 @@ final class ApplicationConfiguration implements Configuration\Source {
 	private const CONFIGURATION = __DIR__ . '/.config.ini',
 		SECRET_CONFIGURATION = __DIR__ . '/.secrets.ini',
 		HASHIDS_CONFIGURATION = __DIR__ . '/.hashids.json',
-		HASHIDS_SECRET_CONFIGURATION = __DIR__ . '/.hashids.secret.json',
-		CACHE_KEY = 'combined_configs';
+		HASHIDS_SECRET_CONFIGURATION = __DIR__ . '/.hashids.secret.json';
 
 	public function read(): array {
 		return (new Configuration\CachedSource(
@@ -30,7 +29,25 @@ final class ApplicationConfiguration implements Configuration\Source {
 					)
 				)
 			),
-			self::CACHE_KEY
+			$this->key()
 		))->read();
+	}
+
+	private function key(): string {
+		return (string) crc32(
+			array_reduce(
+				[
+					self::CONFIGURATION,
+					self::SECRET_CONFIGURATION,
+					self::HASHIDS_CONFIGURATION,
+					self::HASHIDS_SECRET_CONFIGURATION,
+				],
+				function(string $key, string $location): string {
+					$key .= filemtime($location);
+					return $key;
+				},
+				''
+			)
+		);
 	}
 }
