@@ -21,8 +21,23 @@ final class SuitedHashIdMask implements Routing\Mask {
 
 	public function parameters(): array {
 		foreach ($this->hashids as $choice) {
-			if ($this->matching($this->source, $choice['paths']))
-				return (new Routing\HashIdMask($this->origin, ['id'], $choice['hashid']))->parameters();
+			if ($this->matching($this->source, $choice['paths'])) {
+				return array_reduce(
+					array_keys($choice['parameters']),
+					function (array $parameters, string $field) use ($choice): array {
+						$parameters += array_filter(
+							(new Routing\HashIdMask(
+								$this->origin,
+								[$field],
+								$this->hashids[$choice['parameters'][$field]]['hashid']
+							))->parameters(),
+							'is_int'
+						);
+						return $parameters;
+					},
+					[]
+				);
+			}
 		}
 		return $this->origin->parameters();
 	}

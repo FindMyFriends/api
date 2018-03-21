@@ -920,6 +920,22 @@ CREATE UNIQUE INDEX soulmates_demand_id_evolution_id_uindex ON soulmates USING b
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
 
+CREATE FUNCTION soulmates_trigger_row_aid() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF (TG_OP = 'INSERT') THEN
+    INSERT INTO soulmate_searches (demand_id) VALUES (new.demand_id);
+    RETURN new;
+  ELSIF (TG_OP = 'DELETE') THEN
+    DELETE FROM soulmate_searches WHERE demand_id = new.demand_id;
+    RETURN old;
+  END IF;
+END;
+$$;
+
+CREATE TRIGGER soulmates_row_aid_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_aid();
+
 
 CREATE TABLE soulmate_searches (
   id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -941,11 +957,22 @@ ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREI
 
 -- VIEWS --
 CREATE VIEW suited_soulmates AS
-  SELECT soulmates.*,
+  SELECT soulmates.id,
+    soulmates.evolution_id,
+    soulmate_searches.demand_id,
+    soulmates.score,
+    soulmates.related_at,
+    soulmate_searches.searched_at,
     version = 1 AS new,
-    row_number() OVER (PARTITION BY demand_id ORDER BY score DESC) AS position,
-    (SELECT seeker_id FROM demands WHERE id = soulmates.demand_id) AS seeker_id
+    row_number() OVER (PARTITION BY soulmates.demand_id ORDER BY score DESC) AS position,
+    seeker_id
   FROM soulmates
+  RIGHT JOIN (
+      SELECT demand_id, MAX(searched_at) AS searched_at
+      FROM soulmate_searches
+      GROUP BY demand_id
+  ) AS soulmate_searches ON soulmate_searches.demand_id = soulmates.demand_id
+  LEFT JOIN demands ON demands.id = soulmate_searches.demand_id
   ORDER BY position ASC;
 
 

@@ -147,17 +147,17 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$selection = new Dataset\FakeSelection(['filter' => ['demand_id' => $demand]]);
 		$matches = $soulmates->matches($selection);
 		Assert::same(2, $soulmates->count($selection));
-		$soulmate = $matches->current();
-		Assert::equal(
-			['id' => 2, 'new' => true, 'demand_id' => 1, 'position' => 1, 'seeker_id' => $seekerId, 'evolution_id' => 2],
-			json_decode($soulmate->print(new Output\Json())->serialization(), true)
-		);
+		$current = $matches->current();
+		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
+		Assert::same(2, $soulmate['evolution_id']);
+		Assert::same(1, $soulmate['demand_id']);
+		Assert::same($seekerId, $soulmate['seeker_id']);
 		$matches->next();
-		$soulmate = $matches->current();
-		Assert::equal(
-			['id' => 1, 'new' => true, 'demand_id' => 1, 'position' => 2, 'seeker_id' => $seekerId, 'evolution_id' => 1],
-			json_decode($soulmate->print(new Output\Json())->serialization(), true)
-		);
+		$current = $matches->current();
+		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
+		Assert::same(1, $soulmate['evolution_id']);
+		Assert::same(1, $soulmate['demand_id']);
+		Assert::same($seekerId, $soulmate['seeker_id']);
 		$matches->next();
 		Assert::null($matches->current());
 	}

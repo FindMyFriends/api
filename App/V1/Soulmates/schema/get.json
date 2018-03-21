@@ -3,22 +3,48 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "string"
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "demand_id": {
             "type": "string"
         },
         "evolution_id": {
-            "type": "string"
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "seeker_id": {
-            "type": "integer"
+            "type": [
+                "integer",
+                "null"
+            ]
         },
         "position": {
-            "type": "integer"
+            "type": [
+                "integer",
+                "null"
+            ]
         },
         "new": {
-            "type": "boolean"
+            "type": [
+                "boolean",
+                "null"
+            ]
+        },
+        "searched_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "related_at": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time"
         }
     },
     "required": [
@@ -27,7 +53,9 @@
         "evolution_id",
         "seeker_id",
         "position",
-        "new"
+        "new",
+        "searched_at",
+        "related_at"
     ],
     "type": "object"
 }

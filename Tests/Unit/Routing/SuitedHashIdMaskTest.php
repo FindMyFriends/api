@@ -25,10 +25,12 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 					'demand' => [
 						'hashid' => new Hashids(),
 						'paths' => ['^v1/demand.+$'],
+						'parameters' => ['id' => 'demand'],
 					],
 					'evolution' => [
 						'hashid' => new Hashids('abc'),
 						'paths' => ['^v1/evolution.+$'],
+						'parameters' => ['id' => 'evolution'],
 					],
 				],
 				'v1/demands/jR'
@@ -45,13 +47,37 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 					'demand' => [
 						'hashid' => new Hashids(),
 						'paths' => ['^v1/demand.+$'],
+						'parameters' => ['id' => 'demand'],
 					],
 					'evolution' => [
 						'hashid' => new Hashids('abc'),
 						'paths' => ['^v1/evolution.+$'],
+						'parameters' => ['id' => 'evolution'],
 					],
 				],
 				'v1/ou'
+			))->parameters()
+		);
+	}
+
+	public function testUsingReferenceToHashid() {
+		Assert::equal(
+			['id' => 1, 'demand_id' => 2],
+			(new Routing\SuitedHashIdMask(
+				new FakeMask(['id' => 'jR', 'demand_id' => 'Ay']),
+				[
+					'demand' => [
+						'hashid' => new Hashids('abc'),
+						'paths' => ['^v1/demand.+$'],
+						'parameters' => ['id' => 'demand'],
+					],
+					'evolution' => [
+						'hashid' => new Hashids(),
+						'paths' => ['^v1/evolution.+$'],
+						'parameters' => ['id' => 'evolution', 'demand_id' => 'demand'],
+					],
+				],
+				'v1/evolution/jR'
 			))->parameters()
 		);
 	}

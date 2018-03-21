@@ -14,7 +14,7 @@ final class StoredSoulmate implements Soulmate {
 	private $id;
 	private $database;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(?int $id, Storage\MetaPDO $database) {
 		$this->id = $id;
 		$this->database = $database;
 	}
@@ -30,6 +30,8 @@ final class StoredSoulmate implements Soulmate {
 					'position',
 					'seeker_id',
 					'new',
+					'related_at',
+					'searched_at',
 				]
 			))->from(['suited_soulmates'])
 				->where('id = ?', [$this->id])

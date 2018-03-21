@@ -1,3 +1,43 @@
+CREATE FUNCTION unit_tests.soulmates_logged_as_searched() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id integer;
+  v_seeker_id integer;
+BEGIN
+  SELECT samples.seeker() INTO v_seeker_id;
+  SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb) INTO v_demand_id;
+  INSERT INTO soulmate_searches (demand_id, searched_at) VALUES (v_demand_id, '2006-01-01');
+  RETURN message FROM assert.is_equal(
+    1,
+    (SELECT COUNT(*)::integer FROM suited_soulmates WHERE demand_id = v_demand_id AND seeker_id = v_seeker_id)
+  );
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION unit_tests.test_last_search_time() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id integer;
+  messages text[];
+BEGIN
+  SELECT samples.demand() INTO v_demand_id;
+  INSERT INTO soulmates (demand_id, evolution_id, score, version, related_at) VALUES
+    (v_demand_id, (SELECT samples.evolution()), 6, 1, '2010-01-01');
+  INSERT INTO soulmate_searches (demand_id, searched_at) VALUES (v_demand_id, '2005-01-01');
+  INSERT INTO soulmate_searches (demand_id, searched_at) VALUES (v_demand_id, '2006-01-01');
+  -- ADDED BY TRIGGER
+  messages = messages || message FROM assert.is_equal(
+    EXTRACT(YEAR FROM NOW()),
+    EXTRACT(YEAR FROM (SELECT searched_at FROM suited_soulmates WHERE demand_id = v_demand_id))
+  );
+  messages = messages || message FROM assert.is_equal(
+    '2010-01-01'::timestamptz,
+    (SELECT related_at FROM suited_soulmates WHERE demand_id = v_demand_id)
+  );
+  RETURN array_to_string(messages, '');
+END
+$$
+LANGUAGE plpgsql;
+
 CREATE FUNCTION unit_tests.new_for_every_first() RETURNS TEST_RESULT AS $$
 DECLARE
   v_demand_id integer;

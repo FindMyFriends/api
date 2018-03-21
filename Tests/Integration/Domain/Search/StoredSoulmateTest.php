@@ -33,23 +33,16 @@ final class StoredSoulmateTest extends Tester\TestCase {
 			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (?, ?, 30)',
 			[(new SampleDemand($this->database))->try()['id'], (new SampleEvolution($this->database))->try()['id']]
 		))->execute();
-		Assert::equal(
-			[
-				'id' => 2,
-				'new' => true,
-				'evolution_id' => 2,
-				'demand_id' => 2,
-				'position' => 1,
-				'seeker_id' => 3,
-			],
-			json_decode(
-				(new Search\StoredSoulmate(
-					2,
-					$this->database
-				))->print(new Output\Json())->serialization(),
-				true
-			)
+		$soulmate = json_decode(
+			(new Search\StoredSoulmate(
+				2,
+				$this->database
+			))->print(new Output\Json())->serialization(),
+			true
 		);
+		Assert::same(2, $soulmate['evolution_id']);
+		Assert::same(2, $soulmate['demand_id']);
+		Assert::same(3, $soulmate['seeker_id']);
 	}
 }
 

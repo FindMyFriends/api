@@ -77,12 +77,12 @@ final class SuitedSoulmates implements Soulmates {
 				->where('seeker_id = ?', [$this->seeker->id()])
 		))->row();
 		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
-		(new Storage\TypedQuery(
-			$this->database,
-			'INSERT INTO soulmate_searches (demand_id) VALUES (?)',
-			[$id]
-		))->execute();
 		if (!$response['hits']['total']) {
+			(new Storage\TypedQuery(
+				$this->database,
+				'INSERT INTO soulmate_searches (demand_id) VALUES (?)',
+				[$id]
+			))->execute();
 			return;
 		}
 		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
@@ -114,6 +114,8 @@ final class SuitedSoulmates implements Soulmates {
 						'position',
 						'seeker_id',
 						'new',
+						'related_at',
+						'searched_at',
 					]
 				))
 					->from(['suited_soulmates'])

@@ -19,8 +19,18 @@ final class PublicSoulmate implements Soulmate {
 
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('id', [$this->hashids['soulmate']['hashid'], 'encode'])
+			->adjusted('id', function (?int $id): ?string {
+				return $id === null ? $id : $this->hashids['soulmate']['hashid']->encode($id);
+			})
 			->adjusted('demand_id', [$this->hashids['demand']['hashid'], 'encode'])
-			->adjusted('evolution_id', [$this->hashids['evolution']['hashid'], 'encode']);
+			->adjusted('evolution_id', function (?int $id): ?string {
+				return $id === null ? $id : $this->hashids['evolution']['hashid']->encode($id);
+			})
+			->adjusted('searched_at', function (string $datetime): string {
+				return (new \DateTime($datetime))->format(\DateTime::ATOM);
+			})
+			->adjusted('related_at', function (?string $datetime): ?string {
+				return $datetime === null ? $datetime : (new \DateTime($datetime))->format(\DateTime::ATOM);
+			});
 	}
 }

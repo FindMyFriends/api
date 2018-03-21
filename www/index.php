@@ -46,8 +46,8 @@ $rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
 
 echo (new class(
 	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation($configuration['LOGS']['directory'])),
-		new Log\FilesystemLogs(new SplFileInfo($configuration['LOGS']['file']))
+		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
+		new Log\FilesystemLogs(new SplFileInfo(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['file'])))
 	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
