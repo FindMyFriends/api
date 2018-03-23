@@ -81,6 +81,23 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 			))->parameters()
 		);
 	}
+
+	public function testKeepingParameters() {
+		Assert::same(
+			['id' => 1, 'name' => ''],
+			(new Routing\SuitedHashIdMask(
+				new FakeMask(['id' => 'jR', 'name' => '']),
+				[
+					'demand' => [
+						'hashid' => new Hashids(),
+						'paths' => ['^v1/demand.+$'],
+						'parameters' => ['id' => 'demand'],
+					],
+				],
+				'v1/demands/jR'
+			))->parameters()
+		);
+	}
 }
 
 (new SuitedHashIdMaskTest())->run();

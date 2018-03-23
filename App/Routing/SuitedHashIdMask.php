@@ -36,7 +36,7 @@ final class SuitedHashIdMask implements Routing\Mask {
 						return $parameters;
 					},
 					[]
-				);
+				) + $this->origin->parameters();
 			}
 		}
 		return $this->origin->parameters();
