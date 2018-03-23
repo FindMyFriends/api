@@ -462,12 +462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "dedf7b599bf37679cec3440160f21668b73b093e"
+                "reference": "03c21a2be87220cd013407a132e9c2704d4b0059"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/dedf7b599bf37679cec3440160f21668b73b093e",
-                "reference": "dedf7b599bf37679cec3440160f21668b73b093e",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/03c21a2be87220cd013407a132e9c2704d4b0059",
+                "reference": "03c21a2be87220cd013407a132e9c2704d4b0059",
                 "shasum": ""
             },
             "require": {
@@ -502,7 +502,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2018-03-08T21:32:20+00:00"
+            "time": "2018-03-23T21:57:07+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -748,12 +748,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Routing.git",
-                "reference": "d7fcf8d77942a8b63f6dc7a2e6fbc41c4572ef74"
+                "reference": "ad9892693a2eb7091a32ee9f91ecc257902dcaa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Routing/zipball/d7fcf8d77942a8b63f6dc7a2e6fbc41c4572ef74",
-                "reference": "d7fcf8d77942a8b63f6dc7a2e6fbc41c4572ef74",
+                "url": "https://api.github.com/repos/klapuch/Routing/zipball/ad9892693a2eb7091a32ee9f91ecc257902dcaa0",
+                "reference": "ad9892693a2eb7091a32ee9f91ecc257902dcaa0",
                 "shasum": ""
             },
             "require": {
@@ -790,7 +790,7 @@
             ],
             "description": "HTTP routing",
             "homepage": "https://www.github.com/klapuch/Routing",
-            "time": "2018-03-17T19:34:38+00:00"
+            "time": "2018-03-17T19:54:01+00:00"
         },
         {
             "name": "klapuch/sql",
@@ -1268,16 +1268,16 @@
     "packages-dev": [
         {
             "name": "consistence/coding-standard",
-            "version": "2.3.1",
+            "version": "2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consistence/coding-standard.git",
-                "reference": "1bd9615cffd94469e9bd9fdd7fae6c85b1e51a5c"
+                "reference": "3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/1bd9615cffd94469e9bd9fdd7fae6c85b1e51a5c",
-                "reference": "1bd9615cffd94469e9bd9fdd7fae6c85b1e51a5c",
+                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739",
+                "reference": "3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739",
                 "shasum": ""
             },
             "require": {
@@ -1325,7 +1325,7 @@
                 "sniffer",
                 "standard"
             ],
-            "time": "2018-03-08T15:14:39+00:00"
+            "time": "2018-03-09T11:41:10+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
