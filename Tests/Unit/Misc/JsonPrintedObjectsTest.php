@@ -56,6 +56,33 @@ final class JsonPrintedObjectsTest extends Tester\TestCase {
 			))->serialization()
 		);
 	}
+
+	public function testAdjustingWithKeptOrder() {
+		Assert::same(
+			'[
+    {
+        "a": "B"
+    },
+    {
+        "c": "D"
+    }
+]',
+			(new Misc\JsonPrintedObjects(
+				new class {
+					public function print(): Output\Format {
+						return new Output\Json(['a' => 'b']);
+					}
+				},
+				new class {
+					public function print(): Output\Format {
+						return new Output\Json(['c' => 'd']);
+					}
+				}
+			))->adjusted(null, function (array $input): array {
+				return array_map('strtoupper', $input);
+			})->serialization()
+		);
+	}
 }
 
 (new JsonPrintedObjectsTest())->run();

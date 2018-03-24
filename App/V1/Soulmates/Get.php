@@ -52,42 +52,45 @@ final class Get implements Application\View {
 				$this->hashids
 			);
 			return new Application\RawTemplate(
-				new Response\PaginatedResponse(
-					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$soulmates->matches(
-											new Dataset\CombinedSelection(
-												new Dataset\RestFilter(
-													$parameters,
-													self::ALLOWED_FILTERS
-												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
+				new Response\PartialResponse(
+					new Response\PaginatedResponse(
+						new Response\JsonResponse(
+							new Response\JsonApiAuthentication(
+								new Response\PlainResponse(
+									new Misc\JsonPrintedObjects(
+										...iterator_to_array(
+											$soulmates->matches(
+												new Dataset\CombinedSelection(
+													new Dataset\RestFilter(
+														$parameters,
+														self::ALLOWED_FILTERS
+													),
+													new Dataset\RestPaging(
+														$parameters['page'],
+														$parameters['per_page']
+													)
 												)
 											)
 										)
 									)
-								)
-							),
-							$this->role
-						)
-					),
-					$parameters['page'],
-					new UI\AttainablePagination(
-						$parameters['page'],
-						$parameters['per_page'],
-						$soulmates->count(
-							new Dataset\RestFilter(
-								$parameters,
-								self::ALLOWED_FILTERS
+								),
+								$this->role
 							)
-						)
+						),
+						$parameters['page'],
+						new UI\AttainablePagination(
+							$parameters['page'],
+							$parameters['per_page'],
+							$soulmates->count(
+								new Dataset\RestFilter(
+									$parameters,
+									self::ALLOWED_FILTERS
+								)
+							)
+						),
+						$this->url
 					),
-					$this->url
+					$parameters
 				)
 			);
 		} catch (\UnexpectedValueException $ex) {

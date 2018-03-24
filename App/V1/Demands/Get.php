@@ -38,37 +38,40 @@ final class Get implements Application\View {
 				$this->hashids
 			);
 			return new Application\RawTemplate(
-				new Response\PaginatedResponse(
-					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$demands->all(
-											new Dataset\CombinedSelection(
-												new Dataset\RestSort(
-													$parameters['sort'],
-													self::ALLOWED_SORTS
-												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
+				new Response\PartialResponse(
+					new Response\PaginatedResponse(
+						new Response\JsonResponse(
+							new Response\JsonApiAuthentication(
+								new Response\PlainResponse(
+									new Misc\JsonPrintedObjects(
+										...iterator_to_array(
+											$demands->all(
+												new Dataset\CombinedSelection(
+													new Dataset\RestSort(
+														$parameters['sort'],
+														self::ALLOWED_SORTS
+													),
+													new Dataset\RestPaging(
+														$parameters['page'],
+														$parameters['per_page']
+													)
 												)
 											)
 										)
 									)
-								)
-							),
-							$this->role
-						)
-					),
-					$parameters['page'],
-					new UI\AttainablePagination(
+								),
+								$this->role
+							)
+						),
 						$parameters['page'],
-						$parameters['per_page'],
-						$demands->count(new Dataset\EmptySelection())
+						new UI\AttainablePagination(
+							$parameters['page'],
+							$parameters['per_page'],
+							$demands->count(new Dataset\EmptySelection())
+						),
+						$this->url
 					),
-					$this->url
+					$parameters
 				)
 			);
 		} catch (\UnexpectedValueException $ex) {

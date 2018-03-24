@@ -34,31 +34,34 @@ final class Get implements Application\View {
 	public function template(array $parameters): Output\Template {
 		try {
 			return new Application\RawTemplate(
-				new Response\JsonResponse(
-					new Response\ConcurrentlyControlledResponse(
-						new Response\CachedResponse(
-							new Response\JsonApiAuthentication(
-								new Response\PlainResponse(
-									(new Evolution\PublicChange(
-										new Evolution\HarnessedChange(
-											new Evolution\ExistingChange(
-												new Evolution\StoredChange(
+				new Response\PartialResponse(
+					new Response\JsonResponse(
+						new Response\ConcurrentlyControlledResponse(
+							new Response\CachedResponse(
+								new Response\JsonApiAuthentication(
+									new Response\PlainResponse(
+										(new Evolution\PublicChange(
+											new Evolution\HarnessedChange(
+												new Evolution\ExistingChange(
+													new Evolution\StoredChange(
+														$parameters['id'],
+														$this->database
+													),
 													$parameters['id'],
 													$this->database
 												),
-												$parameters['id'],
-												$this->database
+												new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 											),
-											new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
-										),
-										$this->hashids
-									))->print(new Output\Json())
-								),
-								$this->role
-							)
-						),
-						new Http\PostgresETag($this->database, $this->url)
-					)
+											$this->hashids
+										))->print(new Output\Json())
+									),
+									$this->role
+								)
+							),
+							new Http\PostgresETag($this->database, $this->url)
+						)
+					),
+					$parameters
 				)
 			);
 		} catch (\UnexpectedValueException $ex) {

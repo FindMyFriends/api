@@ -42,6 +42,20 @@ final class JsonPrintedObjects implements Output\Format {
 	 * @param callable $adjustment
 	 */
 	public function adjusted($tag, callable $adjustment): Output\Format {
-		throw new \Exception('Not implemented');
+		return new Output\Json(
+			array_map(
+				function(Output\Format $format): array {
+					return json_decode($format->serialization(), true);
+				},
+				array_reduce(
+					$this->prints,
+					function(array $objects, object $object) use ($tag, $adjustment): array {
+						$objects[] = $object->print(new Output\Json())->adjusted($tag, $adjustment);
+						return $objects;
+					},
+					[]
+				)
+			)
+		);
 	}
 }
