@@ -12,11 +12,11 @@ use Klapuch\Output;
 
 final class Delete implements Application\View {
 	private $database;
-	private $user;
+	private $seeker;
 
-	public function __construct(\PDO $database, Access\User $user) {
+	public function __construct(\PDO $database, Access\User $seeker) {
 		$this->database = $database;
-		$this->user = $user;
+		$this->seeker = $seeker;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -34,7 +34,7 @@ final class Delete implements Application\View {
 					new Domain\OwnedDemand(
 						new Domain\FakeDemand(),
 						$parameters['id'],
-						$this->user,
+						$this->seeker,
 						$this->database
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)

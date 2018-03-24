@@ -20,18 +20,18 @@ final class Put implements Application\View {
 	private $request;
 	private $url;
 	private $database;
-	private $user;
+	private $seeker;
 
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $user
+		Access\User $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
-		$this->user = $user;
+		$this->seeker = $seeker;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -49,7 +49,7 @@ final class Put implements Application\View {
 					new Domain\OwnedDemand(
 						new Domain\FakeDemand(),
 						$parameters['id'],
-						$this->user,
+						$this->seeker,
 						$this->database
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)

@@ -54,12 +54,14 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->hashids['demand']['hashid'],
 				$this->uri,
 				$this->database,
+				$user,
 				new Http\ChosenRole($user, ['member', 'guest'])
 			),
 			'v1/demands/{id} [GET]' => new V1\Demand\Get(
 				$this->hashids['demand']['hashid'],
 				$this->uri,
 				$this->database,
+				$user,
 				new Http\ChosenRole($user, ['member', 'guest'])
 			),
 			'v1/demands [POST]' => new V1\Demands\Post(

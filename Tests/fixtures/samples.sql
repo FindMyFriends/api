@@ -295,14 +295,14 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.evolution() RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.evolution(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
-		(SELECT seeker FROM samples.seeker()),
+    samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
 		(SELECT description FROM samples.description()),
 		 NOW()
 	)

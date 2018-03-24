@@ -10,7 +10,7 @@ use Klapuch\Storage;
 /**
  * Evolution change which belongs only to me
  */
-final class OwnedChange implements Change {
+final class PermittedChange implements Change {
 	private $origin;
 	private $id;
 	private $database;
@@ -29,39 +29,36 @@ final class OwnedChange implements Change {
 	}
 
 	public function affect(array $changes): void {
-		if (!$this->owned($this->id))
+		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);
 		$this->origin->affect($changes);
 	}
 
 	public function revert(): void {
-		if (!$this->owned($this->id))
+		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);
 		$this->origin->revert();
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		if (!$this->owned($this->id))
+		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
-	private function owned(int $id): bool {
-		return (bool) (new Storage\NativeQuery(
+	private function permitted(int $id): bool {
+		return (new Storage\NativeQuery(
 			$this->database,
-			'SELECT 1
-			FROM evolutions
-			WHERE id = ?
-			AND seeker_id = ?',
-			[$id, $this->owner->id()]
+			'SELECT is_evolution_permitted(:evolution, :seeker)',
+			['evolution' => $id, 'seeker' => $this->owner->id()]
 		))->field();
 	}
 
 	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
-			'This evolution change does not belong to you',
+			'You are not permitted to see this evolution change.',
 			0,
-			new \UnexpectedValueException(sprintf('Evolution change %d does not belong to you', $id))
+			new \UnexpectedValueException(sprintf('Evolution change %d is not permitted.', $id))
 		);
 	}
 }

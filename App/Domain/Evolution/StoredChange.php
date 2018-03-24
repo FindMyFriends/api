@@ -40,7 +40,8 @@ final class StoredChange implements Change {
 		))->row();
 		return (new Domain\CompleteDescription($format, $evolution))
 			->with('id', $evolution['id'])
-			->with('evolved_at', $evolution['evolved_at']);
+			->with('evolved_at', $evolution['evolved_at'])
+			->with('seeker_id', $evolution['seeker_id']);
 	}
 
 	public function revert(): void {

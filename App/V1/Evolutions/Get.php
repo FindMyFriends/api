@@ -19,15 +19,20 @@ final class Get implements Application\View {
 	private $hashids;
 	private $url;
 	private $database;
-	private $user;
+	private $seeker;
 	private $role;
 
-
-	public function __construct(HashidsInterface $hashids, Uri\Uri $url, \PDO $database, Access\User $user, Http\Role $role) {
+	public function __construct(
+		HashidsInterface $hashids,
+		Uri\Uri $url,
+		\PDO $database,
+		Access\User $seeker,
+		Http\Role $role
+	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
-		$this->user = $user;
+		$this->seeker = $seeker;
 		$this->role = $role;
 	}
 
@@ -35,7 +40,7 @@ final class Get implements Application\View {
 		try {
 			$evolution = new Evolution\PublicChain(
 				new Evolution\IndividualChain(
-					$this->user,
+					$this->seeker,
 					$this->database
 				),
 				$this->hashids

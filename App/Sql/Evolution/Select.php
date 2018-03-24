@@ -11,7 +11,7 @@ final class Select implements Sql\Select {
 
 	public function __construct(array $additionalColumns = []) {
 		$this->select = new Description\Select(
-			array_merge(['evolved_at'], $additionalColumns)
+			array_merge(['evolved_at', 'seeker_id'], $additionalColumns)
 		);
 	}
 

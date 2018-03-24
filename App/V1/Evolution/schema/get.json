@@ -6,6 +6,9 @@
             "type": "string",
             "format": "date-time"
         },
+        "seeker_id": {
+            "type": "integer"
+        },
         "id": {
             "type": "string"
         },

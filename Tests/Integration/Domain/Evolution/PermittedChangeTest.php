@@ -17,45 +17,45 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class OwnedChangeTest extends Tester\TestCase {
+final class PermittedChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnForeign() {
 		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
-		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->affect([]);
-		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser('1000'),
 				$this->database
 			))->revert();
-		}, \UnexpectedValueException::class, 'This evolution change does not belong to you');
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithOwned() {
+	public function testPassingWithPermitted() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser((string) $seeker),
@@ -64,7 +64,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			$evolution->print(new Output\FakeFormat());
 		});
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser((string) $seeker),
@@ -73,7 +73,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			$evolution->affect([]);
 		});
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeUser((string) $seeker),
@@ -84,4 +84,4 @@ final class OwnedChangeTest extends Tester\TestCase {
 	}
 }
 
-(new OwnedChangeTest())->run();
+(new PermittedChangeTest())->run();

@@ -23,20 +23,20 @@ final class Put implements Application\View {
 	private $url;
 	private $database;
 	private $elasticsearch;
-	private $user;
+	private $seeker;
 
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		Elasticsearch\Client $elasticsearch,
-		Access\User $user
+		Access\User $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
 		$this->elasticsearch = $elasticsearch;
-		$this->user = $user;
+		$this->seeker = $seeker;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -53,10 +53,10 @@ final class Put implements Application\View {
 						new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 					),
 					new Evolution\HarnessedChange(
-						new Evolution\OwnedChange(
+						new Evolution\PermittedChange(
 							new Evolution\FakeChange(),
 							$parameters['id'],
-							$this->user,
+							$this->seeker,
 							$this->database
 						),
 						new Misc\ApiErrorCallback(HTTP_FORBIDDEN)

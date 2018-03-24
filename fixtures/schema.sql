@@ -838,6 +838,26 @@ CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
 ALTER TABLE ONLY evolutions ADD CONSTRAINT evolutions_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE;
 ALTER TABLE ONLY evolutions ADD CONSTRAINT evolutions_seekers_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE;
 
+CREATE FUNCTION is_evolution_permitted(in_evolution_id evolutions.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS BOOLEAN AS $$
+  SELECT EXISTS(
+    SELECT 1
+    FROM evolutions
+    WHERE id = in_evolution_id
+    AND seeker_id = in_seeker_id
+  ) OR (
+    SELECT EXISTS(
+      SELECT 1
+      FROM soulmates
+      WHERE evolution_id = in_evolution_id
+      AND demand_id IN (
+        SELECT id
+        FROM demands
+        WHERE seeker_id = in_seeker_id
+      )
+    )
+  );
+$$ LANGUAGE sql VOLATILE;
+
 CREATE FUNCTION evolutions_trigger_row_ad() RETURNS trigger
 LANGUAGE plpgsql
 AS $$

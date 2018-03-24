@@ -13,6 +13,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Hashids\Hashids;
+use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -31,6 +32,7 @@ final class GetTest extends Tester\TestCase {
 				new Hashids(),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
+				new Access\FakeUser((string) $seeker),
 				new Http\FakeRole(true)
 			))->template(['id' => $id])->render()
 		);
@@ -41,18 +43,19 @@ final class GetTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function test404ForNotExisting() {
+	public function test403ForNotOwned() {
 		$demand = json_decode(
 			(new V1\Demand\Get(
 				new Hashids(),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
+				new Access\FakeUser('1'),
 				new Http\FakeRole(true)
 			))->template(['id' => 1])->render(),
 			true
 		);
-		Assert::same(['message' => 'Demand does not exist'], $demand);
-		Assert::same(HTTP_NOT_FOUND, http_response_code());
+		Assert::same(['message' => 'This is not your demand'], $demand);
+		Assert::same(HTTP_FORBIDDEN, http_response_code());
 	}
 }
 

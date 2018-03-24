@@ -8,6 +8,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
+use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Output;
@@ -20,19 +21,27 @@ final class Get implements Application\View {
 	private $database;
 	private $role;
 	private $hashids;
+	private $seeker;
 
-	public function __construct(HashidsInterface $hashids, Uri\Uri $url, \PDO $database, Http\Role $role) {
+	public function __construct(
+		HashidsInterface $hashids,
+		Uri\Uri $url,
+		\PDO $database,
+		Access\User $seeker,
+		Http\Role $role
+	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
+		$this->seeker = $seeker;
 		$this->role = $role;
 	}
 
 	public function template(array $parameters): Output\Template {
 		try {
 			$demands = new Domain\PublicDemands(
-				new Domain\CollectiveDemands(
-					new Domain\FakeDemands(),
+				new Domain\IndividualDemands(
+					$this->seeker,
 					$this->database
 				),
 				$this->hashids

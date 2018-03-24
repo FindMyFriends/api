@@ -24,7 +24,7 @@ final class Post implements Application\View {
 	private $url;
 	private $database;
 	private $rabbitMq;
-	private $user;
+	private $seeker;
 
 	public function __construct(
 		HashidsInterface $hashids,
@@ -32,14 +32,14 @@ final class Post implements Application\View {
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
-		Access\User $user
+		Access\User $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
 		$this->rabbitMq = $rabbitMq;
-		$this->user = $user;
+		$this->seeker = $seeker;
 	}
 
 	public function template(array $parameters): Output\Template {
@@ -50,7 +50,7 @@ final class Post implements Application\View {
 					'id' => $this->hashids->encode(
 						(new Domain\QueuedDemands(
 							new Domain\IndividualDemands(
-								$this->user,
+								$this->seeker,
 								$this->database
 							),
 							new Search\Publisher($this->rabbitMq),
