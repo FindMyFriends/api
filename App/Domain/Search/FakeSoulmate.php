@@ -12,4 +12,7 @@ final class FakeSoulmate implements Soulmate {
 	public function print(Output\Format $format): Output\Format {
 		return $format;
 	}
+
+	public function clarify(array $clarification): int {
+	}
 }

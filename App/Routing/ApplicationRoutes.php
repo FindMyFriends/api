@@ -113,6 +113,12 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->elasticsearch,
 				$user
 			),
+			'v1/soulmates/{id} [PUT]' => new V1\Soulmate\Put(
+				new Application\PlainRequest(),
+				$this->uri,
+				$this->database,
+				$user
+			),
 			'v1/soulmates?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Soulmates\Get(
 				$this->hashids,
 				$this->uri,

@@ -116,6 +116,7 @@ final class SuitedSoulmates implements Soulmates {
 						'new',
 						'related_at',
 						'searched_at',
+						'is_correct',
 					]
 				))
 					->from(['suited_soulmates'])

@@ -10,33 +10,36 @@ namespace FindMyFriends\Integration\Domain\Search;
 
 use FindMyFriends\Domain\Search;
 use FindMyFriends\TestCase;
+use Klapuch\Access;
 use Klapuch\Output;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ExistingSoulmateTest extends Tester\TestCase {
+final class OwnedSoulmateTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknown() {
+	public function testThrowingOnNotOwned() {
 		$ex = Assert::exception(function () {
-			(new Search\ExistingSoulmate(
+			(new Search\OwnedSoulmate(
 				new Search\FakeSoulmate(),
 				1,
+				new Access\FakeUser('1'),
 				$this->database
 			))->print(new Output\Json());
-		}, \UnexpectedValueException::class, 'Soulmate does not exist');
+		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function () {
-			(new Search\ExistingSoulmate(
+			(new Search\OwnedSoulmate(
 				new Search\FakeSoulmate(),
 				1,
+				new Access\FakeUser('1'),
 				$this->database
 			))->clarify([]);
-		}, \UnexpectedValueException::class, 'Soulmate does not exist');
+		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 }
 
-(new ExistingSoulmateTest())->run();
+(new OwnedSoulmateTest())->run();

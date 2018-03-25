@@ -12,4 +12,11 @@ interface Soulmate {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format;
+
+	/**
+	 * Update info about soulmate a bit to be correct
+	 * @param mixed[] $clarification
+	 * @return int
+	 */
+	public function clarify(array $clarification): int;
 }

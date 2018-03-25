@@ -27,6 +27,18 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.random_if_not_exists(random boolean, replacements jsonb, field text) RETURNS boolean
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF replacements ? field THEN
+    RETURN CAST (replacements -> field AS TEXT);
+  ELSE
+    RETURN random;
+  END IF;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.hair(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -318,10 +330,11 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (
+	INSERT INTO soulmates (demand_id, evolution_id, score, is_correct) VALUES (
 		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
 		samples.random_if_not_exists((SELECT evolution FROM samples.evolution()), replacements, 'evolution_id')::integer,
-		test_utils.better_random('integer')
+		test_utils.better_random('integer'),
+    samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'is_correct')::boolean
 	)
 	RETURNING id
 		INTO v_id;

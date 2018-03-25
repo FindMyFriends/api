@@ -58,3 +58,11 @@ BEGIN
 	RETURN test_utils.better_random(1, CAST(types -> lower(type) AS BIGINT));
 END;
 $$ language plpgsql STRICT;
+
+CREATE OR REPLACE FUNCTION test_utils.random_boolean() RETURNS boolean
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN random() > 0.5;
+END;
+$$;

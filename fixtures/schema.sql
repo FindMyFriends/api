@@ -933,12 +933,26 @@ CREATE TABLE soulmates (
   evolution_id integer NOT NULL,
   score numeric NOT NULL,
   version integer NOT NULL DEFAULT 1,
-  related_at timestamp with time zone NOT NULL DEFAULT now()
+  related_at timestamp with time zone NOT NULL DEFAULT now(),
+  is_correct boolean NOT NULL DEFAULT TRUE
 );
 
 CREATE UNIQUE INDEX soulmates_demand_id_evolution_id_uindex ON soulmates USING btree (demand_id, evolution_id);
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
 ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
+
+CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS BOOLEAN AS $$
+  SELECT EXISTS(
+    SELECT 1
+    FROM soulmates
+    WHERE id = in_soulmate_id
+    AND demand_id IN (
+      SELECT id
+      FROM demands
+      WHERE seeker_id = in_seeker_id
+    )
+  );
+$$ LANGUAGE sql VOLATILE;
 
 CREATE FUNCTION soulmates_trigger_row_aid() RETURNS trigger
 LANGUAGE plpgsql
@@ -979,6 +993,7 @@ ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREI
 CREATE VIEW suited_soulmates AS
   SELECT soulmates.id,
     soulmates.evolution_id,
+    soulmates.is_correct,
     soulmate_searches.demand_id,
     soulmates.score,
     soulmates.related_at,

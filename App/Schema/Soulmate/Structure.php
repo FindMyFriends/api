@@ -17,9 +17,38 @@ final class Structure {
 				'new' => ['type' => ['boolean', 'null']],
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
 				'related_at' => ['type' => ['string', 'null'], 'format' => 'date-time'],
+				'is_correct' => ['type' => ['boolean', 'null']],
 			],
-			'required' => ['id', 'demand_id', 'evolution_id', 'seeker_id', 'position', 'new', 'searched_at', 'related_at'],
+			'required' => [
+				'id',
+				'demand_id',
+				'evolution_id',
+				'seeker_id',
+				'position',
+				'new',
+				'searched_at',
+				'related_at',
+				'is_correct',
+			],
 			'type' => 'object',
 		];
+	}
+
+	public function put(): array {
+		$schema = $this->get();
+		$properties = &$schema['properties'];
+		unset(
+			$properties['id'],
+			$properties['demand_id'],
+			$properties['evolution_id'],
+			$properties['seeker_id'],
+			$properties['position'],
+			$properties['new'],
+			$properties['searched_at'],
+			$properties['related_at']
+		);
+		$properties['is_correct']['type'] = ['boolean'];
+		$schema['required'] = ['is_correct'];
+		return $schema;
 	}
 }

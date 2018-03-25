@@ -32,10 +32,21 @@ final class StoredSoulmate implements Soulmate {
 					'new',
 					'related_at',
 					'searched_at',
+					'is_correct',
 				]
 			))->from(['suited_soulmates'])
 				->where('id = ?', [$this->id])
 		))->row();
 		return new Output\FilledFormat($format, $soulmate);
+	}
+
+	public function clarify(array $clarification): int {
+		return (new Storage\BuiltQuery(
+			$this->database,
+			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('soulmates')))
+				->set($clarification)
+				->where('id = :id', ['id' => $this->id])
+				->returning(['id'])
+		))->field();
 	}
 }

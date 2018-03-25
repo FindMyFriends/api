@@ -33,4 +33,8 @@ final class PublicSoulmate implements Soulmate {
 				return $datetime === null ? $datetime : (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
+
+	public function clarify(array $clarification): int {
+		return $this->origin->clarify($clarification);
+	}
 }

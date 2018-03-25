@@ -9,8 +9,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain\Search;
 
 use FindMyFriends\Domain\Search;
-use FindMyFriends\Misc\SampleDemand;
-use FindMyFriends\Misc\SampleEvolution;
+use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
@@ -26,12 +25,12 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		(new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (?, ?, 20)',
-			[(new SampleDemand($this->database))->try()['id'], (new SampleEvolution($this->database))->try()['id']]
+			[(new Misc\SampleDemand($this->database))->try()['id'], (new Misc\SampleEvolution($this->database))->try()['id']]
 		))->execute();
 		(new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (?, ?, 30)',
-			[(new SampleDemand($this->database))->try()['id'], (new SampleEvolution($this->database))->try()['id']]
+			[(new Misc\SampleDemand($this->database))->try()['id'], (new Misc\SampleEvolution($this->database))->try()['id']]
 		))->execute();
 		$soulmate = json_decode(
 			(new Search\StoredSoulmate(
@@ -43,6 +42,18 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		Assert::same(2, $soulmate['evolution_id']);
 		Assert::same(2, $soulmate['demand_id']);
 		Assert::same(3, $soulmate['seeker_id']);
+	}
+
+	public function testClarification() {
+		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['is_correct' => true]))->try();
+		Assert::same(
+			$id,
+			(new Search\StoredSoulmate(
+				$id,
+				$this->database
+			))->clarify(['is_correct' => false])
+		);
+		Assert::false((new Storage\TypedQuery($this->database, 'SELECT is_correct FROM soulmates'))->field());
 	}
 }
 

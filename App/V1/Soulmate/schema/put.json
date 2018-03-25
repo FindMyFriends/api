@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "is_correct": {
+            "type": [
+                "boolean"
+            ]
+        }
+    },
+    "required": [
+        "is_correct"
+    ],
+    "type": "object"
+}

@@ -43,3 +43,4 @@ $schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descr
 
 $soulmate = new Schema\Soulmate\Structure();
 $schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmates/schema/get.json'));
+$schemas->save($soulmate->put(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmate/schema/put.json'));

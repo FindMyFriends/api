@@ -45,6 +45,12 @@
                 "null"
             ],
             "format": "date-time"
+        },
+        "is_correct": {
+            "type": [
+                "boolean",
+                "null"
+            ]
         }
     },
     "required": [
@@ -55,7 +61,8 @@
         "position",
         "new",
         "searched_at",
-        "related_at"
+        "related_at",
+        "is_correct"
     ],
     "type": "object"
 }
