@@ -36,14 +36,25 @@ final class Put implements Application\View {
 
 	public function template(array $parameters): Output\Template {
 		try {
-			(new Search\HarnessedSoulmate(
-				new Search\OwnedSoulmate(
-					new Search\StoredSoulmate($parameters['id'], $this->database),
-					$parameters['id'],
-					$this->seeker,
-					$this->database
+			(new Search\ChainedSoulmate(
+				new Search\HarnessedSoulmate(
+					new Search\ExistingSoulmate(
+						new Search\FakeSoulmate(),
+						$parameters['id'],
+						$this->database
+					),
+					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 				),
-				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+				new Search\HarnessedSoulmate(
+					new Search\OwnedSoulmate(
+						new Search\FakeSoulmate(),
+						$parameters['id'],
+						$this->seeker,
+						$this->database
+					),
+					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+				),
+				new Search\StoredSoulmate($parameters['id'], $this->database)
 			))->clarify(
 				(new Constraint\StructuredJson(
 					new \SplFileInfo(self::SCHEMA)

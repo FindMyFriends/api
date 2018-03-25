@@ -16,7 +16,7 @@ interface Soulmate {
 	/**
 	 * Update info about soulmate a bit to be correct
 	 * @param mixed[] $clarification
-	 * @return int
+	 * @return void
 	 */
-	public function clarify(array $clarification): int;
+	public function clarify(array $clarification): void;
 }

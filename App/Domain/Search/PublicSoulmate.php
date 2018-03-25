@@ -34,7 +34,7 @@ final class PublicSoulmate implements Soulmate {
 			});
 	}
 
-	public function clarify(array $clarification): int {
-		return $this->origin->clarify($clarification);
+	public function clarify(array $clarification): void {
+		$this->origin->clarify($clarification);
 	}
 }

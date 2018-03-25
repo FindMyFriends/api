@@ -46,13 +46,10 @@ final class StoredSoulmateTest extends Tester\TestCase {
 
 	public function testClarification() {
 		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['is_correct' => true]))->try();
-		Assert::same(
+		(new Search\StoredSoulmate(
 			$id,
-			(new Search\StoredSoulmate(
-				$id,
-				$this->database
-			))->clarify(['is_correct' => false])
-		);
+			$this->database
+		))->clarify(['is_correct' => false]);
 		Assert::false((new Storage\TypedQuery($this->database, 'SELECT is_correct FROM soulmates'))->field());
 	}
 }

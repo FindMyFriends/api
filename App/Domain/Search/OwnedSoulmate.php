@@ -34,10 +34,10 @@ final class OwnedSoulmate implements Soulmate {
 		return $this->origin->print($format);
 	}
 
-	public function clarify(array $clarification): int {
+	public function clarify(array $clarification): void {
 		if (!$this->owned($this->id))
 			throw $this->exception($this->id);
-		return $this->origin->clarify($clarification);
+		$this->origin->clarify($clarification);
 	}
 
 	private function owned(int $id): bool {

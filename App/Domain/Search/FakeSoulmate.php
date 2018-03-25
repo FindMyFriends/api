@@ -13,6 +13,6 @@ final class FakeSoulmate implements Soulmate {
 		return $format;
 	}
 
-	public function clarify(array $clarification): int {
+	public function clarify(array $clarification): void {
 	}
 }

@@ -40,13 +40,12 @@ final class StoredSoulmate implements Soulmate {
 		return new Output\FilledFormat($format, $soulmate);
 	}
 
-	public function clarify(array $clarification): int {
-		return (new Storage\BuiltQuery(
+	public function clarify(array $clarification): void {
+		(new Storage\BuiltQuery(
 			$this->database,
 			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('soulmates')))
 				->set($clarification)
 				->where('id = :id', ['id' => $this->id])
-				->returning(['id'])
-		))->field();
+		))->execute();
 	}
 }

@@ -22,7 +22,7 @@ final class HarnessedSoulmate implements Soulmate {
 		return $this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
 	}
 
-	public function clarify(array $clarification): int {
-		return $this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
+	public function clarify(array $clarification): void {
+		$this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
 	}
 }

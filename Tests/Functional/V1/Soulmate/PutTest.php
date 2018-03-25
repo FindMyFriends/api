@@ -61,6 +61,22 @@ final class PutTest extends Tester\TestCase {
 		Assert::same(HTTP_BAD_REQUEST, http_response_code());
 	}
 
+	public function test404OnUnknown() {
+		$response = json_decode(
+			(new V1\Soulmate\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(json_encode(['is_correct' => false]))
+				),
+				new Uri\FakeUri('/', 'v1/soulmates/1', []),
+				$this->database,
+				new Access\FakeUser('666')
+			))->template(['id' => 1])->render(),
+			true
+		);
+		Assert::same(['message' => 'Soulmate does not exist'], $response);
+		Assert::same(HTTP_NOT_FOUND, http_response_code());
+	}
+
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
