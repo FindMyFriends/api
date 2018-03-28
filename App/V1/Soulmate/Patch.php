@@ -5,31 +5,25 @@ namespace FindMyFriends\V1\Soulmate;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Search;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
-use FindMyFriends\Request;
 use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Klapuch\Uri;
 
-final class Put implements Application\View {
-	private const SCHEMA = __DIR__ . '/schema/put.json';
+final class Patch implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/patch.json';
 	private $request;
-	private $url;
 	private $database;
 	private $seeker;
 
 	public function __construct(
 		Application\Request $request,
-		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		Access\User $seeker
 	) {
 		$this->request = $request;
-		$this->url = $url;
 		$this->database = $database;
 		$this->seeker = $seeker;
 	}
@@ -60,10 +54,7 @@ final class Put implements Application\View {
 					new \SplFileInfo(self::SCHEMA)
 				))->apply(
 					json_decode(
-						(new Request\ConcurrentlyControlledRequest(
-							$this->request,
-							new Http\PostgresETag($this->database, $this->url)
-						))->body()->serialization(),
+						$this->request->body()->serialization(),
 						true
 					)
 				)

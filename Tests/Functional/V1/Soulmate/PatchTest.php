@@ -14,13 +14,12 @@ use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class PutTest extends Tester\TestCase {
+final class PatchTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
@@ -28,11 +27,10 @@ final class PutTest extends Tester\TestCase {
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		$response = json_decode(
-			(new V1\Soulmate\Put(
+			(new V1\Soulmate\Patch(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['is_correct' => false]))
 				),
-				new Uri\FakeUri('/', 'v1/soulmates/1', []),
 				$this->database,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
@@ -47,27 +45,25 @@ final class PutTest extends Tester\TestCase {
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		$response = json_decode(
-			(new V1\Soulmate\Put(
+			(new V1\Soulmate\Patch(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['foo' => false]))
 				),
-				new Uri\FakeUri('/', 'v1/soulmates/1', []),
 				$this->database,
 				new Access\FakeUser((string) $seeker)
 			))->template(['id' => $id])->render(),
 			true
 		);
-		Assert::same(['message' => 'The property is_correct is required'], $response);
+		Assert::same(['message' => 'The property foo is not defined and the definition does not allow additional properties'], $response);
 		Assert::same(HTTP_BAD_REQUEST, http_response_code());
 	}
 
 	public function test404OnUnknown() {
 		$response = json_decode(
-			(new V1\Soulmate\Put(
+			(new V1\Soulmate\Patch(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['is_correct' => false]))
 				),
-				new Uri\FakeUri('/', 'v1/soulmates/1', []),
 				$this->database,
 				new Access\FakeUser('666')
 			))->template(['id' => 1])->render(),
@@ -82,11 +78,10 @@ final class PutTest extends Tester\TestCase {
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		$response = json_decode(
-			(new V1\Soulmate\Put(
+			(new V1\Soulmate\Patch(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['is_correct' => false]))
 				),
-				new Uri\FakeUri('/', 'v1/soulmates/1', []),
 				$this->database,
 				new Access\FakeUser('666')
 			))->template(['id' => $id])->render(),
@@ -97,4 +92,4 @@ final class PutTest extends Tester\TestCase {
 	}
 }
 
-(new PutTest())->run();
+(new PatchTest())->run();

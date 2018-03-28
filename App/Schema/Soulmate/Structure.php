@@ -34,7 +34,7 @@ final class Structure {
 		];
 	}
 
-	public function put(): array {
+	public function patch(): array {
 		$schema = $this->get();
 		$properties = &$schema['properties'];
 		unset(
@@ -48,7 +48,7 @@ final class Structure {
 			$properties['related_at']
 		);
 		$properties['is_correct']['type'] = ['boolean'];
-		$schema['required'] = ['is_correct'];
+		unset($schema['required']);
 		return $schema;
 	}
 }

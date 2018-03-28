@@ -8,8 +8,5 @@
             ]
         }
     },
-    "required": [
-        "is_correct"
-    ],
     "type": "object"
 }
