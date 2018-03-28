@@ -5,6 +5,7 @@ namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
 use FindMyFriends;
+use FindMyFriends\Sql\Search;
 use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
@@ -106,19 +107,7 @@ final class SuitedSoulmates implements Soulmates {
 		$matches = (new Storage\BuiltQuery(
 			$this->database,
 			new Dataset\SelectiveClause(
-				(new Sql\AnsiSelect(
-					[
-						'id',
-						'evolution_id',
-						'demand_id',
-						'position',
-						'seeker_id',
-						'new',
-						'related_at',
-						'searched_at',
-						'is_correct',
-					]
-				))
+				(new Search\Select())
 					->from(['suited_soulmates'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
 				$selection
