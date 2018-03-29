@@ -24,7 +24,7 @@ final class StoredChange implements Change {
 	public function affect(array $changes): void {
 		(new Storage\FlatQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Evolution\Set(
+			(new FindMyFriends\Sql\CollectiveEvolutions\Set(
 				new Sql\AnsiUpdate('collective_evolutions')
 			))->where('id = :id')->sql(),
 			['id' => $this->id] + $changes
@@ -34,7 +34,7 @@ final class StoredChange implements Change {
 	public function print(Output\Format $format): Output\Format {
 		$evolution = (new Storage\BuiltQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Evolution\Select())
+			(new FindMyFriends\Sql\CollectiveEvolutions\Select())
 				->from(['collective_evolutions'])
 				->where('id = ?', [$this->id])
 		))->row();

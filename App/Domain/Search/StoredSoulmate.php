@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
-use FindMyFriends\Sql\Search;
+use FindMyFriends\Sql\SuitedSoulmates;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -23,7 +23,7 @@ final class StoredSoulmate implements Soulmate {
 	public function print(Output\Format $format): Output\Format {
 		$soulmate = (new Storage\BuiltQuery(
 			$this->database,
-			(new Search\Select())
+			(new SuitedSoulmates\Select())
 				->from(['suited_soulmates'])
 				->where('id = ?', [$this->id])
 		))->row();

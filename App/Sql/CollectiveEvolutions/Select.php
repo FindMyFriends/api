@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Sql\Evolution;
+namespace FindMyFriends\Sql\CollectiveEvolutions;
 
 use FindMyFriends\Sql\Description;
 use Klapuch\Sql;

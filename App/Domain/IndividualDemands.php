@@ -25,7 +25,7 @@ final class IndividualDemands implements Demands {
 		$demands = (new Storage\BuiltQuery(
 			$this->database,
 			new Dataset\SelectiveClause(
-				(new FindMyFriends\Sql\Demand\Select())
+				(new FindMyFriends\Sql\CollectiveDemands\Select())
 					->from(['collective_demands'])
 					->where('seeker_id = :seeker_id', ['seeker_id' => $this->seeker->id()]),
 				$selection
@@ -42,7 +42,7 @@ final class IndividualDemands implements Demands {
 	public function ask(array $description): int {
 		return (new Storage\FlatQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Demand\InsertInto('collective_demands'))->returning(['id'])->sql(),
+			(new FindMyFriends\Sql\CollectiveDemands\InsertInto('collective_demands'))->returning(['id'])->sql(),
 			['seeker' => $this->seeker->id()] + $description
 		))->field();
 	}

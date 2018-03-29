@@ -20,7 +20,7 @@ final class StoredDemand implements Demand {
 	public function print(Output\Format $format): Output\Format {
 		$demand = (new Storage\TypedQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Demand\Select())
+			(new FindMyFriends\Sql\CollectiveDemands\Select())
 				->from(['collective_demands'])
 				->where('id = ?')
 				->sql(),
@@ -53,7 +53,7 @@ final class StoredDemand implements Demand {
 	public function reconsider(array $description): void {
 		(new Storage\FlatQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Demand\Set(
+			(new FindMyFriends\Sql\CollectiveDemands\Set(
 				new Sql\AnsiUpdate('collective_demands')
 			))->where('id = :id')->sql(),
 			['id' => $this->id] + $description

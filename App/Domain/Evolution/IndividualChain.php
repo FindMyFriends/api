@@ -24,7 +24,7 @@ final class IndividualChain implements Chain {
 	public function extend(array $progress): int {
 		return (new Storage\FlatQuery(
 			$this->database,
-			(new FindMyFriends\Sql\Evolution\InsertInto('collective_evolutions'))->returning(['id'])->sql(),
+			(new FindMyFriends\Sql\CollectiveEvolutions\InsertInto('collective_evolutions'))->returning(['id'])->sql(),
 			['seeker' => $this->seeker->id()] + $progress
 		))->field();
 	}
@@ -33,7 +33,7 @@ final class IndividualChain implements Chain {
 		$evolutions = (new Storage\BuiltQuery(
 			$this->database,
 			new Dataset\SelectiveClause(
-				(new FindMyFriends\Sql\Evolution\Select())
+				(new FindMyFriends\Sql\CollectiveEvolutions\Select())
 					->from(['collective_evolutions'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
 				$selection

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Sql\Search;
+namespace FindMyFriends\Sql\SuitedSoulmates;
 
 use Klapuch\Sql;
 
