@@ -20,6 +20,11 @@ CREATE TYPE timeline_sides AS ENUM (
     'sooner or later'
 );
 
+CREATE TYPE ownerships AS ENUM (
+	'yours',
+	'theirs'
+);
+
 CREATE TYPE approximate_timestamptz AS (
   moment timestamp with time zone,
   timeline_side timeline_sides,
@@ -981,15 +986,6 @@ CREATE INDEX soulmate_searches_demand_id_index ON soulmate_searches USING btree 
 ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
 
 
-
-CREATE TABLE eyebrow_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
-);
-ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
------
-
--- VIEWS --
 CREATE VIEW suited_soulmates AS
   SELECT soulmates.id,
     soulmates.evolution_id,
@@ -1011,6 +1007,43 @@ CREATE VIEW suited_soulmates AS
   ORDER BY position ASC;
 
 
+CREATE FUNCTION with_suited_soulmate_ownership(in_seeker_id seekers.id%TYPE) RETURNS TABLE (
+  id suited_soulmates.id%TYPE,
+  evolution_id suited_soulmates.evolution_id%TYPE,
+  is_correct suited_soulmates.is_correct%TYPE,
+  demand_id suited_soulmates.demand_id%TYPE,
+  score suited_soulmates.score%TYPE,
+  related_at suited_soulmates.related_at%TYPE,
+  searched_at suited_soulmates.searched_at%TYPE,
+  new suited_soulmates.new%TYPE,
+  "position" suited_soulmates.position%TYPE,
+  seeker_id suited_soulmates.seeker_id%TYPE,
+  ownership ownerships
+)
+LANGUAGE sql VOLATILE
+AS $$
+  SELECT suited_soulmates.*, CASE
+							 WHEN demands.seeker_id = in_seeker_id THEN
+								 'yours'::ownerships
+							 ELSE
+								 'theirs'::ownerships
+							 END
+  FROM suited_soulmates
+  JOIN demands ON demands.id = suited_soulmates.demand_id
+  JOIN evolutions ON evolutions.id = suited_soulmates.evolution_id
+  WHERE demands.seeker_id = in_seeker_id OR evolutions.seeker_id = in_seeker_id;
+$$;
+
+
+
+CREATE TABLE eyebrow_colors (
+  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL
+);
+ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
+-----
+
+-- VIEWS --
 CREATE VIEW base_evolution AS
   SELECT general.birth_year,
   general.id AS general_id,

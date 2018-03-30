@@ -20,12 +20,13 @@ final class Select implements Sql\Select {
 				'related_at',
 				'searched_at',
 				'is_correct',
+				'ownership',
 			]
 		);
 	}
 
-	public function from(array $tables): Sql\From {
-		return $this->select->from($tables);
+	public function from(array $tables, array $parameters = []): Sql\From {
+		return $this->select->from($tables, $parameters);
 	}
 
 	public function sql(): string {

@@ -1,7 +1,7 @@
 CREATE FUNCTION unit_tests.soulmates_logged_as_searched() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_demand_id integer;
-  v_seeker_id integer;
+  v_demand_id demands.id%TYPE;
+  v_seeker_id seekers.id%TYPE;
 BEGIN
   SELECT samples.seeker() INTO v_seeker_id;
   SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb) INTO v_demand_id;
@@ -16,7 +16,7 @@ LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.test_last_search_time() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_demand_id integer;
+  v_demand_id demands.id%TYPE;
   messages text[];
 BEGIN
   SELECT samples.demand() INTO v_demand_id;
@@ -40,7 +40,7 @@ LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.new_for_every_first() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_demand_id integer;
+  v_demand_id demands.id%TYPE;
   messages text[];
   v_soulmate record;
   new_soulmates CURSOR FOR
@@ -65,7 +65,7 @@ LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.not_new_for_second_and_more_version() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_demand_id integer;
+  v_demand_id demands.id%TYPE;
   messages text[];
   v_soulmate record;
   new_soulmates CURSOR FOR
@@ -90,7 +90,7 @@ LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.position_by_score() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_demand_id integer;
+  v_demand_id demands.id%TYPE;
   messages text[];
   v_soulmate record;
   new_soulmates CURSOR FOR
@@ -121,8 +121,8 @@ LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.assigned_seeker() RETURNS TEST_RESULT AS $$
 DECLARE
-  v_seeker_id integer;
-  v_demand_id integer;
+  v_seeker_id seekers.id%TYPE;
+  v_demand_id demands.id%TYPE;
   messages text[];
   v_soulmate record;
   new_soulmates CURSOR FOR

@@ -23,8 +23,8 @@ final class Select implements Sql\Select {
 		);
 	}
 
-	public function from(array $tables): Sql\From {
-		return $this->select->from($tables);
+	public function from(array $tables, array $parameters = []): Sql\From {
+		return $this->select->from($tables, $parameters);
 	}
 
 	public function sql(): string {

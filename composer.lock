@@ -798,12 +798,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Sql.git",
-                "reference": "bcfb30308503f6d5df0bb64769ff86a46b3c0baf"
+                "reference": "e498ed341e8c4910b0dfe995be01036ddd6ab241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Sql/zipball/bcfb30308503f6d5df0bb64769ff86a46b3c0baf",
-                "reference": "bcfb30308503f6d5df0bb64769ff86a46b3c0baf",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/e498ed341e8c4910b0dfe995be01036ddd6ab241",
+                "reference": "e498ed341e8c4910b0dfe995be01036ddd6ab241",
                 "shasum": ""
             },
             "require": {
@@ -841,7 +841,7 @@
                 "fluent",
                 "sql"
             ],
-            "time": "2018-03-25T18:02:44+00:00"
+            "time": "2018-03-30T15:31:38+00:00"
         },
         {
             "name": "klapuch/storage",

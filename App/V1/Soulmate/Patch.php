@@ -48,7 +48,11 @@ final class Patch implements Application\View {
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 				),
-				new Search\StoredSoulmate($parameters['id'], $this->database)
+				new Search\StoredSoulmate(
+					$parameters['id'],
+					$this->database,
+					$this->seeker
+				)
 			))->clarify(
 				(new Constraint\StructuredJson(
 					new \SplFileInfo(self::SCHEMA)

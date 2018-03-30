@@ -107,7 +107,7 @@ final class SuitedSoulmates implements Soulmates {
 			$this->database,
 			new Dataset\SelectiveClause(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
-					->from(['suited_soulmates'])
+					->from(['with_suited_soulmate_ownership(:seeker)'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
 				$selection
 			)
@@ -115,7 +115,8 @@ final class SuitedSoulmates implements Soulmates {
 		foreach ($matches as $match) {
 			yield new StoredSoulmate(
 				$match['id'],
-				new Storage\MemoryPDO($this->database, $match)
+				new Storage\MemoryPDO($this->database, $match),
+				$this->seeker
 			);
 		}
 	}
