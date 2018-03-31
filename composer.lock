@@ -748,12 +748,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Routing.git",
-                "reference": "ad9892693a2eb7091a32ee9f91ecc257902dcaa0"
+                "reference": "4f2a625a7148a73b1d288f6a17bffb9f57865ba8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Routing/zipball/ad9892693a2eb7091a32ee9f91ecc257902dcaa0",
-                "reference": "ad9892693a2eb7091a32ee9f91ecc257902dcaa0",
+                "url": "https://api.github.com/repos/klapuch/Routing/zipball/4f2a625a7148a73b1d288f6a17bffb9f57865ba8",
+                "reference": "4f2a625a7148a73b1d288f6a17bffb9f57865ba8",
                 "shasum": ""
             },
             "require": {
@@ -790,7 +790,7 @@
             ],
             "description": "HTTP routing",
             "homepage": "https://www.github.com/klapuch/Routing",
-            "time": "2018-03-17T19:54:01+00:00"
+            "time": "2018-03-31T08:46:20+00:00"
         },
         {
             "name": "klapuch/sql",

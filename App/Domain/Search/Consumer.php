@@ -49,7 +49,7 @@ final class Consumer {
 		try {
 			$demand = json_decode($message->getBody(), true);
 			(new SuitedSoulmates(
-				new Access\FakeUser($demand['seeker_id']),
+				new Access\FakeUser((string) $demand['seeker_id']),
 				$this->elasticsearch,
 				$this->database
 			))->find($demand['id']);
