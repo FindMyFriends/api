@@ -1029,8 +1029,8 @@ AS $$
 								 'theirs'::ownerships
 							 END
   FROM suited_soulmates
-  JOIN demands ON demands.id = suited_soulmates.demand_id
-  JOIN evolutions ON evolutions.id = suited_soulmates.evolution_id
+  LEFT JOIN demands ON demands.id = suited_soulmates.demand_id
+  LEFT JOIN evolutions ON evolutions.id = suited_soulmates.evolution_id
   WHERE demands.seeker_id = in_seeker_id OR evolutions.seeker_id = in_seeker_id;
 $$;
 
