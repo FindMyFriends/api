@@ -55,7 +55,6 @@ final class Post implements Application\View {
 							),
 							new Search\Publisher(
 								$this->rabbitMq,
-								new Search\SubsequentRequests($this->database),
 								$this->database
 							)
 						))->ask(

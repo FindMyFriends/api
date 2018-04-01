@@ -21,8 +21,8 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 		$demand = 1;
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
-		$requests->shouldReceive('refresh')->once()->with($demand, 'processing', $self);
-		$requests->shouldReceive('refresh')->once()->with($demand, 'succeed', $self);
+		$requests->shouldReceive('refresh')->once()->with('processing', $self);
+		$requests->shouldReceive('refresh')->once()->with('succeed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('find')->once();
 		Assert::noError(function () use ($demand, $requests, $origin, $self) {
@@ -38,8 +38,8 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 		$demand = 1;
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
-		$requests->shouldReceive('refresh')->once()->with($demand, 'processing', $self);
-		$requests->shouldReceive('refresh')->once()->with($demand, 'failed', $self);
+		$requests->shouldReceive('refresh')->once()->with('processing', $self);
+		$requests->shouldReceive('refresh')->once()->with('failed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('find')->once()->andThrow(new \DomainException('foo'));
 		Assert::exception(function () use ($demand, $requests, $origin, $self) {

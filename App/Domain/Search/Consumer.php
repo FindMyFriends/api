@@ -51,7 +51,7 @@ final class Consumer {
 			$demand = json_decode($message->getBody(), true);
 			(new RequestedSoulmates(
 				$demand['request_id'],
-				new SubsequentRequests($this->database),
+				new SubsequentRequests($demand['id'], $this->database),
 				new SuitedSoulmates(
 					new Access\FakeUser((string) $demand['seeker_id']),
 					$this->elasticsearch,

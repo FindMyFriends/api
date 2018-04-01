@@ -20,12 +20,12 @@ final class RequestedSoulmates implements Soulmates {
 	}
 
 	public function find(int $id): void {
-		$this->requests->refresh($id, 'processing', $this->request);
+		$this->requests->refresh('processing', $this->request);
 		try {
 			$this->origin->find($id);
-			$this->requests->refresh($id, 'succeed', $this->request);
+			$this->requests->refresh('succeed', $this->request);
 		} catch (\Throwable $ex) {
-			$this->requests->refresh($id, 'failed', $this->request);
+			$this->requests->refresh('failed', $this->request);
 			throw $ex;
 		}
 	}

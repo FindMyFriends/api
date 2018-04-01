@@ -9,7 +9,7 @@ use Klapuch\Dataset;
  * Fake
  */
 final class FakeRequests implements Requests {
-	public function refresh(int $watching, string $status, ?int $self = null): int {
+	public function refresh(string $status, ?int $self = null): int {
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {

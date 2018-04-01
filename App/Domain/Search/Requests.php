@@ -8,12 +8,11 @@ use Klapuch\Dataset;
 interface Requests {
 	/**
 	 * Move request to the new status
-	 * @param int $watching
 	 * @param string $status
 	 * @param int|null $self
 	 * @return int
 	 */
-	public function refresh(int $watching, string $status, ?int $self = null): int;
+	public function refresh(string $status, ?int $self = null): int;
 
 	/**
 	 * All proceeded requests

@@ -11,29 +11,27 @@ use PhpAmqpLib;
 
 final class Publisher {
 	private $connection;
-	private $requests;
 	private $database;
 	private const EXCHANGE = 'fmf.direct',
 		ROUTING_KEY = 'soulmate_demands';
 
 	public function __construct(
 		PhpAmqpLib\Connection\AbstractConnection $connection,
-		Requests $requests,
 		Storage\MetaPDO $database
 	) {
 		$this->connection = $connection;
-		$this->requests = $requests;
 		$this->database = $database;
 	}
 
 	public function publish(int $demand): void {
 		$channel = $this->connection->channel();
 		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
+		$requests = new SubsequentRequests($demand, $this->database);
 		$channel->basic_publish(
 			$this->message(
 				(new Domain\AmqpDemand(
 					new Domain\StoredDemand($demand, $this->database)
-				))->print(new Json(['request_id' => $this->requests->refresh($demand, 'pending')]))
+				))->print(new Json(['request_id' => $requests->refresh('pending')]))
 			),
 			self::EXCHANGE,
 			self::ROUTING_KEY
