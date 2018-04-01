@@ -9,21 +9,23 @@ use Klapuch\Dataset;
  * Soulmates recording request
  */
 final class RequestedSoulmates implements Soulmates {
+	private $request;
 	private $requests;
 	private $origin;
 
-	public function __construct(Requests $requests, Soulmates $origin) {
+	public function __construct(int $request, Requests $requests, Soulmates $origin) {
+		$this->request = $request;
 		$this->requests = $requests;
 		$this->origin = $origin;
 	}
 
 	public function find(int $id): void {
-		$this->requests->refresh($id, 'processing');
+		$this->requests->refresh($id, 'processing', $this->request);
 		try {
 			$this->origin->find($id);
-			$this->requests->refresh($id, 'succeed');
+			$this->requests->refresh($id, 'succeed', $this->request);
 		} catch (\Throwable $ex) {
-			$this->requests->refresh($id, 'failed');
+			$this->requests->refresh($id, 'failed', $this->request);
 			throw $ex;
 		}
 	}

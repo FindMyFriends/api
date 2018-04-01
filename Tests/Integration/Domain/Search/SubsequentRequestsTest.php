@@ -22,10 +22,14 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 
 	public function testSubsequentId() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		$pending = (new Search\SubsequentRequests($this->database))->refresh($demand, 'pending');
-		$success = (new Search\SubsequentRequests($this->database, $pending))->refresh($demand, 'succeed');
+		$c = new Search\SubsequentRequests($this->database);
+		$pending = $c->refresh($demand, 'pending');
+		$success = $c->refresh($demand, 'succeed', $pending);
 		Assert::same($pending, $success);
-		$requests = (new TypedQuery($this->database, 'SELECT demand_id, self_id FROM soulmate_requests'))->rows();
+		$requests = (new TypedQuery(
+			$this->database,
+			'SELECT demand_id, self_id FROM soulmate_requests'
+		))->rows();
 		Assert::count(2, $requests);
 		Assert::same(
 			['demand_id' => $demand, 'self_id' => null],

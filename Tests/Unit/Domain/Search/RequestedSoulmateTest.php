@@ -18,32 +18,36 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testProcessingWithSuccess() {
-		$id = 1;
+		$demand = 1;
+		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
-		$requests->shouldReceive('refresh')->once()->with($id, 'processing');
-		$requests->shouldReceive('refresh')->once()->with($id, 'succeed');
+		$requests->shouldReceive('refresh')->once()->with($demand, 'processing', $self);
+		$requests->shouldReceive('refresh')->once()->with($demand, 'succeed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('find')->once();
-		Assert::noError(function () use ($id, $requests, $origin) {
+		Assert::noError(function () use ($demand, $requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
+				$self,
 				$requests,
 				$origin
-			))->find($id);
+			))->find($demand);
 		});
 	}
 
 	public function testRethrowingOnFail() {
-		$id = 1;
+		$demand = 1;
+		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
-		$requests->shouldReceive('refresh')->once()->with($id, 'processing');
-		$requests->shouldReceive('refresh')->once()->with($id, 'failed');
+		$requests->shouldReceive('refresh')->once()->with($demand, 'processing', $self);
+		$requests->shouldReceive('refresh')->once()->with($demand, 'failed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('find')->once()->andThrow(new \DomainException('foo'));
-		Assert::exception(function () use ($id, $requests, $origin) {
+		Assert::exception(function () use ($demand, $requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
+				$self,
 				$requests,
 				$origin
-			))->find($id);
+			))->find($demand);
 		}, \DomainException::class, 'foo');
 	}
 }
