@@ -64,6 +64,11 @@ final class ApplicationRoutes implements Routing\Routes {
 				$user,
 				new Http\ChosenRole($user, ['member', 'guest'])
 			),
+			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demand\SoulmateRequests\Get(
+				$this->uri,
+				$this->database,
+				new Http\ChosenRole($user, ['member', 'guest'])
+			),
 			'v1/demands [POST]' => new V1\Demands\Post(
 				$this->hashids['demand']['hashid'],
 				new Application\PlainRequest(),

@@ -11,6 +11,7 @@ namespace FindMyFriends\Integration\Domain\Search;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
+use Klapuch\Dataset;
 use Klapuch\Storage\TypedQuery;
 use Tester;
 use Tester\Assert;
@@ -39,6 +40,16 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 			['demand_id' => $demand, 'self_id' => $success],
 			$rows[1]
 		);
+	}
+
+	public function testAllFromDemand() {
+		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		$request = new Search\SubsequentRequests($demand, $this->database);
+		Assert::same(2, $request->count(new Dataset\EmptySelection()));
+		Assert::same(2, iterator_count($request->all(new Dataset\EmptySelection())));
 	}
 }
 

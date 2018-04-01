@@ -21,4 +21,12 @@ interface Requests {
 	 * @return \Iterator
 	 */
 	public function all(Dataset\Selection $selection): \Iterator;
+
+	/**
+	 * Counted all found requests
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
+	public function count(Dataset\Selection $selection): int;
 }

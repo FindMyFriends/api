@@ -44,3 +44,6 @@ $schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descr
 $soulmate = new Schema\Soulmate\Structure($database);
 $schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmates/schema/get.json'));
 $schemas->save($soulmate->patch(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmate/schema/patch.json'));
+
+$soulmateRequest = new FindMyFriends\Schema\SoulmateRequest\Structure($database);
+$schemas->save($soulmateRequest->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/SoulmateRequests/schema/get.json'));

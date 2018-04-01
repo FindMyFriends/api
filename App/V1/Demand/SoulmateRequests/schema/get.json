@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": [
+                "integer"
+            ]
+        },
+        "searched_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "is_repeatable": {
+            "type": [
+                "boolean"
+            ]
+        },
+        "status": {
+            "type": [
+                "string"
+            ],
+            "enum": [
+                null,
+                "pending",
+                "processing",
+                "succeed",
+                "failed"
+            ]
+        }
+    },
+    "required": [
+        "id",
+        "searched_at",
+        "is_repeatable",
+        "status"
+    ],
+    "type": "object"
+}

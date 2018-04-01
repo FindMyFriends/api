@@ -992,6 +992,11 @@ ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_demands_dema
 ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE;
 
 
+CREATE FUNCTION is_soulmate_request_repeatable(timestamptz) RETURNS BOOLEAN AS $$
+  SELECT $1 + INTERVAL '20 MINUTE' < NOW();
+$$ LANGUAGE sql IMMUTABLE;
+
+
 CREATE VIEW suited_soulmates AS
   SELECT soulmates.id,
     soulmates.evolution_id,
