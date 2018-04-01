@@ -20,6 +20,7 @@ final class AmqpDemandTest extends Tester\TestCase {
 			[
 				'id' => 2,
 				'seeker_id' => '666',
+				'request_id' => 123,
 			],
 			json_decode(
 				(new Domain\AmqpDemand(
@@ -29,6 +30,7 @@ final class AmqpDemandTest extends Tester\TestCase {
 						[
 							'id' => 2,
 							'seeker_id' => '666',
+							'request_id' => 123,
 							'foo' => 'bar',
 							'nested' => [
 								'foo' => [

@@ -60,6 +60,13 @@ CREATE TYPE mass_units AS ENUM (
     'kg'
 );
 
+CREATE TYPE job_statuses AS ENUM (
+  'pending',
+  'processing',
+  'succeed',
+  'failed'
+);
+
 
 CREATE TYPE mass AS (
   value numeric,
@@ -959,51 +966,50 @@ CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%TYPE, in_seeke
   );
 $$ LANGUAGE sql VOLATILE;
 
-CREATE FUNCTION soulmates_trigger_row_aid() RETURNS trigger
+CREATE FUNCTION soulmates_trigger_row_ad() RETURNS trigger
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  IF (TG_OP = 'INSERT') THEN
-    INSERT INTO soulmate_searches (demand_id) VALUES (new.demand_id);
-    RETURN new;
-  ELSIF (TG_OP = 'DELETE') THEN
-    DELETE FROM soulmate_searches WHERE demand_id = new.demand_id;
-    RETURN old;
-  END IF;
+   DELETE FROM soulmate_requests WHERE demand_id = new.demand_id;
+   RETURN old;
 END;
 $$;
 
-CREATE TRIGGER soulmates_row_aid_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_aid();
+CREATE TRIGGER soulmates_row_ad_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
 
 
-CREATE TABLE soulmate_searches (
+CREATE TABLE soulmate_requests (
   id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
-  searched_at timestamp with time zone NOT NULL DEFAULT now()
+  searched_at timestamp with time zone NOT NULL DEFAULT now(),
+  self_id integer,
+  status job_statuses NOT NULL
 );
 
-CREATE INDEX soulmate_searches_demand_id_index ON soulmate_searches USING btree (demand_id);
-ALTER TABLE ONLY soulmate_searches ADD CONSTRAINT soulmate_searches_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
+CREATE INDEX soulmate_requests_demand_id_index ON soulmate_requests USING btree (demand_id);
+CREATE INDEX soulmate_requests_id_index ON soulmate_requests USING btree (self_id);
+ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
+ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE;
 
 
 CREATE VIEW suited_soulmates AS
   SELECT soulmates.id,
     soulmates.evolution_id,
     soulmates.is_correct,
-    soulmate_searches.demand_id,
+    soulmate_requests.demand_id,
     soulmates.score,
     soulmates.related_at,
-    soulmate_searches.searched_at,
+    soulmate_requests.searched_at,
     version = 1 AS new,
     row_number() OVER (PARTITION BY soulmates.demand_id ORDER BY score DESC) AS position,
     seeker_id
   FROM soulmates
   RIGHT JOIN (
       SELECT demand_id, MAX(searched_at) AS searched_at
-      FROM soulmate_searches
+      FROM soulmate_requests
       GROUP BY demand_id
-  ) AS soulmate_searches ON soulmate_searches.demand_id = soulmates.demand_id
-  LEFT JOIN demands ON demands.id = soulmate_searches.demand_id
+  ) AS soulmate_requests ON soulmate_requests.demand_id = soulmates.demand_id
+  LEFT JOIN demands ON demands.id = soulmate_requests.demand_id
   ORDER BY position ASC;
 
 

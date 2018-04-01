@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain;
 
 use Klapuch\Dataset;
-use Klapuch\Storage;
 
 /**
  * Demands able to be queued and later processed
@@ -12,12 +11,10 @@ use Klapuch\Storage;
 final class QueuedDemands implements Demands {
 	private $origin;
 	private $publisher;
-	private $database;
 
-	public function __construct(Demands $origin, Search\Publisher $publisher, Storage\MetaPDO $database) {
+	public function __construct(Demands $origin, Search\Publisher $publisher) {
 		$this->origin = $origin;
 		$this->publisher = $publisher;
-		$this->database = $database;
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
@@ -26,7 +23,7 @@ final class QueuedDemands implements Demands {
 
 	public function ask(array $description): int {
 		$id = $this->origin->ask($description);
-		$this->publisher->publish(new StoredDemand($id, $this->database));
+		$this->publisher->publish($id);
 		return $id;
 	}
 

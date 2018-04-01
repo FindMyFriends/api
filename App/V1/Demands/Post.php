@@ -53,8 +53,11 @@ final class Post implements Application\View {
 								$this->seeker,
 								$this->database
 							),
-							new Search\Publisher($this->rabbitMq),
-							$this->database
+							new Search\Publisher(
+								$this->rabbitMq,
+								new Search\SubsequentRequests($this->database),
+								$this->database
+							)
 						))->ask(
 							(new Validation\ChainedRule(
 								new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

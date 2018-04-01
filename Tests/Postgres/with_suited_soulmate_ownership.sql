@@ -40,6 +40,8 @@ BEGIN
     NOW()
   )
   RETURNING id INTO v_soulmate_id2;
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_yours_demand_id, NOW(), 'pending');
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_theirs_demand_id, NOW(), 'pending');
   messages = messages || message FROM assert.is_equal(
     ARRAY[v_soulmate_id1, v_soulmate_id2],
     (SELECT array_agg(id) FROM with_suited_soulmate_ownership(v_yours_seeker_id))

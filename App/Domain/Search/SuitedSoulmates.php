@@ -78,11 +78,6 @@ final class SuitedSoulmates implements Soulmates {
 		))->row();
 		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
 		if (!$response['hits']['total']) {
-			(new Storage\TypedQuery(
-				$this->database,
-				'INSERT INTO soulmate_searches (demand_id) VALUES (?)',
-				[$id]
-			))->execute();
 			return;
 		}
 		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
@@ -132,7 +127,6 @@ final class SuitedSoulmates implements Soulmates {
 			)
 		))->field();
 	}
-
 
 	private function query(array $demand): array {
 		$bool = (new class($demand, $this->database) {

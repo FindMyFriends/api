@@ -26,13 +26,32 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Storage\NativeQuery(
 			$this->database,
-			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (?, ?, 20)',
-			[(new Misc\SampleDemand($this->database))->try()['id'], (new Misc\SampleEvolution($this->database))->try()['id']]
-		))->execute();
-		(new Storage\NativeQuery(
-			$this->database,
-			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES (?, ?, 30)',
-			[(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try()['id'], (new Misc\SampleEvolution($this->database))->try()['id']]
+			'INSERT INTO soulmate_requests (demand_id, status) VALUES
+			(?, ?), (?, ?)',
+			[
+				(new Storage\NativeQuery(
+					$this->database,
+					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
+					(?, ?, 20)
+					RETURNING demand_id',
+					[
+						(new Misc\SampleDemand($this->database))->try()['id'],
+						(new Misc\SampleEvolution($this->database))->try()['id'],
+					]
+				))->field(),
+				'pending',
+				(new Storage\NativeQuery(
+					$this->database,
+					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
+					(?, ?, 30)
+					RETURNING id',
+					[
+						(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try()['id'],
+						(new Misc\SampleEvolution($this->database))->try()['id'],
+					]
+				))->field(),
+				'pending',
+			]
 		))->execute();
 		$soulmate = json_decode(
 			(new Search\StoredSoulmate(

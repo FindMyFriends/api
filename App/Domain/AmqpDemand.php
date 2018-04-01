@@ -21,6 +21,7 @@ final class AmqpDemand implements Demand {
 				return [
 					'id' => $demand['id'],
 					'seeker_id' => $demand['seeker_id'],
+					'request_id' => $demand['request_id'],
 				];
 			});
 	}

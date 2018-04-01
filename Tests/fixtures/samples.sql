@@ -341,3 +341,19 @@ BEGIN
 	RETURN v_id;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION samples.soulmate_request(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id integer;
+BEGIN
+	INSERT INTO soulmate_requests (demand_id, status) VALUES (
+		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
+    samples.random_if_not_exists(test_utils.random_enum('job_statuses'), replacements, 'status')::job_statuses
+	)
+	RETURNING id
+		INTO v_id;
+	RETURN v_id;
+END;
+$$;

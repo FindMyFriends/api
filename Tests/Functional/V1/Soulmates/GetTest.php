@@ -27,6 +27,8 @@ final class GetTest extends Tester\TestCase {
 		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand2]))->try();
 		$soulmates = json_decode(
 			(new V1\Soulmates\Get(
 				$this->configuration['HASHIDS'],
@@ -44,6 +46,7 @@ final class GetTest extends Tester\TestCase {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
 		$demand = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
 		$soulmates = json_decode(
 			(new V1\Soulmates\Get(
 				$this->configuration['HASHIDS'],
@@ -66,6 +69,8 @@ final class GetTest extends Tester\TestCase {
 		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand2]))->try();
 		$soulmates = json_decode(
 			(new V1\Soulmates\Get(
 				$this->configuration['HASHIDS'],

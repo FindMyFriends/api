@@ -16,7 +16,7 @@ final class Consumer {
 	private $logs;
 	private const EXCHANGE = 'fmf.direct',
 		ROUTING_KEY = 'soulmate_demands',
-		QUEUE = 'soulmate_searches';
+		QUEUE = 'soulmate_requests';
 
 	public function __construct(
 		PhpAmqpLib\Connection\AbstractConnection $connection,
@@ -32,6 +32,7 @@ final class Consumer {
 
 	public function consume(): void {
 		$channel = $this->connection->channel();
+		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
 		$channel->queue_declare(self::QUEUE, false, true, false, false);
 		$channel->queue_bind(self::QUEUE, self::EXCHANGE, self::ROUTING_KEY);
 		$channel->basic_consume(self::QUEUE, '', false, false, false, false, [$this, 'action']);
@@ -48,10 +49,13 @@ final class Consumer {
 		$channel = $message->delivery_info['channel'];
 		try {
 			$demand = json_decode($message->getBody(), true);
-			(new SuitedSoulmates(
-				new Access\FakeUser((string) $demand['seeker_id']),
-				$this->elasticsearch,
-				$this->database
+			(new RequestedSoulmates(
+				new SubsequentRequests($this->database, $demand['request_id']),
+				new SuitedSoulmates(
+					new Access\FakeUser((string) $demand['seeker_id']),
+					$this->elasticsearch,
+					$this->database
+				)
 			))->find($demand['id']);
 			$channel->basic_ack($message->delivery_info['delivery_tag']);
 		} catch (\Throwable $ex) {
