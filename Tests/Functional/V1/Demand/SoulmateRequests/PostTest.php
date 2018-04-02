@@ -8,7 +8,6 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demand\SoulmateRequests;
 
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;

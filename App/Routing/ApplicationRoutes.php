@@ -69,6 +69,11 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				new Http\ChosenRole($user, ['member', 'guest'])
 			),
+			'v1/demands/{demand_id}/soulmate_requests [POST]' => new V1\Demand\SoulmateRequests\Post(
+				$this->uri,
+				$this->database,
+				$this->rabbitMq
+			),
 			'v1/demands [POST]' => new V1\Demands\Post(
 				$this->hashids['demand']['hashid'],
 				new Application\PlainRequest(),
