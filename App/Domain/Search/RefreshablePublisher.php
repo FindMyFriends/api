@@ -12,10 +12,7 @@ final class RefreshablePublisher implements Publisher {
 	private $origin;
 	private $database;
 
-	public function __construct(
-		Publisher $origin,
-		Storage\MetaPDO $database
-	) {
+	public function __construct(Publisher $origin, Storage\MetaPDO $database) {
 		$this->origin = $origin;
 		$this->database = $database;
 	}
