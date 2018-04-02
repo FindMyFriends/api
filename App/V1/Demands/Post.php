@@ -53,7 +53,7 @@ final class Post implements Application\View {
 								$this->seeker,
 								$this->database
 							),
-							new Search\Publisher(
+							new Search\AmqpPublisher(
 								$this->rabbitMq,
 								$this->database
 							)

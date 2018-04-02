@@ -19,7 +19,7 @@ final class Structure {
 			'properties' => [
 				'id' => ['type' => ['integer']],
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
-				'is_repeatable' => ['type' => ['boolean']],
+				'is_refreshable' => ['type' => ['boolean']],
 				'status' => [
 					'type' => ['string'],
 					'enum' => array_merge(
@@ -31,7 +31,7 @@ final class Structure {
 			'required' => [
 				'id',
 				'searched_at',
-				'is_repeatable',
+				'is_refreshable',
 				'status',
 			],
 			'type' => 'object',
