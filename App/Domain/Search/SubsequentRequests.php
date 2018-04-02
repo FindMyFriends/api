@@ -34,7 +34,7 @@ final class SubsequentRequests implements Requests {
 		$requests = (new Storage\BuiltQuery(
 			$this->database,
 			new Dataset\SelectiveClause(
-				(new Sql\AnsiSelect(['id', 'searched_at', 'status', 'is_soulmate_request_refreshable(searched_at) AS is_refreshable']))
+				(new Sql\AnsiSelect(['id', 'self_id', 'searched_at', 'status', 'is_soulmate_request_refreshable(searched_at) AS is_refreshable']))
 					->from(['soulmate_requests'])
 					->where('demand_id = :demand_id', [$this->demand]),
 				$selection

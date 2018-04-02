@@ -7,6 +7,12 @@
                 "integer"
             ]
         },
+        "self_id": {
+            "type": [
+                "integer",
+                "null"
+            ]
+        },
         "searched_at": {
             "type": "string",
             "format": "date-time"
@@ -31,6 +37,7 @@
     },
     "required": [
         "id",
+        "self_id",
         "searched_at",
         "is_refreshable",
         "status"

@@ -18,6 +18,7 @@ final class Structure {
 			'additionalProperties' => false,
 			'properties' => [
 				'id' => ['type' => ['integer']],
+				'self_id' => ['type' => ['integer', 'null']],
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
 				'is_refreshable' => ['type' => ['boolean']],
 				'status' => [
@@ -30,6 +31,7 @@ final class Structure {
 			],
 			'required' => [
 				'id',
+				'self_id',
 				'searched_at',
 				'is_refreshable',
 				'status',
