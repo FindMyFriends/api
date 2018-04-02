@@ -996,6 +996,13 @@ CREATE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS BOOLEAN AS 
   SELECT $1 + INTERVAL '20 MINUTE' < NOW();
 $$ LANGUAGE sql IMMUTABLE;
 
+CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%TYPE) RETURNS BOOLEAN AS $$
+  SELECT is_soulmate_request_refreshable(MAX(searched_at)::timestamptz)
+  FROM soulmate_requests
+  WHERE demand_id = in_demand_id
+  GROUP BY demand_id;
+$$ LANGUAGE sql VOLATILE;
+
 
 CREATE VIEW suited_soulmates AS
   SELECT soulmates.id,
