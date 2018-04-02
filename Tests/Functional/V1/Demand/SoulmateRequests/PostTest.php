@@ -28,8 +28,7 @@ final class PostTest extends Tester\TestCase {
 			(new V1\Demand\SoulmateRequests\Post(
 				new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
 				$this->database,
-				$this->rabbitMq,
-				new Http\FakeRole(true)
+				$this->rabbitMq
 			))->template(['demand_id' => $demand])->render(),
 			true
 		);
@@ -44,8 +43,7 @@ final class PostTest extends Tester\TestCase {
 			(new V1\Demand\SoulmateRequests\Post(
 				new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
 				$this->database,
-				$this->rabbitMq,
-				new Http\FakeRole(true)
+				$this->rabbitMq
 			))->template(['demand_id' => $demand])->render(),
 			true
 		);
