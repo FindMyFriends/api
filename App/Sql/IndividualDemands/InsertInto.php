@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Sql\CollectiveDemands;
+namespace FindMyFriends\Sql\IndividualDemands;
 
 use FindMyFriends\Sql\Description;
 use Klapuch\Sql;
