@@ -18,43 +18,17 @@ require __DIR__ . '/../../bootstrap.php';
 final class TypeRuleTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testFailingOnValueOutOfEnum() {
+	public function testPassingOnAllValuesInEnum() {
 		(new Storage\NativeQuery(
 			$this->database,
-			"CREATE TYPE this_is_type AS ENUM ('Dom', 'Kat')"
-		))->execute();
-		$value = ['names' => 'foo'];
-		$types = ['names' => 'this_is_type'];
-		Assert::false((new Constraint\TypeRule($this->database, $types))->satisfied($value));
-		Assert::exception(function() use ($value, $types) {
-			(new Constraint\TypeRule($this->database, $types))->apply($value);
-		}, \UnexpectedValueException::class, '"this_is_type" must be one of: "Dom", "Kat" - "foo" was given');
-	}
-
-	public function testPassingOnValueInType() {
-		(new Storage\NativeQuery(
-			$this->database,
-			"CREATE TYPE this_is_type AS ENUM ('Dom', 'Kat')"
-		))->execute();
-		$value = ['names' => 'Dom'];
-		$types = ['names' => 'this_is_type'];
-		Assert::true((new Constraint\TypeRule($this->database, $types))->satisfied($value));
-		Assert::noError(function() use ($value, $types) {
-			(new Constraint\TypeRule($this->database, $types))->apply($value);
-		});
-	}
-
-	public function testMultiplePassingValues() {
-		(new Storage\NativeQuery(
-			$this->database,
-			"CREATE TYPE this_is_type AS ENUM ('Dom', 'Kat')"
+			"CREATE TYPE name_type AS ENUM ('Dom', 'Kat')"
 		))->execute();
 		(new Storage\NativeQuery(
 			$this->database,
-			"CREATE TYPE this_is_type2 AS ENUM ('Dell', 'Casio')"
+			"CREATE TYPE brand_type AS ENUM ('Dell', 'Casio')"
 		))->execute();
 		$value = ['names' => 'Dom', 'brands' => 'Dell'];
-		$types = ['names' => 'this_is_type', 'brands' => 'this_is_type2'];
+		$types = ['names' => 'name_type', 'brands' => 'brand_type'];
 		Assert::true((new Constraint\TypeRule($this->database, $types))->satisfied($value));
 		Assert::noError(function() use ($value, $types) {
 			(new Constraint\TypeRule($this->database, $types))->apply($value);
@@ -64,18 +38,18 @@ final class TypeRuleTest extends Tester\TestCase {
 	public function testFailingOnAnyValueOutOfEnum() {
 		(new Storage\NativeQuery(
 			$this->database,
-			"CREATE TYPE this_is_type AS ENUM ('Dom', 'Kat')"
+			"CREATE TYPE name_type AS ENUM ('Dom', 'Kat')"
 		))->execute();
 		(new Storage\NativeQuery(
 			$this->database,
-			"CREATE TYPE this_is_type2 AS ENUM ('Dell', 'Casio')"
+			"CREATE TYPE brand_type AS ENUM ('Dell', 'Casio')"
 		))->execute();
 		$value = ['names' => 'Dom', 'brands' => 'foo'];
-		$types = ['names' => 'this_is_type', 'brands' => 'this_is_type2'];
+		$types = ['names' => 'name_type', 'brands' => 'brand_type'];
 		Assert::false((new Constraint\TypeRule($this->database, $types))->satisfied($value));
 		Assert::exception(function() use ($value, $types) {
 			(new Constraint\TypeRule($this->database, $types))->apply($value);
-		}, \UnexpectedValueException::class, '"this_is_type2" must be one of: "Dell", "Casio" - "foo" was given');
+		}, \UnexpectedValueException::class, '"brand_type" must be one of: "Dell", "Casio" - "foo" was given');
 	}
 }
 
