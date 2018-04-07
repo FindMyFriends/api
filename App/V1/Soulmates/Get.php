@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Soulmates;
 
 use Elasticsearch;
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -17,6 +18,7 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/get.json';
 	private const ALLOWED_FILTERS = ['demand_id'];
 	private $hashids;
 	private $url;
@@ -61,9 +63,12 @@ final class Get implements Application\View {
 										...iterator_to_array(
 											$soulmates->matches(
 												new Dataset\CombinedSelection(
-													new Dataset\RestFilter(
-														$parameters,
-														self::ALLOWED_FILTERS
+													new Constraint\SchemaFilter(
+														new Dataset\RestFilter(
+															$parameters,
+															self::ALLOWED_FILTERS
+														),
+														new \SplFileInfo(self::SCHEMA)
 													),
 													new Dataset\RestPaging(
 														$parameters['page'],
