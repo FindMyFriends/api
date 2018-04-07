@@ -3,33 +3,32 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Constraint;
 
-use Klapuch\Validation;
+use Klapuch\Dataset;
 
 /**
- * Values with given types
+ * Filter obey rules by JSON schema
  */
-final class TypeRule implements Validation\Rule {
+final class SchemaFilter extends Dataset\Filter {
+	private $origin;
 	private $schema;
 
-	public function __construct(\SplFileInfo $schema) {
+	public function __construct(Dataset\Filter $origin, \SplFileInfo $schema) {
+		$this->origin = $origin;
 		$this->schema = $schema;
 	}
 
-	public function satisfied($subject): bool {
-		try {
-			$this->apply($subject);
-			return true;
-		} catch (\UnexpectedValueException $e) {
-			return false;
-		}
+	protected function filter(): array {
+		$filter = $this->origin->filter();
+		foreach ($this->properties($this->schema, $filter) as $property => $rules)
+			$this->applyEnums($property, $rules, $filter);
+		return $filter;
 	}
 
-	public function apply($subject): array {
-		$properties = json_decode(file_get_contents($this->schema->getPathname()), true)['properties'];
-		foreach (array_intersect_key($properties, $subject) as $property => $rules) {
-			$this->applyEnums($property, $rules, $subject);
-		}
-		return $subject;
+	private function properties(\SplFileInfo $schema, array $filter): array {
+		return array_intersect_key(
+			json_decode(file_get_contents($schema->getPathname()), true)['properties'],
+			$filter
+		);
 	}
 
 	private function applyEnums(string $property, array $rules, array $subject): void {

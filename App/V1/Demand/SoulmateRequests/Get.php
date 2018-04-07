@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\V1\Demand\SoulmateRequests;
 
-use FindMyFriends\Constraint\TypeRule;
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -55,9 +55,12 @@ final class Get implements Application\View {
 														$parameters['sort'],
 														self::ALLOWED_SORTS
 													),
-													new Dataset\RestFilter(
-														(new TypeRule(new \SplFileInfo(self::SCHEMA)))->apply($parameters),
-														self::ALLOWED_FILTERS
+													new Constraint\SchemaFilter(
+														new Dataset\RestFilter(
+															$parameters,
+															self::ALLOWED_FILTERS
+														),
+														new \SplFileInfo(self::SCHEMA)
 													),
 													new Dataset\RestPaging(
 														$parameters['page'],
