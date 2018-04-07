@@ -30,7 +30,7 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 				$self,
 				$requests,
 				$origin
-			))->seek($demand);
+			))->seek();
 		});
 	}
 
@@ -47,7 +47,7 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 				$self,
 				$requests,
 				$origin
-			))->seek($demand);
+			))->seek();
 		}, \DomainException::class, 'foo');
 	}
 }

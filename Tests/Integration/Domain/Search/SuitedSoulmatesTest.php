@@ -50,7 +50,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['gender' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->seek($id);
+		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->seek();
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
@@ -84,7 +84,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			]
 		);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->seek($id);
+		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->seek();
 		Assert::same([], (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates'))->rows());
 	}
 
