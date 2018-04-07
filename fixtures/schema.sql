@@ -119,23 +119,23 @@ CREATE TYPE flat_description AS (
 
 
 -- FUNCTIONS --
-CREATE FUNCTION check_enum_value(in_enum text, in_value text) RETURNS void AS $$
+CREATE FUNCTION check_enum_value(in_enum text, in_value text, in_name text = NULL) RETURNS void AS $BODY$
 DECLARE
   items text[];
 BEGIN
   EXECUTE(format('SELECT enum_range(null::%I)::text', in_enum)) INTO items;
   IF (NOT(items @> ARRAY[in_value])) THEN
     RAISE EXCEPTION USING MESSAGE = format(
-        '"%s" must be one of: %s - "%s" was given',
-        in_enum,
+        $$'%s' must be one of: %s - '%s' was given$$,
+        CASE WHEN in_name IS NOT NULL THEN in_name ELSE in_enum END,
         array_to_string(
-            (SELECT array_agg(format('"%s"', item)) FROM unnest(items) AS item),
+            (SELECT array_agg(format($$'%s'$$, item)) FROM unnest(items) AS item),
           ', '
         ),
         in_value
     );
   END IF;
-END $$ LANGUAGE plpgsql VOLATILE;
+END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION is_enum_value(in_enum text, in_value text) RETURNS boolean AS $$
 BEGIN
@@ -155,9 +155,14 @@ CREATE FUNCTION check_enum_value(in_enum json, in_value json) RETURNS void AS $$
 DECLARE
   object record;
 BEGIN
-  FOR object IN SELECT key, value FROM json_each_text(in_enum) AS whole
+  IF (in_value::text = '{}'::text) THEN
+    RETURN;
+  END IF;
+  FOR object IN SELECT key, value FROM json_each_text(in_enum)
   LOOP
-    PERFORM check_enum_value(object.value, in_value->>object.key);
+    IF (in_value::jsonb ? object.key) THEN
+      PERFORM check_enum_value(object.value, in_value->>object.key, object.key);
+    END IF;
   END LOOP;
 END $$ LANGUAGE plpgsql VOLATILE;
 

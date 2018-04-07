@@ -49,7 +49,7 @@ final class TypeRuleTest extends Tester\TestCase {
 		Assert::false((new Constraint\TypeRule($this->database, $types))->satisfied($value));
 		Assert::exception(function() use ($value, $types) {
 			(new Constraint\TypeRule($this->database, $types))->apply($value);
-		}, \UnexpectedValueException::class, '"brand_type" must be one of: "Dell", "Casio" - "foo" was given');
+		}, \UnexpectedValueException::class, "'brands' must be one of: 'Dell', 'Casio' - 'foo' was given");
 	}
 }
 

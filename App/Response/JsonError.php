@@ -43,7 +43,7 @@ final class JsonError implements Application\Response {
 	}
 
 	private function text(\Throwable $error): string {
-		return htmlspecialchars($error->getMessage(), ENT_QUOTES | ENT_XHTML)
+		return htmlspecialchars($error->getMessage(), ENT_XHTML)
 			?: 'Unknown error, contact support.';
 	}
 }

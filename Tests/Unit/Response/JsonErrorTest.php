@@ -100,7 +100,7 @@ final class JsonErrorTest extends Tester\TestCase {
 
 	public function testXssProofContent() {
 		Assert::same(
-			['message' => '&lt;&amp;&gt;&quot;&apos;'],
+			['message' => '&lt;&amp;&gt;"\''],
 			json_decode(
 				(new Response\JsonError(new \Exception('<&>"\'')))->body()
 					->serialization(),

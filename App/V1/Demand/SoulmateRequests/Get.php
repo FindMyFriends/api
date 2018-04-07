@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\V1\Demand\SoulmateRequests;
 
+use FindMyFriends\Constraint\TypeRule;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -16,7 +17,7 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	private const ALLOWED_SORTS = ['searched_at'],
-		ALLOWED_FILTERS = ['status'];
+		ALLOWED_FILTERS = ['status' => 'job_statuses'];
 	private $url;
 	private $database;
 	private $role;
@@ -54,8 +55,8 @@ final class Get implements Application\View {
 														self::ALLOWED_SORTS
 													),
 													new Dataset\RestFilter(
-														$parameters,
-														self::ALLOWED_FILTERS
+														(new TypeRule($this->database, self::ALLOWED_FILTERS))->apply($parameters),
+														array_keys(self::ALLOWED_FILTERS)
 													),
 													new Dataset\RestPaging(
 														$parameters['page'],
