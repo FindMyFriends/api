@@ -10,7 +10,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
-use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri;
@@ -33,7 +32,7 @@ final class Get implements Application\View {
 		$this->role = $role;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			$requests = new Search\PublicRequests(
 				new Search\SubsequentRequests(
@@ -41,57 +40,55 @@ final class Get implements Application\View {
 					$this->database
 				)
 			);
-			return new Application\RawTemplate(
-				new Response\PartialResponse(
-					new Response\PaginatedResponse(
-						new Response\JsonResponse(
-							new Response\JsonApiAuthentication(
-								new Response\PlainResponse(
-									new Misc\JsonPrintedObjects(
-										...iterator_to_array(
-											$requests->all(
-												new Dataset\CombinedSelection(
-													new Dataset\RestSort(
-														$parameters['sort'],
-														self::ALLOWED_SORTS
+			return new Response\PartialResponse(
+				new Response\PaginatedResponse(
+					new Response\JsonResponse(
+						new Response\JsonApiAuthentication(
+							new Response\PlainResponse(
+								new Misc\JsonPrintedObjects(
+									...iterator_to_array(
+										$requests->all(
+											new Dataset\CombinedSelection(
+												new Dataset\RestSort(
+													$parameters['sort'],
+													self::ALLOWED_SORTS
+												),
+												new Constraint\SchemaFilter(
+													new Dataset\RestFilter(
+														$parameters,
+														self::ALLOWED_FILTERS
 													),
-													new Constraint\SchemaFilter(
-														new Dataset\RestFilter(
-															$parameters,
-															self::ALLOWED_FILTERS
-														),
-														new \SplFileInfo(self::SCHEMA)
-													),
-													new Dataset\RestPaging(
-														$parameters['page'],
-														$parameters['per_page']
-													)
+													new \SplFileInfo(self::SCHEMA)
+												),
+												new Dataset\RestPaging(
+													$parameters['page'],
+													$parameters['per_page']
 												)
 											)
 										)
 									)
-								),
-								$this->role
-							)
-						),
-						$parameters['page'],
-						new UI\AttainablePagination(
-							$parameters['page'],
-							$parameters['per_page'],
-							$requests->count(
-								new Dataset\RestFilter(
-									$parameters,
-									self::ALLOWED_FILTERS
 								)
-							)
-						),
-						$this->url
+							),
+							$this->role
+						)
 					),
-					$parameters
-				)
+					$parameters['page'],
+					new UI\AttainablePagination(
+						$parameters['page'],
+						$parameters['per_page'],
+						$requests->count(
+							new Dataset\RestFilter(
+								$parameters,
+								self::ALLOWED_FILTERS
+							)
+						)
+					),
+					$this->url
+				),
+				$parameters
 			);
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

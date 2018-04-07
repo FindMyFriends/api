@@ -12,7 +12,6 @@ use FindMyFriends\Request;
 use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
-use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use Klapuch\Validation;
@@ -39,7 +38,7 @@ final class Put implements Application\View {
 		$this->seeker = $seeker;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			(new Evolution\SyncChange(
 				$parameters['id'],
@@ -78,9 +77,9 @@ final class Put implements Application\View {
 					)
 				)
 			);
-			return new Application\RawTemplate(new Response\EmptyResponse());
+			return new Response\EmptyResponse();
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

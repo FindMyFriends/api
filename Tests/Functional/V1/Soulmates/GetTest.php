@@ -29,17 +29,15 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand2]))->try();
-		$soulmates = json_decode(
-			(new V1\Soulmates\Get(
-				$this->configuration['HASHIDS'],
-				new Uri\FakeUri('/', 'v1/soulmates', []),
-				$this->database,
-				new Access\FakeUser($seeker),
-				new Http\FakeRole(true),
-				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1])->render()
-		);
-		Assert::count(1, $soulmates);
+		$response = (new V1\Soulmates\Get(
+			$this->configuration['HASHIDS'],
+			new Uri\FakeUri('/', 'v1/soulmates', []),
+			$this->database,
+			new Access\FakeUser($seeker),
+			new Http\FakeRole(true),
+			$this->elasticsearch
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1]);
+		Assert::count(1, json_decode($response->body()->serialization()));
 	}
 
 	public function testMatchingSchema() {
@@ -47,34 +45,30 @@ final class GetTest extends Tester\TestCase {
 		$demand = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		$soulmates = json_decode(
-			(new V1\Soulmates\Get(
-				$this->configuration['HASHIDS'],
-				new Uri\FakeUri('/', 'v1/soulmates', []),
-				$this->database,
-				new Access\FakeUser($seeker),
-				new Http\FakeRole(true),
-				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->render()
-		);
+		$response = (new V1\Soulmates\Get(
+			$this->configuration['HASHIDS'],
+			new Uri\FakeUri('/', 'v1/soulmates', []),
+			$this->database,
+			new Access\FakeUser($seeker),
+			new Http\FakeRole(true),
+			$this->elasticsearch
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand]);
 		(new Misc\SchemaAssertion(
-			$soulmates,
+			json_decode($response->body()->serialization()),
 			(new \SplFileInfo(__DIR__ . '/../../../../App/V1/Soulmates/schema/get.json'))
 		))->assert();
 	}
 
 	public function testSuccessOnNoSoulmates() {
-		$soulmates = json_decode(
-			(new V1\Soulmates\Get(
-				$this->configuration['HASHIDS'],
-				new Uri\FakeUri('/', 'v1/soulmates', []),
-				$this->database,
-				new Access\FakeUser('1'),
-				new Http\FakeRole(true),
-				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => 1])->render()
-		);
-		Assert::count(0, $soulmates);
+		$response = (new V1\Soulmates\Get(
+			$this->configuration['HASHIDS'],
+			new Uri\FakeUri('/', 'v1/soulmates', []),
+			$this->database,
+			new Access\FakeUser('1'),
+			new Http\FakeRole(true),
+			$this->elasticsearch
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1]);
+		Assert::count(0, json_decode($response->body()->serialization()));
 	}
 }
 

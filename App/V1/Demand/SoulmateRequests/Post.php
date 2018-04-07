@@ -27,7 +27,7 @@ final class Post implements Application\View {
 		$this->rabbitMq = $rabbitMq;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			(new Search\HarnessedPublisher(
 				new Search\RefreshablePublisher(
@@ -39,29 +39,27 @@ final class Post implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 			))->publish($parameters['demand_id']);
-			return new Application\RawTemplate(
-				new class ($this->url) implements Application\Response {
-					private $url;
+			return new class ($this->url) implements Application\Response {
+				private $url;
 
-					public function __construct(Uri\Uri $url) {
-						$this->url = $url;
-					}
-
-					public function body(): Output\Format {
-						return new Output\EmptyFormat();
-					}
-
-					public function headers(): array {
-						return [];
-					}
-
-					public function status(): int {
-						return HTTP_ACCEPTED;
-					}
+				public function __construct(Uri\Uri $url) {
+					$this->url = $url;
 				}
-			);
+
+				public function body(): Output\Format {
+					return new Output\EmptyFormat();
+				}
+
+				public function headers(): array {
+					return [];
+				}
+
+				public function status(): int {
+					return HTTP_ACCEPTED;
+				}
+			};
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

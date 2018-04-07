@@ -34,42 +34,40 @@ final class Get implements Application\View {
 		$this->role = $role;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
-			return new Application\RawTemplate(
-				new Response\PartialResponse(
-					new Response\JsonResponse(
-						new Response\ConcurrentlyControlledResponse(
-							new Response\CachedResponse(
-								new Response\JsonApiAuthentication(
-									new Response\PlainResponse(
-										(new Evolution\PublicChange(
-											new Evolution\HarnessedChange(
-												new Evolution\PermittedChange(
-													new Evolution\StoredChange(
-														$parameters['id'],
-														$this->database
-													),
+			return new Response\PartialResponse(
+				new Response\JsonResponse(
+					new Response\ConcurrentlyControlledResponse(
+						new Response\CachedResponse(
+							new Response\JsonApiAuthentication(
+								new Response\PlainResponse(
+									(new Evolution\PublicChange(
+										new Evolution\HarnessedChange(
+											new Evolution\PermittedChange(
+												new Evolution\StoredChange(
 													$parameters['id'],
-													$this->seeker,
 													$this->database
 												),
-												new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+												$parameters['id'],
+												$this->seeker,
+												$this->database
 											),
-											$this->hashids
-										))->print(new Output\Json())
-									),
-									$this->role
-								)
-							),
-							new Http\PostgresETag($this->database, $this->url)
-						)
-					),
-					$parameters
-				)
+											new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+										),
+										$this->hashids
+									))->print(new Output\Json())
+								),
+								$this->role
+							)
+						),
+						new Http\PostgresETag($this->database, $this->url)
+					)
+				),
+				$parameters
 			);
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

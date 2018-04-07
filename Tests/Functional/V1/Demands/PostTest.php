@@ -26,39 +26,35 @@ final class PostTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		$demand = json_decode(
-			(new V1\Demands\Post(
-				new Hashids(),
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/post.json')
-					)
-				),
-				new FakeUri('/', 'v1/demands', []),
-				$this->database,
-				$this->rabbitMq,
-				new Access\FakeUser((string) $seeker, ['role' => 'guest'])
-			))->template([])->render(),
-			true
-		);
+		$response = (new V1\Demands\Post(
+			new Hashids(),
+			new Application\FakeRequest(
+				new Output\FakeFormat(
+					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/post.json')
+				)
+			),
+			new FakeUri('/', 'v1/demands', []),
+			$this->database,
+			$this->rabbitMq,
+			new Access\FakeUser((string) $seeker, ['role' => 'guest'])
+		))->response([]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
-		Assert::same(HTTP_CREATED, http_response_code());
+		Assert::same(HTTP_CREATED, $response->status());
 	}
 
 	public function test400OnBadInput() {
-		$demand = json_decode(
-			(new V1\Demands\Post(
-				new Hashids(),
-				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-				new FakeUri('/', 'v1/demands', []),
-				$this->database,
-				$this->rabbitMq,
-				new Access\FakeUser('1', ['role' => 'guest'])
-			))->template([])->render(),
-			true
-		);
+		$response = (new V1\Demands\Post(
+			new Hashids(),
+			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+			new FakeUri('/', 'v1/demands', []),
+			$this->database,
+			$this->rabbitMq,
+			new Access\FakeUser('1', ['role' => 'guest'])
+		))->response([]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property location is required'], $demand);
-		Assert::same(HTTP_BAD_REQUEST, http_response_code());
+		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 }
 

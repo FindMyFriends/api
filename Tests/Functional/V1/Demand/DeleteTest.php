@@ -24,41 +24,35 @@ final class DeleteTest extends Tester\TestCase {
 		(new Misc\SampleDemand($this->database))->try();
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		$demand = json_decode(
-			(new V1\Demand\Delete(
-				$this->database,
-				new Access\FakeUser((string) $seeker)
-			))->template(['id' => $id])->render(),
-			true
-		);
+		$response = (new V1\Demand\Delete(
+			$this->database,
+			new Access\FakeUser((string) $seeker)
+		))->response(['id' => $id]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
-		Assert::same(HTTP_NO_CONTENT, http_response_code());
+		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 
 	public function test404OnNotExisting() {
-		$demand = json_decode(
-			(new V1\Demand\Delete(
-				$this->database,
-				new Access\FakeUser()
-			))->template(['id' => 1])->render(),
-			true
-		);
+		$response = (new V1\Demand\Delete(
+			$this->database,
+			new Access\FakeUser()
+		))->response(['id' => 1]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Demand does not exist'], $demand);
-		Assert::same(HTTP_NOT_FOUND, http_response_code());
+		Assert::same(HTTP_NOT_FOUND, $response->status());
 	}
 
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
-		$demand = json_decode(
-			(new V1\Demand\Delete(
-				$this->database,
-				new Access\FakeUser((string) $seeker)
-			))->template(['id' => $id])->render(),
-			true
-		);
+		$response = (new V1\Demand\Delete(
+			$this->database,
+			new Access\FakeUser((string) $seeker)
+		))->response(['id' => $id]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);
-		Assert::same(HTTP_FORBIDDEN, http_response_code());
+		Assert::same(HTTP_FORBIDDEN, $response->status());
 	}
 }
 

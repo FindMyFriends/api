@@ -34,7 +34,7 @@ final class GetTest extends Tester\TestCase {
 				$this->database,
 				new Access\FakeUser((string) $seeker),
 				new Http\FakeRole(true)
-			))->template(['id' => $id])->render()
+			))->response(['id' => $id])->body()->serialization()
 		);
 		Assert::same($seeker, $demand->seeker_id);
 		(new Misc\SchemaAssertion(
@@ -44,18 +44,16 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function test403ForNotOwned() {
-		$demand = json_decode(
-			(new V1\Demand\Get(
-				new Hashids(),
-				new Uri\FakeUri('/', 'v1/demands/1', []),
-				$this->database,
-				new Access\FakeUser('1'),
-				new Http\FakeRole(true)
-			))->template(['id' => 1])->render(),
-			true
-		);
+		$response = (new V1\Demand\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/demands/1', []),
+			$this->database,
+			new Access\FakeUser('1'),
+			new Http\FakeRole(true)
+		))->response(['id' => 1]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);
-		Assert::same(HTTP_FORBIDDEN, http_response_code());
+		Assert::same(HTTP_FORBIDDEN, $response->status());
 	}
 }
 

@@ -26,74 +26,66 @@ final class PutTest extends Tester\TestCase {
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		$demand = json_decode(
-			(new V1\Demand\Put(
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
-					)
-				),
-				new Uri\FakeUri('/', 'v1/demands/1', []),
-				$this->database,
-				new Access\FakeUser((string) $seeker)
-			))->template(['id' => $id])->render(),
-			true
-		);
+		$response = (new V1\Demand\Put(
+			new Application\FakeRequest(
+				new Output\FakeFormat(
+					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
+				)
+			),
+			new Uri\FakeUri('/', 'v1/demands/1', []),
+			$this->database,
+			new Access\FakeUser((string) $seeker)
+		))->response(['id' => $id]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
-		Assert::same(HTTP_NO_CONTENT, http_response_code());
+		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 
 	public function test400OnBadInput() {
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
-		$demand = json_decode(
-			(new V1\Demand\Put(
-				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-				new Uri\FakeUri('/', 'v1/demands/1', []),
-				$this->database,
-				new Access\FakeUser()
-			))->template(['id' => $id])->render(),
-			true
-		);
+		$response = (new V1\Demand\Put(
+			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+			new Uri\FakeUri('/', 'v1/demands/1', []),
+			$this->database,
+			new Access\FakeUser()
+		))->response(['id' => $id]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property location is required'], $demand);
-		Assert::same(HTTP_BAD_REQUEST, http_response_code());
+		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 
 	public function test404OnNotExisting() {
-		$demand = json_decode(
-			(new V1\Demand\Put(
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
-					)
-				),
-				new Uri\FakeUri('/', 'v1/demands/1', []),
-				$this->database,
-				new Access\FakeUser()
-			))->template(['id' => 1])->render(),
-			true
-		);
+		$response = (new V1\Demand\Put(
+			new Application\FakeRequest(
+				new Output\FakeFormat(
+					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
+				)
+			),
+			new Uri\FakeUri('/', 'v1/demands/1', []),
+			$this->database,
+			new Access\FakeUser()
+		))->response(['id' => 1]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Demand does not exist'], $demand);
-		Assert::same(HTTP_NOT_FOUND, http_response_code());
+		Assert::same(HTTP_NOT_FOUND, $response->status());
 	}
 
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
-		$demand = json_decode(
-			(new V1\Demand\Put(
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
-					)
-				),
-				new Uri\FakeUri('/', 'v1/demands/1', []),
-				$this->database,
-				new Access\FakeUser((string) $seeker)
-			))->template(['id' => $id])->render(),
-			true
-		);
+		$response = (new V1\Demand\Put(
+			new Application\FakeRequest(
+				new Output\FakeFormat(
+					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
+				)
+			),
+			new Uri\FakeUri('/', 'v1/demands/1', []),
+			$this->database,
+			new Access\FakeUser((string) $seeker)
+		))->response(['id' => $id]);
+		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);
-		Assert::same(HTTP_FORBIDDEN, http_response_code());
+		Assert::same(HTTP_FORBIDDEN, $response->status());
 	}
 }
 

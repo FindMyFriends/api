@@ -18,16 +18,14 @@ final class Options implements Application\View {
 		$this->redis = $redis;
 	}
 
-	public function template(array $parameters): Output\Template {
-		return new Application\RawTemplate(
-			new Response\JsonResponse(
-				new Response\PlainResponse(
-					new Output\Json(
-						(new Schema\Description\ExplainedTableEnums(
-							$this->database,
-							$this->redis
-						))->values()
-					)
+	public function response(array $parameters): Application\Response {
+		return new Response\JsonResponse(
+			new Response\PlainResponse(
+				new Output\Json(
+					(new Schema\Description\ExplainedTableEnums(
+						$this->database,
+						$this->redis
+					))->values()
 				)
 			)
 		);

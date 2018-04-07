@@ -11,7 +11,6 @@ use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Access;
 use Klapuch\Application;
-use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use Klapuch\Validation;
@@ -42,7 +41,7 @@ final class Post implements Application\View {
 		$this->seeker = $seeker;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			$url = new Http\CreatedResourceUrl(
 				new Uri\RelativeUrl($this->url, 'v1/demands/{id}'),
@@ -66,15 +65,13 @@ final class Post implements Application\View {
 					),
 				]
 			);
-			return new Application\RawTemplate(
-				new Response\ConcurrentlyCreatedResponse(
-					new Response\EmptyResponse(),
-					new Http\PostgresETag($this->database, $url),
-					$url
-				)
+			return new Response\ConcurrentlyCreatedResponse(
+				new Response\EmptyResponse(),
+				new Http\PostgresETag($this->database, $url),
+				$url
 			);
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

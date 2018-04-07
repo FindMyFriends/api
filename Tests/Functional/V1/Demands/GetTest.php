@@ -27,15 +27,14 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleDemand($this->database))->try();
-		$demands = json_decode(
-			(new V1\Demands\Get(
-				new Hashids(),
-				new Uri\FakeUri('/', 'v1/demands', []),
-				$this->database,
-				new Access\FakeUser((string) $seeker),
-				new Http\FakeRole(true)
-			))->template(['page' => 1, 'per_page' => 10, 'sort' => ''])->render()
-		);
+		$response = (new V1\Demands\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/demands', []),
+			$this->database,
+			new Access\FakeUser((string) $seeker),
+			new Http\FakeRole(true)
+		))->response(['page' => 1, 'per_page' => 10, 'sort' => '']);
+		$demands = json_decode($response->body()->serialization());
 		Assert::count(2, $demands);
 		(new Misc\SchemaAssertion(
 			$demands,

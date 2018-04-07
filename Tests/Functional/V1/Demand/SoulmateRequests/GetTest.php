@@ -28,7 +28,7 @@ final class GetTest extends Tester\TestCase {
 				new Uri\FakeUri('/', 'v1/demands/1/soulmate_request', []),
 				$this->database,
 				new Http\FakeRole(true)
-			))->template(['demand_id' => $demand, 'page' => 1, 'per_page' => 10, 'sort' => ''])->render()
+			))->response(['demand_id' => $demand, 'page' => 1, 'per_page' => 10, 'sort' => ''])->body()->serialization()
 		);
 		Assert::count(1, $requests);
 		(new Misc\SchemaAssertion(

@@ -5,10 +5,9 @@ namespace FindMyFriends\V1;
 
 use FindMyFriends\Response;
 use Klapuch\Application;
-use Klapuch\Output;
 
 final class Options implements Application\View {
-	public function template(array $parameters): Output\Template {
-		return new Application\RawTemplate(new Response\EmptyResponse());
+	public function response(array $parameters): Application\Response {
+		return new Response\EmptyResponse();
 	}
 }

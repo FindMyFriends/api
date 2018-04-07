@@ -11,7 +11,6 @@ use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
-use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri;
@@ -40,7 +39,7 @@ final class Get implements Application\View {
 		$this->elasticsearch = $elasticsearch;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			$soulmates = new Domain\Search\PublicSoulmates(
 				new Domain\Search\SuitedSoulmates(
@@ -51,39 +50,37 @@ final class Get implements Application\View {
 				),
 				$this->hashids
 			);
-			return new Application\RawTemplate(
-				new Response\PartialResponse(
-					new Response\PaginatedResponse(
-						new Response\JsonResponse(
-							new Response\JsonApiAuthentication(
-								new Response\PlainResponse(
-									new Misc\JsonPrintedObjects(
-										...iterator_to_array(
-											$soulmates->matches(
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
-												)
+			return new Response\PartialResponse(
+				new Response\PaginatedResponse(
+					new Response\JsonResponse(
+						new Response\JsonApiAuthentication(
+							new Response\PlainResponse(
+								new Misc\JsonPrintedObjects(
+									...iterator_to_array(
+										$soulmates->matches(
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
 											)
 										)
 									)
-								),
-								$this->role
-							)
-						),
-						$parameters['page'],
-						new UI\AttainablePagination(
-							$parameters['page'],
-							$parameters['per_page'],
-							$soulmates->count(new Dataset\EmptySelection())
-						),
-						$this->url
+								)
+							),
+							$this->role
+						)
 					),
-					$parameters
-				)
+					$parameters['page'],
+					new UI\AttainablePagination(
+						$parameters['page'],
+						$parameters['per_page'],
+						$soulmates->count(new Dataset\EmptySelection())
+					),
+					$this->url
+				),
+				$parameters
 			);
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

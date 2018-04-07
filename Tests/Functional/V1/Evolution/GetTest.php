@@ -27,15 +27,14 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		$evolution = json_decode(
-			(new V1\Evolution\Get(
-				new Hashids(),
-				new Uri\FakeUri('/', 'v1/evolutions/1', []),
-				$this->database,
-				new Access\FakeUser((string) $seeker),
-				new Http\FakeRole(true)
-			))->template(['id' => $id])->render()
-		);
+		$response = (new V1\Evolution\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/evolutions/1', []),
+			$this->database,
+			new Access\FakeUser((string) $seeker),
+			new Http\FakeRole(true)
+		))->response(['id' => $id]);
+		$evolution = json_decode($response->body()->serialization());
 		Assert::same((new Hashids())->encode($id), $evolution->id);
 		(new Misc\SchemaAssertion(
 			$evolution,
@@ -44,18 +43,16 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function test403ForNotOwned() {
-		$evolution = json_decode(
-			(new V1\Evolution\Get(
-				new Hashids(),
-				new Uri\FakeUri('/', 'v1/evolutions/1', []),
-				$this->database,
-				new Access\FakeUser('1'),
-				new Http\FakeRole(true)
-			))->template(['id' => 1])->render(),
-			true
-		);
+		$response = (new V1\Evolution\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/evolutions/1', []),
+			$this->database,
+			new Access\FakeUser('1'),
+			new Http\FakeRole(true)
+		))->response(['id' => 1]);
+		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);
-		Assert::same(HTTP_FORBIDDEN, http_response_code());
+		Assert::same(HTTP_FORBIDDEN, $response->status());
 	}
 }
 

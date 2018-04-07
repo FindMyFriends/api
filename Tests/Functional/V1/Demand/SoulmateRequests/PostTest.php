@@ -23,31 +23,26 @@ final class PostTest extends Tester\TestCase {
 	public function testErrorOnNotInRefreshInterval() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		$response = json_decode(
-			(new V1\Demand\SoulmateRequests\Post(
-				new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
-				$this->database,
-				$this->rabbitMq
-			))->template(['demand_id' => $demand])->render(),
-			true
-		);
-		Assert::same(['message' => 'Demand is not refreshable for soulmate yet'], $response);
-		Assert::same(HTTP_TOO_MANY_REQUESTS, http_response_code());
+		$response = (new V1\Demand\SoulmateRequests\Post(
+			new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
+			$this->database,
+			$this->rabbitMq
+		))->response(['demand_id' => $demand]);
+		Assert::same(['message' => 'Demand is not refreshable for soulmate yet'], json_decode($response->body()->serialization(), true));
+		Assert::same(HTTP_TOO_MANY_REQUESTS, $response->status());
 	}
 
 	public function testSuccessfulResponse() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand, 'searched_at' => '2015-01-01']))->try();
-		$response = json_decode(
-			(new V1\Demand\SoulmateRequests\Post(
-				new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
-				$this->database,
-				$this->rabbitMq
-			))->template(['demand_id' => $demand])->render(),
-			true
-		);
-		Assert::null($response);
-		Assert::same(HTTP_ACCEPTED, http_response_code());
+		$response = (new V1\Demand\SoulmateRequests\Post(
+			new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
+			$this->database,
+			$this->rabbitMq
+		))->response(['demand_id' => $demand]);
+
+		Assert::null(json_decode($response->body()->serialization()));
+		Assert::same(HTTP_ACCEPTED, $response->status());
 	}
 }
 

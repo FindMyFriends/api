@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
-use Klapuch\Output;
 
 final class Delete implements Application\View {
 	private $database;
@@ -19,7 +18,7 @@ final class Delete implements Application\View {
 		$this->seeker = $seeker;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			(new Domain\ChainedDemand(
 				new Domain\HarnessedDemand(
@@ -41,9 +40,9 @@ final class Delete implements Application\View {
 				),
 				new Domain\StoredDemand($parameters['id'], $this->database)
 			))->retract();
-			return new Application\RawTemplate(new Response\EmptyResponse());
+			return new Response\EmptyResponse();
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }

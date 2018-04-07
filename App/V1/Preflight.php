@@ -5,7 +5,6 @@ namespace FindMyFriends\V1;
 
 use FindMyFriends\Response;
 use Klapuch\Application;
-use Klapuch\Output;
 
 final class Preflight implements Application\View {
 	private $origin;
@@ -16,10 +15,10 @@ final class Preflight implements Application\View {
 		$this->request = $request;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		if ($this->preflight($this->request->headers()))
-			return new Application\RawTemplate(new Response\EmptyResponse());
-		return $this->origin->template($parameters);
+			return new Response\EmptyResponse();
+		return $this->origin->response($parameters);
 	}
 
 	private function preflight(array $headers): bool {

@@ -27,15 +27,14 @@ final class GetTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		$demands = json_decode(
-			(new V1\Evolutions\Get(
-				new Hashids(),
-				new Uri\FakeUri('/', 'v1/evolutions', []),
-				$this->database,
-				new Access\FakeUser((string) $seeker, ['role' => 'member']),
-				new Http\FakeRole(true)
-			))->template(['page' => 1, 'per_page' => 10])->render()
-		);
+		$response = (new V1\Evolutions\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/evolutions', []),
+			$this->database,
+			new Access\FakeUser((string) $seeker, ['role' => 'member']),
+			new Http\FakeRole(true)
+		))->response(['page' => 1, 'per_page' => 10]);
+		$demands = json_decode($response->body()->serialization());
 		Assert::count(2, $demands);
 		(new Misc\SchemaAssertion(
 			$demands,

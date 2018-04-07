@@ -73,17 +73,19 @@ echo (new class(
 			function(array $match) use ($uri, $configuration): Output\Template {
 				/** @var \Klapuch\Application\View $destination */
 				[$source, $destination] = [key($match), current($match)];
-				return $destination->template(
-					(new FindMyFriends\Routing\SuitedHashIdMask(
-						new Routing\TypedMask(
-							new Routing\CombinedMask(
-								new Routing\PathMask($source, $uri),
-								new Routing\QueryMask($source, $uri)
-							)
-						),
-						$configuration['HASHIDS'],
-						$source
-					))->parameters()
+				return new Application\RawTemplate(
+					$destination->response(
+						(new FindMyFriends\Routing\SuitedHashIdMask(
+							new Routing\TypedMask(
+								new Routing\CombinedMask(
+									new Routing\PathMask($source, $uri),
+									new Routing\QueryMask($source, $uri)
+								)
+							),
+							$configuration['HASHIDS'],
+							$source
+						))->parameters()
+					)
 				);
 			}
 		),

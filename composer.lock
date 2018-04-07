@@ -356,12 +356,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Application.git",
-                "reference": "d630c551b48b614e95f5ebefe430e271a439cb34"
+                "reference": "b7b805a91ef1642087e3533a631db90bdfd85a82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Application/zipball/d630c551b48b614e95f5ebefe430e271a439cb34",
-                "reference": "d630c551b48b614e95f5ebefe430e271a439cb34",
+                "url": "https://api.github.com/repos/klapuch/Application/zipball/b7b805a91ef1642087e3533a631db90bdfd85a82",
+                "reference": "b7b805a91ef1642087e3533a631db90bdfd85a82",
                 "shasum": ""
             },
             "require": {
@@ -401,7 +401,7 @@
             ],
             "description": "HTTP core application",
             "homepage": "https://www.github.com/klapuch/Application",
-            "time": "2018-02-02T18:40:14+00:00"
+            "time": "2018-04-07T21:36:08+00:00"
         },
         {
             "name": "klapuch/configuration",

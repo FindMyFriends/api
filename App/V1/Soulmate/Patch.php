@@ -9,7 +9,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Access;
 use Klapuch\Application;
-use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Patch implements Application\View {
@@ -28,7 +27,7 @@ final class Patch implements Application\View {
 		$this->seeker = $seeker;
 	}
 
-	public function template(array $parameters): Output\Template {
+	public function response(array $parameters): Application\Response {
 		try {
 			(new Search\ChainedSoulmate(
 				new Search\HarnessedSoulmate(
@@ -63,9 +62,9 @@ final class Patch implements Application\View {
 					)
 				)
 			);
-			return new Application\RawTemplate(new Response\EmptyResponse());
+			return new Response\EmptyResponse();
 		} catch (\UnexpectedValueException $ex) {
-			return new Application\RawTemplate(new Response\JsonError($ex));
+			return new Response\JsonError($ex);
 		}
 	}
 }
