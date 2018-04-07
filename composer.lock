@@ -701,12 +701,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Output.git",
-                "reference": "9c38d38ff8f93084868853d70e2b09ce00cc3fae"
+                "reference": "e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Output/zipball/9c38d38ff8f93084868853d70e2b09ce00cc3fae",
-                "reference": "9c38d38ff8f93084868853d70e2b09ce00cc3fae",
+                "url": "https://api.github.com/repos/klapuch/Output/zipball/e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be",
+                "reference": "e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be",
                 "shasum": ""
             },
             "require": {
@@ -740,7 +740,7 @@
             ],
             "description": "printers, output, xml, json",
             "homepage": "https://github.com/klapuch/Output",
-            "time": "2018-03-10T17:25:47+00:00"
+            "time": "2018-04-07T18:48:26+00:00"
         },
         {
             "name": "klapuch/routing",
@@ -2684,7 +2684,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.0.7",
+            "version": "v4.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -2752,16 +2752,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.0.7",
+            "version": "v4.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "c72995d9f5999b3fcdd8660c0c9690243252e1e1"
+                "reference": "ca27c02b7a3fef4828c998c2ff9ba7aae1641c49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/c72995d9f5999b3fcdd8660c0c9690243252e1e1",
-                "reference": "c72995d9f5999b3fcdd8660c0c9690243252e1e1",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/ca27c02b7a3fef4828c998c2ff9ba7aae1641c49",
+                "reference": "ca27c02b7a3fef4828c998c2ff9ba7aae1641c49",
                 "shasum": ""
             },
             "require": {
@@ -2797,7 +2797,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-04-02T09:52:41+00:00"
+            "time": "2018-04-04T05:10:37+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2860,7 +2860,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.0.7",
+            "version": "v4.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

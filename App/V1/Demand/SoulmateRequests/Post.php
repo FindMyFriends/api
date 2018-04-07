@@ -48,7 +48,7 @@ final class Post implements Application\View {
 					}
 
 					public function body(): Output\Format {
-						return new Output\FakeFormat();
+						return new Output\EmptyFormat();
 					}
 
 					public function headers(): array {
