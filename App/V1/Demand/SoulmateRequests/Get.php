@@ -17,8 +17,8 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/get.json';
-	private const ALLOWED_SORTS = ['searched_at'],
-		ALLOWED_FILTERS = ['status'];
+	private const ALLOWED_SORTS = ['searched_at'];
+	private const ALLOWED_FILTERS = ['status'];
 	private $url;
 	private $database;
 	private $role;
