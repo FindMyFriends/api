@@ -14,21 +14,24 @@ use Klapuch\Storage;
  * Soulmates suited for the particular seeker
  */
 final class SuitedSoulmates implements Soulmates {
+	private $demand;
 	private $seeker;
 	private $elasticsearch;
 	private $database;
 
 	public function __construct(
+		int $demand,
 		Access\User $seeker,
 		Elasticsearch\Client $elasticsearch,
 		Storage\MetaPDO $database
 	) {
+		$this->demand = $demand;
 		$this->seeker = $seeker;
 		$this->elasticsearch = new FindMyFriends\Elasticsearch\RelationshipEvolutions($elasticsearch);
 		$this->database = $database;
 	}
 
-	public function find(int $id): void {
+	public function find(): void {
 		$demand = (new Storage\BuiltQuery(
 			$this->database,
 			(new Sql\AnsiSelect(
@@ -73,7 +76,7 @@ final class SuitedSoulmates implements Soulmates {
 				]
 			))
 				->from(['elasticsearch_demands'])
-				->where('id = ?', [$id])
+				->where('id = ?', [$this->demand])
 				->where('seeker_id = ?', [$this->seeker->id()])
 		))->row();
 		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
@@ -81,7 +84,7 @@ final class SuitedSoulmates implements Soulmates {
 			return;
 		}
 		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
-		$demands = array_fill(0, count($evolutions), $id);
+		$demands = array_fill(0, count($evolutions), $this->demand);
 		$scores = array_column($response['hits']['hits'], '_score');
 		(new Storage\NativeQuery(
 			$this->database,
@@ -103,7 +106,8 @@ final class SuitedSoulmates implements Soulmates {
 			new Dataset\SelectiveClause(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
 					->from(['with_suited_soulmate_ownership(:seeker)'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()])
+					->where('demand_id = :demand_id', ['demand_id' => $this->demand]),
 				$selection
 			)
 		))->rows();
@@ -122,7 +126,8 @@ final class SuitedSoulmates implements Soulmates {
 			new Dataset\SelectiveClause(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()])
+					->where('demand_id = :demand_id', ['demand_id' => $this->demand]),
 				$selection
 			)
 		))->field();

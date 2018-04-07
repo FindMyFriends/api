@@ -53,11 +53,12 @@ final class Consumer {
 				$demand['request_id'],
 				new SubsequentRequests($demand['id'], $this->database),
 				new SuitedSoulmates(
+					$demand['id'],
 					new Access\FakeUser((string) $demand['seeker_id']),
 					$this->elasticsearch,
 					$this->database
 				)
-			))->find($demand['id']);
+			))->find();
 			$channel->basic_ack($message->delivery_info['delivery_tag']);
 		} catch (\Throwable $ex) {
 			$channel->basic_reject($message->delivery_info['delivery_tag'], true);

@@ -7,11 +7,11 @@ use Klapuch\Dataset;
 
 interface Soulmates {
 	/**
-	 * Try to find all matches to the given demand
+	 * Try to find all matches
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
-	public function find(int $demand): void;
+	public function find(): void;
 
 	/**
 	 * All found matches

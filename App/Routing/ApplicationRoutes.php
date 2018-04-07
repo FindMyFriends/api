@@ -128,7 +128,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$user
 			),
-			'v1/soulmates?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Soulmates\Get(
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Soulmates\Get(
 				$this->hashids,
 				$this->uri,
 				$this->database,

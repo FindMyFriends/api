@@ -18,8 +18,8 @@ final class PublicSoulmates implements Soulmates {
 		$this->hashids = $hashids;
 	}
 
-	public function find(int $demand): void {
-		$this->origin->find($demand);
+	public function find(): void {
+		$this->origin->find();
 	}
 
 	public function matches(Dataset\Selection $selection): \Iterator {

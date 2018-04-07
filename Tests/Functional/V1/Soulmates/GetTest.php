@@ -37,9 +37,9 @@ final class GetTest extends Tester\TestCase {
 				new Access\FakeUser($seeker),
 				new Http\FakeRole(true),
 				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10])->render()
+			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1])->render()
 		);
-		Assert::count(2, $soulmates);
+		Assert::count(1, $soulmates);
 	}
 
 	public function testMatchingSchema() {
@@ -55,33 +55,12 @@ final class GetTest extends Tester\TestCase {
 				new Access\FakeUser($seeker),
 				new Http\FakeRole(true),
 				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10])->render()
+			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->render()
 		);
 		(new Misc\SchemaAssertion(
 			$soulmates,
 			(new \SplFileInfo(__DIR__ . '/../../../../App/V1/Soulmates/schema/get.json'))
 		))->assert();
-	}
-
-	public function testUsingFilterByDemand() {
-		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
-		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
-		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
-		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand2]))->try();
-		$soulmates = json_decode(
-			(new V1\Soulmates\Get(
-				$this->configuration['HASHIDS'],
-				new Uri\FakeUri('/', 'v1/soulmates', []),
-				$this->database,
-				new Access\FakeUser($seeker),
-				new Http\FakeRole(true),
-				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1])->render()
-		);
-		Assert::count(1, $soulmates);
 	}
 
 	public function testSuccessOnNoSoulmates() {
@@ -93,7 +72,7 @@ final class GetTest extends Tester\TestCase {
 				new Access\FakeUser('1'),
 				new Http\FakeRole(true),
 				$this->elasticsearch
-			))->template(['page' => 1, 'per_page' => 10])->render()
+			))->template(['page' => 1, 'per_page' => 10, 'demand_id' => 1])->render()
 		);
 		Assert::count(0, $soulmates);
 	}

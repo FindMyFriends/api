@@ -50,7 +50,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['gender' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($seeker, $this->elasticsearch, $this->database))->find($id);
+		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->find($id);
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
@@ -84,7 +84,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			]
 		);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($seeker, $this->elasticsearch, $this->database))->find($id);
+		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->find($id);
 		Assert::same([], (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates'))->rows());
 	}
 
@@ -108,9 +108,9 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		$soulmates = new Search\SuitedSoulmates($seeker, $this->elasticsearch, $this->database);
-		$soulmates->find($id);
-		$soulmates->find($id);
+		$soulmates = new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database);
+		$soulmates->find();
+		$soulmates->find();
 		(new Storage\NativeQuery(
 			$this->database,
 			"INSERT INTO soulmate_requests (demand_id, status)
@@ -127,8 +127,8 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 	}
 
 	public function testFromParticularDemand() {
-		$seekerId = (new Misc\SamplePostgresData($this->database, 'seeker'))->try()['id'];
-		$demand = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try()['id'];
+		['id' => $seekerId] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try();
 		(new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO soulmate_requests (demand_id, status) VALUES
@@ -161,13 +161,13 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			]
 		))->execute();
 		$soulmates = new Search\SuitedSoulmates(
+			$demand,
 			new Access\FakeUser((string) $seekerId),
 			$this->elasticsearch,
 			$this->database
 		);
-		$selection = new Dataset\FakeSelection(['filter' => ['demand_id' => $demand]]);
-		$matches = $soulmates->matches($selection);
-		Assert::same(2, $soulmates->count($selection));
+		$matches = $soulmates->matches(new Dataset\EmptySelection());
+		Assert::same(2, $soulmates->count(new Dataset\EmptySelection()));
 		$current = $matches->current();
 		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
 		Assert::same(2, $soulmate['evolution_id']);

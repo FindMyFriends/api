@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Soulmates;
 
 use Elasticsearch;
-use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -18,8 +17,6 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
-	private const SCHEMA = __DIR__ . '/schema/get.json';
-	private const ALLOWED_FILTERS = ['demand_id'];
 	private $hashids;
 	private $url;
 	private $database;
@@ -47,6 +44,7 @@ final class Get implements Application\View {
 		try {
 			$soulmates = new Domain\Search\PublicSoulmates(
 				new Domain\Search\SuitedSoulmates(
+					$parameters['demand_id'],
 					$this->seeker,
 					$this->elasticsearch,
 					$this->database
@@ -62,18 +60,9 @@ final class Get implements Application\View {
 									new Misc\JsonPrintedObjects(
 										...iterator_to_array(
 											$soulmates->matches(
-												new Dataset\CombinedSelection(
-													new Constraint\SchemaFilter(
-														new Dataset\RestFilter(
-															$parameters,
-															self::ALLOWED_FILTERS
-														),
-														new \SplFileInfo(self::SCHEMA)
-													),
-													new Dataset\RestPaging(
-														$parameters['page'],
-														$parameters['per_page']
-													)
+												new Dataset\RestPaging(
+													$parameters['page'],
+													$parameters['per_page']
 												)
 											)
 										)
@@ -86,12 +75,7 @@ final class Get implements Application\View {
 						new UI\AttainablePagination(
 							$parameters['page'],
 							$parameters['per_page'],
-							$soulmates->count(
-								new Dataset\RestFilter(
-									$parameters,
-									self::ALLOWED_FILTERS
-								)
-							)
+							$soulmates->count(new Dataset\EmptySelection())
 						),
 						$this->url
 					),
