@@ -23,10 +23,7 @@ final class Structure {
 				'is_refreshable' => ['type' => ['boolean']],
 				'status' => [
 					'type' => ['string'],
-					'enum' => array_merge(
-						[null],
-						(new Schema\PostgresEnum('job_statuses', $this->database))->values()
-					),
+					'enum' => (new Schema\PostgresEnum('job_statuses', $this->database))->values(),
 				],
 			],
 			'required' => [

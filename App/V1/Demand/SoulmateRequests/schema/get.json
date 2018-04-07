@@ -27,7 +27,6 @@
                 "string"
             ],
             "enum": [
-                null,
                 "pending",
                 "processing",
                 "succeed",

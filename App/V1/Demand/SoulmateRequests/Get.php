@@ -16,8 +16,9 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/get.json';
 	private const ALLOWED_SORTS = ['searched_at'],
-		ALLOWED_FILTERS = ['status' => 'job_statuses'];
+		ALLOWED_FILTERS = ['status'];
 	private $url;
 	private $database;
 	private $role;
@@ -55,8 +56,8 @@ final class Get implements Application\View {
 														self::ALLOWED_SORTS
 													),
 													new Dataset\RestFilter(
-														(new TypeRule($this->database, self::ALLOWED_FILTERS))->apply($parameters),
-														array_keys(self::ALLOWED_FILTERS)
+														(new TypeRule(new \SplFileInfo(self::SCHEMA)))->apply($parameters),
+														self::ALLOWED_FILTERS
 													),
 													new Dataset\RestPaging(
 														$parameters['page'],
