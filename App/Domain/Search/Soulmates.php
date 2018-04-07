@@ -7,7 +7,7 @@ use Klapuch\Dataset;
 
 interface Soulmates {
 	/**
-	 * Try to find all matches
+	 * Seek for related soulmates
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
