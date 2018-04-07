@@ -58,7 +58,7 @@ final class Consumer {
 					$this->elasticsearch,
 					$this->database
 				)
-			))->find();
+			))->seek();
 			$channel->basic_ack($message->delivery_info['delivery_tag']);
 		} catch (\Throwable $ex) {
 			$channel->basic_reject($message->delivery_info['delivery_tag'], true);

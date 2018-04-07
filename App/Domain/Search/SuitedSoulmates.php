@@ -31,7 +31,7 @@ final class SuitedSoulmates implements Soulmates {
 		$this->database = $database;
 	}
 
-	public function find(): void {
+	public function seek(): void {
 		$demand = (new Storage\BuiltQuery(
 			$this->database,
 			(new Sql\AnsiSelect(

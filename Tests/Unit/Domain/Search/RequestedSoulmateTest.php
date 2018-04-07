@@ -24,13 +24,13 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('succeed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
-		$origin->shouldReceive('find')->once();
+		$origin->shouldReceive('seek')->once();
 		Assert::noError(function () use ($demand, $requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,
 				$origin
-			))->find($demand);
+			))->seek($demand);
 		});
 	}
 
@@ -41,13 +41,13 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('failed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
-		$origin->shouldReceive('find')->once()->andThrow(new \DomainException('foo'));
+		$origin->shouldReceive('seek')->once()->andThrow(new \DomainException('foo'));
 		Assert::exception(function () use ($demand, $requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,
 				$origin
-			))->find($demand);
+			))->seek($demand);
 		}, \DomainException::class, 'foo');
 	}
 }

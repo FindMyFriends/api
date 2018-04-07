@@ -11,7 +11,7 @@ interface Soulmates {
 	 * @throws \UnexpectedValueException
 	 * @return void
 	 */
-	public function find(): void;
+	public function seek(): void;
 
 	/**
 	 * All found matches
