@@ -57,7 +57,7 @@ final class StoredSoulmateTest extends Tester\TestCase {
 			(new Search\StoredSoulmate(
 				2,
 				$this->database,
-				new Access\FakeUser((string) '1')
+				new Access\FakeUser('1')
 			))->print(new Output\Json())->serialization(),
 			true
 		);
