@@ -1013,7 +1013,7 @@ CREATE VIEW suited_soulmates AS
     soulmates.related_at,
     soulmate_requests.searched_at,
     version = 1 AS new,
-    row_number() OVER (PARTITION BY soulmates.demand_id ORDER BY score DESC) AS position,
+    row_number() OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
     seeker_id
   FROM soulmates
   RIGHT JOIN (
