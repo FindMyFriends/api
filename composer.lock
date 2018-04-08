@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8dffa45316ba0d4789d6188f84666c6",
+    "content-hash": "9e1d917b87f753e4797fbe64f3a0559f",
     "packages": [
         {
             "name": "elasticsearch/elasticsearch",
@@ -1268,21 +1268,21 @@
     "packages-dev": [
         {
             "name": "consistence/coding-standard",
-            "version": "2.4",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consistence/coding-standard.git",
-                "reference": "3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739"
+                "reference": "7cdee53fb5329911629f4df3de6f7125a1b744fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739",
-                "reference": "3e0f2d3920d9442e1dc67dc69e0ac2196b5cd739",
+                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/7cdee53fb5329911629f4df3de6f7125a1b744fc",
+                "reference": "7cdee53fb5329911629f4df3de6f7125a1b744fc",
                 "shasum": ""
             },
             "require": {
-                "php": "~7.0",
-                "slevomat/coding-standard": "~4.0",
+                "php": "~7.1",
+                "slevomat/coding-standard": "~4.5",
                 "squizlabs/php_codesniffer": "~3.2.3"
             },
             "require-dev": {
@@ -1325,7 +1325,7 @@
                 "sniffer",
                 "standard"
             ],
-            "time": "2018-03-09T11:41:10+00:00"
+            "time": "2018-03-23T17:21:30+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
