@@ -992,8 +992,12 @@ ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_demands_dema
 ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE;
 
 
-CREATE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS BOOLEAN AS $$
-  SELECT $1 + INTERVAL '20 MINUTE' < NOW();
+CREATE FUNCTION soulmate_request_refreshable_in(timestamptz) RETURNS integer AS $$
+  SELECT greatest(EXTRACT(EPOCH FROM $1) - EXTRACT(EPOCH FROM NOW() - INTERVAL '20 MINUTES'), 0)::integer;
+$$ LANGUAGE sql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS boolean AS $$
+  SELECT 0 = soulmate_request_refreshable_in($1);
 $$ LANGUAGE sql IMMUTABLE;
 
 CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%TYPE) RETURNS BOOLEAN AS $$

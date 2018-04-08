@@ -293,7 +293,7 @@ AS
 $$
 BEGIN
     IF($1 IS DISTINCT FROM $2) THEN
-        message := 'Assert is not equal.';
+        message := '';
         PERFORM assert.ok(message);
         result := true;
         RETURN;

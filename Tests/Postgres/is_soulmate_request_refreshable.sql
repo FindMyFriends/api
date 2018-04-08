@@ -1,13 +1,21 @@
 CREATE FUNCTION unit_tests.is_in_interval_range() RETURNS TEST_RESULT AS $$
+DECLARE
+  messages text[];
 BEGIN
-  RETURN message FROM assert.is_true(is_soulmate_request_refreshable('2015-01-01'::timestamptz));
+  messages = messages || message FROM assert.is_true(is_soulmate_request_refreshable('2015-01-01'::timestamptz));
+  messages = messages || message FROM assert.is_equal(0, soulmate_request_refreshable_in('2015-01-01'::timestamptz));
+  RETURN array_to_string(messages, '');
 END
 $$
 LANGUAGE plpgsql;
 
 CREATE FUNCTION unit_tests.is_out_of_allowed_interval() RETURNS TEST_RESULT AS $$
+DECLARE
+  messages text[];
 BEGIN
-  RETURN message FROM assert.is_false(is_soulmate_request_refreshable(NOW()));
+  messages = messages || message FROM assert.is_false(is_soulmate_request_refreshable(NOW()));
+  messages = messages || message FROM assert.is_not_equal(0, soulmate_request_refreshable_in(NOW()));
+  RETURN array_to_string(messages, '');
 END
 $$
 LANGUAGE plpgsql;

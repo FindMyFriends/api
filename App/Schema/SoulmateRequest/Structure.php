@@ -21,6 +21,7 @@ final class Structure {
 				'self_id' => ['type' => ['integer', 'null']],
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
 				'is_refreshable' => ['type' => ['boolean']],
+				'refreshable_in' => ['type' => ['integer'], 'minimum' => 0],
 				'status' => [
 					'type' => ['string'],
 					'enum' => (new Schema\PostgresEnum('job_statuses', $this->database))->values(),
@@ -31,6 +32,7 @@ final class Structure {
 				'self_id',
 				'searched_at',
 				'is_refreshable',
+				'refreshable_in',
 				'status',
 			],
 			'type' => 'object',
