@@ -2,9 +2,6 @@
 <ruleset name="FindMyFriends">
 
 	<rule ref="vendor/consistence/coding-standard/Consistence/ruleset.xml">
-		<exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine"/>
-		<exclude name="PSR2.Methods.FunctionCallSignature.SpaceBeforeOpenBracket"/>
-		<exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
 		<exclude name="PEAR.Classes.ClassDeclaration.OpenBraceNewLine"/>
 		<exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
 		<exclude name="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
