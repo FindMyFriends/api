@@ -849,12 +849,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "92c85a79ed5f80667d796fad600f91ffb7af2bd0"
+                "reference": "6553963d36b3f5000035bfaa416657c4289f5138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/92c85a79ed5f80667d796fad600f91ffb7af2bd0",
-                "reference": "92c85a79ed5f80667d796fad600f91ffb7af2bd0",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/6553963d36b3f5000035bfaa416657c4289f5138",
+                "reference": "6553963d36b3f5000035bfaa416657c4289f5138",
                 "shasum": ""
             },
             "require": {
@@ -872,6 +872,9 @@
                 "phpstan/phpstan": "^0.8.0",
                 "sebastian/phpcpd": "^3.0",
                 "slevomat/coding-standard": "4.3.2"
+            },
+            "suggest": {
+                "ext-igbinary": "For better serialization"
             },
             "type": "library",
             "autoload": {
@@ -897,7 +900,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-03-14T21:36:57+00:00"
+            "time": "2018-04-12T20:10:25+00:00"
         },
         {
             "name": "klapuch/ui",
