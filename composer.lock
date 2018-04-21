@@ -462,12 +462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "03c21a2be87220cd013407a132e9c2704d4b0059"
+                "reference": "9e0de56931c3fb8f3e3d12708bb73767ae57e853"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/03c21a2be87220cd013407a132e9c2704d4b0059",
-                "reference": "03c21a2be87220cd013407a132e9c2704d4b0059",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/9e0de56931c3fb8f3e3d12708bb73767ae57e853",
+                "reference": "9e0de56931c3fb8f3e3d12708bb73767ae57e853",
                 "shasum": ""
             },
             "require": {
@@ -502,7 +502,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2018-03-23T21:57:07+00:00"
+            "time": "2018-04-20T21:39:53+00:00"
         },
         {
             "name": "klapuch/encryption",

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\V1\Demands;
 
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -15,7 +16,7 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
-	private const ALLOWED_SORTS = ['created_at'];
+	private const SCHEMA = __DIR__ . '/schema/get.json';
 	private $url;
 	private $database;
 	private $role;
@@ -54,9 +55,11 @@ final class Get implements Application\View {
 									...iterator_to_array(
 										$demands->all(
 											new Dataset\CombinedSelection(
-												new Dataset\RestSort(
-													$parameters['sort'],
-													self::ALLOWED_SORTS
+												new Constraint\SchemaSort(
+													new Dataset\RestSort(
+														$parameters['sort']
+													),
+													new \SplFileInfo(self::SCHEMA)
 												),
 												new Dataset\RestPaging(
 													$parameters['page'],

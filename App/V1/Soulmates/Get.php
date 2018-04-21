@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Soulmates;
 
 use Elasticsearch;
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -16,6 +17,7 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/get.json';
 	private $hashids;
 	private $url;
 	private $database;
@@ -58,9 +60,17 @@ final class Get implements Application\View {
 								new Misc\JsonPrintedObjects(
 									...iterator_to_array(
 										$soulmates->matches(
-											new Dataset\RestPaging(
-												$parameters['page'],
-												$parameters['per_page']
+											new Dataset\CombinedSelection(
+												new Constraint\SchemaSort(
+													new Dataset\RestSort(
+														$parameters['sort']
+													),
+													new \SplFileInfo(self::SCHEMA)
+												),
+												new Dataset\RestPaging(
+													$parameters['page'],
+													$parameters['per_page']
+												)
 											)
 										)
 									)

@@ -28,6 +28,7 @@ $database = new Storage\SafePDO(
 
 $demand = new Schema\Demand\Structure($database);
 $schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/schema/get.json'));
+$schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demands/schema/get.json'));
 $schemas->save($demand->put(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/schema/put.json'));
 $schemas->save($demand->post(), new SplFileInfo(__DIR__ . '/../App/V1/Demands/schema/post.json'));
 

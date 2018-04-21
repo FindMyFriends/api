@@ -43,9 +43,9 @@ final class SchemaFilterTest extends Tester\TestCase {
 		))->criteria();
 	}
 
-	public function testPassingOnOnStatedValues() {
+	public function testNoRestPropertiesOutOfProperties() {
 		Assert::same(
-			['filter' => ['status' => 'success', 'bar' => 'baz']],
+			['filter' => ['status' => 'success']],
 			(new Constraint\SchemaFilter(
 				new class extends Dataset\Filter {
 					protected function filter(): array {
@@ -55,6 +55,21 @@ final class SchemaFilterTest extends Tester\TestCase {
 				new \SplFileInfo(Tester\FileMock::create($this->testingSchema(), 'json'))
 			))->criteria()
 		);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException Following criteria are not allowed: "status"
+	 */
+	public function testThrowingOnForbidden() {
+		(new Constraint\SchemaFilter(
+			new class extends Dataset\Filter {
+				protected function filter(): array {
+					return ['status' => 'success', 'bar' => 'baz'];
+				}
+			},
+			new \SplFileInfo(Tester\FileMock::create($this->testingSchema(), 'json')),
+			['status']
+		))->criteria();
 	}
 
 	private function testingSchema(): string {

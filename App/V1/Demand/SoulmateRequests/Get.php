@@ -16,8 +16,6 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/get.json';
-	private const ALLOWED_SORTS = ['searched_at'];
-	private const ALLOWED_FILTERS = ['status'];
 	private $url;
 	private $database;
 	private $role;
@@ -49,14 +47,15 @@ final class Get implements Application\View {
 									...iterator_to_array(
 										$requests->all(
 											new Dataset\CombinedSelection(
-												new Dataset\RestSort(
-													$parameters['sort'],
-													self::ALLOWED_SORTS
+												new Constraint\SchemaSort(
+													new Dataset\RestSort(
+														$parameters['sort']
+													),
+													new \SplFileInfo(self::SCHEMA)
 												),
 												new Constraint\SchemaFilter(
 													new Dataset\RestFilter(
-														$parameters,
-														self::ALLOWED_FILTERS
+														$parameters
 													),
 													new \SplFileInfo(self::SCHEMA)
 												),
@@ -77,9 +76,9 @@ final class Get implements Application\View {
 						$parameters['page'],
 						$parameters['per_page'],
 						$requests->count(
-							new Dataset\RestFilter(
-								$parameters,
-								self::ALLOWED_FILTERS
+							new Constraint\SchemaFilter(
+								new Dataset\RestFilter($parameters),
+								new \SplFileInfo(self::SCHEMA)
 							)
 						)
 					),

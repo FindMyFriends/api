@@ -11,15 +11,33 @@ use Klapuch\Dataset;
 final class SchemaFilter extends Dataset\Filter {
 	private $origin;
 	private $schema;
+	private $forbiddenCriteria;
 
-	public function __construct(Dataset\Filter $origin, \SplFileInfo $schema) {
+	public function __construct(
+		Dataset\Filter $origin,
+		\SplFileInfo $schema,
+		array $forbiddenCriteria = []
+	) {
 		$this->origin = $origin;
 		$this->schema = $schema;
+		$this->forbiddenCriteria = $forbiddenCriteria;
 	}
 
 	protected function filter(): array {
-		$filter = $this->origin->filter();
-		foreach ($this->properties($this->schema, $filter) as $property => $rules)
+		$properties = $this->properties($this->schema, $this->origin->filter());
+		return (new Dataset\ForbiddenSelection(
+			new Dataset\FakeSelection(
+				$this->applications(
+					$properties,
+					$this->withoutRest($properties, $this->origin->filter())
+				)
+			),
+			$this->forbiddenCriteria
+		))->criteria();
+	}
+
+	private function applications(array $properties, array $filter): array {
+		foreach ($properties as $property => $rules)
 			$this->applyEnums($property, $rules, $filter);
 		return $filter;
 	}
@@ -50,5 +68,9 @@ final class SchemaFilter extends Dataset\Filter {
 				)
 			);
 		}
+	}
+
+	private function withoutRest(array $properties, array $filter): array {
+		return array_intersect_key($filter, $properties);
 	}
 }

@@ -36,7 +36,7 @@ final class GetTest extends Tester\TestCase {
 			new Access\FakeUser($seeker),
 			new Http\FakeRole(true),
 			$this->elasticsearch
-		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1]);
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1, 'sort' => '']);
 		Assert::count(1, json_decode($response->body()->serialization()));
 	}
 
@@ -52,7 +52,7 @@ final class GetTest extends Tester\TestCase {
 			new Access\FakeUser($seeker),
 			new Http\FakeRole(true),
 			$this->elasticsearch
-		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand]);
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand, 'sort' => '']);
 		(new Misc\SchemaAssertion(
 			json_decode($response->body()->serialization()),
 			(new \SplFileInfo(__DIR__ . '/../../../../App/V1/Soulmates/schema/get.json'))
@@ -67,7 +67,7 @@ final class GetTest extends Tester\TestCase {
 			new Access\FakeUser('1'),
 			new Http\FakeRole(true),
 			$this->elasticsearch
-		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1]);
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => '']);
 		Assert::count(0, json_decode($response->body()->serialization()));
 	}
 }
