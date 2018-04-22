@@ -34,13 +34,11 @@ final class PostTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand, 'searched_at' => '2015-01-01']))->try();
 		$response = (new V1\Demand\SoulmateRequests\Post(
 			new FakeUri('/', 'v1/demands/1/soulmate_requests', []),
 			$this->database,
 			$this->rabbitMq
 		))->response(['demand_id' => $demand]);
-
 		Assert::null(json_decode($response->body()->serialization()));
 		Assert::same(HTTP_ACCEPTED, $response->status());
 	}

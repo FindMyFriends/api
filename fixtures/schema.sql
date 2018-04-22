@@ -1000,12 +1000,35 @@ CREATE OR REPLACE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS 
   SELECT 0 = soulmate_request_refreshable_in($1);
 $$ LANGUAGE sql IMMUTABLE;
 
-CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%TYPE) RETURNS BOOLEAN AS $$
-  SELECT is_soulmate_request_refreshable(MAX(searched_at)::timestamptz)
-  FROM soulmate_requests
-  WHERE demand_id = in_demand_id
-  GROUP BY demand_id;
+CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%TYPE) RETURNS boolean AS $$
+  WITH refrehes AS (
+    SELECT MAX(searched_at) AS searched_at, status
+    FROM soulmate_requests
+    WHERE demand_id = in_demand_id
+    GROUP BY demand_id, status
+    ORDER BY searched_at DESC
+    LIMIT 1
+  ), done_refreshes AS (
+    SELECT *
+    FROM refrehes
+    WHERE status IN ('succeed', 'failed')
+  )
+  SELECT NOT EXISTS(SELECT 1 FROM refrehes) OR (
+    EXISTS(SELECT 1 FROM done_refreshes)
+    AND (SELECT is_soulmate_request_refreshable(searched_at) FROM done_refreshes)
+  );
 $$ LANGUAGE sql VOLATILE;
+
+CREATE FUNCTION soulmate_requests_trigger_row_bi() RETURNS trigger AS $$
+BEGIN
+  IF (NOT is_soulmate_request_refreshable(new.demand_id) AND new.self_id IS NULL) THEN
+    RAISE EXCEPTION 'Seeking for soulmate is already in progress';
+  END IF;
+  RETURN NEW;
+END
+$$ language plpgsql VOLATILE;
+
+CREATE TRIGGER soulmate_requests_row_bi_trigger BEFORE INSERT ON soulmate_requests FOR EACH ROW EXECUTE PROCEDURE soulmate_requests_trigger_row_bi();
 
 
 CREATE VIEW suited_soulmates AS

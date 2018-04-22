@@ -45,11 +45,20 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 	public function testAllFromDemand() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		['id' => $soulmateRequestId] = (new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand, 'self_id' => $soulmateRequestId]))->try();
 		$request = new Search\SubsequentRequests($demand, $this->database);
 		Assert::same(2, $request->count(new Dataset\EmptySelection()));
 		Assert::same(2, iterator_count($request->all(new Dataset\EmptySelection())));
+	}
+
+	public function testThrowingOnRequestInProgress() {
+		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
+		$request = new Search\SubsequentRequests($demand, $this->database);
+		$request->refresh('processing');
+		Assert::exception(function () use ($request) {
+			$request->refresh('processing');
+		}, \UnexpectedValueException::class, 'Seeking for soulmate is already in progress');
 	}
 }
 

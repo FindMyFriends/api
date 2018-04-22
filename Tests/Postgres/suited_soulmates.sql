@@ -17,14 +17,17 @@ LANGUAGE plpgsql;
 CREATE FUNCTION unit_tests.last_search_time() RETURNS TEST_RESULT AS $$
 DECLARE
   v_demand_id demands.id%TYPE;
+  v_soulmate_request_id soulmate_requests.id%TYPE;
   messages text[];
 BEGIN
   SELECT samples.demand() INTO v_demand_id;
   INSERT INTO soulmates (demand_id, evolution_id, score, version, related_at) VALUES
     (v_demand_id, (SELECT samples.evolution()), 6, 1, '2010-01-01');
-  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2005-01-01', 'pending');
-  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2006-01-01', 'pending');
-  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2005-01-01', 'pending')
+  RETURNING id
+  INTO v_soulmate_request_id;
+  INSERT INTO soulmate_requests (demand_id, searched_at, status, self_id) VALUES (v_demand_id, '2006-01-01', 'processing', v_soulmate_request_id);
+  INSERT INTO soulmate_requests (demand_id, searched_at, status, self_id) VALUES (v_demand_id, NOW(), 'succeed', v_soulmate_request_id);
   -- ADDED BY TRIGGER
   messages = messages || message FROM assert.is_equal(
     EXTRACT(YEAR FROM NOW()),

@@ -20,13 +20,15 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE FUNCTION unit_tests.demand_not_yet_refreshable_as_max() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.demand_not_refreshable_as_max() RETURNS TEST_RESULT AS $$
 DECLARE
   v_demand_id demands.id%TYPE;
+  v_soulmate_request_id soulmate_requests.id%TYPE;
 BEGIN
   SELECT samples.demand() INTO v_demand_id;
-  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', NOW())::jsonb);
-  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz)::jsonb);
+  SELECT * FROM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz, 'status', 'pending')::jsonb)
+  INTO v_soulmate_request_id;
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', NOW(), 'status', 'succeed', 'self_id', v_soulmate_request_id)::jsonb);
   RETURN message FROM assert.is_false(is_soulmate_request_refreshable(v_demand_id));
 END
 $$
@@ -37,7 +39,51 @@ DECLARE
   v_demand_id demands.id%TYPE;
 BEGIN
   SELECT samples.demand() INTO v_demand_id;
-  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz)::jsonb);
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz, 'status', 'succeed')::jsonb);
+  RETURN message FROM assert.is_true(is_soulmate_request_refreshable(v_demand_id));
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION unit_tests.demand_not_refreshable_pending() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id demands.id%TYPE;
+BEGIN
+  SELECT samples.demand() INTO v_demand_id;
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz, 'status', 'pending')::jsonb);
+  RETURN message FROM assert.is_false(is_soulmate_request_refreshable(v_demand_id));
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION unit_tests.demand_not_refreshable_processing() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id demands.id%TYPE;
+BEGIN
+  SELECT samples.demand() INTO v_demand_id;
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz, 'status', 'processing')::jsonb);
+  RETURN message FROM assert.is_false(is_soulmate_request_refreshable(v_demand_id));
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION unit_tests.demand_not_past_refreshable_not_now() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id demands.id%TYPE;
+BEGIN
+  SELECT samples.demand() INTO v_demand_id;
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', '2015-01-01'::timestamptz, 'status', 'succeed')::jsonb);
+  PERFORM samples.soulmate_request(json_build_object('demand_id', v_demand_id, 'searched_at', NOW(), 'status', 'processing')::jsonb);
+  RETURN message FROM assert.is_false(is_soulmate_request_refreshable(v_demand_id));
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION unit_tests.refreshable_for_no_demand() RETURNS TEST_RESULT AS $$
+DECLARE
+  v_demand_id demands.id%TYPE;
+BEGIN
+  SELECT samples.demand() INTO v_demand_id;
   RETURN message FROM assert.is_true(is_soulmate_request_refreshable(v_demand_id));
 END
 $$

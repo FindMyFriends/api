@@ -35,7 +35,7 @@ final class RefreshablePublisherTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData(
 			$this->database,
 			'soulmate_request',
-			['demand_id' => $demand, 'searched_at' => '2015-01-01']
+			['demand_id' => $demand, 'searched_at' => '2015-01-01', 'status' => 'succeed']
 		))->try();
 		Assert::noError(function () use ($demand) {
 			(new Search\RefreshablePublisher(

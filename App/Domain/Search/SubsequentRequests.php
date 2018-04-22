@@ -21,12 +21,14 @@ final class SubsequentRequests implements Requests {
 	}
 
 	public function refresh(string $status, ?int $self = null): int {
-		return (new Storage\TypedQuery(
-			$this->database,
-			'INSERT INTO soulmate_requests (demand_id, status, self_id)
-			VALUES (?, ?, ?)
-			RETURNING COALESCE(self_id, id)',
-			[$this->demand, $status, $self]
+		return (new Storage\ApplicationQuery(
+			new Storage\TypedQuery(
+				$this->database,
+				'INSERT INTO soulmate_requests (demand_id, status, self_id)
+				VALUES (?, ?, ?)
+				RETURNING COALESCE(self_id, id)',
+				[$this->demand, $status, $self]
+			)
 		))->field();
 	}
 

@@ -129,37 +129,45 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 	public function testFromParticularDemand() {
 		['id' => $seekerId] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try();
+		['id' => $otherDemand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try();
+		(new Storage\NativeQuery(
+			$this->database,
+			'INSERT INTO soulmates (demand_id, evolution_id, score)
+			 VALUES (?, ?, 20)',
+			[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
+		))->execute();
+		(new Storage\NativeQuery(
+			$this->database,
+			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
+			(?, ?, 30)',
+			[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
+		))->execute();
+		(new Storage\NativeQuery(
+			$this->database,
+			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
+			(?, ?, 5)
+			RETURNING demand_id',
+			[$otherDemand, (new Misc\SampleEvolution($this->database))->try()['id']]
+		))->execute();
+		$selfId = (new Storage\NativeQuery(
+			$this->database,
+			'INSERT INTO soulmate_requests (demand_id, status) VALUES
+			(?, ?)
+			RETURNING id',
+			[$demand, 'pending']
+		))->field();
+		(new Storage\NativeQuery(
+			$this->database,
+			'INSERT INTO soulmate_requests (demand_id, status, self_id) VALUES
+			(?, ?, ?)',
+			[$demand, 'processing', $selfId]
+		))->field();
 		(new Storage\NativeQuery(
 			$this->database,
 			'INSERT INTO soulmate_requests (demand_id, status) VALUES
-			(?, ?), (?, ?), (?, ?)',
-			[
-				(new Storage\NativeQuery(
-					$this->database,
-					'INSERT INTO soulmates (demand_id, evolution_id, score)
-					VALUES (?, ?, 20)
-					RETURNING demand_id',
-					[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
-				))->field(),
-				'pending',
-				(new Storage\NativeQuery(
-					$this->database,
-					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-					(?, ?, 30)
-					RETURNING demand_id',
-					[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
-				))->field(),
-				'pending',
-				(new Storage\NativeQuery(
-					$this->database,
-					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-					(?, ?, 5)
-					RETURNING demand_id',
-					[(new Misc\SampleDemand($this->database))->try()['id'], (new Misc\SampleEvolution($this->database))->try()['id']]
-				))->field(),
-				'pending',
-			]
-		))->execute();
+			(?, ?)',
+			[$otherDemand, 'pending']
+		))->field();
 		$soulmates = new Search\SuitedSoulmates(
 			$demand,
 			new Access\FakeUser((string) $seekerId),

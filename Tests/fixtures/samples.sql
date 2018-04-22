@@ -348,10 +348,11 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO soulmate_requests (demand_id, status, searched_at) VALUES (
+	INSERT INTO soulmate_requests (demand_id, status, searched_at, self_id) VALUES (
 		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
 		samples.random_if_not_exists(test_utils.random_enum('job_statuses'), replacements, 'status')::job_statuses,
-		samples.random_if_not_exists(NOW()::text, replacements, 'searched_at')::timestamptz
+		samples.random_if_not_exists(NOW()::text, replacements, 'searched_at')::timestamptz,
+    samples.random_if_not_exists(NULL, replacements, 'self_id')::integer
 	)
 	RETURNING id
 		INTO v_id;
