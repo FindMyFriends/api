@@ -1,19 +1,3 @@
-CREATE FUNCTION unit_tests.soulmates_logged_as_searched() RETURNS TEST_RESULT AS $$
-DECLARE
-  v_demand_id demands.id%TYPE;
-  v_seeker_id seekers.id%TYPE;
-BEGIN
-  SELECT samples.seeker() INTO v_seeker_id;
-  SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb) INTO v_demand_id;
-  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2006-01-01', 'pending');
-  RETURN message FROM assert.is_equal(
-    1,
-    (SELECT COUNT(*)::integer FROM suited_soulmates WHERE demand_id = v_demand_id AND seeker_id = v_seeker_id)
-  );
-END
-$$
-LANGUAGE plpgsql;
-
 CREATE FUNCTION unit_tests.last_search_time() RETURNS TEST_RESULT AS $$
 DECLARE
   v_demand_id demands.id%TYPE;

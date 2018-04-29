@@ -1059,7 +1059,7 @@ CREATE VIEW suited_soulmates AS
     row_number() OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
     seeker_id
   FROM soulmates
-  RIGHT JOIN (
+  LEFT JOIN (
       SELECT demand_id, MAX(searched_at) AS searched_at
       FROM soulmate_requests
       GROUP BY demand_id
