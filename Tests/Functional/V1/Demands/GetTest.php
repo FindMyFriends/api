@@ -29,6 +29,7 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SampleDemand($this->database))->try();
 		$response = (new V1\Demands\Get(
 			new Hashids(),
+			new Hashids(),
 			new Uri\FakeUri('/', 'v1/demands', []),
 			$this->database,
 			new Access\FakeUser((string) $seeker),

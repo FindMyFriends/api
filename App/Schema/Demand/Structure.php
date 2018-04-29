@@ -21,6 +21,12 @@ final class Structure {
 				'created_at' => ['type' => 'string'],
 				'seeker_id' => ['type' => 'integer'],
 				'id' => ['type' => 'string'],
+				'soulmates' => [
+					'type' => 'array',
+					'items' => [
+						'type' => 'string',
+					],
+				],
 				'location' => [
 					'additionalProperties' => false,
 					'properties' => [
@@ -65,6 +71,7 @@ final class Structure {
 		unset($properties['created_at']);
 		unset($properties['seeker_id']);
 		unset($properties['id']);
+		unset($properties['soulmates']);
 		return $schema;
 	}
 

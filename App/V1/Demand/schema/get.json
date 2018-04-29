@@ -11,6 +11,12 @@
         "id": {
             "type": "string"
         },
+        "soulmates": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "location": {
             "additionalProperties": false,
             "properties": {

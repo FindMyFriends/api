@@ -30,6 +30,7 @@ final class StoredDemand implements Demand {
 			->with('id', $demand['id'])
 			->with('seeker_id', $demand['seeker_id'])
 			->with('created_at', $demand['created_at'])
+			->with('soulmates', $demand['soulmates'])
 			->with(
 				'location',
 				[

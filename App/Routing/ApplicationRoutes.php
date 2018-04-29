@@ -52,6 +52,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
 				$this->hashids['demand']['hashid'],
+				$this->hashids['soulmate']['hashid'],
 				$this->uri,
 				$this->database,
 				$user,
@@ -59,6 +60,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'v1/demands/{id} [GET]' => new V1\Demand\Get(
 				$this->hashids['demand']['hashid'],
+				$this->hashids['soulmate']['hashid'],
 				$this->uri,
 				$this->database,
 				$user,

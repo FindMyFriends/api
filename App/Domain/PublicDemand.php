@@ -11,16 +11,21 @@ use Klapuch\Output;
  */
 final class PublicDemand implements Demand {
 	private $origin;
-	private $hashids;
+	private $demandHashid;
+	private $soulmateHashid;
 
-	public function __construct(Demand $origin, HashidsInterface $hashids) {
+	public function __construct(Demand $origin, HashidsInterface $demandHashid, HashidsInterface $soulmateHashid) {
 		$this->origin = $origin;
-		$this->hashids = $hashids;
+		$this->demandHashid = $demandHashid;
+		$this->soulmateHashid = $soulmateHashid;
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('id', [$this->hashids, 'encode'])
+			->adjusted('id', [$this->demandHashid, 'encode'])
+			->adjusted('soulmates', function(array $soulmates): array {
+				return array_map([$this->soulmateHashid, 'encode'], $soulmates);
+			})
 			->adjusted('created_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('location', function(array $location): array {

@@ -938,6 +938,16 @@ $$;
 CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_ad();
 CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
+CREATE FUNCTION is_demand_owned(in_demand_id demands.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS boolean
+AS $$
+  SELECT EXISTS(
+    SELECT 1
+    FROM demands
+    WHERE id = in_demand_id
+    AND seeker_id = in_seeker_id
+  );
+$$ language sql STABLE;
+
 
 CREATE TABLE soulmates (
   id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -976,6 +986,12 @@ END;
 $$;
 
 CREATE TRIGGER soulmates_row_ad_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
+
+
+CREATE VIEW demand_summary AS
+  SELECT demand_id, array_agg(id) AS soulmates
+  FROM soulmates
+  GROUP BY demand_id;
 
 
 CREATE TABLE soulmate_requests (
@@ -1390,11 +1406,13 @@ CREATE VIEW collective_demands AS
     location.coordinates AS location_coordinates,
     demand.id,
     demand.seeker_id,
-    demand.created_at
+    demand.created_at,
+    COALESCE(demand_summary.soulmates, '{}'::integer[]) AS soulmates
   FROM demands demand
   JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
   JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id
-  JOIN locations location ON location.id = demand.location_id;
+  JOIN locations location ON location.id = demand.location_id
+  LEFT JOIN demand_summary ON demand_summary.demand_id = demand.id;
 
 CREATE FUNCTION collective_demands_trigger_row_ii() RETURNS trigger
 LANGUAGE plpgsql
@@ -1763,7 +1781,7 @@ SET default_with_oids = false;
 
 -- TABLES --
 CREATE TABLE etags (
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     entity text NOT NULL,
     tag text NOT NULL,
     created_at timestamp with time zone NOT NULL

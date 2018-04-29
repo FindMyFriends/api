@@ -17,6 +17,7 @@ final class Select implements Sql\Select {
 					'created_at',
 					'location_coordinates',
 					'location_met_at',
+					'soulmates',
 				],
 				$additionalColumns
 			)

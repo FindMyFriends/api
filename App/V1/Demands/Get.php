@@ -17,20 +17,23 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/get.json';
+	private $demandHashid;
+	private $soulmateHashid;
 	private $url;
 	private $database;
-	private $role;
-	private $hashids;
 	private $seeker;
+	private $role;
 
 	public function __construct(
-		HashidsInterface $hashids,
+		HashidsInterface $demandHashid,
+		HashidsInterface $soulmateHashid,
 		Uri\Uri $url,
 		\PDO $database,
 		Access\User $seeker,
 		Http\Role $role
 	) {
-		$this->hashids = $hashids;
+		$this->demandHashid = $demandHashid;
+		$this->soulmateHashid = $soulmateHashid;
 		$this->url = $url;
 		$this->database = $database;
 		$this->seeker = $seeker;
@@ -44,7 +47,8 @@ final class Get implements Application\View {
 					$this->seeker,
 					$this->database
 				),
-				$this->hashids
+				$this->demandHashid,
+				$this->soulmateHashid
 			);
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
