@@ -23,9 +23,8 @@ final class Structure {
 				'id' => ['type' => 'string'],
 				'soulmates' => [
 					'type' => 'array',
-					'items' => [
-						'type' => 'string',
-					],
+					'uniqueItems' => true,
+					'items' => ['type' => 'string'],
 				],
 				'location' => [
 					'additionalProperties' => false,
