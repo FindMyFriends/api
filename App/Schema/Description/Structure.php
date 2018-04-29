@@ -177,9 +177,9 @@ final class Structure {
 							'type' => 'object',
 						],
 						'firstname' => ['type' => ['string', 'null']],
-						'gender' => [
+						'sex' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresEnum('genders', $this->database))->values(),
+							'enum' => (new Schema\PostgresEnum('sex', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
 						'ethnic_group_id' => ['type' => 'integer'],
@@ -189,7 +189,7 @@ final class Structure {
 						'firstname',
 						'ethnic_group_id',
 						'age',
-						'gender',
+						'sex',
 					],
 					'type' => 'object',
 				],

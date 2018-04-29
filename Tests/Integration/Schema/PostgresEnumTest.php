@@ -20,7 +20,7 @@ final class PostgresEnumTest extends Tester\TestCase {
 	public function testValuesFromEnum() {
 		Assert::same(
 			['man', 'woman'],
-			(new Schema\PostgresEnum('genders', $this->database))->values()
+			(new Schema\PostgresEnum('sex', $this->database))->values()
 		);
 	}
 }

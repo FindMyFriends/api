@@ -235,8 +235,8 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO general (gender, ethnic_group_id, birth_year, firstname, lastname) VALUES (
-		samples.random_if_not_exists(test_utils.random_enum('genders'), replacements, 'gender')::genders,
+	INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+		samples.random_if_not_exists(test_utils.random_enum('sex'), replacements, 'sex')::sex,
 		(SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1),
 		samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
 		samples.random_if_not_exists(md5(random()::text), replacements, 'firstname'),

@@ -16,7 +16,7 @@ final class Select implements Sql\Select {
 					'general_age',
 					'general_firstname',
 					'general_lastname',
-					'general_gender',
+					'general_sex',
 					'general_ethnic_group_id',
 					'hair_style_id',
 					'hair_color_id',

@@ -20,25 +20,25 @@ final class CachedEnumTest extends Tester\TestCase {
 	public function testPersistenceInCache() {
 		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values')->once()->andReturn(['a', 'b', 'c']);
-		$enum = new Schema\CachedEnum($origin, $this->redis, 'genders', 'enum');
-		Assert::falsey($this->redis->exists('genders-enum'));
+		$enum = new Schema\CachedEnum($origin, $this->redis, 'sex', 'enum');
+		Assert::falsey($this->redis->exists('sex-enum'));
 		Assert::same(['a', 'b', 'c'], $enum->values());
 		Assert::same(['a', 'b', 'c'], $enum->values());
-		Assert::same(['a', 'b', 'c'], json_decode($this->redis->get('postgres:type:meta:enums:enum:genders')));
+		Assert::same(['a', 'b', 'c'], json_decode($this->redis->get('postgres:type:meta:enums:enum:sex')));
 	}
 
 	public function testPersistingEnumToInfinite() {
 		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values');
-		(new Schema\CachedEnum($origin, $this->redis, 'genders', 'enum'))->values();
-		Assert::same(-1, $this->redis->ttl('postgres:type:meta:enums:enum:genders'));
+		(new Schema\CachedEnum($origin, $this->redis, 'sex', 'enum'))->values();
+		Assert::same(-1, $this->redis->ttl('postgres:type:meta:enums:enum:sex'));
 	}
 
 	public function testPersistingTableForHour() {
 		$origin = \Mockery::mock(Schema\Enum::class);
 		$origin->shouldReceive('values');
-		(new Schema\CachedEnum($origin, $this->redis, 'genders', 'table'))->values();
-		Assert::same(3600, $this->redis->ttl('postgres:type:meta:enums:table:genders'));
+		(new Schema\CachedEnum($origin, $this->redis, 'sex', 'table'))->values();
+		Assert::same(3600, $this->redis->ttl('postgres:type:meta:enums:table:sex'));
 	}
 
 	protected function tearDown() {

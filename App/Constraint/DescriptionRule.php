@@ -14,9 +14,9 @@ final class DescriptionRule implements Validation\Rule {
 	}
 
 	public function apply($subject): array {
-		if ($this->womanWithBeard($subject['general']['gender'], $subject['beard']))
+		if ($this->womanWithBeard($subject['general']['sex'], $subject['beard']))
 			throw new \UnexpectedValueException('Women do not have beards');
-		elseif ($this->manWithBreast($subject['general']['gender'], $subject['body']['breast_size']))
+		elseif ($this->manWithBreast($subject['general']['sex'], $subject['body']['breast_size']))
 			throw new \UnexpectedValueException('Breast is valid only for women');
 		return array_replace_recursive(
 			[
@@ -55,11 +55,11 @@ final class DescriptionRule implements Validation\Rule {
 		);
 	}
 
-	private function womanWithBeard(string $gender, array $beard): bool {
-		return $gender === 'woman' && count(array_unique(array_values_recursive($beard))) > 1;
+	private function womanWithBeard(string $sex, array $beard): bool {
+		return $sex === 'woman' && count(array_unique(array_values_recursive($beard))) > 1;
 	}
 
-	private function manWithBreast(string $gender, ?string $breast): bool {
-		return $gender === 'man' && $breast !== null;
+	private function manWithBreast(string $sex, ?string $breast): bool {
+		return $sex === 'man' && $breast !== null;
 	}
 }

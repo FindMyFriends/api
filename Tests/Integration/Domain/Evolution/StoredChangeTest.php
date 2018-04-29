@@ -34,7 +34,7 @@ final class StoredChangeTest extends Tester\TestCase {
 				'general' => [
 					'firstname' => null,
 					'lastname' => null,
-					'gender' => 'man',
+					'sex' => 'man',
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [
@@ -184,7 +184,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'age' => ['to' => 21, 'from' => 19],
 					'firstname' => null,
 					'lastname' => null,
-					'gender' => 'man',
+					'sex' => 'man',
 					'ethnic_group_id' => 1,
 				],
 				'evolved_at' => '2017-09-16 00:00:00+00',
@@ -210,7 +210,7 @@ final class StoredChangeTest extends Tester\TestCase {
 				'general' => [
 					'firstname' => null,
 					'lastname' => null,
-					'gender' => 'man',
+					'sex' => 'man',
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [

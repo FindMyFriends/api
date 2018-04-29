@@ -32,7 +32,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 					],
 					'firstname' => null,
 					'lastname' => null,
-					'gender' => 'man',
+					'sex' => 'man',
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [

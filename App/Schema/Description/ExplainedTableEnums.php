@@ -116,10 +116,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'ethnic_groups',
 					'table'
 				))->values(),
-				'gender' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('genders', $this->database),
+				'sex' => (new Schema\CachedEnum(
+					new Schema\PostgresEnum('sex', $this->database),
 					$this->redis,
-					'genders',
+					'sex',
 					'enum'
 				))->values(),
 			],

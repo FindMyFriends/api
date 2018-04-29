@@ -336,7 +336,7 @@
                         "null"
                     ]
                 },
-                "gender": {
+                "sex": {
                     "type": "string",
                     "enum": [
                         "man",
@@ -358,7 +358,7 @@
                 "firstname",
                 "ethnic_group_id",
                 "age",
-                "gender"
+                "sex"
             ],
             "type": "object"
         },

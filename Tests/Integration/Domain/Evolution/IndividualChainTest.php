@@ -38,7 +38,7 @@ final class IndividualChainTest extends Tester\TestCase {
 				'general' => [
 					'firstname' => null,
 					'lastname' => null,
-					'gender' => 'man',
+					'sex' => 'man',
 					'ethnic_group_id' => 1,
 				],
 				'hair' => [
@@ -157,17 +157,17 @@ final class IndividualChainTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['gender' => 'man', 'birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['gender' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'man', 'birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		$chain = (new Evolution\IndividualChain(
 			new Access\FakeUser((string) $seeker),
 			$this->database
 		))->changes(new Dataset\EmptySelection());
-		Assert::contains('"gender": "man"', $chain->current()->print(new Output\Json())->serialization());
+		Assert::contains('"sex": "man"', $chain->current()->print(new Output\Json())->serialization());
 		$chain->next();
-		Assert::contains('"gender": "woman"', $chain->current()->print(new Output\Json())->serialization());
+		Assert::contains('"sex": "woman"', $chain->current()->print(new Output\Json())->serialization());
 		$chain->next();
 		Assert::null($chain->current());
 	}

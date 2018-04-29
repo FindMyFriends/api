@@ -41,7 +41,7 @@ final class EvolutionRuleTest extends Tester\TestCase {
 						],
 					],
 				],
-				'general' => ['gender' => 'man'],
+				'general' => ['sex' => 'man'],
 				'evolved_at' => '2017-09-17T13:58:10+00:00',
 			],
 			(new Constraint\EvolutionRule())->apply(
@@ -70,7 +70,7 @@ final class EvolutionRuleTest extends Tester\TestCase {
 							],
 						],
 					],
-					'general' => ['gender' => 'man'],
+					'general' => ['sex' => 'man'],
 					'evolved_at' => '2017-09-17T13:58:10+00:00',
 				]
 			)

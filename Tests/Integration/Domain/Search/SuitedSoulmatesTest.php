@@ -47,8 +47,8 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
-		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
-		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['gender' => 'man']]]);
+		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
+		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
 		(new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database))->seek();
 		Assert::same(
@@ -80,7 +80,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 				'refresh' => true,
 				'index' => 'relationships',
 				'type' => 'evolutions',
-				'body' => ['id' => 2, 'general' => ['gender' => 'man'], 'seeker_id' => 1],
+				'body' => ['id' => 2, 'general' => ['sex' => 'man'], 'seeker_id' => 1],
 			]
 		);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
@@ -106,7 +106,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			'index' => 'relationships',
 			'type' => 'evolutions',
 		];
-		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['gender' => 'man']]]);
+		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
 		$soulmates = new Search\SuitedSoulmates($id, $seeker, $this->elasticsearch, $this->database);
 		$soulmates->seek();

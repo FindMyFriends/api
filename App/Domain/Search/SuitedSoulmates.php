@@ -37,7 +37,7 @@ final class SuitedSoulmates implements Soulmates {
 			(new Sql\AnsiSelect(
 				[
 					'id',
-					'(general).gender',
+					'(general).sex',
 					'(general).ethnic_group_id',
 					'(general).firstname',
 					'(general).lastname',
@@ -244,7 +244,7 @@ final class SuitedSoulmates implements Soulmates {
 
 			private function must(array $demand): array {
 				return [
-					['term' => ['general.gender' => $demand['gender']]],
+					['term' => ['general.sex' => $demand['sex']]],
 				];
 			}
 

@@ -15,7 +15,7 @@ final class InsertInto implements Sql\InsertInto {
 				'general_ethnic_group_id' => ':general_ethnic_group_id',
 				'general_firstname' => ':general_firstname',
 				'general_lastname' => ':general_lastname',
-				'general_gender' => ':general_gender',
+				'general_sex' => ':general_sex',
 				'body_build_id' => ':body_build_id',
 				'body_weight' => 'ROW(:body_weight_value, :body_weight_unit)',
 				'body_height' => 'ROW(:body_height_value, :body_height_unit)',

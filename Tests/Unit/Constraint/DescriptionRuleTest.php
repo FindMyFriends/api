@@ -23,7 +23,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		'hair' => [
 			'length' => ['value' => 10, 'unit' => 'mm'],
 		],
-		'general' => ['gender' => 'woman'],
+		'general' => ['sex' => 'woman'],
 		'beard' => [
 			'color_id' => null,
 			'length' => [
@@ -47,7 +47,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				array_replace_recursive(
 					self::BASE,
 					[
-						'general' => ['gender' => 'woman'],
+						'general' => ['sex' => 'woman'],
 						'beard' => [
 							'color_id' => 8,
 							'care' => null,
@@ -61,7 +61,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				array_replace_recursive(
 					self::BASE,
 					[
-						'general' => ['gender' => 'woman'],
+						'general' => ['sex' => 'woman'],
 						'beard' => [
 							'style' => 'cool',
 							'color_id' => null,
@@ -84,7 +84,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 			array_replace_recursive(
 				self::BASE,
 				[
-					'general' => ['gender' => 'man'],
+					'general' => ['sex' => 'man'],
 					'body' => [
 						'breast_size' => 'B',
 					],
@@ -97,7 +97,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		$expectation = array_replace_recursive(
 			self::BASE,
 			[
-				'general' => ['gender' => 'woman'],
+				'general' => ['sex' => 'woman'],
 				'beard' => [
 					'color_id' => null,
 					'care' => null,
@@ -112,7 +112,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 			self::BASE,
 			[
 				'body' => ['breast_size' => 'B'],
-				'general' => ['gender' => 'woman'],
+				'general' => ['sex' => 'woman'],
 			]
 		);
 		Assert::equal($expectation, (new Constraint\DescriptionRule())->apply($expectation));
@@ -137,7 +137,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 			[['body' => ['height' => ['value' => null, 'unit' => 'mm']]]],
 			[['body' => ['weight' => ['value' => null, 'unit' => 'mm']]]],
 			[['hair' => ['length' => ['value' => null, 'unit' => 'mm']]]],
-			[['beard' => ['length' => ['value' => null, 'unit' => 'mm']], 'general' => ['gender' => 'man']]],
+			[['beard' => ['length' => ['value' => null, 'unit' => 'mm']], 'general' => ['sex' => 'man']]],
 			[['hands' => ['nails' => ['length' => ['value' => null, 'unit' => 'mm']]]]],
 		];
 	}

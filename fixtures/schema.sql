@@ -39,7 +39,7 @@ CREATE TYPE breast_sizes AS ENUM (
 );
 
 
-CREATE TYPE genders AS ENUM (
+CREATE TYPE sex AS ENUM (
     'man',
     'woman'
 );
@@ -75,7 +75,7 @@ CREATE TYPE mass AS (
 
 CREATE TYPE flat_description AS (
   id integer,
-  general_gender genders,
+  general_sex sex,
   general_ethnic_group_id smallint,
   general_birth_year int4range,
   general_firstname text,
@@ -364,8 +364,8 @@ DECLARE
   v_hair_id INTEGER;
   v_description_id INTEGER;
 BEGIN
-  INSERT INTO general (gender, ethnic_group_id, birth_year, firstname, lastname) VALUES (
-    description.general_gender,
+  INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+    description.general_sex,
     description.general_ethnic_group_id,
     description.general_birth_year,
     description.general_firstname,
@@ -485,7 +485,7 @@ BEGIN
   INTO parts;
 
   UPDATE general
-  SET gender = description.general_gender,
+  SET sex = description.general_sex,
     ethnic_group_id = description.general_ethnic_group_id,
     birth_year = description.general_birth_year,
     firstname = description.general_firstname,
@@ -631,7 +631,7 @@ CREATE TABLE ethnic_groups (
 
 CREATE TABLE general (
   id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  gender genders NOT NULL,
+  sex sex NOT NULL,
   ethnic_group_id smallint NOT NULL,
   birth_year real_birth_year NOT NULL,
   firstname text,
@@ -1153,12 +1153,12 @@ CREATE VIEW complete_descriptions AS
 
 CREATE VIEW printed_descriptions AS
   SELECT complete_descriptions.id,
-      ROW((complete_descriptions.general).id, (complete_descriptions.general).gender, (complete_descriptions.general).ethnic_group_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
+      ROW((complete_descriptions.general).id, (complete_descriptions.general).sex, (complete_descriptions.general).ethnic_group_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
     (complete_descriptions.general).birth_year AS general_birth_year,
     (complete_descriptions.general).ethnic_group_id AS general_ethnic_group_id,
     (complete_descriptions.general).firstname AS general_firstname,
     (complete_descriptions.general).lastname AS general_lastname,
-    (complete_descriptions.general).gender AS general_gender,
+    (complete_descriptions.general).sex AS general_sex,
     complete_descriptions.ethnic_group AS general_ethnic_group,
     complete_descriptions.body,
     complete_descriptions.body_build,
@@ -1186,7 +1186,7 @@ CREATE VIEW flat_descriptions AS
     printed_descriptions.general_ethnic_group,
     printed_descriptions.general_firstname,
     printed_descriptions.general_lastname,
-    printed_descriptions.general_gender,
+    printed_descriptions.general_sex,
     (printed_descriptions.body).weight AS body_weight,
     (printed_descriptions.body).height AS body_height,
     (printed_descriptions.body).breast_size AS body_breast_size,
@@ -1373,7 +1373,7 @@ CREATE VIEW collective_demands AS
     printed_description.general_ethnic_group_id,
     flat_description.general_firstname,
     flat_description.general_lastname,
-    flat_description.general_gender,
+    flat_description.general_sex,
     flat_description.body_weight,
     flat_description.body_height,
     flat_description.body_breast_size,
@@ -1424,7 +1424,7 @@ BEGIN
   v_description_id = inserted_description(
       ROW(
       NULL,
-      new.general_gender,
+      new.general_sex,
       new.general_ethnic_group_id,
       age_to_year(new.general_age, (new.location_met_at).moment),
       new.general_firstname,
@@ -1504,7 +1504,7 @@ BEGIN
   PERFORM updated_description(
       ROW(
       v_description_id,
-      new.general_gender,
+      new.general_sex,
       new.general_ethnic_group_id,
       age_to_year(new.general_age, (new.location_met_at).moment),
       new.general_firstname,
@@ -1566,7 +1566,7 @@ CREATE VIEW collective_evolutions AS
     printed_description.general_ethnic_group_id,
     flat_description.general_firstname,
     flat_description.general_lastname,
-    flat_description.general_gender,
+    flat_description.general_sex,
     flat_description.body_weight,
     flat_description.body_height,
     flat_description.body_breast_size,
@@ -1614,7 +1614,7 @@ BEGIN
   v_description_id = inserted_description(
       ROW(
       NULL,
-      new.general_gender,
+      new.general_sex,
       new.general_ethnic_group_id,
       (
         SELECT birth_year
@@ -1683,7 +1683,7 @@ BEGIN
   PERFORM updated_description(
       ROW(
       v_description_id,
-      new.general_gender,
+      new.general_sex,
       new.general_ethnic_group_id,
       new.general_birth_year,
       new.general_firstname,

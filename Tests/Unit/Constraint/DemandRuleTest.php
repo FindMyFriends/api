@@ -24,7 +24,7 @@ final class DemandRuleTest extends Tester\TestCase {
 			'length' => ['value' => 10, 'unit' => 'mm'],
 		],
 		'general' => [
-			'gender' => 'man',
+			'sex' => 'man',
 			'age' => [
 				'from' => 20,
 				'to' => 30,
