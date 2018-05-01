@@ -12,6 +12,7 @@
 		<exclude name="Squiz.Functions.GlobalFunction.Found"/>
 		<exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
 	</rule>
 
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">

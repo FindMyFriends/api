@@ -58,6 +58,20 @@ final class SchemaSortTest extends Tester\TestCase {
 		))->criteria();
 	}
 
+	public function testPassingOnNestedObject() {
+		Assert::same(
+			['sort' => ['outer.inner.nested' => 'ASC']],
+			(new Constraint\SchemaSort(
+				new class extends Dataset\Sort {
+					protected function sort(): array {
+						return ['outer.inner.nested' => 'ASC'];
+					}
+				},
+				new \SplFileInfo(Tester\FileMock::create($this->testingSchema(), 'json'))
+			))->criteria()
+		);
+	}
+
 	private function testingSchema(): string {
 		return json_encode(
 			[
@@ -67,6 +81,17 @@ final class SchemaSortTest extends Tester\TestCase {
 					'status' => [
 						'type' => ['string'],
 						'enum' => ['success', 'fail'],
+					],
+					'outer' => [
+						'properties' => [
+							'inner' => [
+								'properties' => [
+									'nested' => [
+										'type' => 'string',
+									],
+								],
+							],
+						],
 					],
 					'size' => [
 						'type' => ['integer'],

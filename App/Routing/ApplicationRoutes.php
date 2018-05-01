@@ -50,7 +50,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				new V1\Demands\Options($this->database, $this->redis),
 				new Application\PlainRequest()
 			),
-			'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demands\Get(
+			'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demands\Get(
 				$this->hashids['demand']['hashid'],
 				$this->hashids['soulmate']['hashid'],
 				$this->uri,

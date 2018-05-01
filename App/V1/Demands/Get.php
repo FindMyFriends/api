@@ -16,7 +16,13 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
-	private const SCHEMA = __DIR__ . '/schema/get.json';
+	public const SORTS = [
+		'general.age',
+		'general.firstname',
+		'general.lastname',
+		'general.sex',
+		'created_at',
+	];
 	private $demandHashid;
 	private $soulmateHashid;
 	private $url;
@@ -58,16 +64,18 @@ final class Get implements Application\View {
 								new Misc\JsonPrintedObjects(
 									...iterator_to_array(
 										$demands->all(
-											new Dataset\CombinedSelection(
-												new Constraint\SchemaSort(
-													new Dataset\RestSort(
-														$parameters['sort']
+											new Constraint\MappedSelection(
+												new Dataset\CombinedSelection(
+													new Constraint\AllowedSort(
+														new Dataset\RestSort(
+															$parameters['sort']
+														),
+														self::SORTS
 													),
-													new \SplFileInfo(self::SCHEMA)
-												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
+													new Dataset\RestPaging(
+														$parameters['page'],
+														$parameters['per_page']
+													)
 												)
 											)
 										)
