@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Constraint;
 
+use FindMyFriends\Schema;
 use Klapuch\Dataset;
 
 /**
@@ -34,36 +35,15 @@ final class SchemaSort extends Dataset\Sort {
 	}
 
 	private function properties(\SplFileInfo $schema, array $sort): array {
-		['properties' => $properties] = json_decode(
-			file_get_contents($schema->getPathname()),
-			true
-		);
 		return array_keys(
 			array_diff_key(
 				$sort,
-				array_flip($this->nestedProperties($properties))
+				array_flip(
+					(new Schema\NestedProperties(
+						new Schema\JsonProperties($schema)
+					))->objects()
+				)
 			)
-		);
-	}
-
-	private function nestedProperties(array $properties): array {
-		return array_reduce(
-			array_keys($properties),
-			function (array $nested, string $property) use ($properties): array {
-				if (isset($properties[$property]['properties']))
-					$nested[] = sprintf(
-						'%s.%s',
-						$property,
-						implode(
-							'.',
-							$this->nestedProperties($properties[$property]['properties'])
-						)
-					);
-				else
-					$nested[] = $property;
-				return $nested;
-			},
-			[]
 		);
 	}
 }

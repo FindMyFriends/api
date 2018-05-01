@@ -7,11 +7,12 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1;
 
+use Elasticsearch;
 use FindMyFriends\Routing;
-use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use PhpAmqpLib;
 use Predis;
 use Tester;
 use Tester\Assert;
@@ -19,8 +20,6 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class PreflightTest extends Tester\TestCase {
-	use TestCase\Page;
-
 	/**
 	 * @dataProvider preflightHeaders
 	 */
@@ -55,8 +54,13 @@ final class PreflightTest extends Tester\TestCase {
 				}
 			},
 			new Predis\Client(),
-			$this->elasticsearch,
-			$this->rabbitMq,
+			Elasticsearch\ClientBuilder::create()->build(),
+			new PhpAmqpLib\Connection\AMQPLazyConnection(
+				'',
+				'',
+				'',
+				''
+			),
 			[
 				'demand' => ['hashid' => new Hashids()],
 				'evolution' => ['hashid' => new Hashids()],

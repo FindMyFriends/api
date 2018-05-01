@@ -66,7 +66,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$user,
 				new Http\ChosenRole($user, ['member', 'guest'])
 			),
-			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Demand\SoulmateRequests\Get(
+			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demand\SoulmateRequests\Get(
 				$this->uri,
 				$this->database,
 				new Http\ChosenRole($user, ['member', 'guest'])
@@ -130,7 +130,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$user
 			),
-			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?\w+) [GET]' => new V1\Soulmates\Get(
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Soulmates\Get(
 				$this->hashids,
 				$this->uri,
 				$this->database,

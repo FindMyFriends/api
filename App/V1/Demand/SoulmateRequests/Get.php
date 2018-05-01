@@ -15,7 +15,7 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
-	private const SCHEMA = __DIR__ . '/schema/get.json';
+	public const SCHEMA = __DIR__ . '/schema/get.json';
 	private $url;
 	private $database;
 	private $role;
