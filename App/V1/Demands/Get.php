@@ -17,6 +17,7 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	public const SORTS = [
+		'id',
 		'general.age',
 		'general.firstname',
 		'general.lastname',
