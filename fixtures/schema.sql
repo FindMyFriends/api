@@ -908,7 +908,8 @@ CREATE TABLE demands (
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
   created_at timestamp with time zone NOT NULL,
-  location_id integer NOT NULL
+  location_id integer NOT NULL,
+  note character varying(150)
 );
 CREATE UNIQUE INDEX demands_description_id_uindex ON demands USING btree (description_id);
 CREATE UNIQUE INDEX demands_location_id_uindex ON demands USING btree (location_id);
@@ -935,6 +936,16 @@ BEGIN
 END;
 $$;
 
+CREATE FUNCTION demands_trigger_row_biu() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  new.note = nullif(trim(new.note), '');
+  RETURN new;
+END;
+$$;
+
+CREATE TRIGGER demands_row_biu_trigger BEFORE INSERT OR UPDATE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_biu();
 CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_ad();
 CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
@@ -1407,6 +1418,7 @@ CREATE VIEW collective_demands AS
     demand.id,
     demand.seeker_id,
     demand.created_at,
+    demand.note,
     COALESCE(demand_summary.soulmates, '{}'::integer[]) AS soulmates
   FROM demands demand
   JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
@@ -1471,11 +1483,12 @@ BEGIN
   RETURNING id
     INTO v_location_id;
 
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
     new.seeker_id,
     v_description_id,
     NOW(),
-    v_location_id
+    v_location_id,
+    new.note
   )
   RETURNING id INTO new.id;
 

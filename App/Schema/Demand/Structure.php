@@ -19,6 +19,7 @@ final class Structure {
 			'additionalProperties' => false,
 			'properties' => [
 				'created_at' => ['type' => 'string'],
+				'note' => ['type' => ['string', 'null']],
 				'seeker_id' => ['type' => 'integer'],
 				'id' => ['type' => 'string'],
 				'soulmates' => [

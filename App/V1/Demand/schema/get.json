@@ -5,6 +5,12 @@
         "created_at": {
             "type": "string"
         },
+        "note": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
         "seeker_id": {
             "type": "integer"
         },

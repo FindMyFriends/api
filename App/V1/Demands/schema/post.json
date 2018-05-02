@@ -385,6 +385,12 @@
             ],
             "type": "object"
         },
+        "note": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
         "location": {
             "additionalProperties": false,
             "properties": {

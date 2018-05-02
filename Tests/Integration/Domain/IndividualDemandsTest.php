@@ -25,6 +25,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		$id = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
 			[
+				'note' => null,
 				'general' => [
 					'age' => [
 						'from' => 19,

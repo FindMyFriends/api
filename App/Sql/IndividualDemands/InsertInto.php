@@ -17,6 +17,7 @@ final class InsertInto implements Sql\InsertInto {
 				'seeker_id' => ':seeker',
 				'general_age' => 'int4range(:general_age_from, :general_age_to)',
 				'location_coordinates' => 'POINT(:location_coordinates_latitude, :location_coordinates_longitude)',
+				'note' => ':note',
 			]
 		);
 	}
