@@ -53,7 +53,7 @@ final class PostTest extends Tester\TestCase {
 			new Access\FakeUser('1', ['role' => 'guest'])
 		))->response([]);
 		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property location is required'], $demand);
+		Assert::same(['message' => 'The property note is required'], $demand);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 }

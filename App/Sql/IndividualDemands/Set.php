@@ -16,6 +16,7 @@ final class Set implements Sql\Set {
 				'general_age' => 'int4range(:general_age_from, :general_age_to)',
 				'location_met_at' => 'ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation)',
 				'location_coordinates' => 'POINT(:location_coordinates_latitude, :location_coordinates_longitude)',
+				'note' => ':note',
 			]
 		);
 	}

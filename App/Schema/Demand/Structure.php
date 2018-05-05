@@ -57,7 +57,10 @@ final class Structure {
 					'type' => 'object',
 				],
 			] + $description['properties'],
-			'required' => array_merge(['location'], $description['required']),
+			'required' => array_merge(
+				['created_at', 'note', 'seeker_id', 'id', 'soulmates', 'location'],
+				$description['required']
+			),
 			'type' => 'object',
 		] + $description;
 	}
@@ -68,10 +71,13 @@ final class Structure {
 		$schema['properties'] = $description['properties'] + $schema['properties'];
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
-		unset($properties['created_at']);
-		unset($properties['seeker_id']);
-		unset($properties['id']);
-		unset($properties['soulmates']);
+		$required = &$schema['required'];
+		unset($properties['created_at'], $properties['seeker_id'], $properties['id'], $properties['soulmates']);
+		unset($required[array_search('created_at', $required, true)]);
+		unset($required[array_search('seeker_id', $required, true)]);
+		unset($required[array_search('id', $required, true)]);
+		unset($required[array_search('soulmates', $required, true)]);
+		$required = array_values($required);
 		return $schema;
 	}
 

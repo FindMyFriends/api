@@ -44,6 +44,7 @@ final class StoredDemandTest extends Tester\TestCase {
 		$demand = new Domain\StoredDemand(1, $this->database);
 		$demand->reconsider(
 			[
+				'note' => null,
 				'general' => [
 					'age' => [
 						'from' => 19,
@@ -140,6 +141,7 @@ final class StoredDemandTest extends Tester\TestCase {
 		);
 		Assert::equal(
 			[
+				'note' => null,
 				'soulmates' => [],
 				'hands' => [
 					'nails' => [

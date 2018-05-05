@@ -50,7 +50,7 @@ final class PutTest extends Tester\TestCase {
 			new Access\FakeUser()
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property location is required'], $demand);
+		Assert::same(['message' => 'The property note is required'], $demand);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 

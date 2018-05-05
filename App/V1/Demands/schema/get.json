@@ -469,6 +469,11 @@
         }
     },
     "required": [
+        "created_at",
+        "note",
+        "seeker_id",
+        "id",
+        "soulmates",
         "location",
         "general",
         "face",

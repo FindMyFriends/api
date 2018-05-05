@@ -453,6 +453,7 @@
         }
     },
     "required": [
+        "note",
         "location",
         "general",
         "face",
