@@ -15,7 +15,7 @@ final class Set implements Sql\Set {
 		'location_coordinates' => ['location_coordinates_latitude', 'location_coordinates_longitude'],
 		'note' => ['note'],
 	];
-	private const COLUMNS = [
+	private const SET = [
 		'general_age' => 'int4range(:general_age_from, :general_age_to)',
 		'location_met_at' => 'ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation)',
 		'location_coordinates' => 'POINT(:location_coordinates_latitude, :location_coordinates_longitude)',
@@ -30,7 +30,7 @@ final class Set implements Sql\Set {
 				array_keys(self::CONDITIONS),
 				function (array $values, string $column): array {
 					if (array_keys_exist($this->parameters, ...self::CONDITIONS[$column])) {
-						$values[$column] = self::COLUMNS[$column];
+						$values[$column] = self::SET[$column];
 					}
 					return $values;
 				},
