@@ -90,6 +90,11 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$user
 			),
+			'v1/demands/{id} [PATCH]' => new V1\Demand\Patch(
+				new Application\PlainRequest(),
+				$this->database,
+				$user
+			),
 			'v1/demands/{id} [DELETE]' => new V1\Demand\Delete(
 				$this->database,
 				$user
