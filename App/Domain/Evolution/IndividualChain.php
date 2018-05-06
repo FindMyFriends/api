@@ -22,10 +22,12 @@ final class IndividualChain implements Chain {
 	}
 
 	public function extend(array $progress): int {
-		return (new Storage\FlatQuery(
+		return (new Storage\TypedQuery(
 			$this->database,
 			(new FindMyFriends\Sql\CollectiveEvolutions\InsertInto('collective_evolutions'))->returning(['id'])->sql(),
-			['seeker' => $this->seeker->id()] + $progress
+			(new Sql\FlatParameters(
+				new Sql\UniqueParameters(['seeker' => $this->seeker->id()] + $progress)
+			))->binds()
 		))->field();
 	}
 

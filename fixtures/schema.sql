@@ -1509,6 +1509,10 @@ BEGIN
   WHERE demands.id = new.id
   INTO v_location_id, v_description_id;
 
+  UPDATE demands
+  SET note = new.note
+  WHERE demands.id = new.id;
+
   UPDATE locations
   SET coordinates = new.location_coordinates,
     met_at = new.location_met_at

@@ -53,12 +53,14 @@ final class StoredDemand implements Demand {
 	}
 
 	public function reconsider(array $description): void {
-		(new Storage\FlatQuery(
+		(new Storage\BuiltQuery(
 			$this->database,
 			(new FindMyFriends\Sql\IndividualDemands\Set(
-				new Sql\AnsiUpdate('collective_demands')
-			))->where('id = :id')->sql(),
-			['id' => $this->id] + $description
+				new Sql\AnsiUpdate('collective_demands'),
+				(new Sql\FlatParameters(
+					new Sql\UniqueParameters($description)
+				))->binds()
+			))->where('id = :id', ['id' => $this->id])
 		))->execute();
 	}
 }

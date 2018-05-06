@@ -9,15 +9,16 @@ use Klapuch\Sql;
 final class Set implements Sql\Set {
 	private $set;
 
-	public function __construct(Sql\Clause $clause, array $additionalParameters = []) {
+	public function __construct(Sql\Clause $clause, array $parameters) {
 		$this->set = new Description\Set(
 			$clause,
-			$additionalParameters + ['evolved_at' => ':evolved_at']
+			['evolved_at' => ':evolved_at'],
+			$parameters
 		);
 	}
 
 	public function where(string $comparison, array $parameters = []): Sql\Where {
-		return $this->set->where($comparison, $parameters);
+		return $this->set->where($comparison, $this->parameters()->bind($parameters)->binds());
 	}
 
 	public function sql(): string {

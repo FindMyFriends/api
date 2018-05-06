@@ -22,12 +22,14 @@ final class StoredChange implements Change {
 	}
 
 	public function affect(array $changes): void {
-		(new Storage\FlatQuery(
+		(new Storage\BuiltQuery(
 			$this->database,
 			(new FindMyFriends\Sql\CollectiveEvolutions\Set(
-				new Sql\AnsiUpdate('collective_evolutions')
-			))->where('id = :id')->sql(),
-			['id' => $this->id] + $changes
+				new Sql\AnsiUpdate('collective_evolutions'),
+				(new Sql\FlatParameters(
+					new Sql\UniqueParameters($changes)
+				))->binds()
+			))->where('id = :id', ['id' => $this->id])
 		))->execute();
 	}
 

@@ -17,3 +17,17 @@ function array_values_recursive(array $values): array {
 		[]
 	);
 }
+
+/**
+ * @param mixed[] $array
+ * @param int|string ...$keys
+ * @return bool
+ */
+function array_keys_exist(array $array, ...$keys): bool {
+	foreach ($keys as $key) {
+		if (!array_key_exists($key, $array)) {
+			return false;
+		}
+	}
+	return true;
+}

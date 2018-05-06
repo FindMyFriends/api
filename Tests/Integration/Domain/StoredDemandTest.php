@@ -233,6 +233,19 @@ final class StoredDemandTest extends Tester\TestCase {
 			json_decode($demand->print(new Output\Json())->serialization(), true)
 		);
 	}
+
+	public function testReconsideringOnlyPart() {
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleDemand(
+			$this->database,
+			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
+		))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		$demand = new Domain\StoredDemand(1, $this->database);
+		$demand->reconsider(['note' => 'new note']);
+		['note' => $note] = json_decode($demand->print(new Output\Json())->serialization(), true);
+		Assert::same('new note', $note);
+	}
 }
 
 (new StoredDemandTest())->run();
