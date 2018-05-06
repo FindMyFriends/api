@@ -10,6 +10,7 @@ namespace FindMyFriends\Functional\V1;
 use Elasticsearch;
 use FindMyFriends\Routing;
 use FindMyFriends\Schema;
+use FindMyFriends\TestCase;
 use FindMyFriends\V1\Demand;
 use FindMyFriends\V1\Demands;
 use FindMyFriends\V1\Soulmates;
@@ -17,13 +18,14 @@ use Hashids\Hashids;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use PhpAmqpLib;
-use Predis;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
 final class SortTest extends Tester\TestCase {
+	use TestCase\Redis;
+
 	/**
 	 * @dataProvider sorts
 	 */
@@ -45,7 +47,7 @@ final class SortTest extends Tester\TestCase {
 								public function __construct() {
 								}
 							},
-							new Predis\Client(),
+							$this->redis,
 							Elasticsearch\ClientBuilder::create()->build(),
 							new PhpAmqpLib\Connection\AMQPLazyConnection(
 								'',

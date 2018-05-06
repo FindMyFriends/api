@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Routing;
 
 use Elasticsearch;
+use FindMyFriends\Domain\Access\RateLimitedEntrance;
 use FindMyFriends\Http;
 use FindMyFriends\V1;
 use Klapuch\Access;
@@ -42,8 +43,9 @@ final class ApplicationRoutes implements Routing\Routes {
 	}
 
 	public function matches(): array {
-		$user = (new Access\ApiEntrance(
-			$this->database
+		$user = (new RateLimitedEntrance(
+			new Access\ApiEntrance($this->database),
+			$this->redis
 		))->enter((new Application\PlainRequest())->headers());
 		return [
 			'v1/demands [OPTIONS]' => new V1\Preflight(
