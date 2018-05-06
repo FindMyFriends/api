@@ -118,6 +118,7 @@
 		<mkdir dir="${base_path}/www/schema/v1/demand/soulmate_request" />
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Demand/schema/patch.json" link="${base_path}/www/schema/v1/demand/patch.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolutions/schema/post.json" link="${base_path}/www/schema/v1/evolution/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolution/schema/put.json" link="${base_path}/www/schema/v1/evolution/put.json" overwrite="true"/>
