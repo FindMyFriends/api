@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Routing;
 
 use Elasticsearch;
-use FindMyFriends\Domain\Access\RateLimitedEntrance;
+use FindMyFriends\Domain;
 use FindMyFriends\Http;
+use FindMyFriends\Misc;
 use FindMyFriends\V1;
 use Klapuch\Access;
 use Klapuch\Application;
@@ -43,9 +44,12 @@ final class ApplicationRoutes implements Routing\Routes {
 	}
 
 	public function matches(): array {
-		$user = (new RateLimitedEntrance(
-			new Access\ApiEntrance($this->database),
-			$this->redis
+		$user = (new Domain\Access\HarnessedEntrance(
+			new Domain\Access\RateLimitedEntrance(
+				new Access\ApiEntrance($this->database),
+				$this->redis
+			),
+			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 		))->enter((new Application\PlainRequest())->headers());
 		return [
 			'v1/demands [OPTIONS]' => new V1\Preflight(
