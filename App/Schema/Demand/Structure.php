@@ -65,6 +65,16 @@ final class Structure {
 		] + $description;
 	}
 
+	public function patch(): array {
+		['properties' => ['note' => $noteType]] = $this->get();
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => ['note' => $noteType],
+			'type' => 'object',
+		];
+	}
+
 	public function put(): array {
 		$schema = $this->get();
 		$description = (new Schema\Description\Structure($this->database))->put();
