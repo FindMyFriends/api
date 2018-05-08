@@ -20,7 +20,7 @@ require __DIR__ . '/../../../../bootstrap.php';
 final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
-	public function testErrorOnNotInRefreshInterval() {
+	public function test429OnNotInRefreshInterval() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
 		$response = (new V1\Demand\SoulmateRequests\Post(

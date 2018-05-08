@@ -39,22 +39,19 @@ final class PatchTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
 		$response = (new V1\Soulmate\Patch(
 			new Application\FakeRequest(
 				new Output\FakeFormat(json_encode(['foo' => false]))
 			),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
-		))->response(['id' => $id]);
+			new Access\FakeUser((string) '1')
+		))->response(['id' => 1]);
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property foo is not defined and the definition does not allow additional properties'], $soulmate);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 
-	public function test404OnUnknown() {
+	public function test404OnNotExisting() {
 		$response = (new V1\Soulmate\Patch(
 			new Application\FakeRequest(
 				new Output\FakeFormat(json_encode(['is_correct' => false]))

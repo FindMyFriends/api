@@ -23,8 +23,8 @@ final class GetTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
-		$demand1 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
-		$demand2 = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
+		['id' => $demand1] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $demand2] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
@@ -38,21 +38,6 @@ final class GetTest extends Tester\TestCase {
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1, 'sort' => '']);
 		Assert::count(1, json_decode($response->body()->serialization()));
-	}
-
-	public function testMatchingSchema() {
-		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
-		$demand = current((new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try());
-		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		$response = (new V1\Soulmates\Get(
-			$this->configuration['HASHIDS'],
-			new Uri\FakeUri('/', 'v1/soulmates', []),
-			$this->database,
-			new Access\FakeUser($seeker),
-			new Http\FakeRole(true),
-			$this->elasticsearch
-		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand, 'sort' => '']);
 		(new Misc\SchemaAssertion(
 			json_decode($response->body()->serialization()),
 			(new \SplFileInfo(__DIR__ . '/../../../../App/V1/Soulmates/schema/get.json'))

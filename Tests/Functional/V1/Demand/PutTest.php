@@ -42,13 +42,12 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
 		$response = (new V1\Demand\Put(
 			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
 			new Access\FakeUser()
-		))->response(['id' => $id]);
+		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property note is required'], $demand);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());

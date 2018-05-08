@@ -45,7 +45,6 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		(new Misc\SampleEvolution($this->database))->try();
 		$response = (new V1\Evolution\Put(
 			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
