@@ -117,8 +117,13 @@ echo (new class(
 					)
 				)
 			);
-			http_response_code(HTTP_INTERNAL_SERVER_ERROR);
-			exit;
+			return (new Application\RawTemplate(
+				new FindMyFriends\Response\JsonError(
+					new \UnexpectedValueException(),
+					[],
+					HTTP_INTERNAL_SERVER_ERROR
+				)
+			))->render();
 		}
 	}
 })->render();
