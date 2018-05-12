@@ -60,6 +60,27 @@ END;
 $$;
 
 
+CREATE OR REPLACE FUNCTION samples.nullable_hair(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+    NULL,
+    samples.random_if_not_exists((SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1), replacements, 'color_id'),
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
+
 CREATE OR REPLACE FUNCTION samples.eyebrow(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -73,6 +94,23 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION samples.nullable_eyebrow(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO eyebrows (color_id, care) VALUES (
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -93,6 +131,22 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.nullable_eye(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO eyes (color_id, lenses) VALUES (
+    samples.random_if_not_exists(NULL, replacements, 'color_id')::integer,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.tooth(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -106,6 +160,22 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_tooth(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO teeth (care, braces) VALUES (
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -123,6 +193,23 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_beard(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO beards (color_id, length, style) VALUES (
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -144,6 +231,24 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.nullable_body(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
+    samples.random_if_not_exists(NULL, replacements, 'build_id')::integer,
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.seeker(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -157,6 +262,22 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_seeker(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO seekers (email, password) VALUES (
+    samples.random_if_not_exists(NULL, replacements, 'email'),
+    samples.random_if_not_exists(NULL, replacements, 'password')
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -193,6 +314,22 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.nullable_hand_hair(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO hand_hair (color_id, amount) VALUES (
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.nail(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -207,6 +344,23 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_nail(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO nails (color_id, length, care) VALUES (
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -229,6 +383,25 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.nullable_hand(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+    (SELECT nullable_nail FROM samples.nullable_nail()),
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.general(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -237,7 +410,7 @@ DECLARE
 BEGIN
 	INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
 		samples.random_if_not_exists(test_utils.random_enum('sex'), replacements, 'sex')::sex,
-		(SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1),
+    samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
 		samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
 		samples.random_if_not_exists(md5(random()::text), replacements, 'firstname'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'lastname')
@@ -245,6 +418,25 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_general(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+    samples.random_if_not_exists(test_utils.random_enum('sex'), replacements, 'sex')::sex,
+    samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
+    samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
+    samples.random_if_not_exists(NULL, replacements, 'firstname'),
+    samples.random_if_not_exists(NULL, replacements, 'lastname')
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -262,6 +454,23 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_face(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO faces (freckles, care, shape_id) VALUES (
+    NULL,
+    NULL,
+    NULL
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
 END;
 $$;
 
@@ -289,6 +498,30 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.nullable_description(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, left_eye_id, right_eye_id, beard_id, tooth_id, eyebrow_id) VALUES (
+    (SELECT nullable_general FROM samples.nullable_general(replacements -> 'general')),
+    (SELECT nullable_body FROM samples.nullable_body()),
+    (SELECT nullable_face FROM samples.nullable_face()),
+    (SELECT nullable_hand FROM samples.nullable_hand()),
+    (SELECT nullable_hair FROM samples.nullable_hair(replacements -> 'hair')),
+    (SELECT nullable_eye FROM samples.nullable_eye(replacements -> 'left_eye')),
+    (SELECT nullable_eye FROM samples.nullable_eye(replacements -> 'right_eye')),
+    (SELECT nullable_beard FROM samples.nullable_beard()),
+    (SELECT nullable_tooth FROM samples.nullable_tooth()),
+    (SELECT nullable_eyebrow FROM samples.nullable_eyebrow())
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.demand(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -304,6 +537,24 @@ BEGIN
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.nullable_demand(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+    samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
+    (SELECT nullable_description FROM samples.nullable_description(replacements)),
+    NOW(),
+    (SELECT location FROM samples.location())
+  )
+  RETURNING id
+    INTO v_id;
+  RETURN v_id;
 END;
 $$;
 

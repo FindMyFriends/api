@@ -63,6 +63,7 @@
 		<exclude-pattern>Tests/Integration</exclude-pattern>
 		<exclude-pattern>Tests/Postgres</exclude-pattern>
 		<exclude-pattern>Tests/Functional</exclude-pattern>
+		<exclude-pattern>Tests/Elastic</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
@@ -70,6 +71,7 @@
 		<exclude-pattern>Tests/Integration</exclude-pattern>
 		<exclude-pattern>Tests/Postgres</exclude-pattern>
 		<exclude-pattern>Tests/Functional</exclude-pattern>
+        <exclude-pattern>Tests/Elastic</exclude-pattern>
 	</rule>
 
 	<rule ref="Squiz.Commenting.FunctionComment.InvalidTypeHint">
