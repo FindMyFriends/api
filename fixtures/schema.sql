@@ -899,10 +899,13 @@ CREATE FUNCTION evolutions_trigger_row_bd() RETURNS trigger
 AS $$
 BEGIN
   IF (
-    SELECT (COUNT(*) = 1)
-    FROM evolutions
-    WHERE seeker_id = old.seeker_id
-    LIMIT 2
+    SELECT COUNT(*) = 1
+    FROM (
+      SELECT 1
+      FROM evolutions
+      WHERE seeker_id = old.seeker_id
+      LIMIT 2
+    ) AS i
   ) THEN
     RAISE EXCEPTION 'Base evolution can not be reverted';
   END IF;
