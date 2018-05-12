@@ -14,40 +14,40 @@ SET search_path = public, pg_catalog;
 
 -- TYPES --
 CREATE TYPE timeline_sides AS ENUM (
-    'exactly',
-    'sooner',
-    'later',
-    'sooner or later'
+  'exactly',
+  'sooner',
+  'later',
+  'sooner or later'
 );
 
 CREATE TYPE ownerships AS ENUM (
-	'yours',
-	'theirs'
+  'yours',
+  'theirs'
 );
 
 CREATE TYPE approximate_timestamptz AS (
-  moment timestamp with time zone,
+  moment timestamp WITH TIME ZONE,
   timeline_side timeline_sides,
   approximation interval
 );
 
 CREATE TYPE breast_sizes AS ENUM (
-    'A',
-    'B',
-    'C',
-    'D'
+  'A',
+  'B',
+  'C',
+  'D'
 );
 
 
 CREATE TYPE sex AS ENUM (
-    'man',
-    'woman'
+  'man',
+  'woman'
 );
 
 
 CREATE TYPE length_units AS ENUM (
-    'mm',
-    'cm'
+  'mm',
+  'cm'
 );
 
 CREATE TYPE length AS (
@@ -57,7 +57,7 @@ CREATE TYPE length AS (
 
 
 CREATE TYPE mass_units AS ENUM (
-    'kg'
+  'kg'
 );
 
 CREATE TYPE job_statuses AS ENUM (
@@ -119,25 +119,24 @@ CREATE TYPE flat_description AS (
 
 
 -- FUNCTIONS --
-CREATE FUNCTION similar_colors(integer) RETURNS integer[]
-LANGUAGE plpgsql VOLATILE STRICT
+CREATE FUNCTION similar_colors(integer) RETURNS smallint[]
 AS $$
-BEGIN
-  RETURN array_agg(colors.color_id)
-  FROM (
-    SELECT similar_color_id AS color_id
-    FROM similar_colors
-    WHERE color_id = $1
-    UNION ALL
-    SELECT color_id
-    FROM similar_colors
-    WHERE similar_color_id = $1
-  ) AS colors;
-END
-$$;
+SELECT array_agg(colors.color_id)
+FROM (
+  SELECT similar_color_id AS color_id
+  FROM similar_colors
+  WHERE color_id = $1
+  UNION ALL
+  SELECT color_id
+  FROM similar_colors
+  WHERE similar_color_id = $1
+) AS colors;
+$$
+LANGUAGE SQL
+STABLE
+STRICT;
 
 CREATE FUNCTION validate_approximate_timestamptz(approximate_timestamptz) RETURNS boolean
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   IF $1.timeline_side = 'exactly'::timeline_sides AND $1.approximation IS NOT NULL THEN
@@ -145,20 +144,23 @@ BEGIN
   END IF;
   RETURN TRUE;
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION approximated_breast_size(breast_sizes) RETURNS int4range
-LANGUAGE plpgsql IMMUTABLE STRICT
 AS $$
 DECLARE
   size CONSTANT integer DEFAULT 'A=>1,B=>2,C=>3,D=>4'::hstore -> $1::char;
 BEGIN
   RETURN int4range(greatest(size - 1, 1), least(size + 1, 4), '[]');
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE
+STRICT;
 
 CREATE FUNCTION validate_approximate_max_interval(approximate_timestamptz) RETURNS boolean
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   IF $1.approximation > '2 days'::interval THEN
@@ -166,11 +168,12 @@ BEGIN
   END IF;
   RETURN TRUE;
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION validate_length(length) RETURNS boolean
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
+AS $$
 BEGIN
   IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
     RETURN TRUE;
@@ -180,10 +183,11 @@ BEGIN
     RAISE EXCEPTION 'Length with value must contain unit';
   END IF;
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION validate_mass(mass) RETURNS boolean
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
@@ -194,89 +198,100 @@ BEGIN
     RAISE EXCEPTION 'Mass with value must contain unit';
   END IF;
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
-CREATE FUNCTION age_to_year(age int4range, now timestamp with time zone) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
+CREATE FUNCTION age_to_year(age int4range, now timestamp WITH TIME ZONE) RETURNS int4range
+AS $$
 BEGIN
   RETURN int4range(
-  (EXTRACT('year' FROM now) - upper(age))::INTEGER,
-  (EXTRACT('year' FROM now) - lower(age))::INTEGER
+    (EXTRACT('year' FROM now) - upper(age))::integer,
+    (EXTRACT('year' FROM now) - lower(age))::integer
   );
 END
-$$;
+$$
+LANGUAGE plpgsql
+STABLE;
 
 
 CREATE FUNCTION age_to_year(age int4range, now tstzrange) RETURNS int4range
-    LANGUAGE plpgsql IMMUTABLE
-    AS $$
+AS $$
 BEGIN
   RETURN int4range(
-  (EXTRACT('year' FROM lower(now)) - upper(age))::INTEGER,
-  (EXTRACT('year' FROM lower(now)) - lower(age))::INTEGER
+    (EXTRACT('year' FROM lower(now)) - upper(age))::integer,
+    (EXTRACT('year' FROM lower(now)) - lower(age))::integer
   );
 END
-$$;
+$$
+LANGUAGE plpgsql
+STABLE;
 
 CREATE FUNCTION birth_year_in_range(int4range) RETURNS boolean
-    LANGUAGE plpgsql
-    AS $$
+AS $$
 BEGIN
-  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::INTEGER);
+  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::integer);
 END
-$$;
+$$
+LANGUAGE plpgsql
+STABLE;
 
 
 CREATE FUNCTION is_hex(text) RETURNS boolean
-LANGUAGE plpgsql
 AS $$
 BEGIN
   RETURN $1 ~ '^#[a-f0-9]{6}';
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 
 CREATE FUNCTION is_rating(integer) RETURNS boolean
-LANGUAGE plpgsql
 AS $$
 BEGIN
   RETURN int4range(0, 10, '[]') @> $1;
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 
 CREATE FUNCTION approximated_rating(integer) RETURNS int4range
-LANGUAGE plpgsql IMMUTABLE STRICT
 AS $$
 BEGIN
   RETURN int4range(abs($1 - 2), least($1 + 2, 10), '[]');
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE
+STRICT;
 
 
 CREATE FUNCTION suited_length(length) RETURNS length
-LANGUAGE plpgsql IMMUTABLE
-AS $_$
+AS $$
 BEGIN
   IF (($1).unit = 'mm' AND ($1).value >= 10) THEN
-    RETURN ROW(($1).value / 10, 'cm'::length_units);
+    RETURN ROW (($1).value / 10, 'cm'::length_units);
   END IF;
   RETURN $1;
 END
-$_$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 
 CREATE FUNCTION united_length(length) RETURNS length
-LANGUAGE plpgsql IMMUTABLE
-AS $_$
+AS $$
 BEGIN
   IF (($1).unit = 'cm') THEN
     RETURN ROW(($1).value * 10, 'mm'::length_units);
   END IF;
   RETURN $1;
 END
-$_$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION united_length_trigger() RETURNS trigger
 LANGUAGE plpgsql
@@ -597,207 +612,207 @@ CREATE DOMAIN rating AS smallint
 
 -- TABLES --
 CREATE TABLE face_shapes (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
 
 CREATE TABLE colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL,
   hex hex_color NOT NULL
 );
 
 
 CREATE TABLE similar_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL,
-  similar_color_id smallint NOT NULL
+  similar_color_id smallint NOT NULL,
+  CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id),
+  CONSTRAINT similar_colors_colors_similar_color_id_fk FOREIGN KEY (similar_color_id) REFERENCES colors(id)
 );
-ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
-ALTER TABLE ONLY similar_colors ADD CONSTRAINT similar_colors_colors_similar_color_id_fk FOREIGN KEY (similar_color_id) REFERENCES colors(id);
 
 
 CREATE TABLE body_builds (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
 
 
 CREATE TABLE ethnic_groups (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
 
 
 CREATE TABLE general (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   sex sex NOT NULL,
   ethnic_group_id smallint NOT NULL,
   birth_year real_birth_year NOT NULL,
   firstname text,
-  lastname text
+  lastname text,
+  CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id)
 );
-ALTER TABLE ONLY general ADD CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id);
 
 
 CREATE TABLE beard_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT beard_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
 CREATE UNIQUE INDEX beard_colors_color_id_uindex ON beard_colors USING btree (color_id);
-ALTER TABLE ONLY beard_colors ADD CONSTRAINT beard_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
-
 
 
 CREATE TABLE beards (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
   length length,
   style text,
-  CONSTRAINT beards_length_check CHECK (validate_length(length))
+  CONSTRAINT beards_length_check CHECK (validate_length(length)),
+  CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
 );
-ALTER TABLE ONLY beards ADD CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id);
 CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
 
 CREATE TABLE bodies (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   build_id smallint,
   weight mass,
   height length,
   breast_size breast_sizes,
   CONSTRAINT bodies_height_check CHECK (validate_length(height)),
-  CONSTRAINT bodies_weight_check CHECK (validate_mass(weight))
+  CONSTRAINT bodies_weight_check CHECK (validate_mass(weight)),
+  CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
 );
-ALTER TABLE ONLY bodies ADD CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id);
 
 
 CREATE TABLE eyebrows (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
   care smallint,
   CONSTRAINT eyebrows_care_check CHECK (is_rating((care)::integer))
 );
 
 CREATE TABLE eye_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
 CREATE UNIQUE INDEX eye_colors_color_id_uindex ON eye_colors USING btree (color_id);
-ALTER TABLE ONLY eye_colors ADD CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 CREATE TABLE eyes (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  lenses boolean
+  lenses boolean,
+  CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id)
 );
-ALTER TABLE ONLY eyes ADD CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id);
 
 CREATE FUNCTION heterochromic_eyes(eyes, eyes) RETURNS boolean
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   RETURN (row_to_json($1)::jsonb - 'id') != (row_to_json($2)::jsonb - 'id');
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 
 CREATE TABLE faces (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   freckles boolean,
   care rating,
-  shape_id smallint
+  shape_id smallint,
+  CONSTRAINT faces_face_shapes_id_fk FOREIGN KEY (shape_id) REFERENCES face_shapes(id)
 );
-ALTER TABLE ONLY faces ADD CONSTRAINT faces_face_shapes_id_fk FOREIGN KEY (shape_id) REFERENCES face_shapes(id);
 
 
 CREATE TABLE hair_styles (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
 
 
 CREATE TABLE hair_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
 CREATE UNIQUE INDEX hair_colors_color_id_uindex ON hair_colors USING btree (color_id);
-ALTER TABLE ONLY hair_colors ADD CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 CREATE TABLE hair (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   style_id smallint,
   color_id smallint,
   length length,
   highlights boolean,
   roots boolean,
   nature boolean,
-  CONSTRAINT hair_length_check CHECK (validate_length(length))
+  CONSTRAINT hair_length_check CHECK (validate_length(length)),
+  CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id),
+  CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id)
 );
-ALTER TABLE ONLY hair ADD CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id);
-ALTER TABLE ONLY hair ADD CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id);
 CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
 
 CREATE TABLE hand_hair_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
 CREATE UNIQUE INDEX hand_hair_colors_color_id_uindex ON hand_hair_colors USING btree (color_id);
-ALTER TABLE ONLY hand_hair_colors ADD CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 CREATE TABLE hand_hair (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  amount rating
+  amount rating,
+  CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id)
 );
-ALTER TABLE ONLY hand_hair ADD CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id);
 
 
 CREATE TABLE nail_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
 CREATE UNIQUE INDEX nail_colors_color_id_uindex ON nail_colors USING btree (color_id);
-ALTER TABLE ONLY nail_colors ADD CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 
 
 CREATE TABLE nails (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
   length length,
   care rating,
-  CONSTRAINT nails_length_check CHECK (validate_length(length))
+  CONSTRAINT nails_length_check CHECK (validate_length(length)),
+  CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
 );
 CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
-ALTER TABLE ONLY nails ADD CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id);
 
 
 CREATE TABLE hands (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   nail_id integer,
   care rating,
   vein_visibility rating,
   joint_visibility rating,
-  hand_hair_id integer
+  hand_hair_id integer,
+  CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id),
+  CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) REFERENCES nails(id)
 );
 CREATE UNIQUE INDEX hands_id_uindex ON hands USING btree (id);
-ALTER TABLE ONLY hands ADD CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id);
-ALTER TABLE ONLY hands ADD CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) REFERENCES nails(id);
 
 
 CREATE TABLE teeth (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   care rating,
   braces boolean
 );
 
 
 CREATE TABLE descriptions (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   general_id integer NOT NULL,
   body_id integer NOT NULL,
   face_id integer NOT NULL,
@@ -807,7 +822,17 @@ CREATE TABLE descriptions (
   eyebrow_id integer NOT NULL,
   tooth_id integer NOT NULL,
   left_eye_id integer NOT NULL,
-  right_eye_id integer NOT NULL
+  right_eye_id integer NOT NULL,
+  CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id),
+  CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id),
+  CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id),
+  CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id),
+  CONSTRAINT descriptions_faces_id_fk FOREIGN KEY (face_id) REFERENCES faces(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_general_id_fk FOREIGN KEY (general_id) REFERENCES general(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_hair_id_fk FOREIGN KEY (hair_id) REFERENCES hair(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id)
 );
 CREATE UNIQUE INDEX descriptions_beard_id_uindex ON descriptions USING btree (beard_id);
 CREATE UNIQUE INDEX descriptions_body_id_uindex ON descriptions USING btree (body_id);
@@ -819,20 +844,10 @@ CREATE UNIQUE INDEX descriptions_hand_id_uindex ON descriptions USING btree (han
 CREATE UNIQUE INDEX descriptions_left_eye_id_uindex ON descriptions USING btree (left_eye_id);
 CREATE UNIQUE INDEX descriptions_right_eye_id_uindex ON descriptions USING btree (right_eye_id);
 CREATE UNIQUE INDEX descriptions_tooth_id_uindex ON descriptions USING btree (tooth_id);
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id);
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id) ON DELETE CASCADE;
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id);
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id);
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id);
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_faces_id_fk FOREIGN KEY (face_id) REFERENCES faces(id) ON DELETE CASCADE;
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_general_id_fk FOREIGN KEY (general_id) REFERENCES general(id) ON DELETE CASCADE;
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_hair_id_fk FOREIGN KEY (hair_id) REFERENCES hair(id) ON DELETE CASCADE;
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id) ON DELETE CASCADE;
-ALTER TABLE ONLY descriptions ADD CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id);
 
 
 CREATE TABLE seekers (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   email citext NOT NULL,
   password text NOT NULL
 );
@@ -840,61 +855,67 @@ CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
 
 
 CREATE TABLE evolutions (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
-  evolved_at timestamp with time zone NOT NULL
+  evolved_at timestamp WITH TIME ZONE NOT NULL,
+  CONSTRAINT evolutions_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE,
+  CONSTRAINT evolutions_seekers_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE
 );
 CREATE INDEX evolutions_description_id_index ON evolutions USING btree (description_id);
 CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
-ALTER TABLE ONLY evolutions ADD CONSTRAINT evolutions_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE;
-ALTER TABLE ONLY evolutions ADD CONSTRAINT evolutions_seekers_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE;
 
-CREATE FUNCTION is_evolution_permitted(in_evolution_id evolutions.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS BOOLEAN AS $$
+CREATE FUNCTION is_evolution_permitted(in_evolution_id evolutions.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT EXISTS(
+  SELECT 1
+  FROM evolutions
+  WHERE id = in_evolution_id AND seeker_id = in_seeker_id
+) OR (
   SELECT EXISTS(
     SELECT 1
-    FROM evolutions
-    WHERE id = in_evolution_id
-    AND seeker_id = in_seeker_id
-  ) OR (
-    SELECT EXISTS(
-      SELECT 1
-      FROM soulmates
-      WHERE evolution_id = in_evolution_id
-      AND demand_id IN (
-        SELECT id
-        FROM demands
-        WHERE seeker_id = in_seeker_id
-      )
+    FROM soulmates
+    WHERE evolution_id = in_evolution_id AND demand_id IN (
+      SELECT id
+      FROM demands
+      WHERE seeker_id = in_seeker_id
     )
-  );
-$$ LANGUAGE sql VOLATILE;
+  )
+);
+$$
+LANGUAGE SQL
+VOLATILE;
 
 CREATE FUNCTION evolutions_trigger_row_ad() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
   PERFORM deleted_description(old.description_id);
   RETURN old;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION evolutions_trigger_row_bd() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
-  IF (SELECT (COUNT(*) = 1) FROM evolutions WHERE seeker_id = old.seeker_id LIMIT 2) THEN
+  IF (
+    SELECT (COUNT(*) = 1)
+    FROM evolutions
+    WHERE seeker_id = old.seeker_id
+    LIMIT 2
+  ) THEN
     RAISE EXCEPTION 'Base evolution can not be reverted';
   END IF;
   RETURN old;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_ad();
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
 
 CREATE TABLE locations (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   coordinates point NOT NULL,
   place text,
   met_at approximate_timestamptz NOT NULL,
@@ -904,155 +925,179 @@ CREATE TABLE locations (
 
 
 CREATE TABLE demands (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
-  created_at timestamp with time zone NOT NULL,
+  created_at timestamp WITH TIME ZONE NOT NULL,
   location_id integer NOT NULL,
-  note character varying(150)
+  note character varying(150),
+  CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE,
+  CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX demands_description_id_uindex ON demands USING btree (description_id);
 CREATE UNIQUE INDEX demands_location_id_uindex ON demands USING btree (location_id);
-ALTER TABLE ONLY demands ADD CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE;
-ALTER TABLE ONLY demands ADD CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE;
 
 CREATE FUNCTION demands_trigger_row_ad() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
   PERFORM deleted_description(old.description_id);
-  DELETE FROM locations WHERE id = old.location_id;
+  DELETE FROM locations
+  WHERE id = old.location_id;
   RETURN old;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 
 CREATE FUNCTION demands_trigger_row_bu() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
   RAISE EXCEPTION 'Column created_at is read only';
   RETURN new;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION demands_trigger_row_biu() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
   new.note = nullif(trim(new.note), '');
   RETURN new;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER demands_row_biu_trigger BEFORE INSERT OR UPDATE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_biu();
 CREATE TRIGGER demands_row_ad_trigger AFTER DELETE ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_ad();
 CREATE TRIGGER demands_row_bu_trigger BEFORE UPDATE OF created_at ON demands FOR EACH ROW EXECUTE PROCEDURE demands_trigger_row_bu();
 
-CREATE FUNCTION is_demand_owned(in_demand_id demands.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS boolean
+CREATE FUNCTION is_demand_owned(in_demand_id demands.id%type, in_seeker_id seekers.id%type) RETURNS boolean
 AS $$
-  SELECT EXISTS(
-    SELECT 1
-    FROM demands
-    WHERE id = in_demand_id
-    AND seeker_id = in_seeker_id
-  );
-$$ language sql STABLE;
+SELECT EXISTS(
+  SELECT 1
+  FROM demands
+  WHERE id = in_demand_id AND seeker_id = in_seeker_id
+);
+$$
+LANGUAGE SQL
+STABLE;
 
 CREATE TABLE soulmates (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
   evolution_id integer NOT NULL,
   score numeric NOT NULL,
   version integer NOT NULL DEFAULT 1,
-  related_at timestamp with time zone NOT NULL DEFAULT now(),
-  is_correct boolean NOT NULL DEFAULT TRUE
+  related_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
+  is_correct boolean NOT NULL DEFAULT TRUE,
+  CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE,
+  CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE
 );
-
 CREATE UNIQUE INDEX soulmates_demand_id_evolution_id_uindex ON soulmates USING btree (demand_id, evolution_id);
-ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
-ALTER TABLE ONLY soulmates ADD CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE;
 
-CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%TYPE, in_seeker_id seekers.id%TYPE) RETURNS BOOLEAN AS $$
-  SELECT EXISTS(
-    SELECT 1
-    FROM soulmates
-    WHERE id = in_soulmate_id
-    AND demand_id IN (
-      SELECT id
-      FROM demands
-      WHERE seeker_id = in_seeker_id
-    )
-  );
-$$ LANGUAGE sql VOLATILE;
+CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT EXISTS(
+  SELECT 1
+  FROM soulmates
+  WHERE id = in_soulmate_id AND demand_id IN (
+    SELECT id
+    FROM demands
+    WHERE seeker_id = in_seeker_id
+  )
+);
+$$
+LANGUAGE SQL
+VOLATILE;
 
 CREATE FUNCTION soulmates_trigger_row_ad() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 BEGIN
-   DELETE FROM soulmate_requests WHERE demand_id = new.demand_id;
-   RETURN old;
+  DELETE FROM soulmate_requests
+  WHERE demand_id = new.demand_id;
+  RETURN old;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER soulmates_row_ad_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
 
 
 CREATE TABLE soulmate_requests (
-  id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
-  searched_at timestamp with time zone NOT NULL DEFAULT now(),
+  searched_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
   self_id integer,
-  status job_statuses NOT NULL
+  status job_statuses NOT NULL,
+  CONSTRAINT soulmate_requests_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE,
+  CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE
 );
-
 CREATE INDEX soulmate_requests_demand_id_index ON soulmate_requests USING btree (demand_id);
 CREATE INDEX soulmate_requests_id_index ON soulmate_requests USING btree (self_id);
-ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE;
-ALTER TABLE ONLY soulmate_requests ADD CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE;
 
 
-CREATE FUNCTION soulmate_request_refreshable_in(timestamptz) RETURNS integer AS $$
-  SELECT greatest(EXTRACT(EPOCH FROM $1) - EXTRACT(EPOCH FROM NOW() - INTERVAL '20 MINUTES'), 0)::integer;
-$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION soulmate_request_refreshable_in(timestamptz) RETURNS integer
+AS $$
+SELECT greatest(EXTRACT(EPOCH FROM $1) - EXTRACT(EPOCH FROM NOW() - INTERVAL '20 MINUTES'), 0)::integer;
+$$
+LANGUAGE SQL
+IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS boolean AS $$
-  SELECT 0 = soulmate_request_refreshable_in($1);
-$$ LANGUAGE sql IMMUTABLE;
+CREATE OR REPLACE FUNCTION is_soulmate_request_refreshable(timestamptz) RETURNS boolean
+AS $$
+SELECT 0 = soulmate_request_refreshable_in($1);
+$$
+LANGUAGE SQL
+IMMUTABLE;
 
-CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%TYPE) RETURNS boolean AS $$
-  WITH refrehes AS (
-    SELECT MAX(searched_at) AS searched_at, status
+CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%type) RETURNS boolean
+AS $$
+WITH refrehes AS (
+    SELECT
+      MAX(searched_at) AS searched_at,
+      status
     FROM soulmate_requests
     WHERE demand_id = in_demand_id
     GROUP BY demand_id, status
     ORDER BY searched_at DESC
     LIMIT 1
-  ), done_refreshes AS (
+), done_refreshes AS (
     SELECT *
     FROM refrehes
     WHERE status IN ('succeed', 'failed')
+)
+SELECT NOT EXISTS(
+    SELECT 1 FROM refrehes
+) OR (
+  EXISTS(
+    SELECT 1 FROM done_refreshes
+  ) AND (
+    SELECT is_soulmate_request_refreshable(searched_at)
+    FROM done_refreshes
   )
-  SELECT NOT EXISTS(SELECT 1 FROM refrehes) OR (
-    EXISTS(SELECT 1 FROM done_refreshes)
-    AND (SELECT is_soulmate_request_refreshable(searched_at) FROM done_refreshes)
-  );
-$$ LANGUAGE sql VOLATILE;
+);
+$$
+LANGUAGE SQL
+VOLATILE;
 
-CREATE FUNCTION soulmate_requests_trigger_row_bi() RETURNS trigger AS $$
+CREATE FUNCTION soulmate_requests_trigger_row_bi() RETURNS trigger
+AS $$
 BEGIN
   IF (NOT is_soulmate_request_refreshable(new.demand_id) AND new.self_id IS NULL) THEN
     RAISE EXCEPTION 'Seeking for soulmate is already in progress';
   END IF;
   RETURN NEW;
 END
-$$ language plpgsql VOLATILE;
+$$
+LANGUAGE plpgsql
+VOLATILE;
 
 CREATE TRIGGER soulmate_requests_row_bi_trigger BEFORE INSERT ON soulmate_requests FOR EACH ROW EXECUTE PROCEDURE soulmate_requests_trigger_row_bi();
 
 
 CREATE VIEW suited_soulmates AS
-  SELECT soulmates.id,
+  SELECT
+    soulmates.id,
     soulmates.evolution_id,
     soulmates.is_correct,
     soulmate_requests.demand_id,
@@ -1060,66 +1105,74 @@ CREATE VIEW suited_soulmates AS
     soulmates.related_at,
     soulmate_requests.searched_at,
     version = 1 AS new,
-    row_number() OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
+    row_number()
+    OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC ) AS position,
     seeker_id
   FROM soulmates
   LEFT JOIN (
-      SELECT demand_id, MAX(searched_at) AS searched_at
-      FROM soulmate_requests
-      GROUP BY demand_id
+    SELECT
+    demand_id,
+    MAX(searched_at) AS searched_at
+    FROM soulmate_requests
+    GROUP BY demand_id
   ) AS soulmate_requests ON soulmate_requests.demand_id = soulmates.demand_id
   LEFT JOIN demands ON demands.id = soulmate_requests.demand_id
   ORDER BY position ASC;
 
 
-CREATE FUNCTION with_suited_soulmate_ownership(in_seeker_id seekers.id%TYPE) RETURNS TABLE (
-  id suited_soulmates.id%TYPE,
-  evolution_id suited_soulmates.evolution_id%TYPE,
-  is_correct suited_soulmates.is_correct%TYPE,
-  demand_id suited_soulmates.demand_id%TYPE,
-  score suited_soulmates.score%TYPE,
-  related_at suited_soulmates.related_at%TYPE,
-  searched_at suited_soulmates.searched_at%TYPE,
-  new suited_soulmates.new%TYPE,
-  "position" suited_soulmates.position%TYPE,
-  seeker_id suited_soulmates.seeker_id%TYPE,
+CREATE FUNCTION with_suited_soulmate_ownership(in_seeker_id seekers.id%type) RETURNS table(
+  id suited_soulmates.id%type,
+  evolution_id suited_soulmates.evolution_id%type,
+  is_correct suited_soulmates.is_correct%type,
+  demand_id suited_soulmates.demand_id%type,
+  score suited_soulmates.score%type,
+  related_at suited_soulmates.related_at%type,
+  searched_at suited_soulmates.searched_at%type,
+  new suited_soulmates.new%type,
+  "position" suited_soulmates.position%type,
+  seeker_id suited_soulmates.seeker_id%type,
   ownership ownerships
 )
-LANGUAGE sql VOLATILE
 AS $$
-  SELECT suited_soulmates.*, CASE
-							 WHEN demands.seeker_id = in_seeker_id THEN
-								 'yours'::ownerships
-							 ELSE
-								 'theirs'::ownerships
-							 END
-  FROM suited_soulmates
+SELECT
+  suited_soulmates.*,
+  CASE
+  WHEN demands.seeker_id = in_seeker_id THEN
+    'yours'::ownerships
+  ELSE
+    'theirs'::ownerships
+  END
+FROM suited_soulmates
   LEFT JOIN demands ON demands.id = suited_soulmates.demand_id
   LEFT JOIN evolutions ON evolutions.id = suited_soulmates.evolution_id
-  WHERE demands.seeker_id = in_seeker_id OR evolutions.seeker_id = in_seeker_id;
-$$;
+WHERE demands.seeker_id = in_seeker_id OR evolutions.seeker_id = in_seeker_id;
+$$
+LANGUAGE SQL
+VOLATILE;
 
 
 
 CREATE TABLE eyebrow_colors (
-  id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  color_id smallint NOT NULL,
+  CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-ALTER TABLE ONLY eyebrow_colors ADD CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id);
 -----
 
 -- VIEWS --
 CREATE VIEW base_evolution AS
-  SELECT general.birth_year,
-  general.id AS general_id,
-  evolutions.seeker_id
+  SELECT
+    general.birth_year,
+    general.id AS general_id,
+    evolutions.seeker_id
   FROM general
-  JOIN descriptions ON descriptions.general_id = general.id
-  JOIN evolutions ON evolutions.description_id = descriptions.id;
+    JOIN descriptions ON descriptions.general_id = general.id
+    JOIN evolutions ON evolutions.description_id = descriptions.id;
 
 
 CREATE VIEW complete_descriptions AS
-  SELECT description.id,
+  SELECT
+    description.id,
       ROW(general.*)::general AS general,
       ROW(hair.*)::hair AS hair,
       ROW(hair_style.*)::hair_styles AS hair_style,
@@ -1137,26 +1190,27 @@ CREATE VIEW complete_descriptions AS
       ROW(right_eye.*)::eyes AS right_eye,
       ROW(face_shape.*)::face_shapes AS face_shape
   FROM descriptions description
-  LEFT JOIN hair ON hair.id = description.hair_id
-  LEFT JOIN bodies body ON body.id = description.body_id
-  LEFT JOIN body_builds body_build ON body_build.id = body.build_id
-  LEFT JOIN faces face ON face.id = description.face_id
-  LEFT JOIN face_shapes face_shape ON face.shape_id = face_shape.id
-  LEFT JOIN beards beard ON beard.id = description.beard_id
-  LEFT JOIN general ON general.id = description.general_id
-  LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
-  LEFT JOIN hair_styles hair_style ON hair_style.id = hair.style_id
-  LEFT JOIN hands hand ON hand.id = description.hand_id
-  LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
-  LEFT JOIN nails nail ON nail.id = hand.nail_id
-  LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
-  LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
-  LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
-  LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
+    LEFT JOIN hair ON hair.id = description.hair_id
+    LEFT JOIN bodies body ON body.id = description.body_id
+    LEFT JOIN body_builds body_build ON body_build.id = body.build_id
+    LEFT JOIN faces face ON face.id = description.face_id
+    LEFT JOIN face_shapes face_shape ON face.shape_id = face_shape.id
+    LEFT JOIN beards beard ON beard.id = description.beard_id
+    LEFT JOIN general ON general.id = description.general_id
+    LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
+    LEFT JOIN hair_styles hair_style ON hair_style.id = hair.style_id
+    LEFT JOIN hands hand ON hand.id = description.hand_id
+    LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
+    LEFT JOIN nails nail ON nail.id = hand.nail_id
+    LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
+    LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
+    LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
+    LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 
 
 CREATE VIEW printed_descriptions AS
-  SELECT complete_descriptions.id,
+  SELECT
+    complete_descriptions.id,
       ROW((complete_descriptions.general).id, (complete_descriptions.general).sex, (complete_descriptions.general).ethnic_group_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
     (complete_descriptions.general).birth_year AS general_birth_year,
     (complete_descriptions.general).ethnic_group_id AS general_ethnic_group_id,
@@ -1185,7 +1239,8 @@ CREATE VIEW printed_descriptions AS
   FROM complete_descriptions;
 
 CREATE VIEW flat_descriptions AS
-  SELECT printed_descriptions.id,
+  SELECT
+    printed_descriptions.id,
     printed_descriptions.general_birth_year,
     printed_descriptions.general_ethnic_group,
     printed_descriptions.general_firstname,
@@ -1298,75 +1353,78 @@ CREATE TYPE elasticsearch_eye AS (
 );
 
 CREATE VIEW elasticsearch_demands AS
-  SELECT demands.id, demands.seeker_id,
-    ROW((complete_descriptions.general).*)::general AS general,
-    ROW(
-      (complete_descriptions.body).build_id,
-      (complete_descriptions.body).weight.value,
-      (united_length((complete_descriptions.body).height)).value,
-      approximated_breast_size((complete_descriptions.body).breast_size)
-    )::elasticsearch_body AS body,
-    ROW(
-      (complete_descriptions.hair).style_id,
-      (complete_descriptions.hair).color_id,
-      similar_colors((complete_descriptions.hair).color_id),
-      (united_length((complete_descriptions.hair).length)).value,
-      (complete_descriptions.hair).highlights,
-      (complete_descriptions.hair).roots,
-      (complete_descriptions.hair).nature
-    )::elasticsearch_hair AS hair,
-    ROW(
-      (complete_descriptions.face).freckles,
-      approximated_rating((complete_descriptions.face).care),
-      (complete_descriptions.face).shape_id
-    )::elasticsearch_face AS face,
-    ROW(
+  SELECT
+    demands.id,
+    demands.seeker_id,
+      ROW((complete_descriptions.general).*)::general AS general,
       ROW(
-        (complete_descriptions.nail).color_id,
-        similar_colors((complete_descriptions.nail).color_id),
-        (united_length((complete_descriptions.nail).length)).value,
-        approximated_rating((complete_descriptions.nail).care)
-      )::elasticsearch_nail,
-      approximated_rating((complete_descriptions.hand).care),
-      approximated_rating((complete_descriptions.hand).vein_visibility),
-      approximated_rating((complete_descriptions.hand).joint_visibility),
+        (complete_descriptions.body).build_id,
+        (complete_descriptions.body).weight.value,
+        (united_length((complete_descriptions.body).height)).value,
+        approximated_breast_size((complete_descriptions.body).breast_size)
+      )::elasticsearch_body AS body,
       ROW(
-        (complete_descriptions.hand_hair).color_id,
-        similar_colors((complete_descriptions.hand_hair).color_id),
-        approximated_rating((complete_descriptions.hand_hair).amount)
-      )::elasticsearch_hand_hair
-    )::elasticsearch_hand AS hand,
-    ROW(
-      (complete_descriptions.beard).color_id,
-      similar_colors((complete_descriptions.beard).color_id),
-      (united_length((complete_descriptions.beard).length)).value
-    )::elasticsearch_beard AS beard,
-    ROW(
-      (complete_descriptions.eyebrow).color_id,
-      similar_colors((complete_descriptions.eyebrow).color_id),
-      approximated_rating((complete_descriptions.eyebrow).care)
-    )::elasticsearch_eyebrow AS eyebrow,
-    ROW(
-      approximated_rating((complete_descriptions.tooth).care),
-      (complete_descriptions.tooth).braces
-    )::elasticsearch_tooth AS tooth,
-    heterochromic_eyes(complete_descriptions.right_eye, complete_descriptions.left_eye) AS heterochromic_eyes,
-    ROW(
-       (complete_descriptions.left_eye).color_id,
-       similar_colors((complete_descriptions.left_eye).color_id),
-       (complete_descriptions.left_eye).lenses
-     )::elasticsearch_eye AS left_eye,
-     ROW(
-       (complete_descriptions.right_eye).color_id,
-       similar_colors((complete_descriptions.right_eye).color_id),
-       (complete_descriptions.right_eye).lenses
-     )::elasticsearch_eye AS right_eye
+        (complete_descriptions.hair).style_id,
+        (complete_descriptions.hair).color_id,
+        similar_colors((complete_descriptions.hair).color_id),
+        (united_length((complete_descriptions.hair).length)).value,
+        (complete_descriptions.hair).highlights,
+        (complete_descriptions.hair).roots,
+        (complete_descriptions.hair).nature
+      )::elasticsearch_hair AS hair,
+      ROW(
+        (complete_descriptions.face).freckles,
+        approximated_rating((complete_descriptions.face).care),
+        (complete_descriptions.face).shape_id
+      )::elasticsearch_face AS face,
+      ROW(
+        ROW(
+          (complete_descriptions.nail).color_id,
+          similar_colors((complete_descriptions.nail).color_id),
+          (united_length((complete_descriptions.nail).length)).value,
+          approximated_rating((complete_descriptions.nail).care)
+        )::elasticsearch_nail,
+        approximated_rating((complete_descriptions.hand).care),
+        approximated_rating((complete_descriptions.hand).vein_visibility),
+        approximated_rating((complete_descriptions.hand).joint_visibility),
+        ROW(
+          (complete_descriptions.hand_hair).color_id,
+          similar_colors((complete_descriptions.hand_hair).color_id),
+          approximated_rating((complete_descriptions.hand_hair).amount)
+        )::elasticsearch_hand_hair
+      )::elasticsearch_hand AS hand,
+      ROW(
+        (complete_descriptions.beard).color_id,
+        similar_colors((complete_descriptions.beard).color_id),
+        (united_length((complete_descriptions.beard).length)).value
+      )::elasticsearch_beard AS beard,
+      ROW(
+        (complete_descriptions.eyebrow).color_id,
+        similar_colors((complete_descriptions.eyebrow).color_id),
+        approximated_rating((complete_descriptions.eyebrow).care)
+      )::elasticsearch_eyebrow AS eyebrow,
+      ROW(
+        approximated_rating((complete_descriptions.tooth).care),
+        (complete_descriptions.tooth).braces
+      )::elasticsearch_tooth AS tooth,
+      heterochromic_eyes(complete_descriptions.right_eye, complete_descriptions.left_eye) AS heterochromic_eyes,
+      ROW(
+        (complete_descriptions.left_eye).color_id,
+        similar_colors((complete_descriptions.left_eye).color_id),
+        (complete_descriptions.left_eye).lenses
+      )::elasticsearch_eye AS left_eye,
+      ROW(
+        (complete_descriptions.right_eye).color_id,
+        similar_colors((complete_descriptions.right_eye).color_id),
+        (complete_descriptions.right_eye).lenses
+      )::elasticsearch_eye AS right_eye
   FROM demands
-  JOIN complete_descriptions ON complete_descriptions.id = demands.description_id;
+    JOIN complete_descriptions ON complete_descriptions.id = demands.description_id;
 
 
 CREATE VIEW collective_demands AS
-  SELECT printed_description.general_birth_year,
+  SELECT
+    printed_description.general_birth_year,
     year_to_age(printed_description.general_birth_year, (location.met_at).moment) AS general_age,
     printed_description.face_shape_id,
     printed_description.hands_vein_visibility,
@@ -1413,16 +1471,15 @@ CREATE VIEW collective_demands AS
     demand.created_at,
     demand.note
   FROM demands demand
-  JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
-  JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id
-  JOIN locations location ON location.id = demand.location_id;
+    JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
+    JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id
+    JOIN locations location ON location.id = demand.location_id;
 
 CREATE FUNCTION collective_demands_trigger_row_ii() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_location_id INTEGER;
-  v_description_id INTEGER;
+  v_location_id integer;
+  v_description_id integer;
 BEGIN
   v_description_id = inserted_description(
       ROW(
@@ -1472,7 +1529,7 @@ BEGIN
     new.location_met_at
   )
   RETURNING id
-    INTO v_location_id;
+  INTO v_location_id;
 
   INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
     new.seeker_id,
@@ -1481,22 +1538,25 @@ BEGIN
     v_location_id,
     new.note
   )
-  RETURNING id INTO new.id;
+  RETURNING id
+  INTO new.id;
 
   RETURN new;
 END
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION collective_demands_trigger_row_iu() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_location_id INTEGER;
-  v_description_id INTEGER;
+  v_location_id integer;
+  v_description_id integer;
 BEGIN
-  SELECT location_id, description_id
+  SELECT
+    location_id,
+    description_id
   FROM demands
-  JOIN locations ON locations.id = demands.location_id
+    JOIN locations ON locations.id = demands.location_id
   WHERE demands.id = new.id
   INTO v_location_id, v_description_id;
 
@@ -1510,7 +1570,7 @@ BEGIN
   WHERE id = v_location_id;
 
   PERFORM updated_description(
-      ROW(
+    ROW(
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
@@ -1554,14 +1614,16 @@ BEGIN
 
   RETURN new;
 END
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER collective_demands_row_ii_trigger INSTEAD OF INSERT ON collective_demands FOR EACH ROW EXECUTE PROCEDURE collective_demands_trigger_row_ii();
 CREATE TRIGGER collective_demands_row_iu_trigger INSTEAD OF UPDATE ON collective_demands FOR EACH ROW EXECUTE PROCEDURE collective_demands_trigger_row_iu();
 
 
 CREATE VIEW collective_evolutions AS
-  SELECT printed_description.general_birth_year,
+  SELECT
+    printed_description.general_birth_year,
     year_to_age(printed_description.general_birth_year, evolution.evolved_at) AS general_age,
     printed_description.body_build,
     printed_description.face_shape,
@@ -1610,17 +1672,16 @@ CREATE VIEW collective_evolutions AS
     evolution.seeker_id,
     evolution.evolved_at
   FROM evolutions evolution
-  JOIN printed_descriptions printed_description ON evolution.description_id = printed_description.id
-  JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id;
+    JOIN printed_descriptions printed_description ON evolution.description_id = printed_description.id
+    JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id;
 
 CREATE FUNCTION collective_evolutions_trigger_row_ii() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_description_id INTEGER;
+  v_description_id integer;
 BEGIN
   v_description_id = inserted_description(
-      ROW(
+    ROW(
       NULL,
       new.general_sex,
       new.general_ethnic_group_id,
@@ -1671,17 +1732,18 @@ BEGIN
     v_description_id,
     new.evolved_at
   )
-  RETURNING id INTO new.id;
+  RETURNING id
+  INTO new.id;
 
   RETURN new;
 END
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION collective_evolutions_trigger_row_iu() RETURNS trigger
-LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_description_id INTEGER;
+  v_description_id integer;
 BEGIN
   SELECT description_id
   FROM evolutions
@@ -1689,7 +1751,7 @@ BEGIN
   INTO v_description_id;
 
   PERFORM updated_description(
-      ROW(
+    ROW(
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
@@ -1732,7 +1794,10 @@ BEGIN
   );
 
   UPDATE general
-  SET birth_year = (SELECT birth_year FROM descriptions WHERE id = v_description_id)
+  SET birth_year = (
+    SELECT birth_year
+    FROM descriptions
+    WHERE id = v_description_id)
   WHERE id IN (
     SELECT general_id
     FROM base_evolution
@@ -1741,14 +1806,16 @@ BEGIN
 
   RETURN new;
 END
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER collective_evolutions_row_ii_trigger INSTEAD OF INSERT ON collective_evolutions FOR EACH ROW EXECUTE PROCEDURE collective_evolutions_trigger_row_ii();
 CREATE TRIGGER collective_evolutions_row_iu_trigger INSTEAD OF UPDATE ON collective_evolutions FOR EACH ROW EXECUTE PROCEDURE collective_evolutions_trigger_row_iu();
 
 
 CREATE VIEW description_parts AS
-  SELECT description.id,
+  SELECT
+    description.id,
     description.beard_id,
     description.body_id,
     description.general_id,
@@ -1763,21 +1830,21 @@ CREATE VIEW description_parts AS
     hand.nail_id,
     description.tooth_id
   FROM demands demand
-  RIGHT JOIN descriptions description ON description.id = demand.description_id
-  LEFT JOIN hair ON hair.id = description.hair_id
-  LEFT JOIN bodies body ON body.id = description.body_id
-  LEFT JOIN body_builds body_build ON body_build.id = body.build_id
-  LEFT JOIN faces face ON face.id = description.face_id
-  LEFT JOIN beards beard ON beard.id = description.beard_id
-  LEFT JOIN general ON general.id = description.general_id
-  LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
-  LEFT JOIN hands hand ON hand.id = description.hand_id
-  LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
-  LEFT JOIN nails nail ON nail.id = hand.nail_id
-  LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
-  LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
-  LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
-  LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
+    RIGHT JOIN descriptions description ON description.id = demand.description_id
+    LEFT JOIN hair ON hair.id = description.hair_id
+    LEFT JOIN bodies body ON body.id = description.body_id
+    LEFT JOIN body_builds body_build ON body_build.id = body.build_id
+    LEFT JOIN faces face ON face.id = description.face_id
+    LEFT JOIN beards beard ON beard.id = description.beard_id
+    LEFT JOIN general ON general.id = description.general_id
+    LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
+    LEFT JOIN hands hand ON hand.id = description.hand_id
+    LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
+    LEFT JOIN nails nail ON nail.id = hand.nail_id
+    LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
+    LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
+    LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
+    LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 -----
 
 
@@ -1789,12 +1856,10 @@ SET default_with_oids = false;
 
 -- TABLES --
 CREATE TABLE etags (
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
-    entity text NOT NULL,
-    tag text NOT NULL,
-    created_at timestamp with time zone NOT NULL
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  entity text NOT NULL,
+  tag text NOT NULL,
+  created_at timestamp WITH TIME ZONE NOT NULL
 );
-ALTER TABLE ONLY etags ADD CONSTRAINT etags_pkey PRIMARY KEY (id);
 CREATE UNIQUE INDEX etags_entity_uindex ON etags USING btree (lower((entity)::text));
-CREATE UNIQUE INDEX etags_id_uindex ON etags USING btree (id);
 -----

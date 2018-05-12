@@ -1,11 +1,13 @@
-CREATE FUNCTION unit_tests.throwing_on_running_task() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.throwing_on_running_task() RETURNS test_result
+AS $$
 DECLARE
-  v_demand_id demands.id%TYPE;
+  v_demand_id demands.id%type;
 BEGIN
-  SELECT samples.demand() INTO v_demand_id;
+  SELECT samples.demand()
+  INTO v_demand_id;
   INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (v_demand_id, NOW(), NULL, 'pending');
   RETURN message FROM assert.throws(
-    format(
+    FORMAT (
       'INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (%L, %L, %L, %L)',
       v_demand_id,
       NOW(),
@@ -18,12 +20,14 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE FUNCTION unit_tests.passing_on_subsequent() RETURNS TEST_RESULT AS $$
+CREATE FUNCTION unit_tests.passing_on_subsequent() RETURNS test_result
+AS $$
 DECLARE
-  v_demand_id demands.id%TYPE;
-  v_soulmate_request_id soulmate_requests.id%TYPE;
+  v_demand_id demands.id%type;
+  v_soulmate_request_id soulmate_requests.id%type;
 BEGIN
-  SELECT samples.demand() INTO v_demand_id;
+  SELECT samples.demand()
+  INTO v_demand_id;
   INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (v_demand_id, '2015-01-01'::timestamptz, NULL, 'pending')
   RETURNING id
   INTO v_soulmate_request_id;
