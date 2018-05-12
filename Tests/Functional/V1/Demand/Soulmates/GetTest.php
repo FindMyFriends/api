@@ -5,7 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
-namespace FindMyFriends\Functional\V1\Soulmates;
+namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -16,7 +16,7 @@ use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../../bootstrap.php';
+require __DIR__ . '/../../../../bootstrap.php';
 
 final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
@@ -29,7 +29,7 @@ final class GetTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand2]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand2]))->try();
-		$response = (new V1\Soulmates\Get(
+		$response = (new V1\Demand\Soulmates\Get(
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
@@ -40,12 +40,12 @@ final class GetTest extends Tester\TestCase {
 		Assert::count(1, json_decode($response->body()->serialization()));
 		(new Misc\SchemaAssertion(
 			json_decode($response->body()->serialization()),
-			(new \SplFileInfo(__DIR__ . '/../../../../App/V1/Soulmates/schema/get.json'))
+			(new \SplFileInfo(V1\Demand\Soulmates\Get::SCHEMA))
 		))->assert();
 	}
 
 	public function testSuccessOnNoSoulmates() {
-		$response = (new V1\Soulmates\Get(
+		$response = (new V1\Demand\Soulmates\Get(
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
@@ -57,7 +57,7 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function testIncludedCountHeader() {
-		$headers = (new V1\Soulmates\Get(
+		$headers = (new V1\Demand\Soulmates\Get(
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,

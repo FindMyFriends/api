@@ -139,7 +139,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$user
 			),
-			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Soulmates\Get(
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demand\Soulmates\Get(
 				$this->hashids,
 				$this->uri,
 				$this->database,
@@ -147,7 +147,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Http\ChosenRole($user, ['member', 'guest']),
 				$this->elasticsearch
 			),
-			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new V1\Soulmates\Head(
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new V1\Demand\Soulmates\Head(
 				$this->uri,
 				$this->database,
 				$user,

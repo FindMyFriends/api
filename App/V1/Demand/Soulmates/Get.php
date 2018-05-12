@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\V1\Soulmates;
+namespace FindMyFriends\V1\Demand\Soulmates;
 
 use Elasticsearch;
 use FindMyFriends\Constraint;

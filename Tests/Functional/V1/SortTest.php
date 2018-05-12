@@ -13,7 +13,6 @@ use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1\Demand;
 use FindMyFriends\V1\Demands;
-use FindMyFriends\V1\Soulmates;
 use Hashids\Hashids;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -100,7 +99,7 @@ final class SortTest extends Tester\TestCase {
 			[
 				sprintf(
 					'v1/demands/2wrWlWqMg7DY/soulmates?sort=%s',
-					$this->query(Soulmates\Get::SCHEMA)
+					$this->query(Demand\Soulmates\Get::SCHEMA)
 				),
 			],
 		];

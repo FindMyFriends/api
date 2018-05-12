@@ -112,13 +112,16 @@
 
 	<target name="move-schemas" depends="generate-schemas">
 		<mkdir dir="${base_path}/www/schema/v1/demand" />
+        <mkdir dir="${base_path}/www/schema/v1/demand/soulmate_request" />
+        <mkdir dir="${base_path}/www/schema/v1/demand/soulmate" />
 		<mkdir dir="${base_path}/www/schema/v1/evolution" />
 		<mkdir dir="${base_path}/www/schema/v1/description" />
 		<mkdir dir="${base_path}/www/schema/v1/soulmate" />
-		<mkdir dir="${base_path}/www/schema/v1/demand/soulmate_request" />
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/patch.json" link="${base_path}/www/schema/v1/demand/patch.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Demand/Soulmates/schema/get.json" link="${base_path}/www/schema/v1/demand/soulmate/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Demand/SoulmateRequests/schema/get.json" link="${base_path}/www/schema/v1/demand/soulmate_request/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demands/schema/post.json" link="${base_path}/www/schema/v1/demand/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolutions/schema/post.json" link="${base_path}/www/schema/v1/evolution/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Evolution/schema/put.json" link="${base_path}/www/schema/v1/evolution/put.json" overwrite="true"/>
@@ -127,8 +130,6 @@
 		<symlink target="${base_path}/App/V1/Description/schema/put.json" link="${base_path}/www/schema/v1/description/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Descriptions/schema/post.json" link="${base_path}/www/schema/v1/description/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Soulmate/schema/patch.json" link="${base_path}/www/schema/v1/soulmate/patch.json" overwrite="true"/>
-		<symlink target="${base_path}/App/V1/Soulmates/schema/get.json" link="${base_path}/www/schema/v1/soulmate/patch.json" overwrite="true"/>
-		<symlink target="${base_path}/App/V1/Demand/SoulmateRequests/schema/get.json" link="${base_path}/www/schema/v1/demand/soulmate_request/get.json" overwrite="true"/>
 	</target>
 
 	<target name="generate-schemas">

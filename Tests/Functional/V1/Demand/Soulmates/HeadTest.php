@@ -5,7 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
-namespace FindMyFriends\Functional\V1\Soulmates;
+namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -16,7 +16,7 @@ use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../../bootstrap.php';
+require __DIR__ . '/../../../../bootstrap.php';
 
 final class HeadTest extends Tester\TestCase {
 	use TestCase\Page;
@@ -26,7 +26,7 @@ final class HeadTest extends Tester\TestCase {
 		['id' => $demand1] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
-		$response = (new V1\Soulmates\Head(
+		$response = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
 			new Access\FakeUser($seeker),
@@ -39,7 +39,7 @@ final class HeadTest extends Tester\TestCase {
 	public function testNeededHeaders() {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		$headers = (new V1\Soulmates\Head(
+		$headers = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
 			new Access\FakeUser($seeker),
@@ -52,7 +52,7 @@ final class HeadTest extends Tester\TestCase {
 	}
 
 	public function testErrorInJsonFormat() {
-		$response = (new V1\Soulmates\Head(
+		$response = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
 			new Access\FakeUser('1'),
