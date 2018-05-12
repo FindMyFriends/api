@@ -14,23 +14,20 @@ use Klapuch\Output;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
-	private $demandHashid;
-	private $soulmateHashid;
+	private $hashids;
 	private $url;
 	private $database;
 	private $seeker;
 	private $role;
 
 	public function __construct(
-		HashidsInterface $demandHashid,
-		HashidsInterface $soulmateHashid,
+		HashidsInterface $hashids,
 		Uri\Uri $url,
 		\PDO $database,
 		Access\User $seeker,
 		Http\Role $role
 	) {
-		$this->demandHashid = $demandHashid;
-		$this->soulmateHashid = $soulmateHashid;
+		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->seeker = $seeker;
@@ -58,8 +55,7 @@ final class Get implements Application\View {
 											),
 											new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 										),
-										$this->demandHashid,
-										$this->soulmateHashid
+										$this->hashids
 									))->print(new Output\Json())
 								),
 								$this->role

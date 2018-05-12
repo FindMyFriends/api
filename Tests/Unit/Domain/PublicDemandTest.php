@@ -21,11 +21,6 @@ final class PublicDemandTest extends Tester\TestCase {
 			[
 				'id' => 'jR',
 				'created_at' => '2017-09-17T13:58:10+00:00',
-				'soulmates' => [
-					'lm',
-					'Ay',
-					'ny',
-				],
 				'location' => [
 					'met_at' => [
 						'moment' => '2016-09-17T13:58:10+00:00',
@@ -36,17 +31,11 @@ final class PublicDemandTest extends Tester\TestCase {
 			json_decode(
 				(new Domain\PublicDemand(
 					new Domain\FakeDemand(),
-					new Hashids(),
-					new Hashids('abc')
+					new Hashids()
 				))->print(
 					new Output\Json(
 						[
 							'id' => 1,
-							'soulmates' => [
-								1,
-								2,
-								3,
-							],
 							'created_at' => '2017-09-17 13:58:10.531097+00',
 							'location' => [
 								'met_at' => [

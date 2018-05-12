@@ -55,6 +55,18 @@ final class GetTest extends Tester\TestCase {
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => '']);
 		Assert::count(0, json_decode($response->body()->serialization()));
 	}
+
+	public function testIncludedCountHeader() {
+		$headers = (new V1\Soulmates\Get(
+			$this->configuration['HASHIDS'],
+			new Uri\FakeUri('/', 'v1/soulmates', []),
+			$this->database,
+			new Access\FakeUser('1'),
+			new Http\FakeRole(true),
+			$this->elasticsearch
+		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => ''])->headers();
+		Assert::same(0, $headers['X-Total-Count']);
+	}
 }
 
 (new GetTest())->run();

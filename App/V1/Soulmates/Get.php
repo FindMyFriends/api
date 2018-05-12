@@ -52,6 +52,7 @@ final class Get implements Application\View {
 				),
 				$this->hashids
 			);
+			$count = $soulmates->count(new Dataset\EmptySelection());
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
 					new Response\JsonResponse(
@@ -74,7 +75,8 @@ final class Get implements Application\View {
 											)
 										)
 									)
-								)
+								),
+								['X-Total-Count' => $count]
 							),
 							$this->role
 						)
@@ -83,7 +85,7 @@ final class Get implements Application\View {
 					new UI\AttainablePagination(
 						$parameters['page'],
 						$parameters['per_page'],
-						$soulmates->count(new Dataset\EmptySelection())
+						$count
 					),
 					$this->url
 				),

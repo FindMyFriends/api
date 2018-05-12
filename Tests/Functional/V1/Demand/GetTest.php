@@ -30,7 +30,6 @@ final class GetTest extends Tester\TestCase {
 		$demand = json_decode(
 			(new V1\Demand\Get(
 				new Hashids(),
-				new Hashids(),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
 				new Access\FakeUser((string) $seeker),
@@ -46,7 +45,6 @@ final class GetTest extends Tester\TestCase {
 
 	public function test403ForNotOwned() {
 		$response = (new V1\Demand\Get(
-			new Hashids(),
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,

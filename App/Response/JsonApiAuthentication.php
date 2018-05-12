@@ -8,6 +8,7 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class JsonApiAuthentication implements Application\Response {
+	private const HEADERS = ['Content-Type' => 'application/json; charset=utf8'];
 	private $origin;
 	private $role;
 
@@ -23,7 +24,9 @@ final class JsonApiAuthentication implements Application\Response {
 	}
 
 	public function headers(): array {
-		return $this->origin->headers();
+		if ($this->role->allowed())
+			return $this->origin->headers();
+		return self::HEADERS + $this->origin->headers();
 	}
 
 	public function status(): int {

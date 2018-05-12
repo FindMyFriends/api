@@ -51,6 +51,25 @@ final class JsonApiAuthenticationTest extends Tester\TestCase {
 			)
 		);
 	}
+
+	public function testChangingContentTypeOnError() {
+		Assert::same(
+			[
+				'Content-Type' => 'application/json; charset=utf8',
+				'Range' => '10',
+			],
+			(new Response\JsonApiAuthentication(
+				new Response\PlainResponse(
+					new Output\FakeFormat('foo'),
+					[
+						'Content-Type' => 'text/plain',
+						'Range' => '10',
+					]
+				),
+				new Http\FakeRole(false)
+			))->headers()
+		);
+	}
 }
 
 (new JsonApiAuthenticationTest())->run();

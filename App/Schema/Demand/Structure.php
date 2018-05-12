@@ -22,11 +22,6 @@ final class Structure {
 				'note' => ['type' => ['string', 'null']],
 				'seeker_id' => ['type' => 'integer'],
 				'id' => ['type' => 'string'],
-				'soulmates' => [
-					'type' => 'array',
-					'uniqueItems' => true,
-					'items' => ['type' => 'string'],
-				],
 				'location' => [
 					'additionalProperties' => false,
 					'properties' => [
@@ -58,7 +53,7 @@ final class Structure {
 				],
 			] + $description['properties'],
 			'required' => array_merge(
-				['created_at', 'note', 'seeker_id', 'id', 'soulmates', 'location'],
+				['created_at', 'note', 'seeker_id', 'id', 'location'],
 				$description['required']
 			),
 			'type' => 'object',
@@ -82,11 +77,10 @@ final class Structure {
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
 		$required = &$schema['required'];
-		unset($properties['created_at'], $properties['seeker_id'], $properties['id'], $properties['soulmates']);
+		unset($properties['created_at'], $properties['seeker_id'], $properties['id']);
 		unset($required[array_search('created_at', $required, true)]);
 		unset($required[array_search('seeker_id', $required, true)]);
 		unset($required[array_search('id', $required, true)]);
-		unset($required[array_search('soulmates', $required, true)]);
 		$required = array_values($required);
 		return $schema;
 	}

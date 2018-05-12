@@ -17,13 +17,6 @@
         "id": {
             "type": "string"
         },
-        "soulmates": {
-            "type": "array",
-            "uniqueItems": true,
-            "items": {
-                "type": "string"
-            }
-        },
         "location": {
             "additionalProperties": false,
             "properties": {
@@ -473,7 +466,6 @@
         "note",
         "seeker_id",
         "id",
-        "soulmates",
         "location",
         "general",
         "face",

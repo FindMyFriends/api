@@ -142,7 +142,6 @@ final class StoredDemandTest extends Tester\TestCase {
 		Assert::equal(
 			[
 				'note' => null,
-				'soulmates' => [],
 				'hands' => [
 					'nails' => [
 						'length' => [

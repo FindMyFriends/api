@@ -959,7 +959,6 @@ AS $$
   );
 $$ language sql STABLE;
 
-
 CREATE TABLE soulmates (
   id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
@@ -997,12 +996,6 @@ END;
 $$;
 
 CREATE TRIGGER soulmates_row_ad_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
-
-
-CREATE VIEW demand_summary AS
-  SELECT demand_id, array_agg(id) AS soulmates
-  FROM soulmates
-  GROUP BY demand_id;
 
 
 CREATE TABLE soulmate_requests (
@@ -1418,13 +1411,11 @@ CREATE VIEW collective_demands AS
     demand.id,
     demand.seeker_id,
     demand.created_at,
-    demand.note,
-    COALESCE(demand_summary.soulmates, '{}'::integer[]) AS soulmates
+    demand.note
   FROM demands demand
   JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
   JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id
-  JOIN locations location ON location.id = demand.location_id
-  LEFT JOIN demand_summary ON demand_summary.demand_id = demand.id;
+  JOIN locations location ON location.id = demand.location_id;
 
 CREATE FUNCTION collective_demands_trigger_row_ii() RETURNS trigger
 LANGUAGE plpgsql

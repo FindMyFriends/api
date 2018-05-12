@@ -12,13 +12,11 @@ use Klapuch\Iterator;
  */
 final class PublicDemands implements Demands {
 	private $origin;
-	private $demandHashid;
-	private $soulmateHashid;
+	private $hashids;
 
-	public function __construct(Demands $origin, HashidsInterface $demandHashid, HashidsInterface $soulmateHashid) {
+	public function __construct(Demands $origin, HashidsInterface $hashids) {
 		$this->origin = $origin;
-		$this->demandHashid = $demandHashid;
-		$this->soulmateHashid = $soulmateHashid;
+		$this->hashids = $hashids;
 	}
 
 	public function ask(array $description): int {
@@ -29,7 +27,7 @@ final class PublicDemands implements Demands {
 		return new Iterator\Mapped(
 			$this->origin->all($selection),
 			function(Demand $demand): Demand {
-				return new PublicDemand($demand, $this->demandHashid, $this->soulmateHashid);
+				return new PublicDemand($demand, $this->hashids);
 			}
 		);
 	}
