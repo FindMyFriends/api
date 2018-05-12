@@ -33,7 +33,7 @@ final class GetTest extends Tester\TestCase {
 		Assert::count(1, $requests);
 		(new Misc\SchemaAssertion(
 			$requests,
-			new \SplFileInfo(__DIR__ . '/../../../../../App/V1/Demand/SoulmateRequests/schema/get.json')
+			new \SplFileInfo(V1\Demand\SoulmateRequests\Get::SCHEMA)
 		))->assert();
 	}
 }
