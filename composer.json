@@ -41,7 +41,8 @@
     "consistence/coding-standard": "^3.0",
     "phpstan/phpstan": "*",
     "phpstan/phpstan-strict-rules": "*",
-    "mockery/mockery": "^1.0.0"
+    "mockery/mockery": "^1.0.0",
+    "guzzle/guzzle": "^3.9"
   },
   "autoload": {
     "psr-4": {

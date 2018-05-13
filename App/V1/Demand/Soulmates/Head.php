@@ -48,7 +48,7 @@ final class Head implements Application\View {
 				new Response\JsonApiAuthentication(
 					new Response\PlainResponse(
 						new EmptyFormat(),
-						['X-Total-Count' => $count]
+						['X-Total-Count' => $count, 'Content-Type' => 'text/plain']
 					),
 					$this->role
 				),

@@ -46,8 +46,9 @@ final class HeadTest extends Tester\TestCase {
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->headers();
-		Assert::count(2, $headers);
+		Assert::count(3, $headers);
 		Assert::same(0, $headers['X-Total-Count']);
+		Assert::same('text/plain', $headers['Content-Type']);
 		Assert::true(isset($headers['Link']));
 	}
 
