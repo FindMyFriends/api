@@ -31,3 +31,6 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+after_failure:
+  - docker exec fmf_php-fpm_1 vendor/bin/phing echo-failed-tests

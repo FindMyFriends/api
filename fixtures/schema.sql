@@ -886,6 +886,69 @@ $$
 LANGUAGE SQL
 VOLATILE;
 
+CREATE FUNCTION created_base_evolution(
+  in_seeker_id seekers.id%type,
+  in_sex general.sex%type,
+  in_ethnic_group_id general.ethnic_group_id%type,
+  in_birth_year general.birth_year%type,
+  in_firstname general.firstname%type,
+  in_lastname general.lastname%type
+) RETURNS integer
+AS $$
+DECLARE
+  v_evolution_id evolutions.id%type;
+BEGIN
+  IF (EXISTS (SELECT 1 FROM evolutions WHERE seeker_id = in_seeker_id)) THEN
+    RAISE EXCEPTION USING MESSAGE = FORMAT('Base evolution for seeker %L is already created.', in_seeker_id);
+  END IF;
+  WITH general AS (
+    INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+      in_sex,
+      in_ethnic_group_id,
+      in_birth_year,
+      in_firstname,
+      in_lastname
+    )
+    RETURNING id
+  ),
+  body AS (INSERT INTO bodies DEFAULT VALUES RETURNING id),
+  face AS (INSERT INTO faces DEFAULT VALUES RETURNING id),
+  hand AS (INSERT INTO hands DEFAULT VALUES RETURNING id),
+  hair AS (INSERT INTO hair DEFAULT VALUES RETURNING id),
+  beard AS (INSERT INTO beards DEFAULT VALUES RETURNING id),
+  eyebrow AS (INSERT INTO eyebrows DEFAULT VALUES RETURNING id),
+  tooth AS (INSERT INTO teeth DEFAULT VALUES RETURNING id),
+  left_eye AS (INSERT INTO eyes DEFAULT VALUES RETURNING id),
+  right_eye AS (INSERT INTO eyes DEFAULT VALUES RETURNING id),
+  description AS (
+    INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id) VALUES (
+      (SELECT id FROM general),
+      (SELECT id FROM body),
+      (SELECT id FROM face),
+      (SELECT id FROM hand),
+      (SELECT id FROM hair),
+      (SELECT id FROM beard),
+      (SELECT id FROM eyebrow),
+      (SELECT id FROM tooth),
+      (SELECT id FROM left_eye),
+      (SELECT id FROM right_eye)
+    )
+    RETURNING id
+  )
+  INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
+    in_seeker_id,
+    (SELECT id FROM description),
+    NOW()
+  )
+  RETURNING id
+  INTO v_evolution_id;
+
+  RETURN v_evolution_id;
+END
+$$
+LANGUAGE plpgsql
+VOLATILE;
+
 CREATE FUNCTION evolutions_trigger_row_ad() RETURNS trigger
 AS $$
 BEGIN
@@ -1056,25 +1119,21 @@ IMMUTABLE;
 CREATE FUNCTION is_soulmate_request_refreshable(in_demand_id demands.id%type) RETURNS boolean
 AS $$
 WITH refrehes AS (
-    SELECT
-      MAX(searched_at) AS searched_at,
-      status
-    FROM soulmate_requests
-    WHERE demand_id = in_demand_id
-    GROUP BY demand_id, status
-    ORDER BY searched_at DESC
-    LIMIT 1
+  SELECT
+    MAX(searched_at) AS searched_at,
+    status
+  FROM soulmate_requests
+  WHERE demand_id = in_demand_id
+  GROUP BY demand_id, status
+  ORDER BY searched_at DESC
+  LIMIT 1
 ), done_refreshes AS (
-    SELECT *
-    FROM refrehes
-    WHERE status IN ('succeed', 'failed')
+  SELECT *
+  FROM refrehes
+  WHERE status IN ('succeed', 'failed')
 )
-SELECT NOT EXISTS(
-    SELECT 1 FROM refrehes
-) OR (
-  EXISTS(
-    SELECT 1 FROM done_refreshes
-  ) AND (
+SELECT NOT EXISTS(SELECT 1 FROM refrehes) OR (
+  EXISTS(SELECT 1 FROM done_refreshes) AND (
     SELECT is_soulmate_request_refreshable(searched_at)
     FROM done_refreshes
   )
@@ -1163,16 +1222,6 @@ CREATE TABLE eyebrow_colors (
 -----
 
 -- VIEWS --
-CREATE VIEW base_evolution AS
-  SELECT
-    general.birth_year,
-    general.id AS general_id,
-    evolutions.seeker_id
-  FROM general
-    JOIN descriptions ON descriptions.general_id = general.id
-    JOIN evolutions ON evolutions.description_id = descriptions.id;
-
-
 CREATE VIEW complete_descriptions AS
   SELECT
     description.id,
@@ -1678,22 +1727,71 @@ CREATE VIEW collective_evolutions AS
     JOIN printed_descriptions printed_description ON evolution.description_id = printed_description.id
     JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id;
 
+CREATE FUNCTION base_evolution(in_seeker_id seekers.id%type) RETURNS TABLE (
+  id evolutions.id%type,
+  description_id evolutions.description_id%type
+)
+AS $$
+SELECT id, description_id
+FROM evolutions
+WHERE seeker_id = in_seeker_id
+ORDER BY evolved_at DESC
+LIMIT 1
+$$
+LANGUAGE SQL
+STABLE;
+
+CREATE FUNCTION cascade_update_birth_year(
+  in_description_id descriptions.id%type,
+  in_seeker_id seekers.id%type
+) RETURNS void
+AS $$
+WITH new_birth_year AS (
+  SELECT birth_year
+  FROM general
+    JOIN descriptions ON descriptions.general_id = general.id
+  WHERE descriptions.id = in_description_id
+), related_descriptions AS (
+  SELECT general.id
+  FROM general
+    JOIN descriptions ON descriptions.general_id = general.id
+  WHERE descriptions.id = (SELECT description_id FROM base_evolution(in_seeker_id))
+)
+UPDATE general
+SET birth_year = (
+  SELECT birth_year
+  FROM new_birth_year
+)
+WHERE id IN (
+  SELECT id
+  FROM related_descriptions
+);
+$$
+LANGUAGE SQL
+VOLATILE;
+
 CREATE FUNCTION collective_evolutions_trigger_row_ii() RETURNS trigger
 AS $$
 DECLARE
-  v_description_id integer;
+  v_description_id descriptions.id%type;
+  v_birth_year general.birth_year%type;
 BEGIN
+  SELECT birth_year
+  FROM general
+    JOIN descriptions ON descriptions.general_id = general.id
+  WHERE descriptions.id = (SELECT description_id FROM base_evolution(new.seeker_id))
+  INTO v_birth_year;
+
+  IF (v_birth_year IS NULL) THEN
+    RAISE EXCEPTION USING MESSAGE = FORMAT('Base evolution for seeker %L was not created.', new.seeker_id);
+  END IF;
+
   v_description_id = inserted_description(
     ROW(
       NULL,
       new.general_sex,
       new.general_ethnic_group_id,
-      (
-        SELECT birth_year
-        FROM base_evolution
-        WHERE seeker_id = new.seeker_id
-        LIMIT 1
-      ),
+      v_birth_year,
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -1796,16 +1894,7 @@ BEGIN
     )
   );
 
-  UPDATE general
-  SET birth_year = (
-    SELECT birth_year
-    FROM descriptions
-    WHERE id = v_description_id)
-  WHERE id IN (
-    SELECT general_id
-    FROM base_evolution
-    WHERE seeker_id = new.seeker_id
-  );
+  PERFORM cascade_update_birth_year(v_description_id, new.seeker_id);
 
   RETURN new;
 END
