@@ -11,8 +11,8 @@ use FindMyFriends\Routing;
 use FindMyFriends\Schema;
 use FindMyFriends\V1\Demand;
 use FindMyFriends\V1\Demands;
-use GuzzleHttp;
-use Psr\Http\Message;
+use Klapuch\Http;
+use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -24,7 +24,7 @@ final class SortTest extends Tester\TestCase {
 	 */
 	public function testAllowedSorts(string $endpoint) {
 		$response = $this->response($endpoint);
-		Assert::same(HTTP_OK, $response->getStatusCode());
+		Assert::same(HTTP_OK, $response->code());
 	}
 
 	public function testNumberOfSortsForTest() {
@@ -41,11 +41,11 @@ final class SortTest extends Tester\TestCase {
 		);
 	}
 
-	private function response(string $endpoint): Message\ResponseInterface {
-		return (new GuzzleHttp\Client())->request(
+	private function response(string $endpoint): Http\Response {
+		return (new Http\BasicRequest(
 			'GET',
-			sprintf('http://find-my-friends-nginx/%s', $endpoint)
-		);
+			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint))
+		))->send();
 	}
 
 	protected function sorts(): array {

@@ -8,7 +8,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Functional\V1;
 
 use FindMyFriends\Routing;
-use GuzzleHttp;
+use Klapuch\Http;
+use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -22,6 +23,7 @@ final class HeadGetTest extends Tester\TestCase {
 		$headHeaders = $this->response($endpoint, 'HEAD');
 		$getHeaders = $this->response($endpoint, 'GET');
 		unset($headHeaders['Content-Type'], $getHeaders['Content-Type']);
+		unset($headHeaders['Date'], $getHeaders['Date']);
 		unset($getHeaders['Transfer-Encoding']);
 		Assert::same($headHeaders, $getHeaders);
 	}
@@ -41,10 +43,11 @@ final class HeadGetTest extends Tester\TestCase {
 	}
 
 	private function response(string $endpoint, string $method): array {
-		return (new GuzzleHttp\Client())->request(
+		return (new Http\BasicRequest(
 			$method,
-			sprintf('http://find-my-friends-nginx/%s', $endpoint)
-		)->getHeaders();
+			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint)),
+			[CURLOPT_NOBODY => true]
+		))->send()->headers();
 	}
 
 	protected function getHeadEndpoints(): array {
