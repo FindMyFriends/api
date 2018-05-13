@@ -4,7 +4,7 @@
 	<resolvepath propertyName="base_path" file="."/>
 
 	<target name="check" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, generate-schemas, tests"/>
-	<target name="ci" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests, tester-coverage"/> <!-- Everything in CHECK except generate-schemas -->
+	<target name="ci" depends="validate-composer.lock, lint, phpcpd, phpstan, phpcs, tests, tester-coverage, echo-failed-tests"/> <!-- Everything in CHECK except generate-schemas -->
 	<target name="init" depends="lint, move-schemas"/>
 
 	<target name="lint">
@@ -102,6 +102,10 @@
 		</exec>
 	</target>
 
+	<target name="echo-failed-tests">
+		<exec command='for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done' logoutput="true" passthru="true" checkreturn="true" />
+	</target>
+
 	<target name="validate-composer.lock">
 		<exec executable="composer" logoutput="true" passthru="true" checkreturn="true">
 			<arg value="validate"/>
@@ -112,8 +116,8 @@
 
 	<target name="move-schemas" depends="generate-schemas">
 		<mkdir dir="${base_path}/www/schema/v1/demand" />
-        <mkdir dir="${base_path}/www/schema/v1/demand/soulmate_request" />
-        <mkdir dir="${base_path}/www/schema/v1/demand/soulmate" />
+		<mkdir dir="${base_path}/www/schema/v1/demand/soulmate_request" />
+		<mkdir dir="${base_path}/www/schema/v1/demand/soulmate" />
 		<mkdir dir="${base_path}/www/schema/v1/evolution" />
 		<mkdir dir="${base_path}/www/schema/v1/description" />
 		<mkdir dir="${base_path}/www/schema/v1/soulmate" />
