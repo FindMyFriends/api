@@ -7,22 +7,14 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1;
 
-use Elasticsearch;
 use FindMyFriends\Routing;
-use FindMyFriends\TestCase;
 use GuzzleHttp;
-use Hashids\Hashids;
-use Klapuch\Storage;
-use Klapuch\Uri;
-use PhpAmqpLib;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
 final class HeadGetTest extends Tester\TestCase {
-	use TestCase\Redis;
-
 	/**
 	 * @dataProvider getHeadEndpoints
 	 */
@@ -41,26 +33,7 @@ final class HeadGetTest extends Tester\TestCase {
 				preg_grep(
 					'~\[HEAD\]~',
 					array_keys(
-						(new Routing\ApplicationRoutes(
-							new Uri\FakeUri(),
-							new class extends Storage\MetaPDO {
-								public function __construct() {
-								}
-							},
-							$this->redis,
-							Elasticsearch\ClientBuilder::create()->build(),
-							new PhpAmqpLib\Connection\AMQPLazyConnection(
-								'',
-								'',
-								'',
-								''
-							),
-							[
-								'demand' => ['hashid' => new Hashids()],
-								'evolution' => ['hashid' => new Hashids()],
-								'soulmate' => ['hashid' => new Hashids()],
-							]
-						))->matches()
+						(new Routing\TestApplicationRoutes())->matches()
 					)
 				)
 			)
