@@ -10,10 +10,12 @@ namespace FindMyFriends\Functional\V1;
 use Elasticsearch;
 use FindMyFriends\Routing;
 use FindMyFriends\TestCase;
+use GuzzleHttp;
 use Hashids\Hashids;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use PhpAmqpLib;
+use Psr\Http\Message;
 use Tester;
 use Tester\Assert;
 
@@ -25,26 +27,27 @@ final class PreflightTest extends Tester\TestCase {
 	/**
 	 * @dataProvider preflightHeaders
 	 */
-	public function testPreflightRequestsByMatchingHeaders(array $headers) {
+	public function testPreflightRequestsByMatchingHeaders(array $requestHeaders) {
 		foreach ($this->endpoints() as $endpoint) {
-			$response = $this->response($endpoint, $headers);
-			Assert::same(HTTP_NO_CONTENT, $response['info']['http_code']);
-			Assert::same('', $response['body']);
-			Assert::contains('Content-Length: 0', $response['headers']);
-			Assert::contains('Content-Type: text/plain;charset=UTF-8', $response['headers']);
-			Assert::contains('Access-Control-Allow-Methods: ', $response['headers']);
-			Assert::contains('Access-Control-Allow-Origin: ', $response['headers']);
-			Assert::contains('Access-Control-Allow-Headers: ', $response['headers']);
+			$response = $this->response($endpoint, $requestHeaders);
+			Assert::same('', (string) $response->getBody());
+			Assert::same(HTTP_NO_CONTENT, $response->getStatusCode());
+			$headers = $response->getHeaders();
+			Assert::same(['0'], $headers['Content-Length']);
+			Assert::same(['text/plain;charset=UTF-8'], $headers['Content-Type']);
+			Assert::true(isset($headers['Access-Control-Allow-Methods']));
+			Assert::true(isset($headers['Access-Control-Allow-Origin']));
+			Assert::true(isset($headers['Access-Control-Allow-Headers']));
 		}
 	}
 
 	public function testDomainOptions() {
 		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint);
-			Assert::same(HTTP_OK, $response['info']['http_code']);
-			Assert::notSame([], json_decode($response['body'], true));
-			Assert::notContains('Content-Length: 0', $response['headers']);
-			Assert::contains('Content-Type: application/json; charset=utf8', $response['headers']);
+			Assert::same(HTTP_OK, $response->getStatusCode());
+			Assert::notSame([], json_decode((string) $response->getBody()));
+			$headers = $response->getHeaders();
+			Assert::same(['application/json; charset=utf8'], $headers['Content-Type']);
 		}
 	}
 
@@ -69,42 +72,33 @@ final class PreflightTest extends Tester\TestCase {
 				'soulmate' => ['hashid' => new Hashids()],
 			]
 		))->matches();
-		return str_replace('[OPTIONS]', '', preg_grep('~^v1/\w+ \[OPTIONS\]$~', array_keys($matches)));
+		return str_replace(' [OPTIONS]', '', preg_grep('~^v1/\w+ \[OPTIONS\]$~', array_keys($matches)));
 	}
 
-	private function response(string $endpoint, array $headers = []): array {
-		try {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, sprintf('http://find-my-friends-nginx/%s', $endpoint));
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HEADER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			$response = curl_exec($ch);
-			$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-			Assert::same('', curl_error($ch));
-			return [
-				'headers' => substr($response, 0, $headerSize),
-				'body' => substr($response, $headerSize),
-				'info' => curl_getinfo($ch),
-			];
-		} finally {
-			curl_close($ch);
-		}
+	private function response(string $endpoint, array $headers = []): Message\ResponseInterface {
+		return (new GuzzleHttp\Client())->request(
+			'OPTIONS',
+			sprintf('http://find-my-friends-nginx/%s', $endpoint),
+			['headers' => $headers]
+		);
 	}
 
 	protected function preflightHeaders(): array {
 		return [
-			[[
-				'Access-Control-Request-Method: POST',
-				'Access-Control-Request-Headers: Authorization',
-				'Origin: http://find-my-friends-nginx',
-			]],
-			[[
-				'access-control-request-method: POST',
-				'access-control-request-headers: Authorization',
-				'origin: http://find-my-friends-nginx',
-			]],
+			[
+				[
+					'Access-Control-Request-Method' => 'POST',
+					'Access-Control-Request-Headers' => 'Authorization',
+					'Origin' => 'http://find-my-friends-nginx',
+				],
+			],
+			[
+				[
+					'access-control-request-method' => 'POST',
+					'access-control-request-headers' => 'Authorization',
+					'origin' => 'http://find-my-friends-nginx',
+				],
+			],
 		];
 	}
 }

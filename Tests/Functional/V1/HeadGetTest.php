@@ -10,7 +10,7 @@ namespace FindMyFriends\Functional\V1;
 use Elasticsearch;
 use FindMyFriends\Routing;
 use FindMyFriends\TestCase;
-use Guzzle\Http;
+use GuzzleHttp;
 use Hashids\Hashids;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -68,11 +68,10 @@ final class HeadGetTest extends Tester\TestCase {
 	}
 
 	private function response(string $endpoint, string $method): array {
-		$client = new Http\Client();
-		return $client->createRequest($method, sprintf('http://find-my-friends-nginx/%s', $endpoint))
-			->send()
-			->getHeaders()
-			->toArray();
+		return (new GuzzleHttp\Client())->request(
+			$method,
+			sprintf('http://find-my-friends-nginx/%s', $endpoint)
+		)->getHeaders();
 	}
 
 	protected function getHeadEndpoints(): array {
