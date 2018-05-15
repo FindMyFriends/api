@@ -661,10 +661,9 @@ CREATE TABLE general (
 
 CREATE TABLE beard_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL,
+  color_id smallint NOT NULL UNIQUE,
   CONSTRAINT beard_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-CREATE UNIQUE INDEX beard_colors_color_id_uindex ON beard_colors USING btree (color_id);
 
 
 CREATE TABLE beards (
@@ -699,10 +698,9 @@ CREATE TABLE eyebrows (
 
 CREATE TABLE eye_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL,
+  color_id smallint NOT NULL UNIQUE,
   CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-CREATE UNIQUE INDEX eye_colors_color_id_uindex ON eye_colors USING btree (color_id);
 
 
 CREATE TABLE eyes (
@@ -739,10 +737,9 @@ CREATE TABLE hair_styles (
 
 CREATE TABLE hair_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL,
+  color_id smallint NOT NULL UNIQUE,
   CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-CREATE UNIQUE INDEX hair_colors_color_id_uindex ON hair_colors USING btree (color_id);
 
 
 CREATE TABLE hair (
@@ -762,10 +759,9 @@ CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH RO
 
 CREATE TABLE hand_hair_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL,
+  color_id smallint NOT NULL UNIQUE,
   CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-CREATE UNIQUE INDEX hand_hair_colors_color_id_uindex ON hand_hair_colors USING btree (color_id);
 
 
 CREATE TABLE hand_hair (
@@ -778,10 +774,9 @@ CREATE TABLE hand_hair (
 
 CREATE TABLE nail_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL,
+  color_id smallint NOT NULL UNIQUE,
   CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
 );
-CREATE UNIQUE INDEX nail_colors_color_id_uindex ON nail_colors USING btree (color_id);
 
 
 CREATE TABLE nails (
@@ -805,7 +800,6 @@ CREATE TABLE hands (
   CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id),
   CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) REFERENCES nails(id)
 );
-CREATE UNIQUE INDEX hands_id_uindex ON hands USING btree (id);
 
 
 CREATE TABLE teeth (
@@ -817,16 +811,16 @@ CREATE TABLE teeth (
 
 CREATE TABLE descriptions (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  general_id integer NOT NULL,
-  body_id integer NOT NULL,
-  face_id integer NOT NULL,
-  hand_id integer NOT NULL,
-  hair_id integer NOT NULL,
-  beard_id integer NOT NULL,
-  eyebrow_id integer NOT NULL,
-  tooth_id integer NOT NULL,
-  left_eye_id integer NOT NULL,
-  right_eye_id integer NOT NULL,
+  general_id integer NOT NULL UNIQUE,
+  body_id integer NOT NULL UNIQUE,
+  face_id integer NOT NULL UNIQUE,
+  hand_id integer NOT NULL UNIQUE,
+  hair_id integer NOT NULL UNIQUE,
+  beard_id integer NOT NULL UNIQUE,
+  eyebrow_id integer NOT NULL UNIQUE,
+  tooth_id integer NOT NULL UNIQUE,
+  left_eye_id integer NOT NULL UNIQUE,
+  right_eye_id integer NOT NULL UNIQUE,
   CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id),
   CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id) ON DELETE CASCADE,
   CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id),
@@ -838,25 +832,14 @@ CREATE TABLE descriptions (
   CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id) ON DELETE CASCADE,
   CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id)
 );
-CREATE UNIQUE INDEX descriptions_beard_id_uindex ON descriptions USING btree (beard_id);
-CREATE UNIQUE INDEX descriptions_body_id_uindex ON descriptions USING btree (body_id);
-CREATE UNIQUE INDEX descriptions_eyebrow_id_uindex ON descriptions USING btree (eyebrow_id);
-CREATE UNIQUE INDEX descriptions_face_id_uindex ON descriptions USING btree (face_id);
-CREATE UNIQUE INDEX descriptions_general_id_uindex ON descriptions USING btree (general_id);
-CREATE UNIQUE INDEX descriptions_hair_id_uindex ON descriptions USING btree (hair_id);
-CREATE UNIQUE INDEX descriptions_hand_id_uindex ON descriptions USING btree (hand_id);
-CREATE UNIQUE INDEX descriptions_left_eye_id_uindex ON descriptions USING btree (left_eye_id);
-CREATE UNIQUE INDEX descriptions_right_eye_id_uindex ON descriptions USING btree (right_eye_id);
-CREATE UNIQUE INDEX descriptions_tooth_id_uindex ON descriptions USING btree (tooth_id);
 
 
 CREATE TABLE seekers (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  email citext NOT NULL,
+  email citext NOT NULL UNIQUE,
   password text NOT NULL,
   role roles NOT NULL DEFAULT 'member'::roles
 );
-CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
 
 CREATE TABLE forgotten_passwords (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -875,10 +858,9 @@ CREATE INDEX forgotten_passwords_seeker_id ON forgotten_passwords USING btree (s
 
 CREATE TABLE verification_codes (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  seeker_id integer NOT NULL,
+  seeker_id integer NOT NULL UNIQUE,
   code text NOT NULL,
   used_at timestamp with time zone,
-  CONSTRAINT verification_codes_seeker_id UNIQUE (seeker_id),
   CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id),
   CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
 );
@@ -1024,15 +1006,13 @@ CREATE TABLE locations (
 CREATE TABLE demands (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   seeker_id integer NOT NULL,
-  description_id integer NOT NULL,
+  description_id integer NOT NULL UNIQUE,
   created_at timestamp WITH TIME ZONE NOT NULL,
-  location_id integer NOT NULL,
+  location_id integer NOT NULL UNIQUE,
   note character varying(150),
   CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE,
   CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX demands_description_id_uindex ON demands USING btree (description_id);
-CREATE UNIQUE INDEX demands_location_id_uindex ON demands USING btree (location_id);
 
 CREATE FUNCTION demands_trigger_row_ad() RETURNS trigger
 AS $$
@@ -1087,10 +1067,10 @@ CREATE TABLE soulmates (
   version integer NOT NULL DEFAULT 1,
   related_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
   is_correct boolean NOT NULL DEFAULT TRUE,
+  CONSTRAINT soulmates_demand_id_evolution_id_ukey UNIQUE (demand_id, evolution_id),
   CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE,
   CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX soulmates_demand_id_evolution_id_uindex ON soulmates USING btree (demand_id, evolution_id);
 
 CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
 AS $$
@@ -1983,5 +1963,5 @@ CREATE TABLE etags (
   tag text NOT NULL,
   created_at timestamp WITH TIME ZONE NOT NULL
 );
-CREATE UNIQUE INDEX etags_entity_uindex ON etags USING btree (lower((entity)::text));
+CREATE UNIQUE INDEX etags_entity_ukey ON etags USING btree (lower((entity)::text));
 -----
