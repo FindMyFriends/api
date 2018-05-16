@@ -8,9 +8,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain;
 
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Output;
 use Tester;
 use Tester\Assert;
@@ -26,7 +26,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'This is not your demand');
@@ -35,7 +35,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->retract();
 		}, \UnexpectedValueException::class, 'This is not your demand');
@@ -44,7 +44,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			(new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->reconsider([]);
 		}, \UnexpectedValueException::class, 'This is not your demand');
@@ -58,7 +58,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 			$demand = new Domain\OwnedDemand(
 				new Domain\FakeDemand(),
 				$id,
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			);
 			$demand->print(new Output\FakeFormat());

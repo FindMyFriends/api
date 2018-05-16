@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Sql\SuitedSoulmates;
-use Klapuch\Access;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -20,7 +20,7 @@ final class StoredSoulmate implements Soulmate {
 	public function __construct(
 		?int $id,
 		Storage\MetaPDO $database,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->id = $id;
 		$this->database = $database;

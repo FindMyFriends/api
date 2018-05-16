@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
-use Klapuch\Access;
+use FindMyFriends\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -19,7 +19,7 @@ final class OwnedSoulmate implements Soulmate {
 	public function __construct(
 		Soulmate $origin,
 		int $id,
-		Access\User $owner,
+		Access\Seeker $owner,
 		\PDO $database
 	) {
 		$this->origin = $origin;

@@ -5,9 +5,9 @@ namespace FindMyFriends\V1\Demand\Soulmates;
 
 use Elasticsearch;
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Output\EmptyFormat;
@@ -25,7 +25,7 @@ final class Head implements Application\View {
 	public function __construct(
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
-		Access\User $seeker,
+		Access\Seeker $seeker,
 		Http\Role $role,
 		Elasticsearch\Client $elasticsearch
 	) {

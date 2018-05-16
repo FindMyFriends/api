@@ -5,11 +5,11 @@ namespace FindMyFriends\V1\Demands;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -31,7 +31,7 @@ final class Post implements Application\View {
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->request = $request;

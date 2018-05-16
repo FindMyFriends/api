@@ -7,12 +7,12 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demands;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Hashids\Hashids;
-use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -31,7 +31,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/demands', []),
 			$this->database,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			new Http\FakeRole(true)
 		))->response(['page' => 1, 'per_page' => 10, 'sort' => '']);
 		$demands = json_decode($response->body()->serialization());

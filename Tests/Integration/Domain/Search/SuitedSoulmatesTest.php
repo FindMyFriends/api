@@ -9,11 +9,11 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain\Search;
 
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Klapuch\Storage;
@@ -29,14 +29,14 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => 2]))->try();
-		$seeker = new Access\FakeUser('1');
+		$seeker = new Access\FakeSeeker('1');
 		(new Domain\IndividualDemands(
 			$seeker,
 			$this->database
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		$evolution = function(): void {
 			(new Evolution\IndividualChain(
-				new Access\FakeUser('2'),
+				new Access\FakeSeeker('2'),
 				$this->database
 			))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		};
@@ -66,13 +66,13 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 	public function testIgnoringOwnEvolutions() {
 		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => 1]))->try();
-		$seeker = new Access\FakeUser('1');
+		$seeker = new Access\FakeSeeker('1');
 		(new Domain\IndividualDemands(
 			$seeker,
 			$this->database
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		(new Evolution\IndividualChain(
-			new Access\FakeUser('1'),
+			new Access\FakeSeeker('1'),
 			$this->database
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		$this->elasticsearch->index(
@@ -92,13 +92,13 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => 2]))->try();
-		$seeker = new Access\FakeUser('1');
+		$seeker = new Access\FakeSeeker('1');
 		(new Domain\IndividualDemands(
 			$seeker,
 			$this->database
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		(new Evolution\IndividualChain(
-			new Access\FakeUser('2'),
+			new Access\FakeSeeker('2'),
 			$this->database
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		static $params = [
@@ -170,7 +170,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		))->field();
 		$soulmates = new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeUser((string) $seekerId),
+			new Access\FakeSeeker((string) $seekerId),
 			$this->elasticsearch,
 			$this->database
 		);

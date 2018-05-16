@@ -3,23 +3,23 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Http;
 
-use Klapuch\Access;
+use FindMyFriends\Domain\Access;
 
 /**
  * Chosen role from the listed ones
  */
 final class ChosenRole implements Role {
-	private $user;
+	private $seeker;
 	private $roles;
 
-	public function __construct(Access\User $user, array $roles) {
-		$this->user = $user;
+	public function __construct(Access\Seeker $seeker, array $roles) {
+		$this->seeker = $seeker;
 		$this->roles = $roles;
 	}
 
 	public function allowed(): bool {
 		return (bool) array_uintersect(
-			[$this->user->properties()['role'] ?? 'guest'],
+			[$this->seeker->properties()['role'] ?? 'guest'],
 			$this->roles,
 			'strcasecmp'
 		);

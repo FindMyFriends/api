@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Evolution;
 
 use Elasticsearch;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 
@@ -19,7 +19,7 @@ final class Delete implements Application\View {
 	public function __construct(
 		Storage\MetaPDO $database,
 		Elasticsearch\Client $elasticsearch,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->database = $database;
 		$this->elasticsearch = $elasticsearch;

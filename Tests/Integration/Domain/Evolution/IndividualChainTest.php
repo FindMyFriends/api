@@ -7,10 +7,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Integration\Domain\Evolution;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Tester;
@@ -30,7 +30,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		$changeId = (new Evolution\IndividualChain(
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->database
 		))->extend(
 			[
@@ -147,7 +147,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		Assert::same(
 			2,
 			(new Evolution\IndividualChain(
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			))->count(new Dataset\EmptySelection())
 		);
@@ -162,7 +162,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		$chain = (new Evolution\IndividualChain(
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->database
 		))->changes(new Dataset\EmptySelection());
 		Assert::contains('"sex": "man"', $chain->current()->print(new Output\Json())->serialization());

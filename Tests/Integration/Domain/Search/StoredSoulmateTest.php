@@ -8,10 +8,10 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Integration\Domain\Search;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 use Tester;
@@ -57,7 +57,7 @@ final class StoredSoulmateTest extends Tester\TestCase {
 			(new Search\StoredSoulmate(
 				2,
 				$this->database,
-				new Access\FakeUser('1')
+				new Access\FakeSeeker('1')
 			))->print(new Output\Json())->serialization(),
 			true
 		);
@@ -71,7 +71,7 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		(new Search\StoredSoulmate(
 			$id,
 			$this->database,
-			new Access\FakeUser((string) mt_rand())
+			new Access\FakeSeeker((string) mt_rand())
 		))->clarify(['is_correct' => false]);
 		Assert::false((new Storage\TypedQuery($this->database, 'SELECT is_correct FROM soulmates'))->field());
 	}

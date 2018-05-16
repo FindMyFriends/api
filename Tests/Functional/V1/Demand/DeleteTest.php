@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demand;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Tester;
 use Tester\Assert;
 
@@ -26,7 +26,7 @@ final class DeleteTest extends Tester\TestCase {
 		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$response = (new V1\Demand\Delete(
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
@@ -36,7 +36,7 @@ final class DeleteTest extends Tester\TestCase {
 	public function test404OnNotExisting() {
 		$response = (new V1\Demand\Delete(
 			$this->database,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Demand does not exist'], $demand);
@@ -48,7 +48,7 @@ final class DeleteTest extends Tester\TestCase {
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
 		$response = (new V1\Demand\Delete(
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);

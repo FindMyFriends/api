@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Soulmate;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Tester;
@@ -31,7 +31,7 @@ final class PatchTest extends Tester\TestCase {
 				new Output\FakeFormat(json_encode(['is_correct' => false]))
 			),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::null($soulmate);
@@ -44,7 +44,7 @@ final class PatchTest extends Tester\TestCase {
 				new Output\FakeFormat(json_encode(['foo' => false]))
 			),
 			$this->database,
-			new Access\FakeUser((string) '1')
+			new Access\FakeSeeker((string) '1')
 		))->response(['id' => 1]);
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property foo is not defined and the definition does not allow additional properties'], $soulmate);
@@ -57,7 +57,7 @@ final class PatchTest extends Tester\TestCase {
 				new Output\FakeFormat(json_encode(['is_correct' => false]))
 			),
 			$this->database,
-			new Access\FakeUser('666')
+			new Access\FakeSeeker('666')
 		))->response(['id' => 1]);
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Soulmate does not exist'], $soulmate);
@@ -73,7 +73,7 @@ final class PatchTest extends Tester\TestCase {
 				new Output\FakeFormat(json_encode(['is_correct' => false]))
 			),
 			$this->database,
-			new Access\FakeUser('666')
+			new Access\FakeSeeker('666')
 		))->response(['id' => $id]);
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your soulmate'], $soulmate);

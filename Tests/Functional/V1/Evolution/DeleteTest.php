@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Evolution;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Tester;
 use Tester\Assert;
 
@@ -29,7 +29,7 @@ final class DeleteTest extends Tester\TestCase {
 		$response = (new V1\Evolution\Delete(
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::null($evolution);
@@ -40,7 +40,7 @@ final class DeleteTest extends Tester\TestCase {
 		$response = (new V1\Evolution\Delete(
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
@@ -53,7 +53,7 @@ final class DeleteTest extends Tester\TestCase {
 		$response = (new V1\Evolution\Delete(
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);

@@ -8,11 +8,11 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demands;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Hashids\Hashids;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
@@ -36,7 +36,7 @@ final class PostTest extends Tester\TestCase {
 			new FakeUri('/', 'v1/demands', []),
 			$this->database,
 			$this->rabbitMq,
-			new Access\FakeUser((string) $seeker, ['role' => 'guest'])
+			new Access\FakeSeeker((string) $seeker, ['role' => 'guest'])
 		))->response([]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
@@ -50,7 +50,7 @@ final class PostTest extends Tester\TestCase {
 			new FakeUri('/', 'v1/demands', []),
 			$this->database,
 			$this->rabbitMq,
-			new Access\FakeUser('1', ['role' => 'guest'])
+			new Access\FakeSeeker('1', ['role' => 'guest'])
 		))->response([]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property note is required'], $demand);

@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demand;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Tester;
@@ -32,7 +32,7 @@ final class PatchTest extends Tester\TestCase {
 				)
 			),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
@@ -43,7 +43,7 @@ final class PatchTest extends Tester\TestCase {
 		$response = (new V1\Demand\Patch(
 			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 			$this->database,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property name is not defined and the definition does not allow additional properties'], $demand);
@@ -58,7 +58,7 @@ final class PatchTest extends Tester\TestCase {
 				)
 			),
 			$this->database,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Demand does not exist'], $demand);
@@ -75,7 +75,7 @@ final class PatchTest extends Tester\TestCase {
 				)
 			),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);

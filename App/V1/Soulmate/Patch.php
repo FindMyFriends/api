@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Soulmate;
 
 use FindMyFriends\Constraint;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 
@@ -20,7 +20,7 @@ final class Patch implements Application\View {
 	public function __construct(
 		Application\Request $request,
 		Storage\MetaPDO $database,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->request = $request;
 		$this->database = $database;

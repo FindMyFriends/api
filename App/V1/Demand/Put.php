@@ -5,11 +5,11 @@ namespace FindMyFriends\V1\Demand;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Uri;
 use Klapuch\Validation;
@@ -25,7 +25,7 @@ final class Put implements Application\View {
 		Application\Request $request,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;

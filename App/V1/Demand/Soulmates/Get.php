@@ -6,10 +6,10 @@ namespace FindMyFriends\V1\Demand\Soulmates;
 use Elasticsearch;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Storage;
@@ -29,7 +29,7 @@ final class Get implements Application\View {
 		array $hashids,
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
-		Access\User $seeker,
+		Access\Seeker $seeker,
 		Http\Role $role,
 		Elasticsearch\Client $elasticsearch
 	) {

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain;
 
 use FindMyFriends;
-use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -16,7 +15,7 @@ final class IndividualDemands implements Demands {
 	private $seeker;
 	private $database;
 
-	public function __construct(Access\User $seeker, Storage\MetaPDO $database) {
+	public function __construct(Access\Seeker $seeker, Storage\MetaPDO $database) {
 		$this->seeker = $seeker;
 		$this->database = $database;
 	}

@@ -8,9 +8,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain;
 
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Tester;
@@ -23,7 +23,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 
 	public function testAskingForFirstDemand() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		$id = (new Domain\IndividualDemands(new Access\FakeUser((string) $seeker), $this->database))->ask(
+		$id = (new Domain\IndividualDemands(new Access\FakeSeeker((string) $seeker), $this->database))->ask(
 			[
 				'note' => null,
 				'general' => [
@@ -151,7 +151,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
 		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		$demands = (new Domain\IndividualDemands(
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->database
 		))->all(new Dataset\FakeSelection([]));
 		$demand = $demands->current();
@@ -173,7 +173,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		Assert::same(
 			2,
 			(new Domain\IndividualDemands(
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			))->count(new Dataset\FakeSelection([]))
 		);

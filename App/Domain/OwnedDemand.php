@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain;
 
-use Klapuch\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -19,7 +18,7 @@ final class OwnedDemand implements Demand {
 	public function __construct(
 		Demand $origin,
 		int $id,
-		Access\User $owner,
+		Access\Seeker $owner,
 		\PDO $database
 	) {
 		$this->origin = $origin;

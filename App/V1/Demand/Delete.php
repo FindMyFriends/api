@@ -4,16 +4,16 @@ declare(strict_types = 1);
 namespace FindMyFriends\V1\Demand;
 
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Klapuch\Access;
 use Klapuch\Application;
 
 final class Delete implements Application\View {
 	private $database;
 	private $seeker;
 
-	public function __construct(\PDO $database, Access\User $seeker) {
+	public function __construct(\PDO $database, Access\Seeker $seeker) {
 		$this->database = $database;
 		$this->seeker = $seeker;
 	}

@@ -7,11 +7,11 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -29,7 +29,7 @@ final class HeadTest extends Tester\TestCase {
 		$response = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeUser($seeker),
+			new Access\FakeSeeker($seeker),
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1]);
@@ -42,7 +42,7 @@ final class HeadTest extends Tester\TestCase {
 		$headers = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeUser($seeker),
+			new Access\FakeSeeker($seeker),
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->headers();
@@ -56,7 +56,7 @@ final class HeadTest extends Tester\TestCase {
 		$response = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeUser('1'),
+			new Access\FakeSeeker('1'),
 			new Http\FakeRole(false),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1]);

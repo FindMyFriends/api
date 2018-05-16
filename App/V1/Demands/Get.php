@@ -5,11 +5,11 @@ namespace FindMyFriends\V1\Demands;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\UI;
@@ -34,7 +34,7 @@ final class Get implements Application\View {
 		HashidsInterface $hashids,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\User $seeker,
+		Access\Seeker $seeker,
 		Http\Role $role
 	) {
 		$this->hashids = $hashids;

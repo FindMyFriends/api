@@ -8,12 +8,12 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Evolution;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
 use Hashids\Hashids;
-use Klapuch\Access;
 use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
@@ -31,7 +31,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			new Http\FakeRole(true)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization());
@@ -47,7 +47,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
-			new Access\FakeUser('1'),
+			new Access\FakeSeeker('1'),
 			new Http\FakeRole(true)
 		))->response(['id' => 1]);
 		$evolution = json_decode($response->body()->serialization(), true);

@@ -16,7 +16,6 @@
     "php": ">=7.2",
     "elasticsearch/elasticsearch": "^6.0",
     "hashids/hashids": "^3.0",
-    "klapuch/access": "^2.17.1",
     "klapuch/application": "@dev",
     "klapuch/dataset": "@dev",
     "klapuch/configuration": "dev-master as 0.0.1",
@@ -30,7 +29,8 @@
     "justinrainbow/json-schema": "^5.2",
     "klapuch/ui": "dev-master as 0.0.3",
     "klapuch/uri": "dev-master as 3.0.0",
-    "php-amqplib/php-amqplib": "^2.7"
+    "php-amqplib/php-amqplib": "^2.7",
+    "klapuch/encryption": "^2.1"
   },
   "require-dev": {
     "nette/tester": "^2.0",

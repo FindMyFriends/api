@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d69bf439f2d21bc133b838b014adc7e",
+    "content-hash": "bad9767b0209238738c1168fdeb83cbf",
     "packages": [
         {
             "name": "elasticsearch/elasticsearch",
@@ -295,60 +295,6 @@
                 "schema"
             ],
             "time": "2018-02-14T22:26:30+00:00"
-        },
-        {
-            "name": "klapuch/access",
-            "version": "2.19.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/klapuch/Access.git",
-                "reference": "adcefc4f2acc75ec563d676e398394544e94ad9b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Access/zipball/adcefc4f2acc75ec563d676e398394544e94ad9b",
-                "reference": "adcefc4f2acc75ec563d676e398394544e94ad9b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pdo": "*",
-                "klapuch/encryption": "^2.0.0",
-                "klapuch/internal": "*",
-                "klapuch/output": "^2.6",
-                "klapuch/storage": "^2.0.0",
-                "klapuch/validation": "*",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "consistence/coding-standard": "^0.13.0",
-                "jakub-onderka/php-parallel-lint": "^0.9.2",
-                "mockery/mockery": "@dev",
-                "nette/tester": "^1.7",
-                "phing/phing": "^2.16",
-                "phpstan/phpstan": "*",
-                "sebastian/phpcpd": "^3.0",
-                "slevomat/coding-standard": "^2.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Klapuch\\Access\\": [
-                        "Core/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Dominik Klapuch",
-                    "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
-                }
-            ],
-            "description": "access, authentication, login, register",
-            "homepage": "https://github.com/klapuch/Access",
-            "time": "2017-09-13T18:57:21+00:00"
         },
         {
             "name": "klapuch/application",

@@ -5,11 +5,11 @@ namespace FindMyFriends\V1\Evolutions;
 
 use Elasticsearch;
 use FindMyFriends\Constraint;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -30,7 +30,7 @@ final class Post implements Application\View {
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		Elasticsearch\Client $elasticsearch,
-		Access\User $seeker
+		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->request = $request;

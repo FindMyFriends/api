@@ -7,10 +7,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Integration\Domain\Evolution;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
 use Klapuch\Output;
 use Tester;
 use Tester\Assert;
@@ -26,7 +26,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
@@ -35,7 +35,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->affect([]);
 		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
@@ -44,7 +44,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			(new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser('1000'),
+				new Access\FakeSeeker('1000'),
 				$this->database
 			))->revert();
 		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.');
@@ -58,7 +58,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			);
 			$evolution->print(new Output\FakeFormat());
@@ -67,7 +67,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			);
 			$evolution->affect([]);
@@ -76,7 +76,7 @@ final class PermittedChangeTest extends Tester\TestCase {
 			$evolution = new Evolution\PermittedChange(
 				new Evolution\FakeChange(),
 				$id,
-				new Access\FakeUser((string) $seeker),
+				new Access\FakeSeeker((string) $seeker),
 				$this->database
 			);
 			$evolution->revert();

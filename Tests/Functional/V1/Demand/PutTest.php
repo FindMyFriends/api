@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Demand;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -34,7 +34,7 @@ final class PutTest extends Tester\TestCase {
 			),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
@@ -46,7 +46,7 @@ final class PutTest extends Tester\TestCase {
 			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property note is required'], $demand);
@@ -62,7 +62,7 @@ final class PutTest extends Tester\TestCase {
 			),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Demand does not exist'], $demand);
@@ -80,7 +80,7 @@ final class PutTest extends Tester\TestCase {
 			),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);

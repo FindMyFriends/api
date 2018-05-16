@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
-use Klapuch\Access;
+use FindMyFriends\Domain\Access;
 use Klapuch\Log;
 use Klapuch\Storage;
 use PhpAmqpLib;
@@ -54,7 +54,7 @@ final class Consumer {
 				new SubsequentRequests($demand['id'], $this->database),
 				new SuitedSoulmates(
 					$demand['id'],
-					new Access\FakeUser((string) $demand['seeker_id']),
+					new Access\FakeSeeker((string) $demand['seeker_id']),
 					$this->elasticsearch,
 					$this->database
 				)

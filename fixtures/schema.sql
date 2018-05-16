@@ -20,6 +20,10 @@ CREATE TYPE timeline_sides AS ENUM (
   'sooner or later'
 );
 
+CREATE TYPE roles AS ENUM (
+  'member'
+);
+
 CREATE TYPE ownerships AS ENUM (
   'yours',
   'theirs'
@@ -849,9 +853,36 @@ CREATE UNIQUE INDEX descriptions_tooth_id_uindex ON descriptions USING btree (to
 CREATE TABLE seekers (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   email citext NOT NULL,
-  password text NOT NULL
+  password text NOT NULL,
+  role roles NOT NULL DEFAULT 'member'::roles
 );
 CREATE UNIQUE INDEX seekers_email_uindex ON seekers USING btree (email);
+
+CREATE TABLE forgotten_passwords (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL,
+  reminder text NOT NULL,
+  used boolean NOT NULL,
+  reminded_at timestamp with time zone NOT NULL,
+  expire_at timestamp with time zone NOT NULL,
+  CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (LENGTH(reminder) = 141),
+  CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
+  CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
+);
+CREATE INDEX forgotten_passwords_seeker_id ON forgotten_passwords USING btree (seeker_id);
+
+
+CREATE TABLE verification_codes (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL,
+  code text NOT NULL,
+  used_at timestamp with time zone,
+  CONSTRAINT verification_codes_seeker_id UNIQUE (seeker_id),
+  CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
+);
+CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
 
 
 CREATE TABLE evolutions (
@@ -1938,7 +1969,6 @@ CREATE VIEW description_parts AS
     LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
     LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 -----
-
 
 
 CREATE SCHEMA http;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
-use Klapuch\Access;
+use FindMyFriends\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -19,7 +19,7 @@ final class PermittedChange implements Change {
 	public function __construct(
 		Change $origin,
 		int $id,
-		Access\User $owner,
+		Access\Seeker $owner,
 		\PDO $database
 	) {
 		$this->origin = $origin;

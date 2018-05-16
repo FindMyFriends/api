@@ -255,15 +255,52 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO seekers (email, password) VALUES (
+	INSERT INTO seekers (email, password, role) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
-		samples.random_if_not_exists(md5(random()::text), replacements, 'password')
+		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
+    samples.random_if_not_exists(test_utils.random_enum('roles'), replacements, 'role')::roles
 	)
 	RETURNING id
 	INTO v_id;
 	RETURN v_id;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION samples.verification_code(replacements jsonb = '{}') RETURNS INTEGER
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO verification_codes (seeker_id, code, used_at) VALUES (
+    samples.random_if_not_exists((SELECT samples.seeker()), replacements, 'seeker_id'),
+    samples.random_if_not_exists(substr(md5(random()::text) || md5(random()::text) || md5(random()::text), 1, 91), replacements, 'code'),
+    CASE WHEN replacements ->> 'used_at' IS NULL THEN NULL ELSE samples.random_if_not_exists(NOW()::text, replacements, 'used_at')::timestamptz END
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION samples.forgotten_password(replacements jsonb = '{}') RETURNS INTEGER
+AS $$
+DECLARE
+  v_id integer;
+BEGIN
+  INSERT INTO forgotten_passwords (seeker_id, reminded_at, reminder, used, expire_at) VALUES (
+    samples.random_if_not_exists((SELECT samples.seeker()), replacements, 'seeker_id'),
+    samples.random_if_not_exists(NOW()::text, replacements, 'reminded_at')::timestamptz,
+    samples.random_if_not_exists(substr(md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text), 1, 141), replacements, 'reminder'),
+    samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'used')::bool,
+    samples.random_if_not_exists((NOW() + INTERVAL '1 MINUTE')::text, replacements, 'expire_at')::timestamptz
+  )
+  RETURNING id
+  INTO v_id;
+  RETURN v_id;
+END;
+$$
+LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION samples.nullable_seeker(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql

@@ -8,10 +8,10 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Functional\V1\Evolution;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
-use Klapuch\Access;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -37,7 +37,7 @@ final class PutTest extends Tester\TestCase {
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::null($evolution);
@@ -50,7 +50,7 @@ final class PutTest extends Tester\TestCase {
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'The property general is required'], $evolution);
@@ -67,7 +67,7 @@ final class PutTest extends Tester\TestCase {
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser()
+			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
@@ -86,7 +86,7 @@ final class PutTest extends Tester\TestCase {
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
 			$this->elasticsearch,
-			new Access\FakeUser((string) $seeker)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);

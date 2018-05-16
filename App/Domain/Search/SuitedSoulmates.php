@@ -5,7 +5,7 @@ namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
 use FindMyFriends;
-use Klapuch\Access;
+use FindMyFriends\Domain\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -21,7 +21,7 @@ final class SuitedSoulmates implements Soulmates {
 
 	public function __construct(
 		int $demand,
-		Access\User $seeker,
+		Access\Seeker $seeker,
 		Elasticsearch\Client $elasticsearch,
 		Storage\MetaPDO $database
 	) {

@@ -7,11 +7,11 @@ declare(strict_types = 1);
  */
 namespace FindMyFriends\Elastic;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Access;
-use Klapuch\Storage\NativeQuery;
+use Klapuch\Storage;
 use Tester;
 use Tester\Assert;
 
@@ -36,13 +36,13 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman']]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
 		Assert::same(
 			[['evolution_id' => 3]],
-			(new NativeQuery($this->database, 'SELECT evolution_id FROM soulmates'))->rows()
+			(new Storage\NativeQuery($this->database, 'SELECT evolution_id FROM soulmates'))->rows()
 		);
 	}
 
@@ -62,11 +62,11 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman', 'hair.color_id' => 2]]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
-		$soulmates = (new NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
+		$soulmates = (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(3, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
 		Assert::true($soulmates[1]['score'] > $soulmates[2]['score']);
@@ -91,11 +91,11 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'man', 'general.firstname' => 'Dominik']]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
-		$soulmates = (new NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
+		$soulmates = (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(2, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
 	}
@@ -120,11 +120,11 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'man', 'right_eye.color_id' => 5, 'left_eye.color_id' => 5]]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeUser((string) $seeker),
+			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
-		$soulmates = (new NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
+		$soulmates = (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(2, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
 	}
