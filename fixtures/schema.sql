@@ -631,7 +631,8 @@ CREATE TABLE similar_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL,
   similar_color_id smallint NOT NULL,
-  CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id),
+  CONSTRAINT similar_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT similar_colors_colors_similar_color_id_fk FOREIGN KEY (similar_color_id) REFERENCES colors(id)
 );
 
@@ -656,6 +657,7 @@ CREATE TABLE general (
   firstname text,
   lastname text,
   CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -663,6 +665,7 @@ CREATE TABLE beard_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
   CONSTRAINT beard_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -673,6 +676,7 @@ CREATE TABLE beards (
   style text,
   CONSTRAINT beards_length_check CHECK (validate_length(length)),
   CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
@@ -686,6 +690,7 @@ CREATE TABLE bodies (
   CONSTRAINT bodies_height_check CHECK (validate_length(height)),
   CONSTRAINT bodies_weight_check CHECK (validate_mass(weight)),
   CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -700,6 +705,7 @@ CREATE TABLE eye_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
   CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -708,6 +714,7 @@ CREATE TABLE eyes (
   color_id smallint,
   lenses boolean,
   CONSTRAINT eyes_eye_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES eye_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE FUNCTION heterochromic_eyes(eyes, eyes) RETURNS boolean
@@ -726,6 +733,7 @@ CREATE TABLE faces (
   care rating,
   shape_id smallint,
   CONSTRAINT faces_face_shapes_id_fk FOREIGN KEY (shape_id) REFERENCES face_shapes(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -739,6 +747,7 @@ CREATE TABLE hair_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
   CONSTRAINT hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -751,8 +760,10 @@ CREATE TABLE hair (
   roots boolean,
   nature boolean,
   CONSTRAINT hair_length_check CHECK (validate_length(length)),
-  CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id),
+  CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
@@ -761,6 +772,7 @@ CREATE TABLE hand_hair_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
   CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -769,6 +781,7 @@ CREATE TABLE hand_hair (
   color_id smallint,
   amount rating,
   CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -776,6 +789,7 @@ CREATE TABLE nail_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
   CONSTRAINT nail_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -786,6 +800,7 @@ CREATE TABLE nails (
   care rating,
   CONSTRAINT nails_length_check CHECK (validate_length(length)),
   CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
 
@@ -797,8 +812,10 @@ CREATE TABLE hands (
   vein_visibility rating,
   joint_visibility rating,
   hand_hair_id integer,
-  CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id),
+  CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) REFERENCES nails(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -821,16 +838,26 @@ CREATE TABLE descriptions (
   tooth_id integer NOT NULL UNIQUE,
   left_eye_id integer NOT NULL UNIQUE,
   right_eye_id integer NOT NULL UNIQUE,
-  CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id),
-  CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id) ON DELETE CASCADE,
-  CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id),
-  CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id),
-  CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id),
-  CONSTRAINT descriptions_faces_id_fk FOREIGN KEY (face_id) REFERENCES faces(id) ON DELETE CASCADE,
-  CONSTRAINT descriptions_general_id_fk FOREIGN KEY (general_id) REFERENCES general(id) ON DELETE CASCADE,
-  CONSTRAINT descriptions_hair_id_fk FOREIGN KEY (hair_id) REFERENCES hair(id) ON DELETE CASCADE,
-  CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id) ON DELETE CASCADE,
+  CONSTRAINT descriptions_beards_id_fk FOREIGN KEY (beard_id) REFERENCES beards(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_bodies_id_fk FOREIGN KEY (body_id) REFERENCES bodies(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_faces_id_fk FOREIGN KEY (face_id) REFERENCES faces(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_general_id_fk FOREIGN KEY (general_id) REFERENCES general(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_hair_id_fk FOREIGN KEY (hair_id) REFERENCES hair(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT descriptions_hands_id_fk FOREIGN KEY (hand_id) REFERENCES hands(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 
@@ -848,7 +875,8 @@ CREATE TABLE forgotten_passwords (
   used boolean NOT NULL,
   reminded_at timestamp with time zone NOT NULL,
   expire_at timestamp with time zone NOT NULL,
-  CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (LENGTH(reminder) = 141),
   CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
   CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
@@ -861,7 +889,8 @@ CREATE TABLE verification_codes (
   seeker_id integer NOT NULL UNIQUE,
   code text NOT NULL,
   used_at timestamp with time zone,
-  CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
 );
 CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
@@ -872,8 +901,10 @@ CREATE TABLE evolutions (
   seeker_id integer NOT NULL,
   description_id integer NOT NULL,
   evolved_at timestamp WITH TIME ZONE NOT NULL,
-  CONSTRAINT evolutions_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE,
-  CONSTRAINT evolutions_seekers_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE
+  CONSTRAINT evolutions_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT evolutions_seekers_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 CREATE INDEX evolutions_description_id_index ON evolutions USING btree (description_id);
 CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
@@ -1010,8 +1041,10 @@ CREATE TABLE demands (
   created_at timestamp WITH TIME ZONE NOT NULL,
   location_id integer NOT NULL UNIQUE,
   note character varying(150),
-  CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id) ON DELETE CASCADE,
-  CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
+  CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE FUNCTION demands_trigger_row_ad() RETURNS trigger
@@ -1068,8 +1101,10 @@ CREATE TABLE soulmates (
   related_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
   is_correct boolean NOT NULL DEFAULT TRUE,
   CONSTRAINT soulmates_demand_id_evolution_id_ukey UNIQUE (demand_id, evolution_id),
-  CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE,
-  CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id) ON DELETE CASCADE
+  CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT soulmates_evolutions_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
@@ -1106,8 +1141,10 @@ CREATE TABLE soulmate_requests (
   searched_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
   self_id integer,
   status job_statuses NOT NULL,
-  CONSTRAINT soulmate_requests_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id) ON DELETE CASCADE,
-  CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id) ON DELETE CASCADE
+  CONSTRAINT soulmate_requests_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT soulmate_requests_soulmate_requests_id_fk FOREIGN KEY (self_id) REFERENCES soulmate_requests(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE INDEX soulmate_requests_demand_id_index ON soulmate_requests USING btree (demand_id);
 CREATE INDEX soulmate_requests_id_index ON soulmate_requests USING btree (self_id);
@@ -1229,6 +1266,7 @@ CREATE TABLE eyebrow_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL,
   CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 -----
 
