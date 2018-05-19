@@ -29,8 +29,7 @@ final class VerifiedEntrance extends Tester\TestCase {
 	}
 
 	public function testPassingOnCaseInsensitiveVerifiedEmail() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'verified@bar.cz']))->try();
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['used_at' => '2005-01-01', 'seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database, ['email' => 'verified@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		$seeker = new Access\FakeSeeker((string) $seeker);
 		Assert::same(
 			$seeker,
@@ -42,8 +41,7 @@ final class VerifiedEntrance extends Tester\TestCase {
 	}
 
 	public function testPassingWithStringObject() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'verified@bar.cz']))->try();
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['used_at' => '2005-01-01', 'seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database, ['email' => 'verified@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		Assert::noError(function() use ($seeker) {
 			(new Access\VerifiedEntrance(
 				$this->database,

@@ -19,9 +19,7 @@ final class ReserveVerificationCodes extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRegenerating() {
-		$code = str_repeat('a', 91);
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code, 'used_at' => null, 'seeker_id' => $seeker]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz']))->try();
 		Assert::equal(
 			new Access\ThrowawayVerificationCode($code, $this->database),
 			(new Access\ReserveVerificationCodes(
@@ -34,8 +32,7 @@ final class ReserveVerificationCodes extends Tester\TestCase {
 	 * @throws \UnexpectedValueException For the given email, there is no valid verification code
 	 */
 	public function testThrowingOnRegeneratingForOnceUsedCode() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['used_at' => '2005-01-01', 'seeker_id' => $seeker]))->try();
+		(new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		(new Access\ReserveVerificationCodes(
 			$this->database
 		))->generate('foo@bar.cz');

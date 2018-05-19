@@ -21,8 +21,7 @@ final class ThrowawayVerificationCode extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testMakeCodeUsedAfterUsage() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code, 'used_at' => null]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
 		(new Access\ThrowawayVerificationCode($code, $this->database))->use();
 		Assert::true(
 			(new Storage\NativeQuery(
@@ -36,8 +35,7 @@ final class ThrowawayVerificationCode extends Tester\TestCase {
 	}
 
 	public function testThrowingOnUsingAlreadyActivatedCode() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code, 'used_at' => '2005-01-01']))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		Assert::exception(function() use ($code) {
 			(new Access\ThrowawayVerificationCode(
 				$code,
@@ -53,8 +51,7 @@ final class ThrowawayVerificationCode extends Tester\TestCase {
 	}
 
 	public function testPrintingCode() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code, 'used_at' => null]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
 		Assert::same(
 			sprintf('|code|%s|', $code),
 			(new Access\ThrowawayVerificationCode(

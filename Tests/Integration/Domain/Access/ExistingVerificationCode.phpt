@@ -37,8 +37,7 @@ final class ExistingVerificationCode extends Tester\TestCase {
 	}
 
 	public function testPassingOnUsingKnownCode() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
 		Assert::noError(
 			function() use ($code) {
 				(new Access\ExistingVerificationCode(
@@ -51,8 +50,7 @@ final class ExistingVerificationCode extends Tester\TestCase {
 	}
 
 	public function testPrintingCodeWithOrigin() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
 		Assert::same(
 			sprintf('|abc|def||code|%s|', $code),
 			(new Access\ExistingVerificationCode(
@@ -64,8 +62,7 @@ final class ExistingVerificationCode extends Tester\TestCase {
 	}
 
 	public function testThrowingOnUsingCaseInsensitiveCode() {
-		$code = str_repeat('x', 91);
-		(new Misc\SamplePostgresData($this->database, 'verification_code', ['code' => $code]))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
 		Assert::exception(function() use ($code) {
 			(new Access\ExistingVerificationCode(
 				new Access\FakeVerificationCode(),

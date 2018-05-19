@@ -10,7 +10,12 @@ SET row_security = off;
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
-SET search_path = public, pg_catalog;
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE SCHEMA access;
+CREATE SCHEMA http;
+
+SET search_path = public, pg_catalog, access, http;
 
 -- TYPES --
 CREATE TYPE timeline_sides AS ENUM (
@@ -867,6 +872,20 @@ CREATE TABLE seekers (
   password text NOT NULL,
   role roles NOT NULL DEFAULT 'member'::roles
 );
+
+CREATE FUNCTION seekers_trigger_row_ai() RETURNS trigger
+AS $$
+BEGIN
+  INSERT INTO verification_codes (seeker_id, code) VALUES (
+    new.id,
+    format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex'))
+  );
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER seekers_row_ai_trigger AFTER INSERT ON seekers FOR EACH ROW EXECUTE PROCEDURE seekers_trigger_row_ai();
 
 
 CREATE TABLE evolutions (
@@ -1962,11 +1981,6 @@ CREATE VIEW description_parts AS
 -----
 
 
-CREATE SCHEMA http;
-SET search_path = http, pg_catalog;
-SET default_tablespace = '';
-SET default_with_oids = false;
-
 -- TABLES --
 CREATE TABLE http.etags (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1977,11 +1991,6 @@ CREATE TABLE http.etags (
 CREATE UNIQUE INDEX etags_entity_ukey ON etags USING btree (lower((entity)::text));
 -----
 
-
-CREATE SCHEMA access;
-SET search_path = public, access, pg_catalog;
-SET default_tablespace = '';
-SET default_with_oids = false;
 
 CREATE TABLE access.forgotten_passwords (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -2002,7 +2011,7 @@ CREATE INDEX forgotten_passwords_seeker_id ON forgotten_passwords USING btree (s
 CREATE TABLE access.verification_codes (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   seeker_id integer NOT NULL UNIQUE,
-  code text NOT NULL,
+  code text NOT NULL UNIQUE,
   used_at timestamp with time zone,
   CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
