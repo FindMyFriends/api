@@ -14,7 +14,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class Guest extends Tester\TestCase {
+final class GuestTest extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testStaticId() {
@@ -26,4 +26,4 @@ final class Guest extends Tester\TestCase {
 	}
 }
 
-(new Guest())->run();
+(new GuestTest())->run();

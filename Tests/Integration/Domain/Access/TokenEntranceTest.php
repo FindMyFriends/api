@@ -13,7 +13,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class TokenEntrance extends Tester\TestCase {
+final class TokenEntranceTest extends Tester\TestCase {
 	public function testRetrievedSeekerSessionIdOnEntering() {
 		Assert::match(
 			'~^[\w\d,-]{60}$~',
@@ -46,4 +46,4 @@ final class TokenEntrance extends Tester\TestCase {
 	}
 }
 
-(new TokenEntrance())->run();
+(new TokenEntranceTest())->run();

@@ -13,7 +13,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ConstantSeeker extends Tester\TestCase {
+final class ConstantSeekerTest extends Tester\TestCase {
 	public function testPropertiesWithoutSensitiveData() {
 		$seeker = new Access\ConstantSeeker(
 			'1',
@@ -39,4 +39,4 @@ final class ConstantSeeker extends Tester\TestCase {
 	}
 }
 
-(new ConstantSeeker())->run();
+(new ConstantSeekerTest())->run();

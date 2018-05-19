@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class RemindedPassword extends Tester\TestCase {
+final class RemindedPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testChangingWithValidReminder() {
@@ -84,4 +84,4 @@ final class RemindedPassword extends Tester\TestCase {
 	}
 }
 
-(new RemindedPassword())->run();
+(new RemindedPasswordTest())->run();

@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class RegisteredSeeker extends Tester\TestCase {
+final class RegisteredSeekerTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testInfoAboutRegisteredSeeker() {
@@ -39,4 +39,4 @@ final class RegisteredSeeker extends Tester\TestCase {
 	}
 }
 
-(new RegisteredSeeker())->run();
+(new RegisteredSeekerTest())->run();

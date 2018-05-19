@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ThrowawayRemindedPassword extends Tester\TestCase {
+final class ThrowawayRemindedPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	/**
@@ -44,4 +44,4 @@ final class ThrowawayRemindedPassword extends Tester\TestCase {
 	}
 }
 
-(new ThrowawayRemindedPassword())->run();
+(new ThrowawayRemindedPasswordTest())->run();

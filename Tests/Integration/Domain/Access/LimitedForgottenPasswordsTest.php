@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class LimitedForgottenPasswords extends Tester\TestCase {
+final class LimitedForgottenPasswordsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	/**
@@ -61,4 +61,4 @@ final class LimitedForgottenPasswords extends Tester\TestCase {
 	}
 }
 
-(new LimitedForgottenPasswords())->run();
+(new LimitedForgottenPasswordsTest())->run();

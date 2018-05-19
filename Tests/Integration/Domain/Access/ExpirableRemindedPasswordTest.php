@@ -16,7 +16,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ExpirableRemindedPassword extends Tester\TestCase {
+final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	/**
@@ -77,4 +77,4 @@ final class ExpirableRemindedPassword extends Tester\TestCase {
 	}
 }
 
-(new ExpirableRemindedPassword())->run();
+(new ExpirableRemindedPasswordTest())->run();

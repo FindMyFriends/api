@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ReserveVerificationCodes extends Tester\TestCase {
+final class ReserveVerificationCodesTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRegenerating() {
@@ -39,4 +39,4 @@ final class ReserveVerificationCodes extends Tester\TestCase {
 	}
 }
 
-(new ReserveVerificationCodes())->run();
+(new ReserveVerificationCodesTest())->run();

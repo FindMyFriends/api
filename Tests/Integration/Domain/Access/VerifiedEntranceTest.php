@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class VerifiedEntrance extends Tester\TestCase {
+final class VerifiedEntranceTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	/**
@@ -41,4 +41,4 @@ final class VerifiedEntrance extends Tester\TestCase {
 	}
 }
 
-(new VerifiedEntrance())->run();
+(new VerifiedEntranceTest())->run();

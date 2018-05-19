@@ -14,7 +14,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ApiEntrance extends Tester\TestCase {
+final class ApiEntranceTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testEnteringWithValidBearerToken() {
@@ -83,4 +83,4 @@ final class ApiEntrance extends Tester\TestCase {
 	}
 }
 
-(new ApiEntrance())->run();
+(new ApiEntranceTest())->run();

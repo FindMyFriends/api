@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ForgetfulSeeker extends Tester\TestCase {
+final class ForgetfulSeekerTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testSeekerWithKnownReminder() {
@@ -37,4 +37,4 @@ final class ForgetfulSeeker extends Tester\TestCase {
 	}
 }
 
-(new ForgetfulSeeker())->run();
+(new ForgetfulSeekerTest())->run();

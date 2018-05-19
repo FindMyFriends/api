@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ThrowawayVerificationCode extends Tester\TestCase {
+final class ThrowawayVerificationCodeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testMakeCodeUsedAfterUsage() {
@@ -62,4 +62,4 @@ final class ThrowawayVerificationCode extends Tester\TestCase {
 	}
 }
 
-(new ThrowawayVerificationCode())->run();
+(new ThrowawayVerificationCodeTest())->run();

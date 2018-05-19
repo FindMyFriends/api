@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class SecureEntrance extends Tester\TestCase {
+final class SecureEntranceTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testSuccessfulAuthenticatingWithExactlySameCredentials() {
@@ -145,4 +145,4 @@ final class SecureEntrance extends Tester\TestCase {
 	}
 }
 
-(new SecureEntrance())->run();
+(new SecureEntranceTest())->run();

@@ -16,7 +16,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class UniqueSeekers extends Tester\TestCase {
+final class UniqueSeekersTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testCreatedSeekerWithBaseEvolution() {
@@ -138,4 +138,4 @@ final class UniqueSeekers extends Tester\TestCase {
 	}
 }
 
-(new UniqueSeekers())->run();
+(new UniqueSeekersTest())->run();

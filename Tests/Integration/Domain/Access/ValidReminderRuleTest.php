@@ -15,7 +15,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ValidReminderRule extends Tester\TestCase {
+final class ValidReminderRuleTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testInvalidAsUnknownReminder() {
@@ -70,4 +70,4 @@ final class ValidReminderRule extends Tester\TestCase {
 	}
 }
 
-(new ValidReminderRule())->run();
+(new ValidReminderRuleTest())->run();

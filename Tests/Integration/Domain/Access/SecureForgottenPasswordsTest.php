@@ -16,7 +16,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class SecureForgottenPasswords extends Tester\TestCase {
+final class SecureForgottenPasswordsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRemindingWithFutureExpiration() {
@@ -58,4 +58,4 @@ final class SecureForgottenPasswords extends Tester\TestCase {
 	}
 }
 
-(new SecureForgottenPasswords())->run();
+(new SecureForgottenPasswordsTest())->run();

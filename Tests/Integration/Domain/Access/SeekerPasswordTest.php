@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class SeekerPassword extends Tester\TestCase {
+final class SeekerPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testChangingWithHashing() {
@@ -55,4 +55,4 @@ final class SeekerPassword extends Tester\TestCase {
 	}
 }
 
-(new SeekerPassword())->run();
+(new SeekerPasswordTest())->run();

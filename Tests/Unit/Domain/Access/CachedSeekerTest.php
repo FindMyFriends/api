@@ -14,7 +14,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class CachedSeeker extends Tester\TestCase {
+final class CachedSeekerTest extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testCallingJustOnce() {
@@ -33,4 +33,4 @@ final class CachedSeeker extends Tester\TestCase {
 	}
 }
 
-(new CachedSeeker())->run();
+(new CachedSeekerTest())->run();

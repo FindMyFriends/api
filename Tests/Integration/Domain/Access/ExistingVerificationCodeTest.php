@@ -16,7 +16,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ExistingVerificationCode extends Tester\TestCase {
+final class ExistingVerificationCodeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnUnknownCode() {
@@ -73,4 +73,4 @@ final class ExistingVerificationCode extends Tester\TestCase {
 	}
 }
 
-(new ExistingVerificationCode())->run();
+(new ExistingVerificationCodeTest())->run();
