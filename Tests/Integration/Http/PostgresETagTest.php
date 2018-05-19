@@ -46,7 +46,7 @@ final class PostgresETagTest extends Tester\TestCase {
 	public function testUpdatingWithRecordedDatetime() {
 		$id = (new Storage\NativeQuery(
 			$this->database,
-			'INSERT INTO http.etags (entity, tag, created_at) VALUES (?, ?, ?)
+			'INSERT INTO etags (entity, tag, created_at) VALUES (?, ?, ?)
 			RETURNING id',
 			['/v1/demands/1', '123', '2010-01-01']
 		))->field();
@@ -54,7 +54,7 @@ final class PostgresETagTest extends Tester\TestCase {
 		$eTag->set(new \SplQueue());
 		$current = (new Storage\NativeQuery(
 			$this->database,
-			'SELECT date_part(\'year\', created_at) AS created_at, tag FROM http.etags WHERE id = ?',
+			'SELECT date_part(\'year\', created_at) AS created_at, tag FROM etags WHERE id = ?',
 			[$id]
 		))->row();
 		Assert::notSame('2010', $current['created_at']);

@@ -2,4 +2,5 @@
 psql -U postgres -c "DROP DATABASE IF EXISTS find_my_friends";
 psql -U postgres -c "CREATE DATABASE find_my_friends";
 psql -U postgres find_my_friends < /var/www/FindMyFriends/fixtures/schema.sql;
+psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http;";
 for f in /var/www/FindMyFriends/fixtures/dumps/*.sql; do psql -U postgres -d find_my_friends -f $f; done

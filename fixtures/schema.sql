@@ -868,33 +868,6 @@ CREATE TABLE seekers (
   role roles NOT NULL DEFAULT 'member'::roles
 );
 
-CREATE TABLE forgotten_passwords (
-  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  seeker_id integer NOT NULL,
-  reminder text NOT NULL,
-  used boolean NOT NULL,
-  reminded_at timestamp with time zone NOT NULL,
-  expire_at timestamp with time zone NOT NULL,
-  CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
-    ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (LENGTH(reminder) = 141),
-  CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
-  CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
-);
-CREATE INDEX forgotten_passwords_seeker_id ON forgotten_passwords USING btree (seeker_id);
-
-
-CREATE TABLE verification_codes (
-  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  seeker_id integer NOT NULL UNIQUE,
-  code text NOT NULL,
-  used_at timestamp with time zone,
-  CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
-    ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
-);
-CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
-
 
 CREATE TABLE evolutions (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1995,7 +1968,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 -- TABLES --
-CREATE TABLE etags (
+CREATE TABLE http.etags (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   entity text NOT NULL,
   tag text NOT NULL,
@@ -2003,3 +1976,36 @@ CREATE TABLE etags (
 );
 CREATE UNIQUE INDEX etags_entity_ukey ON etags USING btree (lower((entity)::text));
 -----
+
+
+CREATE SCHEMA access;
+SET search_path = public, access, pg_catalog;
+SET default_tablespace = '';
+SET default_with_oids = false;
+
+CREATE TABLE access.forgotten_passwords (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL,
+  reminder text NOT NULL,
+  used boolean NOT NULL,
+  reminded_at timestamp with time zone NOT NULL,
+  expire_at timestamp with time zone NOT NULL,
+  CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (LENGTH(reminder) = 141),
+  CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
+  CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
+);
+CREATE INDEX forgotten_passwords_seeker_id ON forgotten_passwords USING btree (seeker_id);
+
+
+CREATE TABLE access.verification_codes (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL UNIQUE,
+  code text NOT NULL,
+  used_at timestamp with time zone,
+  CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
+);
+CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);

@@ -6,4 +6,5 @@ psql -U postgres find_my_friends_test < /var/www/FindMyFriends/fixtures/schema.s
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/plpgunit.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/test_utils.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/samples.sql;
+psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http;";
 for f in /var/www/FindMyFriends/fixtures/dumps/*.sql; do psql -U postgres -d find_my_friends_test -f $f; done
