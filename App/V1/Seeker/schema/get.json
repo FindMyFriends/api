@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "email": {
+            "type": "string"
+        },
+        "password": {
+            "type": "string"
+        },
+        "general": {
+            "additionalProperties": false,
+            "properties": {
+                "firstname": {
+                    "type": [
+                        "string"
+                    ]
+                },
+                "sex": {
+                    "type": "string",
+                    "enum": [
+                        "man",
+                        "woman"
+                    ]
+                },
+                "lastname": {
+                    "type": [
+                        "string"
+                    ]
+                },
+                "ethnic_group_id": {
+                    "type": "integer"
+                },
+                "birth_year": {
+                    "type": "integer",
+                    "min": 1850,
+                    "max": 2018
+                }
+            },
+            "required": [
+                "lastname",
+                "firstname",
+                "ethnic_group_id",
+                "birth_year",
+                "sex"
+            ],
+            "type": "object"
+        }
+    },
+    "required": [
+        "email",
+        "password",
+        "general"
+    ],
+    "type": "object"
+}

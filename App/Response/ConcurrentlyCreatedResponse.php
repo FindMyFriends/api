@@ -6,21 +6,14 @@ namespace FindMyFriends\Response;
 use FindMyFriends\Http;
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri;
 
 final class ConcurrentlyCreatedResponse implements Application\Response {
 	private $origin;
 	private $eTag;
-	private $uri;
 
-	public function __construct(
-		Application\Response $origin,
-		Http\ETag $eTag,
-		Uri\Uri $uri
-	) {
+	public function __construct(Application\Response $origin, Http\ETag $eTag) {
 		$this->origin = $origin;
 		$this->eTag = $eTag;
-		$this->uri = $uri;
 	}
 
 	public function body(): Output\Format {
@@ -29,10 +22,10 @@ final class ConcurrentlyCreatedResponse implements Application\Response {
 
 	public function headers(): array {
 		$this->eTag->set($this->origin->body());
-		return ['Location' => $this->uri->reference()] + $this->origin->headers();
+		return $this->origin->headers();
 	}
 
 	public function status(): int {
-		return HTTP_CREATED;
+		return $this->origin->status();
 	}
 }

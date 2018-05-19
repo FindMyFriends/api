@@ -5,6 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use FindMyFriends\Configuration;
 use Klapuch\Application;
+use Klapuch\Encryption;
 use Klapuch\Log;
 use Klapuch\Output;
 use Klapuch\Routing;
@@ -61,6 +62,7 @@ echo (new class(
 								$redis,
 								$elasticsearch,
 								$rabbitMq,
+								new Encryption\AES256CBC($configuration['KEYS']['password']),
 								$configuration['HASHIDS']
 							),
 							$_SERVER['REQUEST_METHOD']

@@ -19,30 +19,67 @@ require __DIR__ . '/../../../bootstrap.php';
 final class UniqueSeekers extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testRegisteringBrandNewOne() {
+	public function testCreatedSeekerWithBaseEvolution() {
 		$seeker = (new Access\UniqueSeekers(
 			$this->database,
 			new Encryption\FakeCipher()
-		))->register('foo@bar.cz', 'passw0rt', 'member');
+		))->join([
+			'email' => 'foo@bar.cz',
+			'password' => 'passw0rt',
+			'general' => [
+				'birth_year' => 1996,
+				'sex' => 'man',
+				'ethnic_group_id' => 2,
+				'firstname' => 'Dominik',
+				'lastname' => 'Klapuch',
+			],
+		]);
 		Assert::same('1', $seeker->id());
 		Assert::same(['email' => 'foo@bar.cz', 'role' => 'member'], $seeker->properties());
-		$rows = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
-		Assert::count(1, $rows);
-		Assert::same('foo@bar.cz', $rows[0]['email']);
-		Assert::same('secret', $rows[0]['password']);
-		Assert::same('member', $rows[0]['role']);
-		Assert::same(1, $rows[0]['id']);
+		$seekers = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
+		$evolutions = (new Storage\NativeQuery($this->database, 'SELECT * FROM evolutions'))->rows();
+		$general = (new Storage\NativeQuery($this->database, 'SELECT * FROM general'))->rows();
+		Assert::count(1, $seekers);
+		Assert::count(1, $evolutions);
+		Assert::count(1, $general);
+		Assert::same('foo@bar.cz', $seekers[0]['email']);
+		Assert::same('secret', $seekers[0]['password']);
+		Assert::same('member', $seekers[0]['role']);
+		Assert::same(1, $seekers[0]['id']);
+		Assert::same('[1996,1997)', $general[0]['birth_year']);
 	}
 
-	public function testRegisteringMultipleDifferentEmails() {
+	public function testJoiningMultipleDifferentEmails() {
 		$seekers = new Access\UniqueSeekers(
 			$this->database,
 			new Encryption\FakeCipher()
 		);
-		$seekers->register('foo@bar.cz', 'ultra secret password', 'member');
-		$seekers->register('bar@foo.cz', 'weak password', 'member');
+		$seekers->join([
+			'email' => 'foo@bar.cz',
+			'password' => 'ultra secret password',
+			'general' => [
+				'birth_year' => 1996,
+				'sex' => 'man',
+				'ethnic_group_id' => 2,
+				'firstname' => 'Dominik',
+				'lastname' => 'Klapuch',
+			],
+		]);
+		$seekers->join([
+			'email' => 'bar@foo.cz',
+			'password' => 'weak password',
+			'general' => [
+				'birth_year' => 1996,
+				'sex' => 'man',
+				'ethnic_group_id' => 2,
+				'firstname' => 'Dominik',
+				'lastname' => 'Klapuch',
+			],
+		]);
 		$rows = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
+		$evolutions = (new Storage\NativeQuery($this->database, 'SELECT * FROM evolutions'))->rows();
 		Assert::count(2, $rows);
+		Assert::count(2, $evolutions);
 		Assert::same(1, $rows[0]['id']);
 		Assert::same(2, $rows[1]['id']);
 	}
@@ -52,7 +89,17 @@ final class UniqueSeekers extends Tester\TestCase {
 			(new Access\UniqueSeekers(
 				$this->database,
 				new Encryption\FakeCipher()
-			))->register('foo@bar.cz', 'password', 'member');
+			))->join([
+				'email' => 'foo@bar.cz',
+				'password' => 'password',
+				'general' => [
+					'birth_year' => 1996,
+					'sex' => 'man',
+					'ethnic_group_id' => 2,
+					'firstname' => 'Dominik',
+					'lastname' => 'Klapuch',
+				],
+			]);
 		};
 		$register();
 		Assert::exception(
@@ -68,7 +115,17 @@ final class UniqueSeekers extends Tester\TestCase {
 			(new Access\UniqueSeekers(
 				$this->database,
 				new Encryption\FakeCipher()
-			))->register($email, 'password', 'member');
+			))->join([
+				'email' => $email,
+				'password' => 'password',
+				'general' => [
+					'birth_year' => 1996,
+					'sex' => 'man',
+					'ethnic_group_id' => 2,
+					'firstname' => 'Dominik',
+					'lastname' => 'Klapuch',
+				],
+			]);
 		};
 		$register($email);
 		Assert::exception(

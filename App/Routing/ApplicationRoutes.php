@@ -10,6 +10,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\V1;
 use Klapuch\Application;
+use Klapuch\Encryption;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -25,6 +26,7 @@ final class ApplicationRoutes implements Routing\Routes {
 	private $redis;
 	private $elasticsearch;
 	private $rabbitMq;
+	private $cipher;
 	private $hashids;
 
 	public function __construct(
@@ -33,6 +35,7 @@ final class ApplicationRoutes implements Routing\Routes {
 		Predis\ClientInterface $redis,
 		Elasticsearch\Client $elasticsearch,
 		PhpAmqpLib\Connection\AMQPLazyConnection $rabbitMq,
+		Encryption\Cipher $cipher,
 		array $hashids
 	) {
 		$this->uri = $uri;
@@ -40,6 +43,7 @@ final class ApplicationRoutes implements Routing\Routes {
 		$this->redis = $redis;
 		$this->elasticsearch = $elasticsearch;
 		$this->rabbitMq = $rabbitMq;
+		$this->cipher = $cipher;
 		$this->hashids = $hashids;
 	}
 
@@ -153,6 +157,12 @@ final class ApplicationRoutes implements Routing\Routes {
 				$seeker,
 				new Http\ChosenRole($seeker, ['member', 'guest']),
 				$this->elasticsearch
+			),
+			'v1/seekers [POST]' => new V1\Seekers\Post(
+				new Application\PlainRequest(),
+				$this->uri,
+				$this->database,
+				$this->cipher
 			),
 			'v1/.+ [OPTIONS]' => new V1\Options(),
 		];

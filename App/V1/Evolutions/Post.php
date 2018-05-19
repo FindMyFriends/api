@@ -62,9 +62,8 @@ final class Post implements Application\View {
 				]
 			);
 			return new Response\ConcurrentlyCreatedResponse(
-				new Response\EmptyResponse(),
-				new Http\PostgresETag($this->database, $this->url),
-				$url
+				new Response\CreatedResponse(new Response\EmptyResponse(), $this->url),
+				new Http\PostgresETag($this->database, $this->url)
 			);
 		} catch (\UnexpectedValueException $ex) {
 			return new Response\JsonError($ex);

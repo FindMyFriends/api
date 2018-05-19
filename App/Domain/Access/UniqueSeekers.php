@@ -18,21 +18,31 @@ final class UniqueSeekers implements Seekers {
 		$this->cipher = $cipher;
 	}
 
-	public function register(
-		string $email,
-		string $password,
-		string $role
-	): Seeker {
-		if ($this->exists($email))
-			throw new \UnexpectedValueException(sprintf('Email "%s" already exists', $email));
-		$row = (new Storage\TypedQuery(
-			$this->database,
-			'INSERT INTO seekers (email, password, role) VALUES
-			(?, ?, ?)
-			RETURNING *',
-			[$email, $this->cipher->encryption($password), $role]
-		))->row();
-		return new ConstantSeeker((string) $row['id'], $row);
+	public function join(array $credentials): Seeker {
+		if ($this->exists($credentials['email']))
+			throw new \UnexpectedValueException(sprintf('Email "%s" already exists', $credentials['email']));
+		return (new Storage\Transaction($this->database))->start(function () use ($credentials): Seeker {
+			$seeker = (new Storage\TypedQuery(
+				$this->database,
+				'INSERT INTO seekers (email, password) VALUES
+				(?, ?)
+				RETURNING *',
+				[$credentials['email'], $this->cipher->encryption($credentials['password'])]
+			))->row();
+			(new Storage\TypedQuery(
+				$this->database,
+				"SELECT created_base_evolution(
+					:seeker,
+					:sex,
+					:ethnic_group_id,
+					int4range(:birth_year, :birth_year, '[]'),
+					:firstname,
+					:lastname
+				)",
+				['seeker' => $seeker['id']] + $credentials['general']
+			))->execute();
+			return new ConstantSeeker((string) $seeker['id'], $seeker);
+		});
 	}
 
 	private function exists(string $email): bool {

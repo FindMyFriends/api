@@ -5,6 +5,7 @@ namespace FindMyFriends\Routing;
 
 use Elasticsearch;
 use Hashids\Hashids;
+use Klapuch\Encryption;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
@@ -55,6 +56,7 @@ final class TestApplicationRoutes implements Routing\Routes {
 				'',
 				''
 			),
+			new Encryption\FakeCipher(),
 			[
 				'demand' => ['hashid' => new Hashids()],
 				'evolution' => ['hashid' => new Hashids()],

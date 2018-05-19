@@ -122,6 +122,7 @@
 		<mkdir dir="${base_path}/www/schema/v1/evolution" />
 		<mkdir dir="${base_path}/www/schema/v1/description" />
 		<mkdir dir="${base_path}/www/schema/v1/soulmate" />
+		<mkdir dir="${base_path}/www/schema/v1/seeker" />
 		<symlink target="${base_path}/App/V1/Demand/schema/get.json" link="${base_path}/www/schema/v1/demand/get.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/put.json" link="${base_path}/www/schema/v1/demand/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Demand/schema/patch.json" link="${base_path}/www/schema/v1/demand/patch.json" overwrite="true"/>
@@ -135,6 +136,8 @@
 		<symlink target="${base_path}/App/V1/Description/schema/put.json" link="${base_path}/www/schema/v1/description/put.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Descriptions/schema/post.json" link="${base_path}/www/schema/v1/description/post.json" overwrite="true"/>
 		<symlink target="${base_path}/App/V1/Soulmate/schema/patch.json" link="${base_path}/www/schema/v1/soulmate/patch.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Seeker/schema/get.json" link="${base_path}/www/schema/v1/seeker/get.json" overwrite="true"/>
+		<symlink target="${base_path}/App/V1/Seekers/schema/post.json" link="${base_path}/www/schema/v1/seeker/post.json" overwrite="true"/>
 	</target>
 
 	<target name="generate-schemas">
