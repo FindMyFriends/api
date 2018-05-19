@@ -18,23 +18,20 @@ final class VerifiedEntrance implements Entrance {
 	}
 
 	public function enter(array $credentials): Seeker {
-		[$email] = $credentials;
-		if (!$this->verified((string) $email))
+		$seeker = $this->origin->enter($credentials);
+		if (!$this->verified($seeker))
 			throw new \UnexpectedValueException('Email has not been verified yet');
-		return $this->origin->enter($credentials);
+		return $seeker;
 	}
 
-	private function verified(string $email): bool {
+	private function verified(Seeker $seeker): bool {
 		return (bool) (new Storage\TypedQuery(
 			$this->database,
 			'SELECT 1
 			FROM verification_codes  
-			WHERE seeker_id = (
-				SELECT id
-				FROM seekers
-				WHERE email IS NOT DISTINCT FROM ?
-			) AND used_at IS NOT NULL',
-			[$email]
+			WHERE seeker_id = ?
+			AND used_at IS NOT NULL',
+			[$seeker->id()]
 		))->field();
 	}
 

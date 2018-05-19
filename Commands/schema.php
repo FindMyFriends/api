@@ -53,3 +53,7 @@ $schemas->save($soulmateRequest->get(), new SplFileInfo(__DIR__ . '/../App/V1/De
 $seeker = new FindMyFriends\Schema\Seeker\Structure($database);
 $schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/V1/Seeker/schema/get.json'));
 $schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/V1/Seekers/schema/post.json'));
+
+$seeker = new FindMyFriends\Schema\Token\Structure();
+$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/V1/Token/schema/get.json'));
+$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/V1/Tokens/schema/post.json'));

@@ -19,7 +19,7 @@ final class SecureEntrance implements Entrance {
 	}
 
 	public function enter(array $credentials): Seeker {
-		[$plainEmail, $plainPassword] = array_map('strval', $credentials);
+		['email' => $plainEmail, 'password' => $plainPassword] = array_map('strval', $credentials);
 		$seeker = (new Storage\TypedQuery(
 			$this->database,
 			'SELECT *

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\V1\Seekers;
+namespace FindMyFriends\V1\Tokens;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Access;
@@ -30,21 +30,28 @@ final class Post implements Application\View {
 
 	public function response(array $parameters): Application\Response {
 		try {
-			(new Access\HarnessedSeekers(
-				new Access\UniqueSeekers(
-					$this->database,
-					$this->cipher
+			$seeker = (new Access\HarnessedEntrance(
+				new Access\TokenEntrance(
+					new Access\VerifiedEntrance(
+						$this->database,
+						new Access\SecureEntrance(
+							$this->database,
+							$this->cipher
+						)
+					)
 				),
-				new Misc\ApiErrorCallback(HTTP_CONFLICT)
-			))->join(
+				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+			))->enter(
 				(new Constraint\StructuredJson(
 					new \SplFileInfo(self::SCHEMA)
 				))->apply(json_decode($this->request->body()->serialization(), true))
 			);
-			return new Response\PlainResponse(
-				new Output\EmptyFormat(),
-				[],
-				HTTP_CREATED
+			return new Response\JsonResponse(
+				new Response\PlainResponse(
+					new Output\Json(['token' => $seeker->id()]),
+					[],
+					HTTP_CREATED
+				)
 			);
 		} catch (\UnexpectedValueException $ex) {
 			return new Response\JsonError($ex);

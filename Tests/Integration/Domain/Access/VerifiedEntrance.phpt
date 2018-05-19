@@ -24,39 +24,20 @@ final class VerifiedEntrance extends Tester\TestCase {
 	public function testThrowingOnNotVerifiedEmail() {
 		(new Access\VerifiedEntrance(
 			$this->database,
-			new Access\FakeEntrance(new Access\FakeSeeker())
+			new Access\FakeEntrance(new Access\FakeSeeker('1'))
 		))->enter(['unverified@bar.cz', 'heslo']);
 	}
 
-	public function testPassingOnCaseInsensitiveVerifiedEmail() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database, ['email' => 'verified@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
+	public function testPassingOnVerifiedEmail() {
+		['id' => $seeker] = (new Misc\SampleSeeker($this->database, ['verification_code' => ['used_at' => 'NOW()']]))->try();
 		$seeker = new Access\FakeSeeker((string) $seeker);
 		Assert::same(
 			$seeker,
 			(new Access\VerifiedEntrance(
 				$this->database,
 				new Access\FakeEntrance($seeker)
-			))->enter(['VERIFIED@bar.cz', 'heslo'])
+			))->enter([])
 		);
-	}
-
-	public function testPassingWithStringObject() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database, ['email' => 'verified@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
-		Assert::noError(function() use ($seeker) {
-			(new Access\VerifiedEntrance(
-				$this->database,
-				new Access\FakeEntrance(new Access\FakeSeeker((string) $seeker))
-			))->enter(
-				[
-					new class {
-						public function __toString() {
-							return 'VERIFIED@bar.cz';
-						}
-					},
-					'heslo',
-				]
-			);
-		});
 	}
 }
 

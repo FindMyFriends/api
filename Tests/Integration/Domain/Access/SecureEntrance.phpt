@@ -25,7 +25,7 @@ final class SecureEntrance extends Tester\TestCase {
 		$seeker = (new Access\SecureEntrance(
 			$this->database,
 			new Encryption\FakeCipher(true)
-		))->enter(['foo@bar.cz', 'heslo']);
+		))->enter(['email' => 'foo@bar.cz', 'password' => 'heslo']);
 		Assert::same('1', $seeker->id());
 	}
 
@@ -46,7 +46,7 @@ final class SecureEntrance extends Tester\TestCase {
 			(new Access\SecureEntrance(
 				$this->database,
 				new Encryption\FakeCipher(true)
-			))->enter(['FOO@bar.cz', 'heslo']);
+			))->enter(['email' => 'FOO@bar.cz', 'password' => 'heslo']);
 		});
 	}
 
@@ -58,12 +58,12 @@ final class SecureEntrance extends Tester\TestCase {
 				new Encryption\FakeCipher(true)
 			))->enter(
 				[
-					new class {
+					'email' => new class {
 						public function __toString() {
 							return 'FOO@bar.cz';
 						}
 					},
-					new class {
+					'password' => new class {
 						public function __toString() {
 							return 'heslo';
 						}
@@ -86,7 +86,7 @@ final class SecureEntrance extends Tester\TestCase {
 		$seeker = (new Access\SecureEntrance(
 			$this->database,
 			new Encryption\FakeCipher(true, false)
-		))->enter(['foo@bar.cz', 'heslo']);
+		))->enter(['email' => 'foo@bar.cz', 'password' => 'heslo']);
 		Assert::same('1', $seeker->id());
 		Assert::same(
 			'heslo',
@@ -105,7 +105,7 @@ final class SecureEntrance extends Tester\TestCase {
 		(new Access\SecureEntrance(
 			$this->database,
 			new Encryption\FakeCipher()
-		))->enter(['unknown@bar.cz', 'heslo']);
+		))->enter(['email' => 'unknown@bar.cz', 'password' => 'heslo']);
 	}
 
 	/**
@@ -116,7 +116,7 @@ final class SecureEntrance extends Tester\TestCase {
 		(new Access\SecureEntrance(
 			$this->database,
 			new Encryption\FakeCipher(false)
-		))->enter(['foo@bar.cz', '2heslo2']);
+		))->enter(['email' => 'foo@bar.cz', 'password' => '2heslo2']);
 	}
 
 	public function testAuthenticatingRehasingPassword() {
@@ -132,7 +132,7 @@ final class SecureEntrance extends Tester\TestCase {
 		$seeker = (new Access\SecureEntrance(
 			$this->database,
 			new Encryption\FakeCipher(true, true)
-		))->enter(['foo@bar.cz', 'heslo']);
+		))->enter(['email' => 'foo@bar.cz', 'password' => 'heslo']);
 		Assert::same('1', $seeker->id());
 		Assert::same(
 			'secret',

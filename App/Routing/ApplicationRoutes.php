@@ -160,7 +160,11 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'v1/seekers [POST]' => new V1\Seekers\Post(
 				new Application\PlainRequest(),
-				$this->uri,
+				$this->database,
+				$this->cipher
+			),
+			'v1/tokens [POST]' => new V1\Tokens\Post(
+				new Application\PlainRequest(),
 				$this->database,
 				$this->cipher
 			),

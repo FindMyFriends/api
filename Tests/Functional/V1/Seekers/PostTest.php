@@ -12,7 +12,6 @@ use FindMyFriends\V1;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Output;
-use Klapuch\Uri\FakeUri;
 use Tester;
 use Tester\Assert;
 
@@ -28,7 +27,6 @@ final class PostTest extends Tester\TestCase {
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/seeker/post.json')
 				)
 			),
-			new FakeUri('/', 'v1/seekers', []),
 			$this->database,
 			new Encryption\FakeCipher()
 		))->response([]);
@@ -40,7 +38,6 @@ final class PostTest extends Tester\TestCase {
 	public function test400OnBadInput() {
 		$response = (new V1\Seekers\Post(
 			new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
-			new FakeUri('/', 'v1/seekers', []),
 			$this->database,
 			new Encryption\FakeCipher()
 		))->response([]);
@@ -56,7 +53,6 @@ final class PostTest extends Tester\TestCase {
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/seeker/post.json')
 				)
 			),
-			new FakeUri('/', 'v1/seekers', []),
 			$this->database,
 			new Encryption\FakeCipher()
 		);
