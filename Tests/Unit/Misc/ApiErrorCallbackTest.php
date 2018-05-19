@@ -17,10 +17,19 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 	public function testTransformingStatusCodeOnThrowing() {
 		$ex = Assert::exception(function() {
 			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
+				throw new \UnexpectedValueException('ABC', 100);
+			});
+		}, \UnexpectedValueException::class, 'ABC', HTTP_FORBIDDEN);
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+	}
+
+	public function testRethrowingOnOtherExceptions() {
+		$ex = Assert::exception(function() {
+			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
 				throw new \DomainException('ABC', 100);
 			});
-		}, new \DomainException(), 'ABC', HTTP_FORBIDDEN);
-		Assert::type(\DomainException::class, $ex->getPrevious());
+		}, \DomainException::class, 'ABC', 100);
+		Assert::null($ex->getPrevious());
 	}
 
 	public function testNoExceptionWithoutThrowing() {

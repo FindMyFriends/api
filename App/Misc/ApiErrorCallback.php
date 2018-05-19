@@ -21,7 +21,7 @@ final class ApiErrorCallback implements Callback {
 	public function invoke(callable $action, array $args = []) {
 		try {
 			return call_user_func_array($action, $args);
-		} catch (\Throwable $ex) {
+		} catch (\UnexpectedValueException $ex) {
 			throw new $ex(
 				$ex->getMessage(),
 				$this->code,
