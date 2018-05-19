@@ -65,19 +65,19 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->uri,
 				$this->database,
 				$seeker,
-				new Http\ChosenRole($seeker, ['member', 'guest'])
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/demands/{id} [GET]' => new V1\Demand\Get(
 				$this->hashids['demand']['hashid'],
 				$this->uri,
 				$this->database,
 				$seeker,
-				new Http\ChosenRole($seeker, ['member', 'guest'])
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demand\SoulmateRequests\Get(
 				$this->uri,
 				$this->database,
-				new Http\ChosenRole($seeker, ['member', 'guest'])
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/demands/{demand_id}/soulmate_requests [POST]' => new V1\Demand\SoulmateRequests\Post(
 				$this->uri,
@@ -124,7 +124,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->uri,
 				$this->database,
 				$seeker,
-				new Http\ChosenRole($seeker, ['member', 'guest'])
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
 				$this->database,
@@ -148,14 +148,14 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->uri,
 				$this->database,
 				$seeker,
-				new Http\ChosenRole($seeker, ['member', 'guest']),
+				new Http\ChosenRole($seeker, ['member']),
 				$this->elasticsearch
 			),
 			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new V1\Demand\Soulmates\Head(
 				$this->uri,
 				$this->database,
 				$seeker,
-				new Http\ChosenRole($seeker, ['member', 'guest']),
+				new Http\ChosenRole($seeker, ['member']),
 				$this->elasticsearch
 			),
 			'v1/seekers [POST]' => new V1\Seekers\Post(

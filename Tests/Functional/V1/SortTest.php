@@ -24,6 +24,7 @@ final class SortTest extends Tester\TestCase {
 	 */
 	public function testAllowedSorts(string $endpoint) {
 		$response = $this->response($endpoint);
+		Assert::same('[]', $response->body());
 		Assert::same(HTTP_OK, $response->code());
 	}
 
@@ -44,8 +45,20 @@ final class SortTest extends Tester\TestCase {
 	private function response(string $endpoint): Http\Response {
 		return (new Http\BasicRequest(
 			'GET',
-			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint))
+			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint)),
+			[
+				CURLOPT_HTTPHEADER => [sprintf('Authorization: Bearer %s', $this->token())],
+			]
 		))->send();
+	}
+
+	private function token(): string {
+		session_start();
+		$_SESSION['id'] = '1';
+		$sessionId = session_id();
+		chown(sprintf('/tmp/sess_%s', $sessionId), 'www-data');
+		session_write_close();
+		return $sessionId;
 	}
 
 	protected function sorts(): array {

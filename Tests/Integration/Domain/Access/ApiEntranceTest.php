@@ -54,6 +54,43 @@ final class ApiEntranceTest extends Tester\TestCase {
 		);
 	}
 
+	public function testCaseInsensitiveHeaders() {
+		session_set_save_handler(
+			new class implements \SessionHandlerInterface {
+				public function close() {
+					return true;
+				}
+
+				public function destroy($id) {
+					return true;
+				}
+
+				public function gc($maxLifeTime) {
+					return true;
+				}
+
+				public function open($path, $name) {
+					return true;
+				}
+
+				public function read($id) {
+					return igbinary_serialize(['id' => '123']);
+				}
+
+				public function write($id, $data) {
+					return true;
+				}
+			},
+			true
+		);
+		Assert::equal(
+			new Access\RegisteredSeeker('123', $this->database),
+			(new Access\ApiEntrance(
+				$this->database
+			))->enter(['Authorization' => sprintf('Bearer 0c3da2dd2900adb00f8f231e4484c1b5')])
+		);
+	}
+
 	public function testNoAuthorizationHeaderLeadingToBeGuest() {
 		Assert::equal(
 			new Access\Guest(),

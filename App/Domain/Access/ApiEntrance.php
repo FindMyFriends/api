@@ -14,7 +14,7 @@ final class ApiEntrance implements Entrance {
 	}
 
 	public function enter(array $headers): Seeker {
-		if ($this->authorized($headers))
+		if ($this->authorized(array_change_key_case($headers, CASE_LOWER)))
 			return new RegisteredSeeker($_SESSION[self::IDENTIFIER], $this->database);
 		return new Guest();
 	}
