@@ -4,7 +4,6 @@ declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.2
- * @httpCode any
  */
 namespace FindMyFriends\Functional\V1\Soulmate;
 
