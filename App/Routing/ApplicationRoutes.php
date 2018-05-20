@@ -168,6 +168,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$this->cipher
 			),
+			'v1/tokens [DELETE]' => new V1\Tokens\Delete(),
 			'v1/.+ [OPTIONS]' => new V1\Options(),
 		];
 	}

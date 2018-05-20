@@ -24,6 +24,8 @@ final class TokenEntrance implements Entrance {
 	}
 
 	public function exit(): Seeker {
+		if (session_status() === PHP_SESSION_ACTIVE)
+			unset($_SESSION[self::IDENTIFIER]);
 		return $this->origin->exit();
 	}
 }
