@@ -5,6 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.0
  */
+
 namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;

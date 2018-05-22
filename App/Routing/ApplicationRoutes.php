@@ -161,6 +161,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'v1/seekers [POST]' => new V1\Seekers\Post(
 				new Application\PlainRequest(),
 				$this->database,
+				$this->rabbitMq,
 				$this->cipher
 			),
 			'v1/tokens [POST]' => new V1\Tokens\Post(

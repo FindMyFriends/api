@@ -5,6 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
+
 namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;
@@ -39,7 +40,6 @@ final class LimitedForgottenPasswordsTest extends Tester\TestCase {
 	public function testRemindingInAllowedTimeRange() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@gmail.com']))->try();
 		foreach ([
-			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable())->format('Y-m-d')],
 			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable('-25 hour'))->format('Y-m-d')],
 			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable('-25 hour'))->format('Y-m-d')],
 			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable('-25 hour'))->format('Y-m-d')],

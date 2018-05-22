@@ -5,71 +5,46 @@ namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Task;
 use Klapuch\Log;
 use Klapuch\Storage;
 use PhpAmqpLib;
 
-final class Consumer {
-	private $connection;
+final class Consumer extends Task\Consumer {
 	private $elasticsearch;
 	private $database;
-	private $logs;
-	private const EXCHANGE = 'fmf.direct',
-		ROUTING_KEY = 'soulmate_demands',
-		QUEUE = 'soulmate_requests';
 
 	public function __construct(
-		PhpAmqpLib\Connection\AbstractConnection $connection,
-		Elasticsearch\Client $elasticsearch,
+		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
+		Log\Logs $logs,
 		Storage\MetaPDO $database,
-		Log\Logs $logs
+		Elasticsearch\Client $elasticsearch
 	) {
-		$this->connection = $connection;
+		parent::__construct($rabbitMq, $logs);
 		$this->elasticsearch = $elasticsearch;
 		$this->database = $database;
-		$this->logs = $logs;
 	}
 
-	public function consume(): void {
-		$channel = $this->connection->channel();
-		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
-		$channel->queue_declare(self::QUEUE, false, true, false, false);
-		$channel->queue_bind(self::QUEUE, self::EXCHANGE, self::ROUTING_KEY);
-		$channel->basic_consume(self::QUEUE, '', false, false, false, false, [$this, 'action']);
-		while (count($channel->callbacks)) {
-			$channel->wait();
-		}
-	}
-
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	public function action(PhpAmqpLib\Message\AMQPMessage $message): void {
-		/** @var \PhpAmqpLib\Channel\AMQPChannel $channel */
-		$channel = $message->delivery_info['channel'];
-		try {
-			$demand = json_decode($message->getBody(), true);
-			(new RequestedSoulmates(
-				$demand['request_id'],
-				new SubsequentRequests($demand['id'], $this->database),
-				new SuitedSoulmates(
-					$demand['id'],
-					new Access\FakeSeeker((string) $demand['seeker_id']),
-					$this->elasticsearch,
-					$this->database
-				)
-			))->seek();
-			$channel->basic_ack($message->delivery_info['delivery_tag']);
-		} catch (\Throwable $ex) {
-			$channel->basic_reject($message->delivery_info['delivery_tag'], true);
-			$this->logs->put(
-				new Log\PrettyLog(
-					$ex,
-					new Log\PrettySeverity(
-						new Log\JustifiedSeverity(Log\Severity::ERROR)
-					)
-				)
-			);
-		}
+		$demand = json_decode($message->getBody(), true);
+		(new RequestedSoulmates(
+			$demand['request_id'],
+			new SubsequentRequests($demand['id'], $this->database),
+			new SuitedSoulmates(
+				$demand['id'],
+				new Access\FakeSeeker((string) $demand['seeker_id']),
+				$this->elasticsearch,
+				$this->database
+			)
+		))->seek();
+	}
+
+	protected function queue(): string {
+		return 'soulmate_requests';
+	}
+
+	protected function key(): string {
+		return 'soulmate_demands';
 	}
 }

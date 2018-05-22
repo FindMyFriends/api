@@ -5,6 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
+
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;

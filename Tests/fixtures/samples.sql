@@ -293,7 +293,7 @@ BEGIN
     samples.random_if_not_exists(NOW()::text, replacements, 'reminded_at')::timestamptz,
     samples.random_if_not_exists(substr(md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text), 1, 141), replacements, 'reminder'),
     samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'used')::bool,
-    samples.random_if_not_exists((NOW() + INTERVAL '1 MINUTE')::text, replacements, 'expire_at')::timestamptz
+    samples.random_if_not_exists((NOW() + INTERVAL '2 MINUTE')::text, replacements, 'expire_at')::timestamptz
   )
   RETURNING id
   INTO v_id;

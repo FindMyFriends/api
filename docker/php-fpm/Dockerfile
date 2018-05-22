@@ -10,4 +10,6 @@ RUN echo '. /root/.bash_aliases' >> ~/.bashrc
 
 COPY .bash_history /root/.bash_history
 
+COPY sendmail /usr/sbin/fake-sendmail
+
 RUN rm -rf /var/cache/apk/*

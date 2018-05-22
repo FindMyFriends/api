@@ -5,6 +5,7 @@ declare(strict_types = 1);
  * @testCase
  * @phpVersion > 7.2
  */
+
 namespace FindMyFriends\Functional\V1\Seekers;
 
 use FindMyFriends\TestCase;
@@ -28,6 +29,7 @@ final class PostTest extends Tester\TestCase {
 				)
 			),
 			$this->database,
+			$this->rabbitMq,
 			new Encryption\FakeCipher()
 		))->response([]);
 		$seeker = json_decode($response->body()->serialization(), true);
@@ -39,6 +41,7 @@ final class PostTest extends Tester\TestCase {
 		$response = (new V1\Seekers\Post(
 			new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
 			$this->database,
+			$this->rabbitMq,
 			new Encryption\FakeCipher()
 		))->response([]);
 		$seeker = json_decode($response->body()->serialization(), true);
@@ -54,6 +57,7 @@ final class PostTest extends Tester\TestCase {
 				)
 			),
 			$this->database,
+			$this->rabbitMq,
 			new Encryption\FakeCipher()
 		);
 		$post->response([]);

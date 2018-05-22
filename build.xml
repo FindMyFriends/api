@@ -25,6 +25,8 @@
 			<arg path="V1/"/>
 			<arg value="--exclude"/>
 			<arg path="Sql/"/>
+			<arg value="--exclude"/>
+			<arg path="Task/"/>
 		</exec>
 	</target>
 

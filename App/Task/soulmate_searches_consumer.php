@@ -18,9 +18,10 @@ $configuration = (new Configuration\ApplicationConfiguration())->read();
 		$configuration['RABBITMQ']['pass'],
 		$configuration['RABBITMQ']['vhost']
 	),
-	Elasticsearch\ClientBuilder::create()
-		->setHosts($configuration['ELASTICSEARCH']['hosts'])
-		->build(),
+	new Log\ChainedLogs(
+		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory']))),
+		new Log\FilesystemLogs(new SplFileInfo(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['file'])))
+	),
 	new Storage\MetaPDO(
 		new Storage\SideCachedPDO(
 			new Storage\SafePDO(
@@ -31,8 +32,7 @@ $configuration = (new Configuration\ApplicationConfiguration())->read();
 		),
 		new Predis\Client($configuration['REDIS']['uri'])
 	),
-	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory']))),
-		new Log\FilesystemLogs(new SplFileInfo(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['file'])))
-	)
+	Elasticsearch\ClientBuilder::create()
+		->setHosts($configuration['ELASTICSEARCH']['hosts'])
+		->build()
 ))->consume();
