@@ -52,10 +52,7 @@ final class Post implements Application\View {
 								$this->seeker,
 								$this->database
 							),
-							new Search\AmqpPublisher(
-								$this->rabbitMq,
-								$this->database
-							)
+							new Search\AmqpPublisher($this->rabbitMq)
 						))->ask(
 							(new Validation\ChainedRule(
 								new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

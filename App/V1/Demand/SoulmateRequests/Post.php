@@ -31,10 +31,7 @@ final class Post implements Application\View {
 		try {
 			(new Search\HarnessedPublisher(
 				new Search\RefreshablePublisher(
-					new Search\AmqpPublisher(
-						$this->rabbitMq,
-						$this->database
-					),
+					new Search\AmqpPublisher($this->rabbitMq),
 					$this->database
 				),
 				new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)

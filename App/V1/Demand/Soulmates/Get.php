@@ -6,7 +6,6 @@ namespace FindMyFriends\V1\Demand\Soulmates;
 use Elasticsearch;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -21,7 +20,6 @@ final class Get implements Application\View {
 	private $hashids;
 	private $url;
 	private $database;
-	private $seeker;
 	private $role;
 	private $elasticsearch;
 
@@ -29,14 +27,12 @@ final class Get implements Application\View {
 		array $hashids,
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
-		Access\Seeker $seeker,
 		Http\Role $role,
 		Elasticsearch\Client $elasticsearch
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
-		$this->seeker = $seeker;
 		$this->role = $role;
 		$this->elasticsearch = $elasticsearch;
 	}
@@ -46,7 +42,6 @@ final class Get implements Application\View {
 			$soulmates = new Domain\Search\PublicSoulmates(
 				new Domain\Search\SuitedSoulmates(
 					$parameters['demand_id'],
-					$this->seeker,
 					$this->elasticsearch,
 					$this->database
 				),

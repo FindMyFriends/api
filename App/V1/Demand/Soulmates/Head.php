@@ -5,7 +5,6 @@ namespace FindMyFriends\V1\Demand\Soulmates;
 
 use Elasticsearch;
 use FindMyFriends\Domain;
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -18,20 +17,17 @@ use Klapuch\Uri;
 final class Head implements Application\View {
 	private $url;
 	private $database;
-	private $seeker;
 	private $role;
 	private $elasticsearch;
 
 	public function __construct(
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
-		Access\Seeker $seeker,
 		Http\Role $role,
 		Elasticsearch\Client $elasticsearch
 	) {
 		$this->url = $url;
 		$this->database = $database;
-		$this->seeker = $seeker;
 		$this->role = $role;
 		$this->elasticsearch = $elasticsearch;
 	}
@@ -40,7 +36,6 @@ final class Head implements Application\View {
 		try {
 			$count = (new Domain\Search\SuitedSoulmates(
 				$parameters['demand_id'],
-				$this->seeker,
 				$this->elasticsearch,
 				$this->database
 			))->count(new Dataset\EmptySelection());

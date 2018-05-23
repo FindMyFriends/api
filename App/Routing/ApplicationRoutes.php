@@ -147,14 +147,12 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->hashids,
 				$this->uri,
 				$this->database,
-				$seeker,
 				new Http\ChosenRole($seeker, ['member']),
 				$this->elasticsearch
 			),
 			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new V1\Demand\Soulmates\Head(
 				$this->uri,
 				$this->database,
-				$seeker,
 				new Http\ChosenRole($seeker, ['member']),
 				$this->elasticsearch
 			),

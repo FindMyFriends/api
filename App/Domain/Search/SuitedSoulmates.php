@@ -5,7 +5,6 @@ namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
 use FindMyFriends;
-use FindMyFriends\Domain\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -15,18 +14,15 @@ use Klapuch\Storage;
  */
 final class SuitedSoulmates implements Soulmates {
 	private $demand;
-	private $seeker;
 	private $elasticsearch;
 	private $database;
 
 	public function __construct(
 		int $demand,
-		Access\Seeker $seeker,
 		Elasticsearch\Client $elasticsearch,
 		Storage\MetaPDO $database
 	) {
 		$this->demand = $demand;
-		$this->seeker = $seeker;
 		$this->elasticsearch = new FindMyFriends\Elasticsearch\RelationshipEvolutions($elasticsearch);
 		$this->database = $database;
 	}
@@ -77,7 +73,6 @@ final class SuitedSoulmates implements Soulmates {
 			))
 				->from(['elasticsearch_demands'])
 				->where('id = ?', [$this->demand])
-				->where('seeker_id = ?', [$this->seeker->id()])
 		))->row();
 		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
 		if (!$response['hits']['total']) {
@@ -105,17 +100,15 @@ final class SuitedSoulmates implements Soulmates {
 			$this->database,
 			new Dataset\SelectiveClause(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
-					->from(['with_suited_soulmate_ownership(:seeker)'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()])
-					->where('demand_id = :demand_id', ['demand_id' => $this->demand]),
+					->from(['suited_soulmates'])
+					->where('demand_id = ?', [$this->demand]),
 				$selection
 			)
 		))->rows();
 		foreach ($matches as $match) {
 			yield new StoredSoulmate(
 				$match['id'],
-				new Storage\MemoryPDO($this->database, $match),
-				$this->seeker
+				new Storage\MemoryPDO($this->database, $match)
 			);
 		}
 	}
@@ -126,8 +119,7 @@ final class SuitedSoulmates implements Soulmates {
 			new Dataset\SelectiveClause(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()])
-					->where('demand_id = :demand_id', ['demand_id' => $this->demand]),
+					->where('demand_id = ?', [$this->demand]),
 				$selection
 			)
 		))->field();

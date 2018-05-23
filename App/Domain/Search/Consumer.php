@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Task;
 use Klapuch\Log;
 use Klapuch\Storage;
@@ -27,16 +26,14 @@ final class Consumer extends Task\Consumer {
 
 	/** @internal */
 	public function action(PhpAmqpLib\Message\AMQPMessage $message): void {
-		$demand = json_decode($message->getBody(), true);
+		$demand = (int) $message->getBody();
 		(new RequestedSoulmates(
-			$demand['request_id'],
-			new SubsequentRequests($demand['id'], $this->database),
-			new SuitedSoulmates(
-				$demand['id'],
-				new Access\FakeSeeker((string) $demand['seeker_id']),
-				$this->elasticsearch,
+			(new SubsequentRequests(
+				$demand,
 				$this->database
-			)
+			))->refresh('pending'),
+			new SubsequentRequests($demand, $this->database),
+			new SuitedSoulmates($demand, $this->elasticsearch, $this->database)
 		))->seek();
 	}
 

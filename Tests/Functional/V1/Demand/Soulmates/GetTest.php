@@ -8,7 +8,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
@@ -34,7 +33,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeSeeker($seeker),
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1, 'sort' => '']);
@@ -50,7 +48,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeSeeker('1'),
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => '']);
@@ -62,7 +59,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Access\FakeSeeker('1'),
 			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => ''])->headers();

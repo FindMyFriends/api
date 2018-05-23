@@ -3,15 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Schema\Soulmate;
 
-use FindMyFriends\Schema;
-
 final class Structure {
-	private $database;
-
-	public function __construct(\PDO $database) {
-		$this->database = $database;
-	}
-
 	public function get(): array {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
@@ -26,13 +18,6 @@ final class Structure {
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
 				'related_at' => ['type' => ['string', 'null'], 'format' => 'date-time'],
 				'is_correct' => ['type' => ['boolean', 'null']],
-				'ownership' => [
-					'type' => ['string', 'null'],
-					'enum' => array_merge(
-						[null],
-						(new Schema\PostgresEnum('ownerships', $this->database))->values()
-					),
-				],
 			],
 			'required' => [
 				'id',
@@ -44,7 +29,6 @@ final class Structure {
 				'searched_at',
 				'related_at',
 				'is_correct',
-				'ownership',
 			],
 			'type' => 'object',
 		];
@@ -61,8 +45,7 @@ final class Structure {
 			$properties['position'],
 			$properties['new'],
 			$properties['searched_at'],
-			$properties['related_at'],
-			$properties['ownership']
+			$properties['related_at']
 		);
 		$properties['is_correct']['type'] = ['boolean'];
 		unset($schema['required']);

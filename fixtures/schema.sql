@@ -29,11 +29,6 @@ CREATE TYPE roles AS ENUM (
   'member'
 );
 
-CREATE TYPE ownerships AS ENUM (
-  'yours',
-  'theirs'
-);
-
 CREATE TYPE approximate_timestamptz AS (
   moment timestamp WITH TIME ZONE,
   timeline_side timeline_sides,
@@ -1208,7 +1203,7 @@ CREATE VIEW suited_soulmates AS
     soulmate_requests.searched_at,
     version = 1 AS new,
     row_number()
-    OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC ) AS position,
+    OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
     seeker_id
   FROM soulmates
   LEFT JOIN (
@@ -1220,37 +1215,6 @@ CREATE VIEW suited_soulmates AS
   ) AS soulmate_requests ON soulmate_requests.demand_id = soulmates.demand_id
   LEFT JOIN demands ON demands.id = soulmate_requests.demand_id
   ORDER BY position ASC;
-
-
-CREATE FUNCTION with_suited_soulmate_ownership(in_seeker_id seekers.id%type) RETURNS table(
-  id suited_soulmates.id%type,
-  evolution_id suited_soulmates.evolution_id%type,
-  is_correct suited_soulmates.is_correct%type,
-  demand_id suited_soulmates.demand_id%type,
-  score suited_soulmates.score%type,
-  related_at suited_soulmates.related_at%type,
-  searched_at suited_soulmates.searched_at%type,
-  new suited_soulmates.new%type,
-  "position" suited_soulmates.position%type,
-  seeker_id suited_soulmates.seeker_id%type,
-  ownership ownerships
-)
-AS $$
-SELECT
-  suited_soulmates.*,
-  CASE
-  WHEN demands.seeker_id = in_seeker_id THEN
-    'yours'::ownerships
-  ELSE
-    'theirs'::ownerships
-  END
-FROM suited_soulmates
-  LEFT JOIN demands ON demands.id = suited_soulmates.demand_id
-  LEFT JOIN evolutions ON evolutions.id = suited_soulmates.evolution_id
-WHERE demands.seeker_id = in_seeker_id OR evolutions.seeker_id = in_seeker_id;
-$$
-LANGUAGE SQL
-VOLATILE;
 
 
 

@@ -8,7 +8,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Elastic;
 
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
@@ -37,7 +36,6 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman']]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
@@ -63,7 +61,6 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman', 'hair.color_id' => 2]]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
@@ -92,7 +89,6 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'man', 'general.firstname' => 'Dominik']]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();
@@ -121,7 +117,6 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'man', 'right_eye.color_id' => 5, 'left_eye.color_id' => 5]]);
 		(new Search\SuitedSoulmates(
 			$demand,
-			new Access\FakeSeeker((string) $seeker),
 			$this->elasticsearch,
 			$this->database
 		))->seek();

@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Search;
 
-use FindMyFriends\Domain;
-use Klapuch\Output\Format;
-use Klapuch\Output\Json;
-use Klapuch\Storage;
 use PhpAmqpLib;
 
 /**
@@ -14,46 +10,24 @@ use PhpAmqpLib;
  */
 final class AmqpPublisher implements Publisher {
 	private $connection;
-	private $database;
 	private const EXCHANGE = 'fmf.direct',
 		ROUTING_KEY = 'soulmate_demands';
 
-	public function __construct(
-		PhpAmqpLib\Connection\AbstractConnection $connection,
-		Storage\MetaPDO $database
-	) {
+	public function __construct(PhpAmqpLib\Connection\AbstractConnection $connection) {
 		$this->connection = $connection;
-		$this->database = $database;
 	}
 
 	public function publish(int $demand): void {
 		$channel = $this->connection->channel();
 		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
-		$channel->basic_publish(
-			$this->message(
-				(new Domain\AmqpDemand(
-					new Domain\StoredDemand($demand, $this->database)
-				))->print(
-					new Json(
-						[
-							'request_id' => (new SubsequentRequests(
-								$demand,
-								$this->database
-							))->refresh('pending'),
-						]
-					)
-				)
-			),
-			self::EXCHANGE,
-			self::ROUTING_KEY
-		);
+		$channel->basic_publish($this->message($demand), self::EXCHANGE, self::ROUTING_KEY);
 	}
 
-	private function message(Format $format): PhpAmqpLib\Message\AMQPMessage {
+	private function message(int $demand): PhpAmqpLib\Message\AMQPMessage {
 		return new PhpAmqpLib\Message\AMQPMessage(
-			$format->serialization(),
+			(string) $demand,
 			[
-				'content_type' => 'application/json',
+				'content_type' => 'text/plain',
 				'delivery_mode' => PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT,
 			]
 		);

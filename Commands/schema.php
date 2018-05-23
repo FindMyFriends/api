@@ -43,7 +43,7 @@ $schemas->save($description->get(), new SplFileInfo(__DIR__ . '/../App/V1/Descri
 $schemas->save($description->put(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/put.json'));
 $schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descriptions/schema/post.json'));
 
-$soulmate = new Schema\Soulmate\Structure($database);
+$soulmate = new Schema\Soulmate\Structure();
 $schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/Soulmates/schema/get.json'));
 $schemas->save($soulmate->patch(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmate/schema/patch.json'));
 
