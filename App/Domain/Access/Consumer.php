@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Access;
 
-use Dasuos\Mail\AssembledMail;
+use Dasuos\Mail;
 use FindMyFriends\Mail\Verification;
 use FindMyFriends\Task;
 use Klapuch\Log;
@@ -23,14 +23,13 @@ final class Consumer extends Task\Consumer {
 	}
 
 	/** @internal */
-	public function action(PhpAmqpLib\Message\AMQPMessage $message): void {
-		$receiver = $message->getBody();
-		(new AssembledMail(
+	public function action(array $body): void {
+		(new Mail\AssembledMail(
 			'noreply@fmf.com'
 		))->send(
-			$receiver,
+			$body['email'],
 			'Welcome and verification email',
-			new Verification\Message($receiver, $this->database)
+			new Verification\Message($body['email'], $this->database)
 		);
 	}
 

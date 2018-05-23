@@ -25,15 +25,14 @@ final class Consumer extends Task\Consumer {
 	}
 
 	/** @internal */
-	public function action(PhpAmqpLib\Message\AMQPMessage $message): void {
-		$demand = (int) $message->getBody();
+	public function action(array $body): void {
 		(new RequestedSoulmates(
 			(new SubsequentRequests(
-				$demand,
+				$body['id'],
 				$this->database
 			))->refresh('pending'),
-			new SubsequentRequests($demand, $this->database),
-			new SuitedSoulmates($demand, $this->elasticsearch, $this->database)
+			new SubsequentRequests($body['id'], $this->database),
+			new SuitedSoulmates($body['id'], $this->elasticsearch, $this->database)
 		))->seek();
 	}
 

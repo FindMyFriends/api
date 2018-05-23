@@ -25,9 +25,9 @@ final class AmqpPublisher implements Publisher {
 
 	private function message(string $email): PhpAmqpLib\Message\AMQPMessage {
 		return new PhpAmqpLib\Message\AMQPMessage(
-			$email,
+			json_encode(['email' => $email]),
 			[
-				'content_type' => 'text/plain',
+				'content_type' => 'application/json',
 				'delivery_mode' => PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT,
 			]
 		);

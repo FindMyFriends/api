@@ -35,7 +35,7 @@ abstract class Consumer {
 		/** @var \PhpAmqpLib\Channel\AMQPChannel $channel */
 		$channel = $message->delivery_info['channel'];
 		try {
-			$this->action($message);
+			$this->action(json_decode($message->getBody(), true));
 			$channel->basic_ack($message->delivery_info['delivery_tag']);
 		} catch (\Throwable $ex) {
 			$channel->basic_reject($message->delivery_info['delivery_tag'], true);
@@ -50,7 +50,7 @@ abstract class Consumer {
 		}
 	}
 
-	abstract protected function action(PhpAmqpLib\Message\AMQPMessage $message): void;
+	abstract protected function action(array $body): void;
 	abstract protected function queue(): string;
 	abstract protected function key(): string;
 }
