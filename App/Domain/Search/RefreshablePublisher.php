@@ -18,9 +18,8 @@ final class RefreshablePublisher implements Publisher {
 	}
 
 	public function publish(int $demand): void {
-		if (!$this->refreshable($demand)) {
+		if (!$this->refreshable($demand))
 			throw new \UnexpectedValueException('Demand is not refreshable for soulmate yet');
-		}
 		$this->origin->publish($demand);
 	}
 

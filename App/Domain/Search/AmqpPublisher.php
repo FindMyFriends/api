@@ -29,12 +29,20 @@ final class AmqpPublisher implements Publisher {
 	public function publish(int $demand): void {
 		$channel = $this->connection->channel();
 		$channel->exchange_declare(self::EXCHANGE, 'direct', false, true, false);
-		$requests = new SubsequentRequests($demand, $this->database);
 		$channel->basic_publish(
 			$this->message(
 				(new Domain\AmqpDemand(
 					new Domain\StoredDemand($demand, $this->database)
-				))->print(new Json(['request_id' => $requests->refresh('pending')]))
+				))->print(
+					new Json(
+						[
+							'request_id' => (new SubsequentRequests(
+								$demand,
+								$this->database
+							))->refresh('pending'),
+						]
+					)
+				)
 			),
 			self::EXCHANGE,
 			self::ROUTING_KEY
