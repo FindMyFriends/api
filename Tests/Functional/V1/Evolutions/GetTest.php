@@ -9,7 +9,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Functional\V1\Evolutions;
 
 use FindMyFriends\Domain\Access;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -32,8 +31,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/evolutions', []),
 			$this->database,
-			new Access\FakeSeeker((string) $seeker, ['role' => 'member']),
-			new Http\FakeRole(true)
+			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
 		))->response(['page' => 1, 'per_page' => 10]);
 		$demands = json_decode($response->body()->serialization());
 		Assert::count(2, $demands);

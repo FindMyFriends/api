@@ -9,7 +9,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Functional\V1\Demand;
 
 use FindMyFriends\Domain\Access;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -32,8 +31,7 @@ final class GetTest extends Tester\TestCase {
 				new Hashids(),
 				new Uri\FakeUri('/', 'v1/demands/1', []),
 				$this->database,
-				new Access\FakeSeeker((string) $seeker),
-				new Http\FakeRole(true)
+				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id])->body()->serialization()
 		);
 		Assert::same($seeker, $demand->seeker_id);
@@ -48,8 +46,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/demands/1', []),
 			$this->database,
-			new Access\FakeSeeker('1'),
-			new Http\FakeRole(true)
+			new Access\FakeSeeker('1')
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);

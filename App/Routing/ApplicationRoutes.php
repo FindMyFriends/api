@@ -9,6 +9,7 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\V1;
+use FindMyFriends\View;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Routing;
@@ -60,23 +61,29 @@ final class ApplicationRoutes implements Routing\Routes {
 				new V1\Demands\Options($this->database, $this->redis),
 				new Application\PlainRequest()
 			),
-			'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demands\Get(
-				$this->hashids['demand']['hashid'],
-				$this->uri,
-				$this->database,
-				$seeker,
+			'v1/demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+				new V1\Demands\Get(
+					$this->hashids['demand']['hashid'],
+					$this->uri,
+					$this->database,
+					$seeker
+				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{id} [GET]' => new V1\Demand\Get(
-				$this->hashids['demand']['hashid'],
-				$this->uri,
-				$this->database,
-				$seeker,
+			'v1/demands/{id} [GET]' => new View\AuthenticatedView(
+				new V1\Demand\Get(
+					$this->hashids['demand']['hashid'],
+					$this->uri,
+					$this->database,
+					$seeker
+				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demand\SoulmateRequests\Get(
-				$this->uri,
-				$this->database,
+			'v1/demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+				new V1\Demand\SoulmateRequests\Get(
+					$this->uri,
+					$this->database
+				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/demands/{demand_id}/soulmate_requests [POST]' => new V1\Demand\SoulmateRequests\Post(
@@ -119,11 +126,13 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->elasticsearch,
 				$seeker
 			),
-			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new V1\Evolutions\Get(
-				$this->hashids['evolution']['hashid'],
-				$this->uri,
-				$this->database,
-				$seeker,
+			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new View\AuthenticatedView(
+				new V1\Evolutions\Get(
+					$this->hashids['evolution']['hashid'],
+					$this->uri,
+					$this->database,
+					$seeker
+				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
@@ -143,18 +152,22 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$seeker
 			),
-			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new V1\Demand\Soulmates\Get(
-				$this->hashids,
-				$this->uri,
-				$this->database,
-				new Http\ChosenRole($seeker, ['member']),
-				$this->elasticsearch
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+				new V1\Demand\Soulmates\Get(
+					$this->hashids,
+					$this->uri,
+					$this->database,
+					$this->elasticsearch
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new V1\Demand\Soulmates\Head(
-				$this->uri,
-				$this->database,
-				new Http\ChosenRole($seeker, ['member']),
-				$this->elasticsearch
+			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new View\AuthenticatedView(
+				new V1\Demand\Soulmates\Head(
+					$this->uri,
+					$this->database,
+					$this->elasticsearch
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/seekers [POST]' => new V1\Seekers\Post(
 				new Application\PlainRequest(),

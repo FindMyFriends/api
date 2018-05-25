@@ -8,7 +8,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -33,7 +32,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1, 'sort' => '']);
 		Assert::count(1, json_decode($response->body()->serialization()));
@@ -48,7 +46,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => '']);
 		Assert::count(0, json_decode($response->body()->serialization()));
@@ -59,7 +56,6 @@ final class GetTest extends Tester\TestCase {
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1, 'sort' => ''])->headers();
 		Assert::same(0, $headers['X-Total-Count']);

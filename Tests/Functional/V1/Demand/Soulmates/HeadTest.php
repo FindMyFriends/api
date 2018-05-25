@@ -8,7 +8,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\V1\Demand\Soulmates;
 
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -29,7 +28,6 @@ final class HeadTest extends Tester\TestCase {
 		$response = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1]);
 		Assert::null(json_decode($response->body()->serialization()));
@@ -41,26 +39,12 @@ final class HeadTest extends Tester\TestCase {
 		$headers = (new V1\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'v1/soulmates', []),
 			$this->database,
-			new Http\FakeRole(true),
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->headers();
 		Assert::count(3, $headers);
 		Assert::same(0, $headers['X-Total-Count']);
 		Assert::same('text/plain', $headers['Content-Type']);
 		Assert::true(isset($headers['Link']));
-	}
-
-	public function testErrorInJsonFormat() {
-		$response = (new V1\Demand\Soulmates\Head(
-			new Uri\FakeUri('/', 'v1/soulmates', []),
-			$this->database,
-			new Http\FakeRole(false),
-			$this->elasticsearch
-		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => 1]);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
-		$headers = $response->headers();
-		Assert::count(3, $headers);
-		Assert::same('application/json; charset=utf8', $headers['Content-Type']);
 	}
 }
 

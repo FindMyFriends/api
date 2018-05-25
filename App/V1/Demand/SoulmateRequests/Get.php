@@ -5,7 +5,6 @@ namespace FindMyFriends\V1\Demand\SoulmateRequests;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Search;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -18,16 +17,10 @@ final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
 	private $url;
 	private $database;
-	private $role;
 
-	public function __construct(
-		Uri\Uri $url,
-		Storage\MetaPDO $database,
-		Http\Role $role
-	) {
+	public function __construct(Uri\Uri $url, Storage\MetaPDO $database) {
 		$this->url = $url;
 		$this->database = $database;
-		$this->role = $role;
 	}
 
 	public function response(array $parameters): Application\Response {
@@ -41,34 +34,31 @@ final class Get implements Application\View {
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
 					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$requests->all(
-											new Dataset\CombinedSelection(
-												new Constraint\SchemaSort(
-													new Dataset\RestSort(
-														$parameters['sort']
-													),
-													new \SplFileInfo(self::SCHEMA)
+						new Response\PlainResponse(
+							new Misc\JsonPrintedObjects(
+								...iterator_to_array(
+									$requests->all(
+										new Dataset\CombinedSelection(
+											new Constraint\SchemaSort(
+												new Dataset\RestSort(
+													$parameters['sort']
 												),
-												new Constraint\SchemaFilter(
-													new Dataset\RestFilter(
-														$parameters
-													),
-													new \SplFileInfo(self::SCHEMA)
+												new \SplFileInfo(self::SCHEMA)
+											),
+											new Constraint\SchemaFilter(
+												new Dataset\RestFilter(
+													$parameters
 												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
-												)
+												new \SplFileInfo(self::SCHEMA)
+											),
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
 											)
 										)
 									)
 								)
-							),
-							$this->role
+							)
 						)
 					),
 					$parameters['page'],

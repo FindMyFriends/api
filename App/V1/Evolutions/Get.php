@@ -5,7 +5,6 @@ namespace FindMyFriends\V1\Evolutions;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
@@ -19,20 +18,17 @@ final class Get implements Application\View {
 	private $url;
 	private $database;
 	private $seeker;
-	private $role;
 
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\Seeker $seeker,
-		Http\Role $role
+		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->seeker = $seeker;
-		$this->role = $role;
 	}
 
 	public function response(array $parameters): Application\Response {
@@ -47,22 +43,19 @@ final class Get implements Application\View {
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
 					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$evolution->changes(
-											new Dataset\CombinedSelection(
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
-												)
+						new Response\PlainResponse(
+							new Misc\JsonPrintedObjects(
+								...iterator_to_array(
+									$evolution->changes(
+										new Dataset\CombinedSelection(
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
 											)
 										)
 									)
 								)
-							),
-							$this->role
+							)
 						)
 					),
 					$parameters['page'],

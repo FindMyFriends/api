@@ -9,7 +9,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Functional\V1\Evolution;
 
 use FindMyFriends\Domain\Access;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -31,8 +30,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
-			new Access\FakeSeeker((string) $seeker),
-			new Http\FakeRole(true)
+			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$evolution = json_decode($response->body()->serialization());
 		Assert::same((new Hashids())->encode($id), $evolution->id);
@@ -47,8 +45,7 @@ final class GetTest extends Tester\TestCase {
 			new Hashids(),
 			new Uri\FakeUri('/', 'v1/evolutions/1', []),
 			$this->database,
-			new Access\FakeSeeker('1'),
-			new Http\FakeRole(true)
+			new Access\FakeSeeker('1')
 		))->response(['id' => 1]);
 		$evolution = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);

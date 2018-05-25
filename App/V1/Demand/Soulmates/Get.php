@@ -6,7 +6,6 @@ namespace FindMyFriends\V1\Demand\Soulmates;
 use Elasticsearch;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -20,20 +19,17 @@ final class Get implements Application\View {
 	private $hashids;
 	private $url;
 	private $database;
-	private $role;
 	private $elasticsearch;
 
 	public function __construct(
 		array $hashids,
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
-		Http\Role $role,
 		Elasticsearch\Client $elasticsearch
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
-		$this->role = $role;
 		$this->elasticsearch = $elasticsearch;
 	}
 
@@ -51,29 +47,26 @@ final class Get implements Application\View {
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
 					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$soulmates->matches(
-											new Dataset\CombinedSelection(
-												new Constraint\SchemaSort(
-													new Dataset\RestSort(
-														$parameters['sort']
-													),
-													new \SplFileInfo(self::SCHEMA)
+						new Response\PlainResponse(
+							new Misc\JsonPrintedObjects(
+								...iterator_to_array(
+									$soulmates->matches(
+										new Dataset\CombinedSelection(
+											new Constraint\SchemaSort(
+												new Dataset\RestSort(
+													$parameters['sort']
 												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
-												)
+												new \SplFileInfo(self::SCHEMA)
+											),
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
 											)
 										)
 									)
-								),
-								['X-Total-Count' => $count]
+								)
 							),
-							$this->role
+							['X-Total-Count' => $count]
 						)
 					),
 					$parameters['page'],

@@ -8,7 +8,6 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\V1\Demand\SoulmateRequests;
 
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use FindMyFriends\V1;
@@ -27,8 +26,7 @@ final class GetTest extends Tester\TestCase {
 		$requests = json_decode(
 			(new V1\Demand\SoulmateRequests\Get(
 				new Uri\FakeUri('/', 'v1/demands/1/soulmate_request', []),
-				$this->database,
-				new Http\FakeRole(true)
+				$this->database
 			))->response(['demand_id' => $demand, 'page' => 1, 'per_page' => 10, 'sort' => ''])->body()->serialization()
 		);
 		Assert::count(1, $requests);

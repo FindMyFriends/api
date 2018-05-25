@@ -6,7 +6,6 @@ namespace FindMyFriends\V1\Demands;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
-use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
@@ -26,7 +25,6 @@ final class Get implements Application\View {
 	];
 	private $url;
 	private $database;
-	private $role;
 	private $hashids;
 	private $seeker;
 
@@ -34,14 +32,12 @@ final class Get implements Application\View {
 		HashidsInterface $hashids,
 		Uri\Uri $url,
 		\PDO $database,
-		Access\Seeker $seeker,
-		Http\Role $role
+		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->database = $database;
 		$this->seeker = $seeker;
-		$this->role = $role;
 	}
 
 	public function response(array $parameters): Application\Response {
@@ -56,30 +52,27 @@ final class Get implements Application\View {
 			return new Response\PartialResponse(
 				new Response\PaginatedResponse(
 					new Response\JsonResponse(
-						new Response\JsonApiAuthentication(
-							new Response\PlainResponse(
-								new Misc\JsonPrintedObjects(
-									...iterator_to_array(
-										$demands->all(
-											new Constraint\MappedSelection(
-												new Dataset\CombinedSelection(
-													new Constraint\AllowedSort(
-														new Dataset\RestSort(
-															$parameters['sort']
-														),
-														self::SORTS
+						new Response\PlainResponse(
+							new Misc\JsonPrintedObjects(
+								...iterator_to_array(
+									$demands->all(
+										new Constraint\MappedSelection(
+											new Dataset\CombinedSelection(
+												new Constraint\AllowedSort(
+													new Dataset\RestSort(
+														$parameters['sort']
 													),
-													new Dataset\RestPaging(
-														$parameters['page'],
-														$parameters['per_page']
-													)
+													self::SORTS
+												),
+												new Dataset\RestPaging(
+													$parameters['page'],
+													$parameters['per_page']
 												)
 											)
 										)
 									)
 								)
-							),
-							$this->role
+							)
 						)
 					),
 					$parameters['page'],
