@@ -36,5 +36,4 @@ final class AuthenticatedView implements Application\View {
 			}
 		};
 	}
-
 }

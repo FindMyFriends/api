@@ -36,6 +36,7 @@ services:
           - ./:/var/www/FindMyFriends:ro
       ports:
         - 80:80
+        - 443:443
       networks:
         - fmf
 
