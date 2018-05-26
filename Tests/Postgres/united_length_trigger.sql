@@ -3,8 +3,8 @@ AS $$
 BEGIN
   INSERT INTO beards (color_id, length, style) VALUES (8, ROW(100, 'cm'::length_units), 'ok');
   RETURN message FROM assert.is_equal(
-    (SELECT LENGTH FROM beards),
-    ROW(1000, 'mm'::length_units):: LENGTH
+    (SELECT length FROM beards),
+    ROW(100, 'cm'::length_units)::length
   );
 END
 $$
@@ -20,11 +20,11 @@ BEGIN
   RETURNING id
   INTO v_beard_id;
   UPDATE beards
-  SET length = ROW(200, 'cm'::length_units)
+  SET length = ROW(20, 'mm'::length_units)
   WHERE id = v_beard_id;
   RETURN message FROM assert.is_equal(
-    (SELECT LENGTH FROM beards WHERE id = v_beard_id),
-    ROW(2000, 'mm'::length_units):: LENGTH
+    (SELECT length FROM beards WHERE id = v_beard_id),
+    ROW(2, 'cm'::length_units)::length
   );
 END
 $$

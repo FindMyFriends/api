@@ -272,24 +272,11 @@ IMMUTABLE
 STRICT;
 
 
-CREATE FUNCTION suited_length(length) RETURNS length
-AS $$
-BEGIN
-  IF (($1).unit = 'mm' AND ($1).value >= 10) THEN
-    RETURN ROW (($1).value / 10, 'cm'::length_units);
-  END IF;
-  RETURN $1;
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
-
 CREATE FUNCTION united_length(length) RETURNS length
 AS $$
 BEGIN
-  IF (($1).unit = 'cm') THEN
-    RETURN ROW(($1).value * 10, 'mm'::length_units);
+  IF (($1).unit = 'mm' AND ($1).value % 10 = 0) THEN
+    RETURN ROW(($1).value / 10, 'cm'::length_units);
   END IF;
   RETURN $1;
 END
@@ -302,6 +289,24 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
   new."length" = united_length(new."length");
+  RETURN new;
+END;
+$$;
+
+CREATE FUNCTION united_height_trigger() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  new.height = united_length(new.height);
+  RETURN new;
+END;
+$$;
+
+CREATE FUNCTION united_weight_trigger() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  new.weight = COALESCE(new.weight, ROW(NULL, NULL)::mass);
   RETURN new;
 END;
 $$;
@@ -672,7 +677,7 @@ CREATE TABLE beard_colors (
 CREATE TABLE beards (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length length,
+  length length NOT NULL DEFAULT ROW(NULL, NULL),
   style text,
   CONSTRAINT beards_length_check CHECK (validate_length(length)),
   CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
@@ -684,14 +689,16 @@ CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EAC
 CREATE TABLE bodies (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   build_id smallint,
-  weight mass,
-  height length,
+  weight mass NOT NULL DEFAULT ROW(NULL, NULL),
+  height length NOT NULL DEFAULT ROW(NULL, NULL),
   breast_size breast_sizes,
   CONSTRAINT bodies_height_check CHECK (validate_length(height)),
   CONSTRAINT bodies_weight_check CHECK (validate_mass(weight)),
   CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+CREATE TRIGGER bodies_row_abiu_height_trigger BEFORE INSERT OR UPDATE ON bodies FOR EACH ROW EXECUTE PROCEDURE united_height_trigger();
+CREATE TRIGGER bodies_row_abiu_weight_trigger BEFORE INSERT OR UPDATE ON bodies FOR EACH ROW EXECUTE PROCEDURE united_weight_trigger();
 
 
 CREATE TABLE eyebrows (
@@ -755,7 +762,7 @@ CREATE TABLE hair (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   style_id smallint,
   color_id smallint,
-  length length,
+  length length NOT NULL DEFAULT ROW(NULL, NULL),
   highlights boolean,
   roots boolean,
   nature boolean,
@@ -796,7 +803,7 @@ CREATE TABLE nail_colors (
 CREATE TABLE nails (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length length,
+  length length NOT NULL DEFAULT ROW(NULL, NULL),
   care rating,
   CONSTRAINT nails_length_check CHECK (validate_length(length)),
   CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
@@ -1279,19 +1286,19 @@ CREATE VIEW printed_descriptions AS
     complete_descriptions.body_build,
     (complete_descriptions.face).freckles AS face_freckles,
     (complete_descriptions.face).care AS face_care,
-      ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, suited_length((complete_descriptions.beard).length), (complete_descriptions.beard).style)::beards AS beard,
+      ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, (complete_descriptions.beard).length, (complete_descriptions.beard).style)::beards AS beard,
     complete_descriptions.eyebrow,
     (complete_descriptions.face).shape_id AS face_shape_id,
     complete_descriptions.face_shape AS face_shape,
     complete_descriptions.tooth,
     complete_descriptions.left_eye,
     complete_descriptions.right_eye,
-      ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, suited_length((complete_descriptions.nail).length), (complete_descriptions.nail).care)::nails AS hands_nails,
+      ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, (complete_descriptions.nail).length, (complete_descriptions.nail).care)::nails AS hands_nails,
     (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
     (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
     (complete_descriptions.hand).care AS hands_care,
     complete_descriptions.hand_hair AS hands_hair,
-      ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style_id, (complete_descriptions.hair).color_id, suited_length((complete_descriptions.hair).length), (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair,
+      ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style_id, (complete_descriptions.hair).color_id, (complete_descriptions.hair).length, (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair,
     complete_descriptions.hair_style
   FROM complete_descriptions;
 
