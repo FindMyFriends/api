@@ -126,7 +126,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->elasticsearch,
 				$seeker
 			),
-			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+) [GET]' => new View\AuthenticatedView(
+			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
 				new V1\Evolutions\Get(
 					$this->hashids['evolution']['hashid'],
 					$this->uri,

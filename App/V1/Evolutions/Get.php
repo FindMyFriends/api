@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\V1\Evolutions;
 
+use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
@@ -14,6 +15,10 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	public const SORTS = [
+		'id',
+		'evolved_at',
+	];
 	private $hashids;
 	private $url;
 	private $database;
@@ -47,10 +52,18 @@ final class Get implements Application\View {
 							new Misc\JsonPrintedObjects(
 								...iterator_to_array(
 									$evolution->changes(
-										new Dataset\CombinedSelection(
-											new Dataset\RestPaging(
-												$parameters['page'],
-												$parameters['per_page']
+										new Constraint\MappedSelection(
+											new Dataset\CombinedSelection(
+												new Constraint\AllowedSort(
+													new Dataset\RestSort(
+														$parameters['sort']
+													),
+													self::SORTS
+												),
+												new Dataset\RestPaging(
+													$parameters['page'],
+													$parameters['per_page']
+												)
 											)
 										)
 									)

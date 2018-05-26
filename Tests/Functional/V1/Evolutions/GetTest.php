@@ -32,7 +32,7 @@ final class GetTest extends Tester\TestCase {
 			new Uri\FakeUri('/', 'v1/evolutions', []),
 			$this->database,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
-		))->response(['page' => 1, 'per_page' => 10]);
+		))->response(['page' => 1, 'per_page' => 10, 'sort' => '']);
 		$demands = json_decode($response->body()->serialization());
 		Assert::count(2, $demands);
 		(new Misc\SchemaAssertion(

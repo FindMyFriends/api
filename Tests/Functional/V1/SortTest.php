@@ -12,6 +12,7 @@ use FindMyFriends\Routing;
 use FindMyFriends\Schema;
 use FindMyFriends\V1\Demand;
 use FindMyFriends\V1\Demands;
+use FindMyFriends\V1\Evolutions;
 use Klapuch\Http;
 use Klapuch\Uri;
 use Tester;
@@ -66,6 +67,9 @@ final class SortTest extends Tester\TestCase {
 		return [
 			[
 				sprintf('v1/demands?sort=%s', implode(',', Demands\Get::SORTS)),
+			],
+			[
+				sprintf('v1/evolutions?sort=%s', implode(',', Evolutions\Get::SORTS)),
 			],
 			[
 				sprintf(
