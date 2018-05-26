@@ -140,7 +140,7 @@ LANGUAGE SQL
 STABLE
 STRICT;
 
-CREATE FUNCTION validate_approximate_timestamptz(approximate_timestamptz) RETURNS boolean
+CREATE FUNCTION is_approximate_timestamptz_valid(approximate_timestamptz) RETURNS boolean
 AS $$
 BEGIN
   IF $1.timeline_side = 'exactly'::timeline_sides AND $1.approximation IS NOT NULL THEN
@@ -164,7 +164,7 @@ LANGUAGE plpgsql
 IMMUTABLE
 STRICT;
 
-CREATE FUNCTION validate_approximate_max_interval(approximate_timestamptz) RETURNS boolean
+CREATE FUNCTION is_approximate_interval_in_range(approximate_timestamptz) RETURNS boolean
 AS $$
 BEGIN
   IF $1.approximation > '2 days'::interval THEN
@@ -176,7 +176,7 @@ $$
 LANGUAGE plpgsql
 IMMUTABLE;
 
-CREATE FUNCTION validate_length(length) RETURNS boolean
+CREATE FUNCTION is_length_valid(length) RETURNS boolean
 AS $$
 BEGIN
   IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
@@ -191,7 +191,7 @@ $$
 LANGUAGE plpgsql
 IMMUTABLE;
 
-CREATE FUNCTION validate_mass(mass) RETURNS boolean
+CREATE FUNCTION is_mass_valid(mass) RETURNS boolean
 AS $$
 BEGIN
   IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
@@ -231,7 +231,7 @@ $$
 LANGUAGE plpgsql
 STABLE;
 
-CREATE FUNCTION birth_year_in_range(int4range) RETURNS boolean
+CREATE FUNCTION is_birth_year_in_range(int4range) RETURNS boolean
 AS $$
 BEGIN
   RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::integer);
@@ -613,7 +613,7 @@ CREATE DOMAIN hex_color AS text
   CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
 
 CREATE DOMAIN real_birth_year AS int4range
-  CHECK (birth_year_in_range(VALUE));
+  CHECK (is_birth_year_in_range(VALUE));
 
 CREATE DOMAIN rating AS smallint
   CHECK (is_rating((VALUE)::integer));
@@ -679,7 +679,7 @@ CREATE TABLE beards (
   color_id smallint,
   length length NOT NULL DEFAULT ROW(NULL, NULL),
   style text,
-  CONSTRAINT beards_length_check CHECK (validate_length(length)),
+  CONSTRAINT beards_length_check CHECK (is_length_valid(length)),
   CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
@@ -692,8 +692,8 @@ CREATE TABLE bodies (
   weight mass NOT NULL DEFAULT ROW(NULL, NULL),
   height length NOT NULL DEFAULT ROW(NULL, NULL),
   breast_size breast_sizes,
-  CONSTRAINT bodies_height_check CHECK (validate_length(height)),
-  CONSTRAINT bodies_weight_check CHECK (validate_mass(weight)),
+  CONSTRAINT bodies_height_check CHECK (is_length_valid(height)),
+  CONSTRAINT bodies_weight_check CHECK (is_mass_valid(weight)),
   CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
@@ -766,7 +766,7 @@ CREATE TABLE hair (
   highlights boolean,
   roots boolean,
   nature boolean,
-  CONSTRAINT hair_length_check CHECK (validate_length(length)),
+  CONSTRAINT hair_length_check CHECK (is_length_valid(length)),
   CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id)
@@ -805,7 +805,7 @@ CREATE TABLE nails (
   color_id smallint,
   length length NOT NULL DEFAULT ROW(NULL, NULL),
   care rating,
-  CONSTRAINT nails_length_check CHECK (validate_length(length)),
+  CONSTRAINT nails_length_check CHECK (is_length_valid(length)),
   CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
@@ -1023,8 +1023,8 @@ CREATE TABLE locations (
   coordinates point NOT NULL,
   place text,
   met_at approximate_timestamptz NOT NULL,
-  CONSTRAINT locations_met_at_approximation_mix_check CHECK (validate_approximate_timestamptz(met_at)),
-  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (validate_approximate_max_interval(met_at))
+  CONSTRAINT locations_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
+  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
 );
 
 
