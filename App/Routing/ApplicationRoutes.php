@@ -135,6 +135,15 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
+			'v1/evolutions/{id} [GET]' => new View\AuthenticatedView(
+				new V1\Evolution\Get(
+					$this->hashids['evolution']['hashid'],
+					$this->uri,
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
 			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
 				$this->database,
 				$this->elasticsearch,
