@@ -1868,7 +1868,7 @@ BEGIN
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
-      new.general_birth_year,
+      age_to_year(new.general_age, NOW()),
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,

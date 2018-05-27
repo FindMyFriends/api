@@ -12,7 +12,10 @@ final class Set implements Sql\Set {
 	public function __construct(Sql\Clause $clause, array $parameters) {
 		$this->set = new Description\Set(
 			$clause,
-			['evolved_at' => ':evolved_at'],
+			[
+				'evolved_at' => ':evolved_at',
+				'general_age' => "int4range(:general_age_from, :general_age_to, '[)')",
+			],
 			$parameters
 		);
 	}

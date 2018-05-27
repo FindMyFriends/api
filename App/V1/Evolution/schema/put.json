@@ -254,6 +254,22 @@
         "general": {
             "additionalProperties": false,
             "properties": {
+                "age": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "from": {
+                            "$ref": "#/definitions/age"
+                        },
+                        "to": {
+                            "$ref": "#/definitions/age"
+                        }
+                    },
+                    "required": [
+                        "from",
+                        "to"
+                    ],
+                    "type": "object"
+                },
                 "firstname": {
                     "type": [
                         "string",
@@ -277,12 +293,13 @@
                     "type": "integer"
                 }
             },
-            "required": {
-                "0": "lastname",
-                "1": "firstname",
-                "2": "ethnic_group_id",
-                "4": "sex"
-            },
+            "required": [
+                "lastname",
+                "firstname",
+                "ethnic_group_id",
+                "age",
+                "sex"
+            ],
             "type": "object"
         },
         "hands": {

@@ -34,12 +34,14 @@ final class Structure {
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
 		unset($properties['seeker_id']);
-		unset($properties['general']['properties']['age']);
-		unset($properties['general']['required'][array_search('age', $properties['general']['required'], true)]);
 		return $schema;
 	}
 
 	public function post(): array {
-		return $this->put();
+		$schema = $this->put();
+		$properties = &$schema['properties'];
+		unset($properties['general']['properties']['age']);
+		unset($properties['general']['required'][array_search('age', $properties['general']['required'], true)]);
+		return $schema;
 	}
 }

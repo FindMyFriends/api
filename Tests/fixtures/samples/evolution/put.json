@@ -1,6 +1,10 @@
 {
 	"evolved_at": "2017-01-01T13:58:10+00:00",
 	"general": {
+		"age": {
+			"from": 16,
+			"to": 20
+		},
 		"sex": "man",
 		"ethnic_group_id": 2,
 		"firstname": "Dominik",

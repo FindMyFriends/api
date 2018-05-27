@@ -14,6 +14,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Output;
+use Klapuch\Storage;
 use Tester;
 use Tester\Assert;
 
@@ -114,6 +115,14 @@ final class IndividualChainTest extends Tester\TestCase {
 					],
 				],
 			]
+		);
+		Assert::same(
+			'[15,16)',
+			(new Storage\NativeQuery(
+				$this->database,
+				'SELECT general_age FROM collective_evolutions WHERE id = ?',
+				[$changeId]
+			))->field()
 		);
 		Assert::same(7, $changeId);
 		(new Misc\TableCounts(
