@@ -951,7 +951,18 @@ BEGIN
   ),
   body AS (INSERT INTO bodies DEFAULT VALUES RETURNING id),
   face AS (INSERT INTO faces DEFAULT VALUES RETURNING id),
-  hand AS (INSERT INTO hands DEFAULT VALUES RETURNING id),
+  nail AS (INSERT INTO nails DEFAULT VALUES RETURNING id),
+  hand_hair AS (INSERT INTO hand_hair DEFAULT VALUES RETURNING id),
+  hand AS (
+    INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+      (SELECT id FROM nail),
+      DEFAULT,
+      DEFAULT,
+      DEFAULT,
+      (SELECT id FROM hand_hair)
+    )
+    RETURNING id
+  ),
   hair AS (INSERT INTO hair DEFAULT VALUES RETURNING id),
   beard AS (INSERT INTO beards DEFAULT VALUES RETURNING id),
   eyebrow AS (INSERT INTO eyebrows DEFAULT VALUES RETURNING id),
