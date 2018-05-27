@@ -22,6 +22,13 @@ final class DateTimeRuleTest extends Tester\TestCase {
 		});
 	}
 
+	public function testPassingWithJavascriptPreferredIso8601() {
+		Assert::true((new Constraint\DateTimeRule())->satisfied('2018-05-27T19:14:02.232+02:00'));
+		Assert::noError(function() {
+			(new Constraint\DateTimeRule())->apply('2018-05-27T19:14:02.232+02:00');
+		});
+	}
+
 	public function testFailingOnCustomFormat() {
 		Assert::false((new Constraint\DateTimeRule())->satisfied('2017-09-17 13:58:10'));
 		Assert::exception(function() {

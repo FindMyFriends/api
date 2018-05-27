@@ -10,7 +10,8 @@ use Klapuch\Validation;
  */
 final class DateTimeRule implements Validation\Rule {
 	public function satisfied($subject): bool {
-		return $subject === (new \DateTime($subject))->format(\DateTime::ATOM);
+		return $subject === (new \DateTime($subject))->format(\DateTime::ATOM)
+			|| $subject === (new \DateTime($subject))->format(\DateTime::RFC3339_EXTENDED);
 	}
 
 	public function apply($subject): string {
