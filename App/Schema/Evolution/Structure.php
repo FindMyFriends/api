@@ -34,6 +34,7 @@ final class Structure {
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];
 		unset($properties['seeker_id']);
+		unset($properties['id']);
 		return $schema;
 	}
 
