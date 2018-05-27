@@ -17,7 +17,7 @@ $uri = new Uri\CachedUri(
 		$_SERVER['SCRIPT_NAME'],
 		$_SERVER['REQUEST_URI'],
 		$_SERVER['SERVER_NAME'],
-		$_SERVER['HTTPS'] ?? 'http'
+		isset($_SERVER['HTTPS']) ? 'https' : 'http'
 	)
 );
 

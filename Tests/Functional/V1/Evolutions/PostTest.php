@@ -34,7 +34,7 @@ final class PostTest extends Tester\TestCase {
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/post.json')
 				)
 			),
-			new FakeUri('/', 'v1/evolutions', []),
+			new FakeUri('https://localhost', 'v1/evolutions', []),
 			$this->database,
 			$this->elasticsearch,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
@@ -42,6 +42,7 @@ final class PostTest extends Tester\TestCase {
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
 		Assert::same(HTTP_CREATED, $response->status());
+		Assert::same('https://localhost/v1/evolutions/k5', $response->headers()['Location']);
 	}
 
 	public function test400OnBadInput() {
