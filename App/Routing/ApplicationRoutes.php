@@ -86,45 +86,63 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{demand_id}/soulmate_requests [POST]' => new V1\Demand\SoulmateRequests\Post(
-				$this->uri,
-				$this->database,
-				$this->rabbitMq
+			'v1/demands/{demand_id}/soulmate_requests [POST]' => new View\AuthenticatedView(
+				new V1\Demand\SoulmateRequests\Post(
+					$this->uri,
+					$this->database,
+					$this->rabbitMq
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands [POST]' => new V1\Demands\Post(
-				$this->hashids['demand']['hashid'],
-				new Application\PlainRequest(),
-				$this->uri,
-				$this->database,
-				$this->rabbitMq,
-				$seeker
+			'v1/demands [POST]' => new View\AuthenticatedView(
+				new V1\Demands\Post(
+					$this->hashids['demand']['hashid'],
+					new Application\PlainRequest(),
+					$this->uri,
+					$this->database,
+					$this->rabbitMq,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{id} [PUT]' => new V1\Demand\Put(
-				new Application\PlainRequest(),
-				$this->uri,
-				$this->database,
-				$seeker
+			'v1/demands/{id} [PUT]' => new View\AuthenticatedView(
+				new V1\Demand\Put(
+					new Application\PlainRequest(),
+					$this->uri,
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{id} [PATCH]' => new V1\Demand\Patch(
-				new Application\PlainRequest(),
-				$this->database,
-				$seeker
+			'v1/demands/{id} [PATCH]' => new View\AuthenticatedView(
+				new V1\Demand\Patch(
+					new Application\PlainRequest(),
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/demands/{id} [DELETE]' => new V1\Demand\Delete(
-				$this->database,
-				$seeker
+			'v1/demands/{id} [DELETE]' => new View\AuthenticatedView(
+				new V1\Demand\Delete(
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/evolutions [OPTIONS]' => new V1\Preflight(
 				new V1\Evolutions\Options($this->database, $this->redis),
 				new Application\PlainRequest()
 			),
-			'v1/evolutions [POST]' => new V1\Evolutions\Post(
-				$this->hashids['evolution']['hashid'],
-				new Application\PlainRequest(),
-				$this->uri,
-				$this->database,
-				$this->elasticsearch,
-				$seeker
+			'v1/evolutions [POST]' => new View\AuthenticatedView(
+				new V1\Evolutions\Post(
+					$this->hashids['evolution']['hashid'],
+					new Application\PlainRequest(),
+					$this->uri,
+					$this->database,
+					$this->elasticsearch,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/evolutions?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
 				new V1\Evolutions\Get(
@@ -144,22 +162,31 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/evolutions/{id} [DELETE]' => new V1\Evolution\Delete(
-				$this->database,
-				$this->elasticsearch,
-				$seeker
+			'v1/evolutions/{id} [DELETE]' => new View\AuthenticatedView(
+				new V1\Evolution\Delete(
+					$this->database,
+					$this->elasticsearch,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/evolutions/{id} [PUT]' => new V1\Evolution\Put(
-				new Application\PlainRequest(),
-				$this->uri,
-				$this->database,
-				$this->elasticsearch,
-				$seeker
+			'v1/evolutions/{id} [PUT]' => new View\AuthenticatedView(
+				new V1\Evolution\Put(
+					new Application\PlainRequest(),
+					$this->uri,
+					$this->database,
+					$this->elasticsearch,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
-			'v1/soulmates/{id} [PATCH]' => new V1\Soulmate\Patch(
-				new Application\PlainRequest(),
-				$this->database,
-				$seeker
+			'v1/soulmates/{id} [PATCH]' => new View\AuthenticatedView(
+				new V1\Soulmate\Patch(
+					new Application\PlainRequest(),
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
 			),
 			'v1/demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
 				new V1\Demand\Soulmates\Get(
@@ -189,7 +216,10 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->database,
 				$this->cipher
 			),
-			'v1/tokens [DELETE]' => new V1\Tokens\Delete(),
+			'v1/tokens [DELETE]' => new View\AuthenticatedView(
+				new V1\Tokens\Delete(),
+				new Http\ChosenRole($seeker, ['member'])
+			),
 			'v1/.+ [OPTIONS]' => new V1\Options(),
 		];
 	}
