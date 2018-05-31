@@ -1,5 +1,5 @@
 FROM nginx:alpine
 
 COPY site.conf /etc/nginx/conf.d/default.conf
-COPY ssl/localhost.crt /etc/ssl/certs/localhost.crt
-COPY ssl/localhost.key /etc/ssl/private/localhost.key
+COPY ssl/fmf.localhost.crt /etc/ssl/certs/fmf.localhost.crt
+COPY ssl/fmf.localhost.key /etc/ssl/private/fmf.localhost.key
