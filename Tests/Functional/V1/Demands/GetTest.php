@@ -40,6 +40,20 @@ final class GetTest extends Tester\TestCase {
 			new \SplFileInfo(__DIR__ . '/../../../../App/V1/Demand/schema/get.json')
 		))->assert();
 	}
+
+	public function testIncludedCountHeader() {
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->database))->try();
+		$headers = (new V1\Demands\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'v1/demands', []),
+			$this->database,
+			new Access\FakeSeeker((string) $seeker)
+		))->response(['page' => 1, 'per_page' => 10, 'sort' => ''])->headers();
+		Assert::same(2, $headers['X-Total-Count']);
+	}
 }
 
 (new GetTest())->run();
