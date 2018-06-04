@@ -22,15 +22,15 @@ install:
   - docker-compose -p fmf up -d --build
 
 before_script:
-  - docker exec fmf_php-fpm_1 composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
+  - docker exec fmf_php-fpm_1 make composer-install
   - docker exec find-my-friends-postgres test_import
   - docker exec find-my-friends-postgres import
 
 script:
-  - docker exec fmf_php-fpm_1 vendor/bin/phing ci
+  - docker exec fmf_php-fpm_1 make ci
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
-  - docker exec fmf_php-fpm_1 vendor/bin/phing echo-failed-tests
+  - docker exec fmf_php-fpm_1 make echo-failed-tests
