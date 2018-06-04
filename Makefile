@@ -1,6 +1,8 @@
 .DEFAULT_GOAL := check
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install
 
+PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
+
 check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests
 ci: validate-composer.lock lint phpcpd phpstan phpcs tests tester-coverage
 init: lint generate-schemas move-schemas
@@ -15,10 +17,10 @@ phpstan:
 	vendor/bin/phpstan analyse -l max -c phpstan.neon App Tests/Misc Tests/TestCase Commands
 
 phpcs:
-	vendor/bin/phpcs --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
+	vendor/bin/phpcs $(PHPCS_ARGS)
 
 phpcbf:
-	vendor/bin/phpcbf --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
+	vendor/bin/phpcbf $(PHPCS_ARGS)
 
 tests:
 	vendor/bin/tester -o console -s -p php -c Tests/php.ini Tests/
