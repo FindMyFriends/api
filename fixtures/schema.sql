@@ -1097,6 +1097,24 @@ $$
 LANGUAGE SQL
 STABLE;
 
+
+CREATE FUNCTION is_common_seeker(in_demand_id demands.id%type, in_evolution_id evolutions.id%type) RETURNS boolean
+AS $$
+WITH demand_seeker AS (
+  SELECT seeker_id
+  FROM demands
+  WHERE id = in_demand_id
+), evolution_seeker AS (
+  SELECT seeker_id
+  FROM evolutions
+  WHERE id = in_evolution_id
+)
+SELECT seeker_id = (SELECT seeker_id FROM evolution_seeker) FROM demand_seeker
+$$
+LANGUAGE SQL
+STABLE;
+
+
 CREATE TABLE soulmates (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
@@ -1137,7 +1155,22 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER soulmates_row_ad_trigger AFTER INSERT OR DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
+CREATE FUNCTION soulmates_trigger_row_bui() RETURNS trigger
+AS $$
+BEGIN
+  IF (is_common_seeker(new.demand_id, new.evolution_id)) THEN
+    RAISE EXCEPTION USING
+      MESSAGE = 'Demand and evolution can not belong to the same seeker',
+      HINT = format('Demand ID %L and evolution ID %L belongs to the same seeker', new.demand_id, new.evolution_id);
+  END IF;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER soulmates_row_ad_trigger AFTER DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
+CREATE TRIGGER soulmates_row_bui_trigger BEFORE UPDATE OR INSERT ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_bui();
 
 
 CREATE TABLE soulmate_requests (
