@@ -2,6 +2,7 @@
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
+TESTER_ARGS := -o console -s -p php -c Tests/php.ini
 
 check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests
 ci: validate-composer.lock lint phpcpd phpstan phpcs tests tester-coverage
@@ -23,10 +24,10 @@ phpcbf:
 	vendor/bin/phpcbf $(PHPCS_ARGS)
 
 tests:
-	vendor/bin/tester -o console -s -p php -c Tests/php.ini Tests/
+	vendor/bin/tester $(TESTER_ARGS) Tests/
 
 tester-coverage:
-	vendor/bin/tester -o console -s -p php -d extension=xdebug.so -c Tests/php.ini Tests/ --coverage tester-coverage.xml --coverage-src App/
+	vendor/bin/tester $(TESTER_ARGS) -d extension=xdebug.so Tests/ --coverage tester-coverage.xml --coverage-src App/
 
 echo-failed-tests:
 	@for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
