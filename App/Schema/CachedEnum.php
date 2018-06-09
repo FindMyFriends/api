@@ -25,8 +25,8 @@ final class CachedEnum implements Enum {
 
 	public function values(): array {
 		if (!$this->redis->exists($this->key($this->field, $this->type)))
-			$this->redis->set($this->key($this->field, $this->type), json_encode($this->origin->values()), ...self::TTL[$this->type]);
-		return json_decode($this->redis->get($this->key($this->field, $this->type)), true);
+			$this->redis->set($this->key($this->field, $this->type), igbinary_serialize($this->origin->values()), ...self::TTL[$this->type]);
+		return igbinary_unserialize($this->redis->get($this->key($this->field, $this->type)));
 	}
 
 	private function key(string $field, string $type): string {

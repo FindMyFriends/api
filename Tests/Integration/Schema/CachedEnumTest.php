@@ -25,7 +25,7 @@ final class CachedEnumTest extends Tester\TestCase {
 		Assert::falsey($this->redis->exists('sex-enum'));
 		Assert::same(['a', 'b', 'c'], $enum->values());
 		Assert::same(['a', 'b', 'c'], $enum->values());
-		Assert::same(['a', 'b', 'c'], json_decode($this->redis->get('postgres:type:meta:enums:enum:sex')));
+		Assert::same(['a', 'b', 'c'], igbinary_unserialize($this->redis->get('postgres:type:meta:enums:enum:sex')));
 	}
 
 	public function testPersistingEnumToInfinite() {
