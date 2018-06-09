@@ -66,6 +66,9 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => ['note' => $noteType],
+			'anyOf' => [
+				['required' => ['note']],
+			],
 			'type' => 'object',
 		];
 	}

@@ -9,5 +9,12 @@
             ]
         }
     },
+    "anyOf": [
+        {
+            "required": [
+                "note"
+            ]
+        }
+    ],
     "type": "object"
 }

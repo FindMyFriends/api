@@ -47,6 +47,9 @@ final class Structure {
 			$properties['searched_at'],
 			$properties['related_at']
 		);
+		$schema['anyOf'] = [
+			['required' => ['is_correct']],
+		];
 		$properties['is_correct']['type'] = ['boolean'];
 		unset($schema['required']);
 		return $schema;

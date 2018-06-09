@@ -44,10 +44,10 @@ final class PatchTest extends Tester\TestCase {
 				new Output\FakeFormat(json_encode(['foo' => false]))
 			),
 			$this->database,
-			new Access\FakeSeeker((string) '1')
+			new Access\FakeSeeker('1')
 		))->response(['id' => 1]);
 		$soulmate = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property foo is not defined and the definition does not allow additional properties'], $soulmate);
+		Assert::same(['message' => 'The property is_correct is required'], $soulmate);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 
@@ -78,6 +78,17 @@ final class PatchTest extends Tester\TestCase {
 		$soulmate = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your soulmate'], $soulmate);
 		Assert::same(HTTP_FORBIDDEN, $response->status());
+	}
+
+	public function test400OnEmptyBody() {
+		$response = (new Endpoint\Soulmate\Patch(
+			new Application\FakeRequest(new Output\FakeFormat('')),
+			$this->database,
+			new Access\FakeSeeker('1')
+		))->response(['id' => 1]);
+		$soulmate = json_decode($response->body()->serialization(), true);
+		Assert::same(['message' => 'The property is_correct is required'], $soulmate);
+		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 }
 

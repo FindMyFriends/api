@@ -46,7 +46,7 @@ final class PatchTest extends Tester\TestCase {
 			new Access\FakeSeeker()
 		))->response(['id' => 1]);
 		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property name is not defined and the definition does not allow additional properties'], $demand);
+		Assert::same(['message' => 'The property note is required'], $demand);
 		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 
@@ -80,6 +80,17 @@ final class PatchTest extends Tester\TestCase {
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::same(['message' => 'This is not your demand'], $demand);
 		Assert::same(HTTP_FORBIDDEN, $response->status());
+	}
+
+	public function test400OnEmptyBody() {
+		$response = (new Endpoint\Demand\Patch(
+			new Application\FakeRequest(new Output\FakeFormat('{}')),
+			$this->database,
+			new Access\FakeSeeker()
+		))->response(['id' => 1]);
+		$demand = json_decode($response->body()->serialization(), true);
+		Assert::same(['message' => 'The property note is required'], $demand);
+		Assert::same(HTTP_BAD_REQUEST, $response->status());
 	}
 }
 
