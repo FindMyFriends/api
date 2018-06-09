@@ -277,12 +277,12 @@
                     "type": "integer"
                 }
             },
-            "required": {
-                "0": "lastname",
-                "1": "firstname",
-                "2": "ethnic_group_id",
-                "4": "sex"
-            },
+            "required": [
+                "lastname",
+                "firstname",
+                "ethnic_group_id",
+                "sex"
+            ],
             "type": "object"
         },
         "hands": {

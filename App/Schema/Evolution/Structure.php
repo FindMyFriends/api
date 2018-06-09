@@ -43,6 +43,7 @@ final class Structure {
 		$properties = &$schema['properties'];
 		unset($properties['general']['properties']['age']);
 		unset($properties['general']['required'][array_search('age', $properties['general']['required'], true)]);
+		$properties['general']['required'] = array_values($properties['general']['required']);
 		return $schema;
 	}
 }
