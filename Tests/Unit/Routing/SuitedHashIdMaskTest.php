@@ -25,16 +25,16 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 				[
 					'demand' => [
 						'hashid' => new Hashids(),
-						'paths' => ['^v1/demand.+$'],
+						'paths' => ['^demand.+$'],
 						'parameters' => ['id' => 'demand'],
 					],
 					'evolution' => [
 						'hashid' => new Hashids('abc'),
-						'paths' => ['^v1/evolution.+$'],
+						'paths' => ['^evolution.+$'],
 						'parameters' => ['id' => 'evolution'],
 					],
 				],
-				'v1/demands/jR'
+				'demands/jR'
 			))->parameters()
 		);
 	}
@@ -47,16 +47,16 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 				[
 					'demand' => [
 						'hashid' => new Hashids(),
-						'paths' => ['^v1/demand.+$'],
+						'paths' => ['^demand.+$'],
 						'parameters' => ['id' => 'demand'],
 					],
 					'evolution' => [
 						'hashid' => new Hashids('abc'),
-						'paths' => ['^v1/evolution.+$'],
+						'paths' => ['^evolution.+$'],
 						'parameters' => ['id' => 'evolution'],
 					],
 				],
-				'v1/ou'
+				'ou'
 			))->parameters()
 		);
 	}
@@ -69,16 +69,16 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 				[
 					'demand' => [
 						'hashid' => new Hashids('abc'),
-						'paths' => ['^v1/demand.+$'],
+						'paths' => ['^demand.+$'],
 						'parameters' => ['id' => 'demand'],
 					],
 					'evolution' => [
 						'hashid' => new Hashids(),
-						'paths' => ['^v1/evolution.+$'],
+						'paths' => ['^evolution.+$'],
 						'parameters' => ['id' => 'evolution', 'demand_id' => 'demand'],
 					],
 				],
-				'v1/evolution/jR'
+				'evolution/jR'
 			))->parameters()
 		);
 	}
@@ -91,11 +91,11 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 				[
 					'demand' => [
 						'hashid' => new Hashids(),
-						'paths' => ['^v1/demand.+$'],
+						'paths' => ['^demand.+$'],
 						'parameters' => ['id' => 'demand'],
 					],
 				],
-				'v1/demands/jR'
+				'demands/jR'
 			))->parameters()
 		);
 	}

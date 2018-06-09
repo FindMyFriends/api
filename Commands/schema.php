@@ -27,33 +27,33 @@ $database = new Storage\SafePDO(
 );
 
 $demand = new Schema\Demand\Structure($database);
-$schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/schema/get.json'));
-$schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demands/schema/get.json'));
-$schemas->save($demand->put(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/schema/put.json'));
-$schemas->save($demand->patch(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/schema/patch.json'));
-$schemas->save($demand->post(), new SplFileInfo(__DIR__ . '/../App/V1/Demands/schema/post.json'));
+$schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demand/schema/get.json'));
+$schemas->save($demand->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demands/schema/get.json'));
+$schemas->save($demand->put(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demand/schema/put.json'));
+$schemas->save($demand->patch(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demand/schema/patch.json'));
+$schemas->save($demand->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demands/schema/post.json'));
 
 $evolution = new Schema\Evolution\Structure($database);
-$schemas->save($evolution->get(), new SplFileInfo(__DIR__ . '/../App/V1/Evolution/schema/get.json'));
-$schemas->save($evolution->put(), new SplFileInfo(__DIR__ . '/../App/V1/Evolution/schema/put.json'));
-$schemas->save($evolution->post(), new SplFileInfo(__DIR__ . '/../App/V1/Evolutions/schema/post.json'));
+$schemas->save($evolution->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Evolution/schema/get.json'));
+$schemas->save($evolution->put(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Evolution/schema/put.json'));
+$schemas->save($evolution->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Evolutions/schema/post.json'));
 
 $description = new Schema\Description\Structure($database);
-$schemas->save($description->get(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/get.json'));
-$schemas->save($description->put(), new SplFileInfo(__DIR__ . '/../App/V1/Description/schema/put.json'));
-$schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/V1/Descriptions/schema/post.json'));
+$schemas->save($description->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Description/schema/get.json'));
+$schemas->save($description->put(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Description/schema/put.json'));
+$schemas->save($description->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Descriptions/schema/post.json'));
 
 $soulmate = new Schema\Soulmate\Structure();
-$schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/Soulmates/schema/get.json'));
-$schemas->save($soulmate->patch(), new SplFileInfo(__DIR__ . '/../App/V1/Soulmate/schema/patch.json'));
+$schemas->save($soulmate->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demand/Soulmates/schema/get.json'));
+$schemas->save($soulmate->patch(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Soulmate/schema/patch.json'));
 
 $soulmateRequest = new FindMyFriends\Schema\SoulmateRequest\Structure($database);
-$schemas->save($soulmateRequest->get(), new SplFileInfo(__DIR__ . '/../App/V1/Demand/SoulmateRequests/schema/get.json'));
+$schemas->save($soulmateRequest->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Demand/SoulmateRequests/schema/get.json'));
 
 $seeker = new FindMyFriends\Schema\Seeker\Structure($database);
-$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/V1/Seeker/schema/get.json'));
-$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/V1/Seekers/schema/post.json'));
+$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Seeker/schema/get.json'));
+$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Seekers/schema/post.json'));
 
 $seeker = new FindMyFriends\Schema\Token\Structure();
-$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/V1/Token/schema/get.json'));
-$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/V1/Tokens/schema/post.json'));
+$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Token/schema/get.json'));
+$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Tokens/schema/post.json'));

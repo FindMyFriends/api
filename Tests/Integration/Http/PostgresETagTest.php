@@ -21,13 +21,13 @@ final class PostgresETagTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testStoredAsHexFormat() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		Assert::match('"%h%"', $eTag->get());
 	}
 
 	public function testSameClassesWithSameTag() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		$first = $eTag->get();
 		$eTag->set(new \stdClass());
@@ -36,7 +36,7 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testUpdatingTag() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \SplQueue());
 		$first = $eTag->get();
 		$eTag->set(new \stdClass());
@@ -49,9 +49,9 @@ final class PostgresETagTest extends Tester\TestCase {
 			$this->database,
 			'INSERT INTO etags (entity, tag, created_at) VALUES (?, ?, ?)
 			RETURNING id',
-			['/v1/demands/1', '123', '2010-01-01']
+			['/demands/1', '123', '2010-01-01']
 		))->field();
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \SplQueue());
 		$current = (new Storage\NativeQuery(
 			$this->database,
@@ -64,7 +64,7 @@ final class PostgresETagTest extends Tester\TestCase {
 
 
 	public function testAllowingAnonymousClasses() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		Assert::noError(function() use ($eTag) {
 			$eTag->set(new class () {
 
@@ -73,15 +73,15 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testCheckingExistence() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
+		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		Assert::false($eTag->exists());
 		$eTag->set(new \stdClass());
 		Assert::true($eTag->exists());
 	}
 
 	public function testCaseInsensitiveEntities() {
-		$lower = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/v1/demands/1'));
-		$upper = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/V1/DEMANDS/1'));
+		$lower = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$upper = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/DEMANDS/1'));
 		$lower->set(new \stdClass());
 		Assert::true($upper->exists());
 		Assert::same($lower->get(), $upper->get());
