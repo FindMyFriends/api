@@ -1971,16 +1971,16 @@
         },
         {
             "name": "nette/tester",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "93f70b53f7b87b44334d98219302939eda2a423b"
+                "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/93f70b53f7b87b44334d98219302939eda2a423b",
-                "reference": "93f70b53f7b87b44334d98219302939eda2a423b",
+                "url": "https://api.github.com/repos/nette/tester/zipball/3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
+                "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
                 "shasum": ""
             },
             "require": {
@@ -2029,7 +2029,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2018-02-07T12:55:20+00:00"
+            "time": "2018-06-07T11:24:40+00:00"
         },
         {
             "name": "nette/utils",
