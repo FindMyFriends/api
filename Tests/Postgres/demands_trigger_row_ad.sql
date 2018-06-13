@@ -1,4 +1,4 @@
-CREATE FUNCTION unit_tests.deleting_all_evidences() RETURNS test_result
+CREATE FUNCTION tests.deleting_all_evidences_after_demand() RETURNS void
 AS $$
 DECLARE
   inserted_demand_id demands.id%type;
@@ -12,13 +12,9 @@ BEGIN
   RETURNING id
   INTO inserted_demand_id;
 
-  DELETE FROM demands
-  WHERE id = inserted_demand_id;
+  DELETE FROM demands WHERE id = inserted_demand_id;
 
-  RETURN message FROM assert.is_equal(
-    '',
-    (SELECT test_utils.tables_not_matching_count('seekers=>1'))
-  );
+  PERFORM assert.same('', (SELECT test_utils.tables_not_matching_count('seekers=>1')));
 END
 $$
 LANGUAGE plpgsql;

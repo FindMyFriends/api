@@ -1,4 +1,4 @@
-CREATE FUNCTION unit_tests.throwing_on_deleting_base() RETURNS test_result
+CREATE FUNCTION tests.throwing_on_deleting_base() RETURNS void
 AS $$
 DECLARE
   inserted_evolution_id evolutions.id%type;
@@ -11,7 +11,7 @@ BEGIN
   RETURNING id
   INTO inserted_evolution_id;
 
-  RETURN message FROM assert.throws(
+  PERFORM assert.throws(
     FORMAT ('DELETE FROM evolutions WHERE id = %L', inserted_evolution_id),
     ROW('Base evolution can not be reverted', 'P0001')::error
   );
@@ -19,7 +19,7 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE FUNCTION unit_tests.passing_on_not_deleting_base() RETURNS test_result
+CREATE FUNCTION tests.passing_on_not_deleting_base() RETURNS void
 AS $$
 DECLARE
   inserted_evolution_id evolutions.id%type;
@@ -44,8 +44,6 @@ BEGIN
 
   DELETE FROM evolutions
   WHERE id = inserted_evolution_id;
-
-  RETURN '';
 END
 $$
 LANGUAGE plpgsql;

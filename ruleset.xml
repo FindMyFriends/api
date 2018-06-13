@@ -13,6 +13,7 @@
 		<exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
 		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
+		<exclude name="Consistence.Exceptions.ExceptionDeclaration.IncorrectExceptionDirectory"/>
 	</rule>
 
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
@@ -33,6 +34,7 @@
 		<exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment.OneLinePropertyComment"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator.DisallowedShortTernaryOperator"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowEmpty.DisallowedEmpty"/> <!-- TODO: Temporary -->
+		<exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">

@@ -3,7 +3,7 @@ disconnect;
 psql -U postgres -c "DROP DATABASE IF EXISTS find_my_friends_test";
 psql -U postgres -c "CREATE DATABASE find_my_friends_test";
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/fixtures/schema.sql;
-psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/plpgunit.sql;
+psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/plest.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/test_utils.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/samples.sql;
 psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http;";

@@ -66,3 +66,15 @@ BEGIN
   RETURN random() > 0.5;
 END;
 $$;
+
+CREATE FUNCTION test_utils.is_function_exist(name text, schema text) RETURNS boolean
+AS $$
+SELECT EXISTS (
+  SELECT 1
+  FROM pg_proc p
+  JOIN pg_namespace n ON p.pronamespace = n.oid
+  WHERE n.nspname = schema AND p.proname = TRIM(LEADING format('%s.', schema) FROM name)
+);
+$$
+LANGUAGE sql
+STABLE;

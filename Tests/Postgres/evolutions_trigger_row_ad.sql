@@ -1,4 +1,4 @@
-CREATE FUNCTION unit_tests.deleting_all_evidences() RETURNS test_result
+CREATE FUNCTION tests.deleting_all_evidences() RETURNS void
 AS $$
 DECLARE
   inserted_evolution_id evolutions.id%type;
@@ -24,7 +24,7 @@ BEGIN
   DELETE FROM evolutions
   WHERE id = inserted_evolution_id;
 
-  RETURN message FROM assert.is_equal(
+  PERFORM assert.same(
     '',
     (
       SELECT test_utils.tables_not_matching_count(

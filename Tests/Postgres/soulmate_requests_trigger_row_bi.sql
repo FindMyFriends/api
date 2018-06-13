@@ -1,4 +1,4 @@
-CREATE FUNCTION unit_tests.throwing_on_running_task() RETURNS test_result
+CREATE FUNCTION tests.throwing_on_running_task() RETURNS void
 AS $$
 DECLARE
   v_demand_id demands.id%type;
@@ -6,7 +6,7 @@ BEGIN
   SELECT samples.demand()
   INTO v_demand_id;
   INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (v_demand_id, NOW(), NULL, 'pending');
-  RETURN message FROM assert.throws(
+  PERFORM assert.throws(
     FORMAT (
       'INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (%L, %L, %L, %L)',
       v_demand_id,
@@ -20,7 +20,7 @@ END
 $$
 LANGUAGE plpgsql;
 
-CREATE FUNCTION unit_tests.passing_on_subsequent() RETURNS test_result
+CREATE FUNCTION tests.passing_on_subsequent() RETURNS void
 AS $$
 DECLARE
   v_demand_id demands.id%type;
@@ -32,7 +32,6 @@ BEGIN
   RETURNING id
   INTO v_soulmate_request_id;
   INSERT INTO soulmate_requests (demand_id, searched_at, self_id, status) VALUES (v_demand_id, NOW(), v_soulmate_request_id, 'succeed');
-  RETURN '';
 END
 $$
 LANGUAGE plpgsql;
