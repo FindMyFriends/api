@@ -2,7 +2,7 @@ CREATE FUNCTION tests.throwing_on_missing_value_mass() RETURNS void
 AS $$
 BEGIN
   PERFORM assert.throws(
-    FORMAT('SELECT is_mass_valid(ROW(%L, %L))', NULL, 'kg'),
+    format('SELECT is_mass_valid(ROW(%L, %L))', NULL, 'kg'),
     ROW('Mass with unit must contain value', 'P0001')::error
   );
 END

@@ -2,7 +2,7 @@ CREATE FUNCTION tests.throwing_on_overstepped_max() RETURNS void
 AS $BODY$
 BEGIN
   PERFORM assert.throws(
-    FORMAT ('SELECT is_approximate_interval_in_range(ROW(%L, %L, %L))', NOW(), 'sooner', 'P3M'),
+    format('SELECT is_approximate_interval_in_range(ROW(%L, %L, %L))', NOW(), 'sooner', 'P3M'),
     ROW($$Overstepped maximum of 2 days$$, 'P0001')::error
   );
 END

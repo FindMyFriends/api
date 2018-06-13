@@ -29,8 +29,8 @@ BEGIN
   SELECT samples.seeker() INTO v_seeker_id;
   PERFORM samples.evolution(json_build_object('seeker_id', v_seeker_id)::jsonb);
   PERFORM assert.throws(
-    FORMAT('SELECT created_base_evolution(%L, %L, %L, %L, %L, %L)', v_seeker_id, 'man', 1, '[1996,1996]', 'Dom', 'Self'),
-    ROW(FORMAT('Base evolution for seeker %L is already created.', v_seeker_id), 'P0001')::error
+    format('SELECT created_base_evolution(%L, %L, %L, %L, %L, %L)', v_seeker_id, 'man', 1, '[1996,1996]', 'Dom', 'Self'),
+    ROW(format('Base evolution for seeker %L is already created.', v_seeker_id), 'P0001')::error
   );
 END
 $$
