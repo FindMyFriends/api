@@ -14,6 +14,9 @@
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
 		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
 		<exclude name="Consistence.Exceptions.ExceptionDeclaration.IncorrectExceptionDirectory"/>
+		<exclude name="Squiz.WhiteSpace.FunctionSpacing.AfterLast"/>
+		<exclude name="Squiz.WhiteSpace.FunctionSpacing.BeforeFirst"/>
+		<exclude name="Squiz.Arrays.ArrayDeclaration.NoComma"/>
 	</rule>
 
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
