@@ -617,6 +617,12 @@ CREATE DOMAIN real_birth_year AS int4range
 
 CREATE DOMAIN rating AS smallint
   CHECK (is_rating((VALUE)::integer));
+
+CREATE DOMAIN valid_length AS length
+  CHECK (is_length_valid((VALUE)::length));
+
+CREATE DOMAIN valid_mass AS mass
+  CHECK (is_mass_valid((VALUE)::mass));
 -----
 
 -- TABLES --
@@ -677,9 +683,8 @@ CREATE TABLE beard_colors (
 CREATE TABLE beards (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length length NOT NULL DEFAULT ROW(NULL, NULL),
+  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
   style text,
-  CONSTRAINT beards_length_check CHECK (is_length_valid(length)),
   CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
@@ -689,11 +694,9 @@ CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EAC
 CREATE TABLE bodies (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   build_id smallint,
-  weight mass NOT NULL DEFAULT ROW(NULL, NULL),
-  height length NOT NULL DEFAULT ROW(NULL, NULL),
+  weight valid_mass NOT NULL DEFAULT ROW(NULL, NULL),
+  height valid_length NOT NULL DEFAULT ROW(NULL, NULL),
   breast_size breast_sizes,
-  CONSTRAINT bodies_height_check CHECK (is_length_valid(height)),
-  CONSTRAINT bodies_weight_check CHECK (is_mass_valid(weight)),
   CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
@@ -704,8 +707,7 @@ CREATE TRIGGER bodies_row_abiu_weight_trigger BEFORE INSERT OR UPDATE ON bodies 
 CREATE TABLE eyebrows (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  care smallint,
-  CONSTRAINT eyebrows_care_check CHECK (is_rating((care)::integer))
+  care rating
 );
 
 CREATE TABLE eye_colors (
@@ -762,11 +764,10 @@ CREATE TABLE hair (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   style_id smallint,
   color_id smallint,
-  length length NOT NULL DEFAULT ROW(NULL, NULL),
+  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
   highlights boolean,
   roots boolean,
   nature boolean,
-  CONSTRAINT hair_length_check CHECK (is_length_valid(length)),
   CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id)
@@ -803,9 +804,8 @@ CREATE TABLE nail_colors (
 CREATE TABLE nails (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length length NOT NULL DEFAULT ROW(NULL, NULL),
+  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
   care rating,
-  CONSTRAINT nails_length_check CHECK (is_length_valid(length)),
   CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );

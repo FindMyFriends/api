@@ -4,7 +4,7 @@ BEGIN
   INSERT INTO beards (color_id, length, style) VALUES (8, ROW(100, 'cm'::length_units), 'ok');
   PERFORM assert.same(
     (SELECT length FROM beards),
-    ROW(100, 'cm'::length_units)::length
+    ROW(100, 'cm'::length_units)::valid_length
   );
 END
 $$
@@ -23,7 +23,7 @@ BEGIN
   WHERE id = v_beard_id;
   PERFORM assert.same(
     (SELECT length FROM beards WHERE id = v_beard_id),
-    ROW(2, 'cm'::length_units)::length
+    ROW(2, 'cm'::length_units)::valid_length
   );
 END
 $$
