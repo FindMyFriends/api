@@ -3,8 +3,8 @@ AS $$
 BEGIN
   PERFORM assert.false(
     heterochromic_eyes(
-      ROW(1, 2, TRUE )::eyes,
-      ROW(2, 2, TRUE )::eyes
+      ROW(1, 2, TRUE)::eyes,
+      ROW(2, 2, TRUE)::eyes
     )
   );
 END
@@ -16,8 +16,8 @@ AS $$
 BEGIN
   PERFORM assert.true(
     heterochromic_eyes(
-      ROW(1, 2, FALSE )::eyes,
-      ROW(2, 2, TRUE )::eyes
+      ROW(1, 2, FALSE)::eyes,
+      ROW(2, 2, TRUE)::eyes
     )
   );
 END
@@ -30,7 +30,7 @@ BEGIN
   PERFORM assert.true(
     heterochromic_eyes(
       NULL,
-      ROW(2, 2, TRUE )::eyes
+      ROW(2, 2, TRUE)::eyes
     )
   );
 END

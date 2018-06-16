@@ -36,7 +36,7 @@ IMMUTABLE;
 CREATE FUNCTION assert.true(actual anyelement) RETURNS void
 AS $$
 BEGIN
-  PERFORM assert.same(actual, TRUE);
+  PERFORM assert.same(TRUE, actual);
 END
 $$
 LANGUAGE plpgsql
@@ -45,7 +45,7 @@ IMMUTABLE;
 CREATE FUNCTION assert.false(actual anyelement) RETURNS void
 AS $$
 BEGIN
-  PERFORM assert.same(actual, FALSE);
+  PERFORM assert.same(FALSE, actual);
 END
 $$
 LANGUAGE plpgsql

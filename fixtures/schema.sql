@@ -727,7 +727,7 @@ CREATE TABLE eyes (
 CREATE FUNCTION heterochromic_eyes(eyes, eyes) RETURNS boolean
 AS $$
 BEGIN
-  RETURN (row_to_json($1)::jsonb - 'id') != (row_to_json($2)::jsonb - 'id');
+  RETURN (row_to_json($1)::jsonb - 'id') IS DISTINCT FROM (row_to_json($2)::jsonb - 'id');
 END
 $$
 LANGUAGE plpgsql

@@ -69,7 +69,7 @@ BEGIN
   INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
     NULL,
     samples.random_if_not_exists((SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1), replacements, 'color_id'),
-    NULL,
+		DEFAULT,
     NULL,
     NULL,
     NULL
@@ -204,7 +204,7 @@ DECLARE
 BEGIN
   INSERT INTO beards (color_id, length, style) VALUES (
     NULL,
-    NULL,
+		DEFAULT,
     NULL
   )
   RETURNING id
@@ -239,8 +239,8 @@ DECLARE
 BEGIN
   INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
     samples.random_if_not_exists(NULL, replacements, 'build_id')::integer,
-    NULL,
-    NULL,
+    DEFAULT,
+		DEFAULT,
     NULL
   )
   RETURNING id
@@ -392,7 +392,7 @@ DECLARE
 BEGIN
   INSERT INTO nails (color_id, length, care) VALUES (
     NULL,
-    NULL,
+    DEFAULT,
     NULL
   )
   RETURNING id
