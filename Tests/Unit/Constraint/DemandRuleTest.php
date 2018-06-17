@@ -80,6 +80,27 @@ final class DemandRuleTest extends Tester\TestCase {
 			)
 		);
 	}
+
+
+	public function testAllowedApproximationAsNull()
+	{
+		Assert::noError(function() {
+			(new Constraint\DemandRule())->apply(
+				array_replace_recursive(
+					self::BASE,
+					[
+						'location' => [
+							'met_at' => [
+								'moment' => '2015-09-17T13:58:10+00:00',
+								'timeline_side' => 'exactly',
+								'approximation' => null,
+							],
+						],
+					]
+				)
+			);
+		});
+	}
 }
 
 (new DemandRuleTest())->run();

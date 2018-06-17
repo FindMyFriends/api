@@ -30,13 +30,17 @@ final class DemandRule implements Validation\Rule {
 							new DateTimeRule(),
 							'Met at moment is not a valid datetime.'
 						))->apply($subject['location']['met_at']['moment']),
-						'approximation' => (new Validation\FriendlyRule(
-							new IntervalDiffRule('P2D'),
-							'Overstepped maximum of 2 days as approximated met at interval.'
+						'approximation' => (new IfNotNullRule(
+							new Validation\FriendlyRule(
+								new IntervalDiffRule('P2D'),
+								'Overstepped maximum of 2 days as approximated met at interval.'
+							)
 						))->apply(
-							(new Validation\FriendlyRule(
-								new IntervalRule(),
-								'Approximation is not a valid interval.'
+							(new IfNotNullRule(
+								new Validation\FriendlyRule(
+									new IntervalRule(),
+									'Approximation is not a valid interval.'
+								)
 							))->apply($subject['location']['met_at']['approximation'])
 						),
 					],
