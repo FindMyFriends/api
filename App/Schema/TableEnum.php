@@ -18,6 +18,6 @@ final class TableEnum implements Enum {
 		return (new Storage\NativeQuery(
 			$this->database,
 			sprintf('SELECT id, name FROM %s ORDER BY id', $this->table)
-		))->rows(\PDO::FETCH_KEY_PAIR);
+		))->rows();
 	}
 }
