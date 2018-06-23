@@ -42,32 +42,35 @@ final class Post implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$url = new Http\CreatedResourceUrl(
-				new Uri\RelativeUrl($this->url, 'demands/{id}'),
-				[
-					'id' => $this->hashids->encode(
-						(new Domain\QueuedDemands(
-							new Domain\IndividualDemands(
-								$this->seeker,
-								$this->database
+		$url = new Http\CreatedResourceUrl(
+			new Uri\RelativeUrl($this->url, 'demands/{id}'),
+			[
+				'id' => $this->hashids->encode(
+					(new Domain\QueuedDemands(
+						new Domain\IndividualDemands(
+							$this->seeker,
+							$this->database
+						),
+						new Search\AmqpPublisher($this->rabbitMq)
+					))->ask(
+						(new Validation\ChainedRule(
+							new Constraint\StructuredJson(
+								new \SplFileInfo(self::SCHEMA)
 							),
-							new Search\AmqpPublisher($this->rabbitMq)
-						))->ask(
-							(new Validation\ChainedRule(
-								new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-								new Constraint\DemandRule()
-							))->apply(json_decode($this->request->body()->serialization(), true))
+							new Constraint\DemandRule()
+						))->apply(
+							json_decode(
+								$this->request->body()->serialization(),
+								true
+							)
 						)
-					),
-				]
-			);
-			return new Response\ConcurrentlyCreatedResponse(
-				new Response\CreatedResponse(new Response\EmptyResponse(), $url),
-				new Http\PostgresETag($this->database, $url)
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+					)
+				),
+			]
+		);
+		return new Response\ConcurrentlyCreatedResponse(
+			new Response\CreatedResponse(new Response\EmptyResponse(), $url),
+			new Http\PostgresETag($this->database, $url)
+		);
 	}
 }

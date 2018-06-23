@@ -41,32 +41,28 @@ final class Post implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$url = new Http\CreatedResourceUrl(
-				new Uri\RelativeUrl($this->url, 'evolutions/{id}'),
-				[
-					'id' => $this->hashids->encode(
-						(new Evolution\SyncChain(
-							new Evolution\IndividualChain(
-								$this->seeker,
-								$this->database
-							),
-							$this->elasticsearch
-						))->extend(
-							(new Validation\ChainedRule(
-								new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-								new Constraint\EvolutionRule()
-							))->apply(json_decode($this->request->body()->serialization(), true))
-						)
-					),
-				]
-			);
-			return new Response\ConcurrentlyCreatedResponse(
-				new Response\CreatedResponse(new Response\EmptyResponse(), $url),
-				new Http\PostgresETag($this->database, $url)
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+		$url = new Http\CreatedResourceUrl(
+			new Uri\RelativeUrl($this->url, 'evolutions/{id}'),
+			[
+				'id' => $this->hashids->encode(
+					(new Evolution\SyncChain(
+						new Evolution\IndividualChain(
+							$this->seeker,
+							$this->database
+						),
+						$this->elasticsearch
+					))->extend(
+						(new Validation\ChainedRule(
+							new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+							new Constraint\EvolutionRule()
+						))->apply(json_decode($this->request->body()->serialization(), true))
+					)
+				),
+			]
+		);
+		return new Response\ConcurrentlyCreatedResponse(
+			new Response\CreatedResponse(new Response\EmptyResponse(), $url),
+			new Http\PostgresETag($this->database, $url)
+		);
 	}
 }

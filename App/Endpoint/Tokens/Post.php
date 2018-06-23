@@ -29,32 +29,28 @@ final class Post implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$seeker = (new Access\HarnessedEntrance(
-				new Access\TokenEntrance(
-					new Access\VerifiedEntrance(
+		$seeker = (new Access\HarnessedEntrance(
+			new Access\TokenEntrance(
+				new Access\VerifiedEntrance(
+					$this->database,
+					new Access\SecureEntrance(
 						$this->database,
-						new Access\SecureEntrance(
-							$this->database,
-							$this->cipher
-						)
+						$this->cipher
 					)
-				),
-				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
-			))->enter(
-				(new Constraint\StructuredJson(
-					new \SplFileInfo(self::SCHEMA)
-				))->apply(json_decode($this->request->body()->serialization(), true))
-			);
-			return new Response\JsonResponse(
-				new Response\PlainResponse(
-					new Output\Json(['token' => $seeker->id()]),
-					[],
-					HTTP_CREATED
 				)
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+			),
+			new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+		))->enter(
+			(new Constraint\StructuredJson(
+				new \SplFileInfo(self::SCHEMA)
+			))->apply(json_decode($this->request->body()->serialization(), true))
+		);
+		return new Response\JsonResponse(
+			new Response\PlainResponse(
+				new Output\Json(['token' => $seeker->id()]),
+				[],
+				HTTP_CREATED
+			)
+		);
 	}
 }

@@ -11,6 +11,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Request;
 use FindMyFriends\Response;
 use Klapuch\Application;
+use Klapuch\Storage;
 use Klapuch\Uri;
 use Klapuch\Validation;
 
@@ -24,7 +25,7 @@ final class Put implements Application\View {
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
-		\PDO $database,
+		Storage\MetaPDO $database,
 		Access\Seeker $seeker
 	) {
 		$this->request = $request;
@@ -34,43 +35,39 @@ final class Put implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			(new Domain\ChainedDemand(
-				new Domain\HarnessedDemand(
-					new Domain\ExistingDemand(
-						new Domain\FakeDemand(),
-						$parameters['id'],
-						$this->database
-					),
-					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+		(new Domain\ChainedDemand(
+			new Domain\HarnessedDemand(
+				new Domain\ExistingDemand(
+					new Domain\FakeDemand(),
+					$parameters['id'],
+					$this->database
 				),
-				new Domain\HarnessedDemand(
-					new Domain\OwnedDemand(
-						new Domain\FakeDemand(),
-						$parameters['id'],
-						$this->seeker,
-						$this->database
-					),
-					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+			),
+			new Domain\HarnessedDemand(
+				new Domain\OwnedDemand(
+					new Domain\FakeDemand(),
+					$parameters['id'],
+					$this->seeker,
+					$this->database
 				),
-				new Domain\StoredDemand($parameters['id'], $this->database)
-			))->reconsider(
-				(new Validation\ChainedRule(
-					new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-					new Constraint\DemandRule()
-				))->apply(
-					json_decode(
-						(new Request\ConcurrentlyControlledRequest(
-							$this->request,
-							new Http\PostgresETag($this->database, $this->url)
-						))->body()->serialization(),
-						true
-					)
+				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+			),
+			new Domain\StoredDemand($parameters['id'], $this->database)
+		))->reconsider(
+			(new Validation\ChainedRule(
+				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+				new Constraint\DemandRule()
+			))->apply(
+				json_decode(
+					(new Request\ConcurrentlyControlledRequest(
+						$this->request,
+						new Http\PostgresETag($this->database, $this->url)
+					))->body()->serialization(),
+					true
 				)
-			);
-			return new Response\EmptyResponse();
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+			)
+		);
+		return new Response\EmptyResponse();
 	}
 }

@@ -33,25 +33,21 @@ final class Post implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$information = (new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA)
-			))->apply(json_decode($this->request->body()->serialization(), true));
-			(new Access\HarnessedSeekers(
-				new Access\UniqueSeekers(
-					$this->database,
-					$this->cipher
-				),
-				new Misc\ApiErrorCallback(HTTP_CONFLICT)
-			))->join($information);
-			(new Access\AmqpPublisher($this->rabbitMq))->publish($information['email']);
-			return new Response\PlainResponse(
-				new Output\EmptyFormat(),
-				[],
-				HTTP_CREATED
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+		$information = (new Constraint\StructuredJson(
+			new \SplFileInfo(self::SCHEMA)
+		))->apply(json_decode($this->request->body()->serialization(), true));
+		(new Access\HarnessedSeekers(
+			new Access\UniqueSeekers(
+				$this->database,
+				$this->cipher
+			),
+			new Misc\ApiErrorCallback(HTTP_CONFLICT)
+		))->join($information);
+		(new Access\AmqpPublisher($this->rabbitMq))->publish($information['email']);
+		return new Response\PlainResponse(
+			new Output\EmptyFormat(),
+			[],
+			HTTP_CREATED
+		);
 	}
 }

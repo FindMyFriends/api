@@ -42,15 +42,14 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function test403ForNotOwned() {
-		$response = (new Endpoint\Demand\Get(
-			new Hashids(),
-			new Uri\FakeUri('/', 'demands/1', []),
-			$this->database,
-			new Access\FakeSeeker('1')
-		))->response(['id' => 1]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'This is not your demand'], $demand);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function() {
+			(new Endpoint\Demand\Get(
+				new Hashids(),
+				new Uri\FakeUri('/', 'demands/1', []),
+				$this->database,
+				new Access\FakeSeeker('1')
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'This is not your demand', HTTP_FORBIDDEN);
 	}
 }
 

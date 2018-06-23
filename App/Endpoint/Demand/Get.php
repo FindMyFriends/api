@@ -11,6 +11,7 @@ use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Output;
+use Klapuch\Storage;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
@@ -22,7 +23,7 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
-		\PDO $database,
+		Storage\MetaPDO $database,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
@@ -32,36 +33,32 @@ final class Get implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			return new Response\PartialResponse(
-				new Response\JsonResponse(
-					new Response\ConcurrentlyControlledResponse(
-						new Response\CachedResponse(
-							new Response\PlainResponse(
-								(new Domain\PublicDemand(
-									new Domain\HarnessedDemand(
-										new Domain\OwnedDemand(
-											new Domain\StoredDemand(
-												$parameters['id'],
-												$this->database
-											),
+		return new Response\PartialResponse(
+			new Response\JsonResponse(
+				new Response\ConcurrentlyControlledResponse(
+					new Response\CachedResponse(
+						new Response\PlainResponse(
+							(new Domain\PublicDemand(
+								new Domain\HarnessedDemand(
+									new Domain\OwnedDemand(
+										new Domain\StoredDemand(
 											$parameters['id'],
-											$this->seeker,
 											$this->database
 										),
-										new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+										$parameters['id'],
+										$this->seeker,
+										$this->database
 									),
-									$this->hashids
-								))->print(new Output\Json())
-							)
-						),
-						new Http\PostgresETag($this->database, $this->url)
-					)
-				),
-				$parameters
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+									new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+								),
+								$this->hashids
+							))->print(new Output\Json())
+						)
+					),
+					new Http\PostgresETag($this->database, $this->url)
+				)
+			),
+			$parameters
+		);
 	}
 }

@@ -37,27 +37,25 @@ final class DeleteTest extends Tester\TestCase {
 	}
 
 	public function test404OnNotExisting() {
-		$response = (new Endpoint\Evolution\Delete(
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker()
-		))->response(['id' => 1]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
-		Assert::same(HTTP_NOT_FOUND, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Evolution\Delete(
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker()
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'Evolution change does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
-		$response = (new Endpoint\Evolution\Delete(
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker((string) $seeker)
-		))->response(['id' => $id]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () use ($seeker, $id) {
+			(new Endpoint\Evolution\Delete(
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker((string) $seeker)
+			))->response(['id' => $id]);
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.', HTTP_FORBIDDEN);
 	}
 }
 

@@ -28,39 +28,35 @@ final class Patch implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			(new Search\ChainedSoulmate(
-				new Search\HarnessedSoulmate(
-					new Search\ExistingSoulmate(
-						new Search\FakeSoulmate(),
-						$parameters['id'],
-						$this->database
-					),
-					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+		(new Search\ChainedSoulmate(
+			new Search\HarnessedSoulmate(
+				new Search\ExistingSoulmate(
+					new Search\FakeSoulmate(),
+					$parameters['id'],
+					$this->database
 				),
-				new Search\HarnessedSoulmate(
-					new Search\OwnedSoulmate(
-						new Search\FakeSoulmate(),
-						$parameters['id'],
-						$this->seeker,
-						$this->database
-					),
-					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
+			),
+			new Search\HarnessedSoulmate(
+				new Search\OwnedSoulmate(
+					new Search\FakeSoulmate(),
+					$parameters['id'],
+					$this->seeker,
+					$this->database
 				),
-				new Search\StoredSoulmate($parameters['id'], $this->database)
-			))->clarify(
-				(new Constraint\StructuredJson(
-					new \SplFileInfo(self::SCHEMA)
-				))->apply(
-					json_decode(
-						$this->request->body()->serialization(),
-						true
-					)
+				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+			),
+			new Search\StoredSoulmate($parameters['id'], $this->database)
+		))->clarify(
+			(new Constraint\StructuredJson(
+				new \SplFileInfo(self::SCHEMA)
+			))->apply(
+				json_decode(
+					$this->request->body()->serialization(),
+					true
 				)
-			);
-			return new Response\EmptyResponse();
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+			)
+		);
+		return new Response\EmptyResponse();
 	}
 }

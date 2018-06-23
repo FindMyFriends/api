@@ -11,6 +11,7 @@ use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri;
 
@@ -31,7 +32,7 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
-		\PDO $database,
+		Storage\MetaPDO $database,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
@@ -41,54 +42,50 @@ final class Get implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$demands = new Domain\PublicDemands(
-				new Domain\IndividualDemands(
-					$this->seeker,
-					$this->database
-				),
-				$this->hashids
-			);
-			$count = $demands->count(new Dataset\EmptySelection());
-			return new Response\PartialResponse(
-				new Response\PaginatedResponse(
-					new Response\JsonResponse(
-						new Response\PlainResponse(
-							new Misc\JsonPrintedObjects(
-								...iterator_to_array(
-									$demands->all(
-										new Constraint\MappedSelection(
-											new Dataset\CombinedSelection(
-												new Constraint\AllowedSort(
-													new Dataset\RestSort(
-														$parameters['sort']
-													),
-													self::SORTS
+		$demands = new Domain\PublicDemands(
+			new Domain\IndividualDemands(
+				$this->seeker,
+				$this->database
+			),
+			$this->hashids
+		);
+		$count = $demands->count(new Dataset\EmptySelection());
+		return new Response\PartialResponse(
+			new Response\PaginatedResponse(
+				new Response\JsonResponse(
+					new Response\PlainResponse(
+						new Misc\JsonPrintedObjects(
+							...iterator_to_array(
+								$demands->all(
+									new Constraint\MappedSelection(
+										new Dataset\CombinedSelection(
+											new Constraint\AllowedSort(
+												new Dataset\RestSort(
+													$parameters['sort']
 												),
-												new Dataset\RestPaging(
-													$parameters['page'],
-													$parameters['per_page']
-												)
+												self::SORTS
+											),
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
 											)
 										)
 									)
 								)
-							),
-							['X-Total-Count' => $count]
-						)
-					),
-					$parameters['page'],
-					new UI\AttainablePagination(
-						$parameters['page'],
-						$parameters['per_page'],
-						$count
-					),
-					$this->url
+							)
+						),
+						['X-Total-Count' => $count]
+					)
 				),
-				$parameters
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+				$parameters['page'],
+				new UI\AttainablePagination(
+					$parameters['page'],
+					$parameters['per_page'],
+					$count
+				),
+				$this->url
+			),
+			$parameters
+		);
 	}
 }

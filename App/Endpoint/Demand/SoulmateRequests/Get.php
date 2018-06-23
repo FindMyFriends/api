@@ -24,60 +24,56 @@ final class Get implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$requests = new Search\PublicRequests(
-				new Search\SubsequentRequests(
-					$parameters['demand_id'],
-					$this->database
-				)
-			);
-			return new Response\PartialResponse(
-				new Response\PaginatedResponse(
-					new Response\JsonResponse(
-						new Response\PlainResponse(
-							new Misc\JsonPrintedObjects(
-								...iterator_to_array(
-									$requests->all(
-										new Dataset\CombinedSelection(
-											new Constraint\SchemaSort(
-												new Dataset\RestSort(
-													$parameters['sort']
-												),
-												new \SplFileInfo(self::SCHEMA)
+		$requests = new Search\PublicRequests(
+			new Search\SubsequentRequests(
+				$parameters['demand_id'],
+				$this->database
+			)
+		);
+		return new Response\PartialResponse(
+			new Response\PaginatedResponse(
+				new Response\JsonResponse(
+					new Response\PlainResponse(
+						new Misc\JsonPrintedObjects(
+							...iterator_to_array(
+								$requests->all(
+									new Dataset\CombinedSelection(
+										new Constraint\SchemaSort(
+											new Dataset\RestSort(
+												$parameters['sort']
 											),
-											new Constraint\SchemaFilter(
-												new Dataset\RestFilter(
-													$parameters
-												),
-												new \SplFileInfo(self::SCHEMA)
+											new \SplFileInfo(self::SCHEMA)
+										),
+										new Constraint\SchemaFilter(
+											new Dataset\RestFilter(
+												$parameters
 											),
-											new Dataset\RestPaging(
-												$parameters['page'],
-												$parameters['per_page']
-											)
+											new \SplFileInfo(self::SCHEMA)
+										),
+										new Dataset\RestPaging(
+											$parameters['page'],
+											$parameters['per_page']
 										)
 									)
 								)
 							)
 						)
-					),
-					$parameters['page'],
-					new UI\AttainablePagination(
-						$parameters['page'],
-						$parameters['per_page'],
-						$requests->count(
-							new Constraint\SchemaFilter(
-								new Dataset\RestFilter($parameters),
-								new \SplFileInfo(self::SCHEMA)
-							)
-						)
-					),
-					$this->url
+					)
 				),
-				$parameters
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+				$parameters['page'],
+				new UI\AttainablePagination(
+					$parameters['page'],
+					$parameters['per_page'],
+					$requests->count(
+						new Constraint\SchemaFilter(
+							new Dataset\RestFilter($parameters),
+							new \SplFileInfo(self::SCHEMA)
+						)
+					)
+				),
+				$this->url
+			),
+			$parameters
+		);
 	}
 }

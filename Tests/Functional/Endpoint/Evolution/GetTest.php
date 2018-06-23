@@ -41,15 +41,14 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function test403ForNotOwned() {
-		$response = (new Endpoint\Evolution\Get(
-			new Hashids(),
-			new Uri\FakeUri('/', 'evolutions/1', []),
-			$this->database,
-			new Access\FakeSeeker('1')
-		))->response(['id' => 1]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Evolution\Get(
+				new Hashids(),
+				new Uri\FakeUri('/', 'evolutions/1', []),
+				$this->database,
+				new Access\FakeSeeker('1')
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.', HTTP_FORBIDDEN);
 	}
 }
 

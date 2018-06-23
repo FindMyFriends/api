@@ -38,15 +38,14 @@ final class PostTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Seekers\Post(
-			new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
-			$this->database,
-			$this->rabbitMq,
-			new Encryption\FakeCipher()
-		))->response([]);
-		$seeker = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property email is required'], $seeker);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function() {
+			(new Endpoint\Seekers\Post(
+				new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
+				$this->database,
+				$this->rabbitMq,
+				new Encryption\FakeCipher()
+			))->response([]);
+		}, \UnexpectedValueException::class, 'The property email is required');
 	}
 
 	public function test409ForDuplication() {
@@ -61,10 +60,9 @@ final class PostTest extends Tester\TestCase {
 			new Encryption\FakeCipher()
 		);
 		$post->response([]);
-		$response = $post->response([]);
-		$seeker = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Email "me@example.com" already exists'], $seeker);
-		Assert::same(HTTP_CONFLICT, $response->status());
+		Assert::exception(function() use ($post) {
+			$post->response([]);
+		}, \UnexpectedValueException::class, 'Email "me@example.com" already exists', HTTP_CONFLICT);
 	}
 }
 

@@ -23,13 +23,13 @@ final class PostTest extends Tester\TestCase {
 	public function test429OnNotInRefreshInterval() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		$response = (new Endpoint\Demand\SoulmateRequests\Post(
-			new FakeUri('/', 'demands/1/soulmate_requests', []),
-			$this->database,
-			$this->rabbitMq
-		))->response(['demand_id' => $demand]);
-		Assert::same(['message' => 'Demand is not refreshable for soulmate yet'], json_decode($response->body()->serialization(), true));
-		Assert::same(HTTP_TOO_MANY_REQUESTS, $response->status());
+		Assert::exception(function() use ($demand) {
+			(new Endpoint\Demand\SoulmateRequests\Post(
+				new FakeUri('/', 'demands/1/soulmate_requests', []),
+				$this->database,
+				$this->rabbitMq
+			))->response(['demand_id' => $demand]);
+		}, \UnexpectedValueException::class, 'Demand is not refreshable for soulmate yet', HTTP_TOO_MANY_REQUESTS);
 	}
 
 	public function testSuccessfulResponse() {

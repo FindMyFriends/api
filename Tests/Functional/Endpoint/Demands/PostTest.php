@@ -45,17 +45,16 @@ final class PostTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Demands\Post(
-			new Hashids(),
-			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-			new FakeUri('/', 'demands', []),
-			$this->database,
-			$this->rabbitMq,
-			new Access\FakeSeeker('1', ['role' => 'guest'])
-		))->response([]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property note is required'], $demand);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Demands\Post(
+				new Hashids(),
+				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+				new FakeUri('/', 'demands', []),
+				$this->database,
+				$this->rabbitMq,
+				new Access\FakeSeeker('1', ['role' => 'guest'])
+			))->response([]);
+		}, \UnexpectedValueException::class, 'The property note is required');
 	}
 }
 

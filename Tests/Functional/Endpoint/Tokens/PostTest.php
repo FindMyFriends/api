@@ -39,65 +39,61 @@ final class PostTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Tokens\Post(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					json_encode(['foo' => 'bar'])
-				)
-			),
-			$this->database,
-			new Encryption\FakeCipher(true)
-		))->response([]);
-		$access = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property email is required'], $access);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Tokens\Post(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						json_encode(['foo' => 'bar'])
+					)
+				),
+				$this->database,
+				new Encryption\FakeCipher(true)
+			))->response([]);
+		}, \UnexpectedValueException::class, 'The property email is required');
 	}
 
 	public function test403OnUnknownEmail() {
-		$response = (new Endpoint\Tokens\Post(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					json_encode(['email' => 'foo@baz.cz', 'password' => '123'])
-				)
-			),
-			$this->database,
-			new Encryption\FakeCipher(false)
-		))->response([]);
-		$access = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Email "foo@baz.cz" does not exist'], $access);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Tokens\Post(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						json_encode(['email' => 'foo@baz.cz', 'password' => '123'])
+					)
+				),
+				$this->database,
+				new Encryption\FakeCipher(false)
+			))->response([]);
+		}, \UnexpectedValueException::class, 'Email "foo@baz.cz" does not exist', HTTP_FORBIDDEN);
 	}
 
 	public function test403OnWrongPassword() {
 		(new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
-		$response = (new Endpoint\Tokens\Post(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
-				)
-			),
-			$this->database,
-			new Encryption\FakeCipher(false)
-		))->response([]);
-		$access = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Wrong password'], $access);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Tokens\Post(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
+					)
+				),
+				$this->database,
+				new Encryption\FakeCipher(false)
+			))->response([]);
+		}, \UnexpectedValueException::class, 'Wrong password', HTTP_FORBIDDEN);
 	}
 
 	public function test403OnNotVerifiedCode() {
 		(new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz']))->try();
-		$response = (new Endpoint\Tokens\Post(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
-				)
-			),
-			$this->database,
-			new Encryption\FakeCipher(true)
-		))->response([]);
-		$access = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Email has not been verified yet'], $access);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Tokens\Post(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
+					)
+				),
+				$this->database,
+				new Encryption\FakeCipher(true)
+			))->response([]);
+		}, \UnexpectedValueException::class, 'Email has not been verified yet', HTTP_FORBIDDEN);
 	}
 }
 

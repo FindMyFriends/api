@@ -34,53 +34,49 @@ final class Get implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			$soulmates = new Domain\Search\PublicSoulmates(
-				new Domain\Search\SuitedSoulmates(
-					$parameters['demand_id'],
-					$this->elasticsearch,
-					$this->database
-				),
-				$this->hashids
-			);
-			$count = $soulmates->count(new Dataset\EmptySelection());
-			return new Response\PartialResponse(
-				new Response\PaginatedResponse(
-					new Response\JsonResponse(
-						new Response\PlainResponse(
-							new Misc\JsonPrintedObjects(
-								...iterator_to_array(
-									$soulmates->matches(
-										new Dataset\CombinedSelection(
-											new Constraint\SchemaSort(
-												new Dataset\RestSort(
-													$parameters['sort']
-												),
-												new \SplFileInfo(self::SCHEMA)
+		$soulmates = new Domain\Search\PublicSoulmates(
+			new Domain\Search\SuitedSoulmates(
+				$parameters['demand_id'],
+				$this->elasticsearch,
+				$this->database
+			),
+			$this->hashids
+		);
+		$count = $soulmates->count(new Dataset\EmptySelection());
+		return new Response\PartialResponse(
+			new Response\PaginatedResponse(
+				new Response\JsonResponse(
+					new Response\PlainResponse(
+						new Misc\JsonPrintedObjects(
+							...iterator_to_array(
+								$soulmates->matches(
+									new Dataset\CombinedSelection(
+										new Constraint\SchemaSort(
+											new Dataset\RestSort(
+												$parameters['sort']
 											),
-											new Dataset\RestPaging(
-												$parameters['page'],
-												$parameters['per_page']
-											)
+											new \SplFileInfo(self::SCHEMA)
+										),
+										new Dataset\RestPaging(
+											$parameters['page'],
+											$parameters['per_page']
 										)
 									)
 								)
-							),
-							['X-Total-Count' => $count]
-						)
-					),
-					$parameters['page'],
-					new UI\AttainablePagination(
-						$parameters['page'],
-						$parameters['per_page'],
-						$count
-					),
-					$this->url
+							)
+						),
+						['X-Total-Count' => $count]
+					)
 				),
-				$parameters
-			);
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+				$parameters['page'],
+				new UI\AttainablePagination(
+					$parameters['page'],
+					$parameters['per_page'],
+					$count
+				),
+				$this->url
+			),
+			$parameters
+		);
 	}
 }

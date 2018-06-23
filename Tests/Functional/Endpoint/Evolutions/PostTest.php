@@ -46,17 +46,16 @@ final class PostTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Evolutions\Post(
-			new Hashids(),
-			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-			new FakeUri('/', 'evolutions', []),
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker('1', ['role' => 'member'])
-		))->response([]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property general is required'], $demand);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Evolutions\Post(
+				new Hashids(),
+				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+				new FakeUri('/', 'evolutions', []),
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker('1', ['role' => 'member'])
+			))->response([]);
+		}, \UnexpectedValueException::class, 'The property general is required');
 	}
 }
 

@@ -42,49 +42,46 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Demand\Put(
-			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-			new Uri\FakeUri('/', 'demands/1', []),
-			$this->database,
-			new Access\FakeSeeker()
-		))->response(['id' => 1]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property note is required'], $demand);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function() {
+			(new Endpoint\Demand\Put(
+				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+				new Uri\FakeUri('/', 'demands/1', []),
+				$this->database,
+				new Access\FakeSeeker()
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'The property note is required');
 	}
 
 	public function test404OnNotExisting() {
-		$response = (new Endpoint\Demand\Put(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
-				)
-			),
-			new Uri\FakeUri('/', 'demands/1', []),
-			$this->database,
-			new Access\FakeSeeker()
-		))->response(['id' => 1]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Demand does not exist'], $demand);
-		Assert::same(HTTP_NOT_FOUND, $response->status());
+		Assert::exception(function() {
+			(new Endpoint\Demand\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
+					)
+				),
+				new Uri\FakeUri('/', 'demands/1', []),
+				$this->database,
+				new Access\FakeSeeker()
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'Demand does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
-		$response = (new Endpoint\Demand\Put(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
-				)
-			),
-			new Uri\FakeUri('/', '/demands/1', []),
-			$this->database,
-			new Access\FakeSeeker((string) $seeker)
-		))->response(['id' => $id]);
-		$demand = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'This is not your demand'], $demand);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function() use ($id, $seeker) {
+			(new Endpoint\Demand\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/put.json')
+					)
+				),
+				new Uri\FakeUri('/', '/demands/1', []),
+				$this->database,
+				new Access\FakeSeeker((string) $seeker)
+			))->response(['id' => $id]);
+		}, \UnexpectedValueException::class, 'This is not your demand', HTTP_FORBIDDEN);
 	}
 }
 

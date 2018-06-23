@@ -5,7 +5,6 @@ namespace FindMyFriends\Endpoint\Demand\SoulmateRequests;
 
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
-use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Storage;
@@ -28,35 +27,31 @@ final class Post implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		try {
-			(new Search\HarnessedPublisher(
-				new Search\RefreshablePublisher(
-					new Search\AmqpPublisher($this->rabbitMq),
-					$this->database
-				),
-				new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
-			))->publish($parameters['demand_id']);
-			return new class ($this->url) implements Application\Response {
-				private $url;
+		(new Search\HarnessedPublisher(
+			new Search\RefreshablePublisher(
+				new Search\AmqpPublisher($this->rabbitMq),
+				$this->database
+			),
+			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
+		))->publish($parameters['demand_id']);
+		return new class ($this->url) implements Application\Response {
+			private $url;
 
-				public function __construct(Uri\Uri $url) {
-					$this->url = $url;
-				}
+			public function __construct(Uri\Uri $url) {
+				$this->url = $url;
+			}
 
-				public function body(): Output\Format {
-					return new Output\EmptyFormat();
-				}
+			public function body(): Output\Format {
+				return new Output\EmptyFormat();
+			}
 
-				public function headers(): array {
-					return [];
-				}
+			public function headers(): array {
+				return [];
+			}
 
-				public function status(): int {
-					return HTTP_ACCEPTED;
-				}
-			};
-		} catch (\UnexpectedValueException $ex) {
-			return new Response\JsonError($ex);
-		}
+			public function status(): int {
+				return HTTP_ACCEPTED;
+			}
+		};
 	}
 }

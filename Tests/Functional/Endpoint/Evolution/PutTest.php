@@ -45,52 +45,49 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		$response = (new Endpoint\Evolution\Put(
-			new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-			new Uri\FakeUri('/', 'evolutions/1', []),
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker()
-		))->response(['id' => 1]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'The property general is required'], $evolution);
-		Assert::same(HTTP_BAD_REQUEST, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Evolution\Put(
+				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
+				new Uri\FakeUri('/', 'evolutions/1', []),
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker()
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'The property general is required');
 	}
 
 	public function test404OnNotExisting() {
-		$response = (new Endpoint\Evolution\Put(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
-				)
-			),
-			new Uri\FakeUri('/', 'evolutions/1', []),
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker()
-		))->response(['id' => 1]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'Evolution change does not exist'], $evolution);
-		Assert::same(HTTP_NOT_FOUND, $response->status());
+		Assert::exception(function () {
+			(new Endpoint\Evolution\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
+					)
+				),
+				new Uri\FakeUri('/', 'evolutions/1', []),
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker()
+			))->response(['id' => 1]);
+		}, \UnexpectedValueException::class, 'Evolution change does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
-		$response = (new Endpoint\Evolution\Put(
-			new Application\FakeRequest(
-				new Output\FakeFormat(
-					file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
-				)
-			),
-			new Uri\FakeUri('/', 'evolutions/1', []),
-			$this->database,
-			$this->elasticsearch,
-			new Access\FakeSeeker((string) $seeker)
-		))->response(['id' => $id]);
-		$evolution = json_decode($response->body()->serialization(), true);
-		Assert::same(['message' => 'You are not permitted to see this evolution change.'], $evolution);
-		Assert::same(HTTP_FORBIDDEN, $response->status());
+		Assert::exception(function () use ($seeker, $id) {
+			(new Endpoint\Evolution\Put(
+				new Application\FakeRequest(
+					new Output\FakeFormat(
+						file_get_contents(__DIR__ . '/../../../fixtures/samples/evolution/put.json')
+					)
+				),
+				new Uri\FakeUri('/', 'evolutions/1', []),
+				$this->database,
+				$this->elasticsearch,
+				new Access\FakeSeeker((string) $seeker)
+			))->response(['id' => $id]);
+		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.', HTTP_FORBIDDEN);
 	}
 }
 
