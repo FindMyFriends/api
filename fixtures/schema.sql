@@ -2069,4 +2069,18 @@ END;
 $$
 LANGUAGE plpgsql;
 
+CREATE FUNCTION logs_trigger_row_au() RETURNS trigger
+AS $$
+BEGIN
+  IF (new.severity != old.severity) THEN
+    UPDATE log.logs
+    SET severity = new.severity
+    WHERE message = old.message AND md5(trace) = md5(old.trace);
+  END IF;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER logs_row_bi_trigger BEFORE INSERT ON log.logs FOR EACH ROW EXECUTE PROCEDURE logs_trigger_row_bi();
+CREATE TRIGGER logs_row_au_trigger AFTER UPDATE ON log.logs FOR EACH ROW EXECUTE PROCEDURE logs_trigger_row_au();
