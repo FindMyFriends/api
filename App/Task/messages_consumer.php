@@ -10,6 +10,21 @@ use Klapuch\Storage;
 
 $configuration = (new Configuration\ApplicationConfiguration())->read();
 
+$elasticsearch = Elasticsearch\ClientBuilder::create()
+	->setHosts($configuration['ELASTICSEARCH']['hosts'])
+	->build();
+
+$database = new Storage\MetaPDO(
+	new Storage\SideCachedPDO(
+		new Storage\SafePDO(
+			$configuration['DATABASE']['dsn'],
+			$configuration['DATABASE']['user'],
+			$configuration['DATABASE']['password']
+		)
+	),
+	new Predis\Client($configuration['REDIS']['uri'])
+);
+
 (new Access\Consumer(
 	new PhpAmqpLib\Connection\AMQPStreamConnection(
 		$configuration['RABBITMQ']['host'],
@@ -20,16 +35,8 @@ $configuration = (new Configuration\ApplicationConfiguration())->read();
 	),
 	new Log\ChainedLogs(
 		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory']))),
-		new Log\FilesystemLogs(new SplFileInfo(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['file'])))
+		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch),
+		new FindMyFriends\Log\PostgresLogs($database)
 	),
-	new Storage\MetaPDO(
-		new Storage\SideCachedPDO(
-			new Storage\SafePDO(
-				$configuration['DATABASE']['dsn'],
-				$configuration['DATABASE']['user'],
-				$configuration['DATABASE']['password']
-			)
-		),
-		new Predis\Client($configuration['REDIS']['uri'])
-	)
+	$database
 ))->consume();

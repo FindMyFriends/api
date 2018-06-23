@@ -24,6 +24,7 @@ final class HeadGetTest extends Tester\TestCase {
 		$headHeaders = $this->response($endpoint, 'HEAD');
 		$getHeaders = $this->response($endpoint, 'GET');
 		unset($headHeaders['Content-Type'], $getHeaders['Content-Type']);
+		unset($headHeaders['Content-Length'], $getHeaders['Content-Length']);
 		unset($headHeaders['Date'], $getHeaders['Date']);
 		unset($getHeaders['Transfer-Encoding']);
 		Assert::same($headHeaders, $getHeaders);
@@ -53,7 +54,7 @@ final class HeadGetTest extends Tester\TestCase {
 
 	protected function getHeadEndpoints(): array {
 		return [
-			['/demands/2wrWlWqMg7DY/soulmates'],
+			['demands/2wrWlWqMg7DY/soulmates'],
 		];
 	}
 }

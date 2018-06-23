@@ -14,8 +14,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 CREATE SCHEMA access;
 CREATE SCHEMA http;
+CREATE SCHEMA log;
 
-SET search_path = public, pg_catalog, access, http;
+SET search_path = public, pg_catalog, access, http, log;
 
 -- TYPES --
 CREATE TYPE timeline_sides AS ENUM (
@@ -2033,3 +2034,39 @@ CREATE TABLE access.verification_codes (
   CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
 );
 CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
+
+
+CREATE TYPE log.severity AS ENUM (
+  'relevant',
+  'irrelevant'
+);
+
+CREATE TABLE log.logs (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  message text NOT NULL,
+  trace text NOT NULL,
+  post jsonb NOT NULL,
+  get jsonb NOT NULL,
+  session jsonb NOT NULL,
+  cookie jsonb NOT NULL,
+  server jsonb NOT NULL,
+  input text NOT NULL,
+  severity severity NOT NULL,
+  logged_at timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+CREATE INDEX logs_message_trace_index ON log.logs USING btree (message, md5(trace), severity);
+
+CREATE FUNCTION logs_trigger_row_bi() RETURNS trigger
+AS $$
+BEGIN
+  IF (EXISTS(SELECT 1 FROM log.logs WHERE message = new.message AND md5(trace) = md5(new.trace) AND severity = 'irrelevant')) THEN
+    new.severity = 'irrelevant';
+  ELSE
+    new.severity = 'relevant';
+  END IF;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER logs_row_bi_trigger BEFORE INSERT ON log.logs FOR EACH ROW EXECUTE PROCEDURE logs_trigger_row_bi();

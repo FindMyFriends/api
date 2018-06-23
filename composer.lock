@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Log.git",
-                "reference": "8120d8d0e82ba71848e0dc58e4b62845e6e38466"
+                "reference": "213415c9c4042f949e83c26914ebef9ad86629ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Log/zipball/8120d8d0e82ba71848e0dc58e4b62845e6e38466",
-                "reference": "8120d8d0e82ba71848e0dc58e4b62845e6e38466",
+                "url": "https://api.github.com/repos/klapuch/Log/zipball/213415c9c4042f949e83c26914ebef9ad86629ff",
+                "reference": "213415c9c4042f949e83c26914ebef9ad86629ff",
                 "shasum": ""
             },
             "require": {
@@ -662,10 +662,9 @@
             "require-dev": {
                 "consistence/coding-standard": "^1.0",
                 "ext-mbstring": "*",
-                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "jakub-onderka/php-parallel-lint": "^1.0",
                 "nette/tester": "^1.7",
-                "phing/phing": "^2.16",
-                "phpstan/phpstan": "^0.7.0",
+                "phpstan/phpstan": "^0.9.0",
                 "sebastian/phpcpd": "^3.0",
                 "slevomat/coding-standard": "^2.3"
             },
@@ -688,7 +687,7 @@
             ],
             "description": "log, exception, error",
             "homepage": "https://github.com/klapuch/Log",
-            "time": "2018-06-23T11:31:32+00:00"
+            "time": "2018-06-23T19:32:09+00:00"
         },
         {
             "name": "klapuch/output",

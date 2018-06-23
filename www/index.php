@@ -46,7 +46,11 @@ $rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
 );
 
 echo (new class(
-	new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
+	new Log\ChainedLogs(
+		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
+		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch),
+		new FindMyFriends\Log\PostgresLogs($database)
+	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
 			new Routing\QueryRoutes(
@@ -104,14 +108,7 @@ echo (new class(
 		try {
 			return current($this->routes->matches())->render($variables);
 		} catch (\Throwable $ex) {
-			$this->logs->put(
-				new Log\DetailedLog(
-					$ex,
-					new Log\PrettySeverity(
-						new Log\JustifiedSeverity(Log\Severity::ERROR)
-					)
-				)
-			);
+			$this->logs->put($ex, new Log\CurrentEnvironment());
 			if ($ex instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
 					new FindMyFriends\Response\JsonError($ex)
