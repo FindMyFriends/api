@@ -40,7 +40,7 @@ abstract class Consumer {
 		} catch (\Throwable $ex) {
 			$channel->basic_reject($message->delivery_info['delivery_tag'], true);
 			$this->logs->put(
-				new Log\PrettyLog(
+				new Log\DetailedLog(
 					$ex,
 					new Log\PrettySeverity(
 						new Log\JustifiedSeverity(Log\Severity::ERROR)

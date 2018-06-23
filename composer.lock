@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Log.git",
-                "reference": "2f85a8381d8b028a9cb893ed191e37ff02087026"
+                "reference": "a1285a319759e27c723e5067cde4caa57c4df4db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Log/zipball/2f85a8381d8b028a9cb893ed191e37ff02087026",
-                "reference": "2f85a8381d8b028a9cb893ed191e37ff02087026",
+                "url": "https://api.github.com/repos/klapuch/Log/zipball/a1285a319759e27c723e5067cde4caa57c4df4db",
+                "reference": "a1285a319759e27c723e5067cde4caa57c4df4db",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
             ],
             "description": "log, exception, error",
             "homepage": "https://github.com/klapuch/Log",
-            "time": "2018-02-18T17:26:02+00:00"
+            "time": "2018-06-23T09:02:53+00:00"
         },
         {
             "name": "klapuch/output",
@@ -1266,16 +1266,16 @@
     "packages-dev": [
         {
             "name": "consistence/coding-standard",
-            "version": "3.3",
+            "version": "3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consistence/coding-standard.git",
-                "reference": "8f4e10c90e2538d58fc20d9a7e92c8d95b6eb001"
+                "reference": "fb48c3d51bce30877454903139b96ecbe19ec14d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/8f4e10c90e2538d58fc20d9a7e92c8d95b6eb001",
-                "reference": "8f4e10c90e2538d58fc20d9a7e92c8d95b6eb001",
+                "url": "https://api.github.com/repos/consistence/coding-standard/zipball/fb48c3d51bce30877454903139b96ecbe19ec14d",
+                "reference": "fb48c3d51bce30877454903139b96ecbe19ec14d",
                 "shasum": ""
             },
             "require": {
@@ -1323,7 +1323,7 @@
                 "sniffer",
                 "standard"
             ],
-            "time": "2018-06-13T12:15:29+00:00"
+            "time": "2018-06-19T15:34:54+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",

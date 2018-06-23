@@ -46,10 +46,7 @@ $rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
 );
 
 echo (new class(
-	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
-		new Log\FilesystemLogs(new SplFileInfo(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['file'])))
-	),
+	new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(
 			new Routing\QueryRoutes(
@@ -106,19 +103,20 @@ echo (new class(
 	public function render(array $variables = []): string {
 		try {
 			return current($this->routes->matches())->render($variables);
-		} catch (\UnexpectedValueException $ex) {
-			return (new Application\RawTemplate(
-				new FindMyFriends\Response\JsonError($ex, [])
-			))->render();
 		} catch (\Throwable $ex) {
 			$this->logs->put(
-				new Log\PrettyLog(
+				new Log\DetailedLog(
 					$ex,
 					new Log\PrettySeverity(
 						new Log\JustifiedSeverity(Log\Severity::ERROR)
 					)
 				)
 			);
+			if ($ex instanceof \UnexpectedValueException) {
+				return (new Application\RawTemplate(
+					new FindMyFriends\Response\JsonError($ex)
+				))->render();
+			}
 			return (new Application\RawTemplate(
 				new FindMyFriends\Response\JsonError(
 					new \UnexpectedValueException(),
