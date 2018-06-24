@@ -25,8 +25,8 @@ final class TableEnumTest extends Tester\TestCase {
 		$this->database->exec("INSERT INTO body_builds (name) VALUES ('skinny')");
 		Assert::same(
 			[
-				['id' => 1, 'name' => 'muscular'],
-				['id' => 2, 'name' => 'skinny'],
+				1 => ['id' => 1, 'name' => 'muscular'],
+				2 => ['id' => 2, 'name' => 'skinny'],
 			],
 			(new Schema\TableEnum('body_builds', $this->database))->values()
 		);

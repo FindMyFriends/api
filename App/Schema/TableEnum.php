@@ -15,9 +15,10 @@ final class TableEnum implements Enum {
 	}
 
 	public function values(): array {
-		return (new Storage\NativeQuery(
+		$enum = (new Storage\NativeQuery(
 			$this->database,
 			sprintf('SELECT id, name FROM %s ORDER BY id', $this->table)
 		))->rows();
+		return array_combine(array_column($enum, 'id'), $enum);
 	}
 }

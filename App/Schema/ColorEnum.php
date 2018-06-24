@@ -15,7 +15,7 @@ final class ColorEnum implements Enum {
 	}
 
 	public function values(): array {
-		return (new Storage\NativeQuery(
+		$colors = (new Storage\NativeQuery(
 			$this->database,
 			sprintf(
 				'SELECT color_id AS id, name, hex
@@ -25,5 +25,6 @@ final class ColorEnum implements Enum {
 				$this->set
 			)
 		))->rows();
+		return array_combine(array_column($colors, 'id'), $colors);
 	}
 }
