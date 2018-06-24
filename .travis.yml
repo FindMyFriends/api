@@ -24,7 +24,6 @@ install:
 before_script:
   - docker exec fmf_php-fpm_1 make composer-install
   - docker exec find-my-friends-postgres test_import
-  - docker exec find-my-friends-postgres import
 
 script:
   - docker exec fmf_php-fpm_1 make ci
