@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Log.git",
-                "reference": "213415c9c4042f949e83c26914ebef9ad86629ff"
+                "reference": "4fb8d5e3d6509a79fa3867c0129587f1b9c19da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Log/zipball/213415c9c4042f949e83c26914ebef9ad86629ff",
-                "reference": "213415c9c4042f949e83c26914ebef9ad86629ff",
+                "url": "https://api.github.com/repos/klapuch/Log/zipball/4fb8d5e3d6509a79fa3867c0129587f1b9c19da0",
+                "reference": "4fb8d5e3d6509a79fa3867c0129587f1b9c19da0",
                 "shasum": ""
             },
             "require": {
@@ -687,7 +687,7 @@
             ],
             "description": "log, exception, error",
             "homepage": "https://github.com/klapuch/Log",
-            "time": "2018-06-23T19:32:09+00:00"
+            "time": "2018-06-23T19:37:12+00:00"
         },
         {
             "name": "klapuch/output",
