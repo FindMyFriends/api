@@ -14,17 +14,6 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 	->setHosts($configuration['ELASTICSEARCH']['hosts'])
 	->build();
 
-$database = new Storage\MetaPDO(
-	new Storage\SideCachedPDO(
-		new Storage\SafePDO(
-			$configuration['DATABASE']['dsn'],
-			$configuration['DATABASE']['user'],
-			$configuration['DATABASE']['password']
-		)
-	),
-	new Predis\Client($configuration['REDIS']['uri'])
-);
-
 (new Search\Consumer(
 	new PhpAmqpLib\Connection\AMQPStreamConnection(
 		$configuration['RABBITMQ']['host'],
@@ -34,11 +23,23 @@ $database = new Storage\MetaPDO(
 		$configuration['RABBITMQ']['vhost']
 	),
 	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory']))),
-		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch),
-		new FindMyFriends\Log\PostgresLogs($database)
+		new Log\FilesystemLogs(
+			new Log\DynamicLocation(
+				sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory'])
+			)
+		),
+		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
 	),
-	$database,
+	new Storage\MetaPDO(
+		new Storage\SideCachedPDO(
+			new Storage\SafePDO(
+				$configuration['DATABASE']['dsn'],
+				$configuration['DATABASE']['user'],
+				$configuration['DATABASE']['password']
+			)
+		),
+		new Predis\Client($configuration['REDIS']['uri'])
+	),
 	Elasticsearch\ClientBuilder::create()
 		->setHosts($configuration['ELASTICSEARCH']['hosts'])
 		->build()

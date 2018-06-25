@@ -21,20 +21,14 @@ final class ElasticsearchLogs implements Log\Logs {
 	}
 
 	public function put(\Throwable $exception, Log\Environment $environment): void {
-		$this->elasticsearch->index(self::OPTIONS + ['body' => $this->body($exception, $environment, new \DateTimeImmutable())]);
+		$this->elasticsearch->index(self::OPTIONS + ['body' => $this->body($exception, $environment)]);
 	}
 
-	private function body(\Throwable $exception, Log\Environment $environment, \DateTimeInterface $now): array {
-		return [
-			'logged_at' => $now->format('Y-m-d H:i'),
-			'message' => $exception->getMessage(),
-			'trace' => $exception->getTraceAsString(),
-			'cookie' => $environment->cookie(),
-			'get' => $environment->get(),
-			'input' => $environment->input(),
-			'post' => $environment->post(),
-			'server' => $environment->server(),
-			'session' => $environment->session(),
-		];
+	private function body(\Throwable $exception, Log\Environment $environment): array {
+		return (new Log\CompleteLog(
+			new Log\ExceptionLog($exception),
+			new Log\ExceptionsLog($exception),
+			new Log\EnvironmentLog($environment)
+		))->content();
 	}
 }

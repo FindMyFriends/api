@@ -17,6 +17,7 @@
 		<exclude name="Squiz.WhiteSpace.FunctionSpacing.AfterLast"/>
 		<exclude name="Squiz.WhiteSpace.FunctionSpacing.BeforeFirst"/>
 		<exclude name="Squiz.Arrays.ArrayDeclaration.NoComma"/>
+		<exclude name="Squiz.PHP.Heredoc.NotAllowed"/>
 	</rule>
 
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">

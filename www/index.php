@@ -47,9 +47,12 @@ $rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
 
 echo (new class(
 	new Log\ChainedLogs(
-		new Log\FilesystemLogs(new Log\DynamicLocation(sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory']))),
-		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch),
-		new FindMyFriends\Log\PostgresLogs($database)
+		new FindMyFriends\Log\FilesystemLogs(
+			new Log\DynamicLocation(
+				sprintf('%s/../%s', __DIR__, $configuration['LOGS']['directory'])
+			)
+		),
+		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
 	),
 	new Routing\MatchingRoutes(
 		new Routing\MappedRoutes(

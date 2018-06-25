@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a87ac4c7930d393861e58efcf51bb35",
+    "content-hash": "70f2451a9b5871268d6100e2b5450f86",
     "packages": [
         {
             "name": "dasuos/mail",
@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Log.git",
-                "reference": "4fb8d5e3d6509a79fa3867c0129587f1b9c19da0"
+                "reference": "e956e2ba9fc24d3b48631b5eceae63f0d4f4e97f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Log/zipball/4fb8d5e3d6509a79fa3867c0129587f1b9c19da0",
-                "reference": "4fb8d5e3d6509a79fa3867c0129587f1b9c19da0",
+                "url": "https://api.github.com/repos/klapuch/Log/zipball/e956e2ba9fc24d3b48631b5eceae63f0d4f4e97f",
+                "reference": "e956e2ba9fc24d3b48631b5eceae63f0d4f4e97f",
                 "shasum": ""
             },
             "require": {
@@ -687,7 +687,7 @@
             ],
             "description": "log, exception, error",
             "homepage": "https://github.com/klapuch/Log",
-            "time": "2018-06-23T19:37:12+00:00"
+            "time": "2018-06-24T22:47:56+00:00"
         },
         {
             "name": "klapuch/output",
