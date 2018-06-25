@@ -2,7 +2,7 @@
 /var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php:30
 
 TRACE:
-#0 [internal function]: FindMyFriends\Integration\Log\FilesystemLogs->testFormat()
+#0 [internal function]: FindMyFriends\Integration\Log\FilesystemLogsTest->testFormat()
 #1 /var/www/FindMyFriends/vendor/nette/tester/src/Framework/TestCase.php(143): call_user_func_array(Array, Array)
 #2 /var/www/FindMyFriends/vendor/nette/tester/src/Framework/TestCase.php(50): Tester\TestCase->runTest(Object(ReflectionMethod))
 #3 /var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php(40): Tester\TestCase->run()
