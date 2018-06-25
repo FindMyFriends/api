@@ -9,6 +9,7 @@ interface Demand {
 	/**
 	 * Print the demand to specified format
 	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format;

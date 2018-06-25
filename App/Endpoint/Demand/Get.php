@@ -39,6 +39,9 @@ final class Get implements Application\View {
 		$this->seeker = $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		return new Response\PartialResponse(
 			new Response\JsonResponse(
