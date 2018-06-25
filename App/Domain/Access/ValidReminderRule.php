@@ -16,6 +16,7 @@ final class ValidReminderRule implements Validation\Rule {
 
 	/**
 	 * @param string $subject
+	 * @throws \UnexpectedValueException
 	 */
 	public function apply($subject): void {
 		if (!$this->satisfied($subject))

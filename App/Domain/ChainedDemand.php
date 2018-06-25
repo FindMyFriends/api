@@ -20,11 +20,18 @@ final class ChainedDemand implements Demand {
 		return $format;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function retract(): void {
 		foreach ($this->origins as $origin)
 			$origin->retract();
 	}
 
+	/**
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 */
 	public function reconsider(array $description): void {
 		foreach ($this->origins as $origin)
 			$origin->reconsider($description);

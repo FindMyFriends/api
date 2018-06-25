@@ -18,6 +18,9 @@ final class Message implements Mail\Message {
 	/** @var \Dasuos\Mail\HtmlMessage */
 	private $origin;
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function __construct(string $receiver, Storage\MetaPDO $database) {
 		$this->origin = new Mail\HtmlMessage(
 			(new Output\XsltTemplate(

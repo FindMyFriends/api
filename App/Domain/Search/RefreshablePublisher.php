@@ -20,6 +20,10 @@ final class RefreshablePublisher implements Publisher {
 		$this->database = $database;
 	}
 
+	/**
+	 * @param int $demand
+	 * @throws \UnexpectedValueException
+	 */
 	public function publish(int $demand): void {
 		if (!$this->refreshable($demand))
 			throw new \UnexpectedValueException('Demand is not refreshable for soulmate yet');

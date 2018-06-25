@@ -20,6 +20,11 @@ final class VerifiedEntrance implements Entrance {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param array $credentials
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function enter(array $credentials): Seeker {
 		$seeker = $this->origin->enter($credentials);
 		if (!$this->verified($seeker))
@@ -38,6 +43,10 @@ final class VerifiedEntrance implements Entrance {
 		))->field();
 	}
 
+	/**
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 * @throws \UnexpectedValueException
+	 */
 	public function exit(): Seeker {
 		return $this->origin->exit();
 	}

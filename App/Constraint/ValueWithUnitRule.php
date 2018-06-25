@@ -19,6 +19,7 @@ final class ValueWithUnitRule implements Validation\Rule {
 
 	/**
 	 * @param mixed[] $subject
+	 * @throws \UnexpectedValueException
 	 * @return array
 	 */
 	public function apply($subject): array {

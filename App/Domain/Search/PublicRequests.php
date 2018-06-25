@@ -21,6 +21,11 @@ final class PublicRequests implements Requests {
 		return $this->origin->refresh($status, $self);
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return \Iterator
+	 */
 	public function all(Dataset\Selection $selection): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->all($selection),
@@ -30,6 +35,11 @@ final class PublicRequests implements Requests {
 		);
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function count(Dataset\Selection $selection): int {
 		return $this->origin->count($selection);
 	}

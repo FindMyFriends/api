@@ -21,10 +21,18 @@ final class PublicSoulmates implements Soulmates {
 		$this->hashids = $hashids;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function seek(): void {
 		$this->origin->seek();
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return \Iterator
+	 */
 	public function matches(Dataset\Selection $selection): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->matches($selection),
@@ -34,6 +42,11 @@ final class PublicSoulmates implements Soulmates {
 		);
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function count(Dataset\Selection $selection): int {
 		return $this->origin->count($selection);
 	}

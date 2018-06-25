@@ -16,6 +16,11 @@ final class SecureForgottenPasswords implements ForgottenPasswords {
 		$this->database = $database;
 	}
 
+	/**
+	 * @param string $email
+	 * @return \FindMyFriends\Domain\Access\Password
+	 * @throws \UnexpectedValueException
+	 */
 	public function remind(string $email): Password {
 		if (!$this->exists($email))
 			throw new \UnexpectedValueException('The email does not exist');

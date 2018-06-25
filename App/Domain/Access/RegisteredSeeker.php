@@ -20,6 +20,10 @@ final class RegisteredSeeker implements Seeker {
 		$this->database = $database;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return array
+	 */
 	public function properties(): array {
 		$seeker = (new Storage\TypedQuery(
 			$this->database,
@@ -31,6 +35,10 @@ final class RegisteredSeeker implements Seeker {
 		return (new ConstantSeeker((string) $seeker['id'], $seeker))->properties();
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return string
+	 */
 	public function id(): string {
 		if ($this->registered($this->id))
 			return $this->id;

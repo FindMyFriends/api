@@ -21,6 +21,9 @@ final class ThrowawayVerificationCode implements VerificationCode {
 		$this->database = $database;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function use(): void {
 		if ($this->used())
 			throw new \UnexpectedValueException('Verification code was already used');
@@ -44,6 +47,11 @@ final class ThrowawayVerificationCode implements VerificationCode {
 		))->field();
 	}
 
+	/**
+	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function print(Output\Format $format): Output\Format {
 		if ($this->used())
 			throw new \UnexpectedValueException('Verification code was already used');

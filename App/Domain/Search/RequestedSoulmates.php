@@ -35,10 +35,20 @@ final class RequestedSoulmates implements Soulmates {
 		}
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return \Iterator
+	 */
 	public function matches(Dataset\Selection $selection): \Iterator {
 		return $this->origin->matches($selection);
 	}
 
+	/**
+	 * @param \Klapuch\Dataset\Selection $selection
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function count(Dataset\Selection $selection): int {
 		return $this->origin->count($selection);
 	}

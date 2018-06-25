@@ -21,6 +21,11 @@ final class UniqueSeekers implements Seekers {
 		$this->cipher = $cipher;
 	}
 
+	/**
+	 * @param array $credentials
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 * @throws \UnexpectedValueException
+	 */
 	public function join(array $credentials): Seeker {
 		if ($this->exists($credentials['email']))
 			throw new \UnexpectedValueException(sprintf('Email "%s" already exists', $credentials['email']));

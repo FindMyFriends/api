@@ -28,6 +28,7 @@ final class StructuredJson implements Validation\Rule {
 
 	/**
 	 * @param array|\stdClass $subject
+	 * @throws \UnexpectedValueException
 	 * @return array
 	 */
 	public function apply($subject): array {

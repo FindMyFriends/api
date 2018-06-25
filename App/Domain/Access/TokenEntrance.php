@@ -16,6 +16,11 @@ final class TokenEntrance implements Entrance {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param array $credentials
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function enter(array $credentials): Seeker {
 		$seeker = $this->origin->enter($credentials);
 		if (session_status() === PHP_SESSION_NONE)
@@ -25,6 +30,10 @@ final class TokenEntrance implements Entrance {
 		return new ConstantSeeker(session_id(), $seeker->properties());
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function exit(): Seeker {
 		if (session_status() === PHP_SESSION_ACTIVE)
 			unset($_SESSION[self::IDENTIFIER]);

@@ -28,6 +28,10 @@ final class SchemaFilter extends Dataset\Filter {
 		$this->forbiddenCriteria = $forbiddenCriteria;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return array
+	 */
 	protected function filter(): array {
 		$properties = $this->properties($this->schema, $this->origin->filter());
 		return (new Dataset\ForbiddenSelection(
@@ -41,12 +45,24 @@ final class SchemaFilter extends Dataset\Filter {
 		))->criteria();
 	}
 
+	/**
+	 * @param array $properties
+	 * @param array $filter
+	 * @throws \UnexpectedValueException
+	 * @return array
+	 */
 	private function applications(array $properties, array $filter): array {
 		foreach ($properties as $property => $rules)
 			$this->applyEnums($property, $rules, $filter);
 		return $filter;
 	}
 
+	/**
+	 * @param \SplFileInfo $schema
+	 * @param mixed[] $filter
+	 * @throws \UnexpectedValueException
+	 * @return array
+	 */
 	private function properties(\SplFileInfo $schema, array $filter): array {
 		$content = @file_get_contents($schema->getPathname());
 		if ($content === false)
@@ -57,6 +73,12 @@ final class SchemaFilter extends Dataset\Filter {
 		);
 	}
 
+	/**
+	 * @param string $property
+	 * @param array $rules
+	 * @param array $subject
+	 * @throws \UnexpectedValueException
+	 */
 	private function applyEnums(string $property, array $rules, array $subject): void {
 		if (isset($rules['enum']) && !in_array($subject[$property], $rules['enum'], true)) {
 			throw new \UnexpectedValueException(

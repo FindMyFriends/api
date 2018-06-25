@@ -21,6 +21,10 @@ final class PublicChange implements Change {
 		$this->hashids = $hashids;
 	}
 
+	/**
+	 * @param array $changes
+	 * @throws \UnexpectedValueException
+	 */
 	public function affect(array $changes): void {
 		$this->origin->affect($changes);
 	}
@@ -33,6 +37,9 @@ final class PublicChange implements Change {
 			});
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function revert(): void {
 		$this->origin->revert();
 	}

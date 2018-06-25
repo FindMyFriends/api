@@ -19,6 +19,7 @@ final class AgeRangeRule implements Validation\Rule {
 
 	/**
 	 * @param int[] $subject
+	 * @throws \UnexpectedValueException
 	 * @return array
 	 */
 	public function apply($subject): array {

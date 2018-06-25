@@ -22,6 +22,11 @@ final class PublicChain implements Chain {
 		$this->hashids = $hashids;
 	}
 
+	/**
+	 * @param array $progress
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function extend(array $progress): int {
 		return $this->origin->extend($progress);
 	}

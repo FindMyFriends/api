@@ -29,6 +29,10 @@ final class ThrowawayRemindedPassword implements Password {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param string $password
+	 * @throws \UnexpectedValueException
+	 */
 	public function change(string $password): void {
 		if ($this->used($this->reminder))
 			throw new \UnexpectedValueException('The reminder is already used');

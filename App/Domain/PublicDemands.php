@@ -22,6 +22,11 @@ final class PublicDemands implements Demands {
 		$this->hashids = $hashids;
 	}
 
+	/**
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function ask(array $description): int {
 		return $this->origin->ask($description);
 	}

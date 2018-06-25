@@ -27,6 +27,9 @@ final class Get implements Application\View {
 		$this->database = $database;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$requests = new Search\PublicRequests(
 			new Search\SubsequentRequests(

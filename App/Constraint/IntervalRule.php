@@ -24,6 +24,7 @@ final class IntervalRule implements Validation\Rule {
 
 	/**
 	 * @param string $subject
+	 * @throws \UnexpectedValueException
 	 * @return string
 	 */
 	public function apply($subject): string {

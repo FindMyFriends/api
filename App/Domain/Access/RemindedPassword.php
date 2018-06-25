@@ -29,6 +29,10 @@ final class RemindedPassword implements Password {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param string $password
+	 * @throws \UnexpectedValueException
+	 */
 	public function change(string $password): void {
 		if (!$this->exists($this->reminder))
 			throw new \UnexpectedValueException('The reminder does not exist');

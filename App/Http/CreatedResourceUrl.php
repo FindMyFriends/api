@@ -22,6 +22,9 @@ final class CreatedResourceUrl implements Uri\Uri {
 		$this->parameters = $parameters;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function path(): string {
 		$parts = explode(self::DELIMITER, $this->origin->path());
 		$replacements = $this->replacements(
@@ -32,6 +35,9 @@ final class CreatedResourceUrl implements Uri\Uri {
 		return ltrim(implode(self::DELIMITER, $replacements), self::DELIMITER);
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function reference(): string {
 		return rtrim(
 			$this->origin->reference(),
@@ -61,6 +67,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 * Placeholders replaced by parameters
 	 * @param array $placeholders
 	 * @param array $parameters
+	 * @throws \UnexpectedValueException
 	 * @return array
 	 */
 	private function replacements(array $placeholders, array $parameters): array {

@@ -29,6 +29,9 @@ final class ExistingVerificationCode implements VerificationCode {
 		$this->database = $database;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function use(): void {
 		if (!$this->exists($this->code))
 			throw new \UnexpectedValueException('The verification code does not exist');
@@ -45,6 +48,11 @@ final class ExistingVerificationCode implements VerificationCode {
 		))->field();
 	}
 
+	/**
+	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->code))
 			throw new \UnexpectedValueException('The verification code does not exist');

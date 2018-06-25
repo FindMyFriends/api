@@ -35,18 +35,30 @@ final class PermittedChange implements Change {
 		$this->owner = $owner;
 	}
 
+	/**
+	 * @param array $changes
+	 * @throws \UnexpectedValueException
+	 */
 	public function affect(array $changes): void {
 		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);
 		$this->origin->affect($changes);
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function revert(): void {
 		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);
 		$this->origin->revert();
 	}
 
+	/**
+	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->permitted($this->id))
 			throw $this->exception($this->id);

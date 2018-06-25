@@ -38,10 +38,17 @@ final class PublicDemand implements Demand {
 			});
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function retract(): void {
 		$this->origin->retract();
 	}
 
+	/**
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 */
 	public function reconsider(array $description): void {
 		$this->origin->reconsider($description);
 	}

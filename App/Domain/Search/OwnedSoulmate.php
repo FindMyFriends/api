@@ -35,12 +35,21 @@ final class OwnedSoulmate implements Soulmate {
 		$this->owner = $owner;
 	}
 
+	/**
+	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->owned($this->id))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
+	/**
+	 * @param array $clarification
+	 * @throws \UnexpectedValueException
+	 */
 	public function clarify(array $clarification): void {
 		if (!$this->owned($this->id))
 			throw $this->exception($this->id);

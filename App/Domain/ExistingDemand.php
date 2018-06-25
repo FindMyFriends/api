@@ -22,18 +22,30 @@ final class ExistingDemand implements Demand {
 		$this->database = $database;
 	}
 
+	/**
+	 * @param \Klapuch\Output\Format $format
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function retract(): void {
 		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
 		$this->origin->retract();
 	}
 
+	/**
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 */
 	public function reconsider(array $description): void {
 		if (!$this->exists($this->id))
 			throw $this->exception($this->id);

@@ -22,6 +22,11 @@ final class SyncChain implements Chain {
 		$this->elasticsearch = new FindMyFriends\Elasticsearch\RelationshipEvolutions($elasticsearch);
 	}
 
+	/**
+	 * @param array $progress
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function extend(array $progress): int {
 		$id = $this->origin->extend($progress);
 		$this->elasticsearch->index(

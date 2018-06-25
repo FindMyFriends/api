@@ -48,6 +48,9 @@ final class Put implements Application\View {
 		$this->seeker = $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		(new Evolution\SyncChange(
 			$parameters['id'],

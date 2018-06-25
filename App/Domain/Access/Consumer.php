@@ -23,7 +23,11 @@ final class Consumer extends Task\Consumer {
 		$this->database = $database;
 	}
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @throws \UnexpectedValueException
+	 * @param array $body
+	 */
 	public function action(array $body): void {
 		(new Mail\AssembledMail(
 			'noreply@fmf.com'

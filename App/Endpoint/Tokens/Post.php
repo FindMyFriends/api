@@ -34,6 +34,9 @@ final class Post implements Application\View {
 		$this->cipher = $cipher;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$seeker = (new Access\HarnessedEntrance(
 			new Access\TokenEntrance(

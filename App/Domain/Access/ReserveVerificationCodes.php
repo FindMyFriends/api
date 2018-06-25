@@ -17,6 +17,11 @@ final class ReserveVerificationCodes implements VerificationCodes {
 		$this->database = $database;
 	}
 
+	/**
+	 * @param string $email
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\VerificationCode
+	 */
 	public function generate(string $email): VerificationCode {
 		$code = (new Storage\TypedQuery(
 			$this->database,

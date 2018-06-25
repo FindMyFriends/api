@@ -41,6 +41,9 @@ final class Get implements Application\View {
 		$this->elasticsearch = $elasticsearch;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$soulmates = new Domain\Search\PublicSoulmates(
 			new Domain\Search\SuitedSoulmates(

@@ -27,6 +27,7 @@ final class IntervalDiffRule implements Validation\Rule {
 
 	/**
 	 * @param string $subject
+	 * @throws \UnexpectedValueException
 	 * @return string
 	 */
 	public function apply($subject): string {

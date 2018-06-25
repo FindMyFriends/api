@@ -30,6 +30,10 @@ final class SyncChange implements Change {
 		return $this->origin->print($format);
 	}
 
+	/**
+	 * @param array $changes
+	 * @throws \UnexpectedValueException
+	 */
 	public function affect(array $changes): void {
 		$this->origin->affect($changes);
 		$this->elasticsearch->update(
@@ -40,6 +44,9 @@ final class SyncChange implements Change {
 		);
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function revert(): void {
 		$this->origin->revert();
 		$this->elasticsearch->delete(['id' => $this->id]);

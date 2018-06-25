@@ -24,6 +24,10 @@ final class ConcurrentlyControlledRequest implements Application\Request {
 		$this->eTag = $eTag;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return \Klapuch\Output\Format
+	 */
 	public function body(): Output\Format {
 		if ($this->eTag->exists() && !$this->matches($this->eTag->get(), $this->headers()))
 			throw new \UnexpectedValueException('ETag does not match your preferences', HTTP_PRECONDITION_FAILED);

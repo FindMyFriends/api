@@ -42,7 +42,8 @@
     "phpstan/phpstan": "*",
     "phpstan/phpstan-strict-rules": "*",
     "mockery/mockery": "^1.0.0",
-    "klapuch/http": "^1.4"
+    "klapuch/http": "^1.4",
+    "pepakriz/phpstan-exception-rules": "*"
   },
   "autoload": {
     "psr-4": {

@@ -24,6 +24,11 @@ final class QueuedDemands implements Demands {
 		return $this->origin->all($selection);
 	}
 
+	/**
+	 * @param array $description
+	 * @throws \UnexpectedValueException
+	 * @return int
+	 */
 	public function ask(array $description): int {
 		$id = $this->origin->ask($description);
 		$this->publisher->publish($id);

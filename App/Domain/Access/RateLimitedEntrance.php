@@ -28,6 +28,11 @@ final class RateLimitedEntrance implements Access\Entrance {
 		$this->redis = $redis;
 	}
 
+	/**
+	 * @param array $credentials
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function enter(array $credentials): Seeker {
 		$seeker = $this->origin->enter($credentials);
 		if ($this->redis->exists($this->key($seeker)) === 0) {
@@ -39,6 +44,10 @@ final class RateLimitedEntrance implements Access\Entrance {
 		return $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function exit(): Seeker {
 		return $this->origin->exit();
 	}

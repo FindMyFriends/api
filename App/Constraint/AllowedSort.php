@@ -20,6 +20,9 @@ final class AllowedSort extends Dataset\Sort {
 		$this->allowedSorts = $allowedSorts;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	protected function sort(): array {
 		if ($this->allowed($this->origin->sort(), $this->allowedSorts))
 			return $this->origin->sort();

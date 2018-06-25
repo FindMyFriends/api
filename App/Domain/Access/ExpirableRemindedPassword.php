@@ -29,6 +29,10 @@ final class ExpirableRemindedPassword implements Password {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param string $password
+	 * @throws \UnexpectedValueException
+	 */
 	public function change(string $password): void {
 		if ($this->expired($this->reminder))
 			throw new \UnexpectedValueException('The reminder expired');

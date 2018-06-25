@@ -16,6 +16,10 @@ final class ChainedChange implements Change {
 		$this->origins = $origins;
 	}
 
+	/**
+	 * @param array $changes
+	 * @throws \UnexpectedValueException
+	 */
 	public function affect(array $changes): void {
 		foreach ($this->origins as $origin)
 			$origin->affect($changes);
@@ -25,6 +29,9 @@ final class ChainedChange implements Change {
 		return $format;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function revert(): void {
 		foreach ($this->origins as $origin)
 			$origin->revert();

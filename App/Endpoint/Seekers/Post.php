@@ -40,6 +40,9 @@ final class Post implements Application\View {
 		$this->cipher = $cipher;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$information = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMA)

@@ -33,6 +33,9 @@ final class Patch implements Application\View {
 		$this->seeker = $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		(new Domain\ChainedDemand(
 			new Domain\HarnessedDemand(

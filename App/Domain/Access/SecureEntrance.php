@@ -21,6 +21,11 @@ final class SecureEntrance implements Entrance {
 		$this->cipher = $cipher;
 	}
 
+	/**
+	 * @param array $credentials
+	 * @throws \UnexpectedValueException
+	 * @return \FindMyFriends\Domain\Access\Seeker
+	 */
 	public function enter(array $credentials): Seeker {
 		['email' => $plainEmail, 'password' => $plainPassword] = array_map('strval', $credentials);
 		$seeker = (new Storage\TypedQuery(

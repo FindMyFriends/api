@@ -17,6 +17,10 @@ final class CreatedHashids implements Configuration\Source {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @return array
+	 */
 	public function read(): array {
 		$hashids = $this->origin->read();
 		return array_reduce(

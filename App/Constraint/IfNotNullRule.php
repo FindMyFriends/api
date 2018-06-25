@@ -28,6 +28,7 @@ final class IfNotNullRule implements Validation\Rule {
 
 	/**
 	 * @param mixed|null $subject
+	 * @throws \UnexpectedValueException
 	 * @return mixed|null
 	 */
 	public function apply($subject) {

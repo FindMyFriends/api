@@ -53,6 +53,9 @@ final class Post implements Application\View {
 		$this->seeker = $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$url = new Http\CreatedResourceUrl(
 			new Uri\RelativeUrl($this->url, 'demands/{id}'),
