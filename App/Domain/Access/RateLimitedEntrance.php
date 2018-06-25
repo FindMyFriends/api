@@ -13,7 +13,11 @@ final class RateLimitedEntrance implements Access\Entrance {
 	private const KEY_FORMAT = 'seeker_rate_limit:%s';
 	private const TIME_LIMIT = 15 * 60,
 		CALLS_LIMIT = 180;
+
+	/** @var \FindMyFriends\Domain\Access\Entrance */
 	private $origin;
+
+	/** @var \Predis\ClientInterface */
 	private $redis;
 
 	public function __construct(
@@ -26,7 +30,7 @@ final class RateLimitedEntrance implements Access\Entrance {
 
 	public function enter(array $credentials): Seeker {
 		$seeker = $this->origin->enter($credentials);
-		if (!$this->redis->exists($this->key($seeker))) {
+		if ($this->redis->exists($this->key($seeker)) === 0) {
 			$this->redis->setex($this->key($seeker), self::TIME_LIMIT, 0);
 		}
 		if ($this->redis->incr($this->key($seeker)) >= self::CALLS_LIMIT) {

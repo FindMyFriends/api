@@ -9,7 +9,10 @@ use Klapuch\Output;
  * Soulmate formatted to be used for public representation
  */
 final class PublicSoulmate implements Soulmate {
+	/** @var \FindMyFriends\Domain\Search\Soulmate */
 	private $origin;
+
+	/** @var mixed[] */
 	private $hashids;
 
 	public function __construct(Soulmate $origin, array $hashids) {

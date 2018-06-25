@@ -11,7 +11,10 @@ use Klapuch\Dataset;
  * Chain synced with elasticsearch
  */
 final class SyncChain implements Chain {
+	/** @var \FindMyFriends\Domain\Evolution\Chain */
 	private $origin;
+
+	/** @var \FindMyFriends\Elasticsearch\RelationshipEvolutions */
 	private $elasticsearch;
 
 	public function __construct(Chain $origin, Elasticsearch\Client $elasticsearch) {

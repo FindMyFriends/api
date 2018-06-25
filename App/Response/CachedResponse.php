@@ -7,9 +7,16 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class CachedResponse implements Application\Response {
+	/** @var \Klapuch\Output\Format|null */
 	private $body;
+
+	/** @var mixed[]|null */
 	private $headers;
+
+	/** @var int|null */
 	private $status;
+
+	/** @var \Klapuch\Application\Response */
 	private $origin;
 
 	public function __construct(Application\Response $origin) {

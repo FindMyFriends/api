@@ -11,9 +11,17 @@ final class CachedEnum implements Enum {
 		'enum' => [],
 		'table' => ['ex', 3600],
 	];
+
+	/** @var \FindMyFriends\Schema\Enum */
 	private $origin;
+
+	/** @var \Predis\ClientInterface */
 	private $redis;
+
+	/** @var string */
 	private $field;
+
+	/** @var string */
 	private $type;
 
 	public function __construct(Enum $origin, Predis\ClientInterface $redis, string $field, string $type) {
@@ -24,7 +32,7 @@ final class CachedEnum implements Enum {
 	}
 
 	public function values(): array {
-		if (!$this->redis->exists($this->key($this->field, $this->type)))
+		if ($this->redis->exists($this->key($this->field, $this->type)) === 0)
 			$this->redis->set($this->key($this->field, $this->type), igbinary_serialize($this->origin->values()), ...self::TTL[$this->type]);
 		return igbinary_unserialize($this->redis->get($this->key($this->field, $this->type)));
 	}

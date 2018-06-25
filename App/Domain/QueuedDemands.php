@@ -9,7 +9,10 @@ use Klapuch\Dataset;
  * Demands able to be queued and later processed
  */
 final class QueuedDemands implements Demands {
+	/** @var \FindMyFriends\Domain\Demands */
 	private $origin;
+
+	/** @var \FindMyFriends\Domain\Search\Publisher */
 	private $publisher;
 
 	public function __construct(Demands $origin, Search\Publisher $publisher) {

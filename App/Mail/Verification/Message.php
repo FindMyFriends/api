@@ -14,6 +14,8 @@ use Klapuch\Storage;
 final class Message implements Mail\Message {
 	private const CONTENT = __DIR__ . '/content/verification.xsl',
 		SCHEMA = __DIR__ . '/content/verification.xsd';
+
+	/** @var \Dasuos\Mail\HtmlMessage */
 	private $origin;
 
 	public function __construct(string $receiver, Storage\MetaPDO $database) {

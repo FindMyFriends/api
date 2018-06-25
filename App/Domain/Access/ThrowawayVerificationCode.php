@@ -10,7 +10,10 @@ use Klapuch\Storage;
  * Verification code which can be used just once
  */
 final class ThrowawayVerificationCode implements VerificationCode {
+	/** @var string */
 	private $code;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(string $code, Storage\MetaPDO $database) {

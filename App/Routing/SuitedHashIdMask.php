@@ -9,8 +9,13 @@ use Klapuch\Routing;
  * HashId chosen by comparing source with paths
  */
 final class SuitedHashIdMask implements Routing\Mask {
+	/** @var \Klapuch\Routing\Mask */
 	private $origin;
+
+	/** @var mixed[] */
 	private $hashids;
+
+	/** @var string */
 	private $source;
 
 	public function __construct(Routing\Mask $origin, array $hashids, string $source) {
@@ -46,7 +51,7 @@ final class SuitedHashIdMask implements Routing\Mask {
 		return (bool) array_filter(
 			array_map(
 				function(string $path) use ($source): int {
-					return preg_match(sprintf('~%s~', $path), $source);
+					return (int) preg_match(sprintf('~%s~', $path), $source);
 				},
 				$paths
 			)

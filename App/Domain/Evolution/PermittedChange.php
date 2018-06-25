@@ -11,9 +11,16 @@ use Klapuch\Storage;
  * Evolution change which belongs only to me
  */
 final class PermittedChange implements Change {
+	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
 	public function __construct(

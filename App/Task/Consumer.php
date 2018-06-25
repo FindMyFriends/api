@@ -7,9 +7,13 @@ use Klapuch\Log;
 use PhpAmqpLib;
 
 abstract class Consumer {
-	private $connection;
-	private $logs;
 	private const EXCHANGE = 'fmf.direct';
+
+	/** @var \PhpAmqpLib\Connection\AbstractConnection */
+	private $connection;
+
+	/** @var \Klapuch\Log\Logs */
+	private $logs;
 
 	public function __construct(
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,

@@ -7,7 +7,10 @@ use FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SampleEvolution implements Sample {
+	/** @var mixed[] */
 	private $evolution;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(\PDO $database, array $evolution = []) {

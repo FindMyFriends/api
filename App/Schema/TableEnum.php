@@ -6,7 +6,10 @@ namespace FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class TableEnum implements Enum {
+	/** @var string */
 	private $table;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(string $table, \PDO $database) {

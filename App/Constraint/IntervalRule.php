@@ -9,6 +9,10 @@ use Klapuch\Validation;
  * Rule interval in ISO8601 format
  */
 final class IntervalRule implements Validation\Rule {
+	/**
+	 * @param string $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		try {
 			new \DateInterval($subject);
@@ -18,6 +22,10 @@ final class IntervalRule implements Validation\Rule {
 		}
 	}
 
+	/**
+	 * @param string $subject
+	 * @return string
+	 */
 	public function apply($subject): string {
 		if ($this->satisfied($subject))
 			return $subject;

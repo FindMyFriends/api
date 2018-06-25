@@ -7,10 +7,13 @@ use Klapuch\Storage;
 use Tester\Assert;
 
 final class TableCounts implements Assertion {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var mixed[] */
 	private $counts;
 
-	public function __construct(\PDO $database, array $counts) {
+	public function __construct(Storage\MetaPDO $database, array $counts) {
 		$this->database = $database;
 		$this->counts = $counts;
 	}

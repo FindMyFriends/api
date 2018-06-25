@@ -9,7 +9,10 @@ use FindMyFriends\Domain\Access;
  * Chosen role from the listed ones
  */
 final class ChosenRole implements Role {
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
+
+	/** @var mixed[] */
 	private $roles;
 
 	public function __construct(Access\Seeker $seeker, array $roles) {

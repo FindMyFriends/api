@@ -7,6 +7,7 @@ use FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class InsertInto implements Sql\InsertInto {
+	/** @var \FindMyFriends\Sql\Description\InsertInto */
 	private $insert;
 
 	public function __construct(string $table, array $additionalParameters = []) {

@@ -10,9 +10,16 @@ use Klapuch\Storage;
  * Demand which belongs only to me
  */
 final class OwnedDemand implements Demand {
+	/** @var \FindMyFriends\Domain\Demand */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
 	public function __construct(

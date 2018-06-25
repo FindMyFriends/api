@@ -10,8 +10,13 @@ use Klapuch\Dataset;
  * Sort obey rules by JSON schema
  */
 final class SchemaSort extends Dataset\Sort {
+	/** @var \Klapuch\Dataset\Sort */
 	private $origin;
+
+	/** @var \SplFileInfo */
 	private $schema;
+
+	/** @var mixed[] */
 	private $forbiddenCriteria;
 
 	public function __construct(

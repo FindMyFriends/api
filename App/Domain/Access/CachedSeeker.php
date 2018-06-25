@@ -7,8 +7,13 @@ namespace FindMyFriends\Domain\Access;
  * Cached seeker
  */
 final class CachedSeeker implements Seeker {
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $origin;
+
+	/** @var string|null */
 	private $id;
+
+	/** @var mixed[]|null */
 	private $properties;
 
 	public function __construct(Seeker $origin) {

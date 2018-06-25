@@ -10,6 +10,7 @@ use Klapuch\Configuration;
  * Each hashid instantiated to Hashids class
  */
 final class CreatedHashids implements Configuration\Source {
+	/** @var \Klapuch\Configuration\Source */
 	private $origin;
 
 	public function __construct(Configuration\Source $origin) {

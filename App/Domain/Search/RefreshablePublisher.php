@@ -9,7 +9,10 @@ use Klapuch\Storage;
  * Publisher with limit of refreshes
  */
 final class RefreshablePublisher implements Publisher {
+	/** @var \FindMyFriends\Domain\Search\Publisher */
 	private $origin;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Publisher $origin, Storage\MetaPDO $database) {

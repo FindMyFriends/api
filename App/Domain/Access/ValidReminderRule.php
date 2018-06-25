@@ -7,17 +7,25 @@ use Klapuch\Storage;
 use Klapuch\Validation;
 
 final class ValidReminderRule implements Validation\Rule {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 
+	/**
+	 * @param string $subject
+	 */
 	public function apply($subject): void {
 		if (!$this->satisfied($subject))
 			throw new \UnexpectedValueException('Reminder is no longer valid.');
 	}
 
+	/**
+	 * @param string $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		return (bool) (new Storage\TypedQuery(
 			$this->database,

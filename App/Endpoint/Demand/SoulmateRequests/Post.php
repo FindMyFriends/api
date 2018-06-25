@@ -12,8 +12,13 @@ use Klapuch\Uri;
 use PhpAmqpLib;
 
 final class Post implements Application\View {
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \PhpAmqpLib\Connection\AbstractConnection */
 	private $rabbitMq;
 
 	public function __construct(
@@ -35,6 +40,7 @@ final class Post implements Application\View {
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 		))->publish($parameters['demand_id']);
 		return new class ($this->url) implements Application\Response {
+			/** @var \Klapuch\Uri\Uri */
 			private $url;
 
 			public function __construct(Uri\Uri $url) {

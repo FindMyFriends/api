@@ -9,12 +9,17 @@ use Klapuch\Validation;
  * Apply rule only for not null subject
  */
 final class IfNotNullRule implements Validation\Rule {
+	/** @var \Klapuch\Validation\Rule */
 	private $origin;
 
 	public function __construct(Validation\Rule $origin) {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param mixed|null $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		if ($subject === null)
 			return true;
@@ -22,6 +27,7 @@ final class IfNotNullRule implements Validation\Rule {
 	}
 
 	/**
+	 * @param mixed|null $subject
 	 * @return mixed|null
 	 */
 	public function apply($subject) {

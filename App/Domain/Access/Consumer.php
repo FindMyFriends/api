@@ -11,6 +11,7 @@ use Klapuch\Storage;
 use PhpAmqpLib;
 
 final class Consumer extends Task\Consumer {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(

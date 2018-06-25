@@ -9,8 +9,13 @@ use Klapuch\Dataset;
  * Cached demands
  */
 final class CachedDemands implements Demands {
+	/** @var int|null */
 	private $count;
+
+	/** @var \Iterator|null */
 	private $all;
+
+	/** @var \FindMyFriends\Domain\Demands */
 	private $origin;
 
 	public function __construct(Demands $origin) {

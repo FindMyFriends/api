@@ -10,7 +10,10 @@ use Klapuch\Iterator;
  * Soulmates formatted to be used for public representation
  */
 final class PublicSoulmates implements Soulmates {
+	/** @var \FindMyFriends\Domain\Search\Soulmates */
 	private $origin;
+
+	/** @var mixed[] */
 	private $hashids;
 
 	public function __construct(Soulmates $origin, array $hashids) {

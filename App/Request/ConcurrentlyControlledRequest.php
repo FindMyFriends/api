@@ -12,7 +12,11 @@ final class ConcurrentlyControlledRequest implements Application\Request {
 		'If-Match' => true,
 		'If-None-Match' => false,
 	];
+
+	/** @var \FindMyFriends\Request\CachedRequest */
 	private $origin;
+
+	/** @var \FindMyFriends\Http\ETag */
 	private $eTag;
 
 	public function __construct(Application\Request $origin, Http\ETag $eTag) {

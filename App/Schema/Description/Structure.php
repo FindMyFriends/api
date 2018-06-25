@@ -6,6 +6,7 @@ namespace FindMyFriends\Schema\Description;
 use FindMyFriends\Schema;
 
 final class Structure {
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(\PDO $database) {

@@ -11,8 +11,13 @@ use Klapuch\Storage;
  * Password which belongs to particular seeker
  */
 final class SeekerPassword implements Password {
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(

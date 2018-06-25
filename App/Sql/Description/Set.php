@@ -6,8 +6,6 @@ namespace FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class Set implements Sql\Set {
-	private $set;
-	private $parameters;
 	private const CONDITIONS = [
 		'general_ethnic_group_id' => ['general_ethnic_group_id'],
 		'general_firstname' => ['general_firstname'],
@@ -84,6 +82,12 @@ final class Set implements Sql\Set {
 		'hair_roots' => ':hair_roots',
 		'hair_nature' => ':hair_nature',
 	];
+
+	/** @var \Klapuch\Sql\AnsiSet */
+	private $set;
+
+	/** @var mixed[] */
+	private $parameters;
 
 	public function __construct(Sql\Clause $clause, array $columns, array $parameters) {
 		$this->parameters = $parameters;

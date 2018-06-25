@@ -10,7 +10,10 @@ use Klapuch\Output;
 use Predis;
 
 final class Options implements Application\View {
+	/** @var \PDO */
 	private $database;
+
+	/** @var \Predis\ClientInterface */
 	private $redis;
 
 	public function __construct(\PDO $database, Predis\ClientInterface $redis) {

@@ -10,7 +10,10 @@ use Klapuch\Storage;
  * Collection of unique seekers
  */
 final class UniqueSeekers implements Seekers {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(Storage\MetaPDO $database, Encryption\Cipher $cipher) {

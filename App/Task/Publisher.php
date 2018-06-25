@@ -6,8 +6,10 @@ namespace FindMyFriends\Task;
 use PhpAmqpLib;
 
 abstract class Publisher {
-	private $rabbitMq;
 	private const EXCHANGE = 'fmf.direct';
+
+	/** @var \PhpAmqpLib\Connection\AbstractConnection */
+	private $rabbitMq;
 
 	final public function __construct(PhpAmqpLib\Connection\AbstractConnection $rabbitMq) {
 		$this->rabbitMq = $rabbitMq;

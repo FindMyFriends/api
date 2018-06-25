@@ -9,7 +9,10 @@ use FindMyFriends\Misc;
  * Seekers harnessed by callback
  */
 final class HarnessedSeekers implements Seekers {
+	/** @var \FindMyFriends\Domain\Access\Seekers */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Seekers $origin, Misc\Callback $callback) {

@@ -12,7 +12,10 @@ use Klapuch\Storage;
  * Demands belonging to the seeker
  */
 final class IndividualDemands implements Demands {
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Access\Seeker $seeker, Storage\MetaPDO $database) {

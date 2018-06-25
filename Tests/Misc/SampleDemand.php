@@ -7,7 +7,10 @@ use FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SampleDemand implements Sample {
+	/** @var mixed[] */
 	private $demand;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(\PDO $database, array $demand = []) {

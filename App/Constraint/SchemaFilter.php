@@ -9,8 +9,13 @@ use Klapuch\Dataset;
  * Filter obey rules by JSON schema
  */
 final class SchemaFilter extends Dataset\Filter {
+	/** @var \Klapuch\Dataset\Filter */
 	private $origin;
+
+	/** @var \SplFileInfo */
 	private $schema;
+
+	/** @var mixed[] */
 	private $forbiddenCriteria;
 
 	public function __construct(
@@ -43,8 +48,11 @@ final class SchemaFilter extends Dataset\Filter {
 	}
 
 	private function properties(\SplFileInfo $schema, array $filter): array {
+		$content = @file_get_contents($schema->getPathname());
+		if ($content === false)
+			throw new \UnexpectedValueException(sprintf('Schema "%s" is not readable', $schema->getPathname()));
 		return array_intersect_key(
-			json_decode(file_get_contents($schema->getPathname()), true)['properties'],
+			json_decode($content, true)['properties'],
 			$filter
 		);
 	}

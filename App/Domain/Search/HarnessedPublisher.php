@@ -9,7 +9,10 @@ use FindMyFriends\Misc;
  * Publisher harnessed by callback
  */
 final class HarnessedPublisher implements Publisher {
+	/** @var \FindMyFriends\Domain\Search\Publisher */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Publisher $origin, Misc\Callback $callback) {

@@ -6,6 +6,7 @@ namespace FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class Select implements Sql\Select {
+	/** @var \Klapuch\Sql\AnsiSelect */
 	private $select;
 
 	public function __construct(array $additionalColumns = []) {

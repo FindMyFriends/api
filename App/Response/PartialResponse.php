@@ -12,7 +12,11 @@ use Klapuch\Output;
  */
 final class PartialResponse implements Application\Response {
 	private const PARAMETER = 'fields';
+
+	/** @var \Klapuch\Application\Response */
 	private $origin;
+
+	/** @var mixed[] */
 	private $parameters;
 
 	public function __construct(

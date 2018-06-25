@@ -9,8 +9,13 @@ use Klapuch\Dataset;
  * Soulmates recording request
  */
 final class RequestedSoulmates implements Soulmates {
+	/** @var int */
 	private $request;
+
+	/** @var \FindMyFriends\Domain\Search\Requests */
 	private $requests;
+
+	/** @var \FindMyFriends\Domain\Search\Soulmates */
 	private $origin;
 
 	public function __construct(int $request, Requests $requests, Soulmates $origin) {

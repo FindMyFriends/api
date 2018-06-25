@@ -9,6 +9,7 @@ use Klapuch\Output;
  * Simplified mass printing to JSON
  */
 final class JsonPrintedObjects implements Output\Format {
+	/** @var object[] */
 	private $prints;
 
 	public function __construct(object ...$prints) {

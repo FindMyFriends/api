@@ -31,6 +31,20 @@ final class SchemaFilterTest extends Tester\TestCase {
 	}
 
 	/**
+	 * @throws \UnexpectedValueException Schema "foo.txt" is not readable
+	 */
+	public function testThrowingOnNotReadableFile() {
+		(new Constraint\SchemaFilter(
+			new class extends Dataset\Filter {
+				protected function filter(): array {
+					return [];
+				}
+			},
+			new \SplFileInfo('foo.txt')
+		))->criteria();
+	}
+
+	/**
 	 * @throws \UnexpectedValueException 'status' must be one of: 'success', 'fail' - 'foo' was given
 	 */
 	public function testFailingOnAnyValueOutOfEnum() {

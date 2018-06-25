@@ -39,12 +39,20 @@ final class TestApplicationRoutes implements Routing\Routes {
 				public function getConnection(): void {
 				}
 
+				/**
+				 * @param string $method
+				 * @param array $arguments
+				 */
 				public function createCommand($method, $arguments = []): void {
 				}
 
 				public function executeCommand(Predis\Command\CommandInterface $command): void {
 				}
 
+				/**
+				 * @param string $method
+				 * @param array $arguments
+				 */
 				public function __call($method, $arguments): void {
 				}
 

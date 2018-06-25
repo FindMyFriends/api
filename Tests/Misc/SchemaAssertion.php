@@ -7,7 +7,10 @@ use JsonSchema;
 use Tester\Assert;
 
 final class SchemaAssertion implements Assertion {
+	/** @var mixed[]|\stdClass */
 	private $values;
+
+	/** @var \SplFileInfo */
 	private $schema;
 
 	/**

@@ -11,7 +11,10 @@ use Klapuch\Output;
  * View showing response by used role
  */
 final class AuthenticatedView implements Application\View {
+	/** @var \Klapuch\Application\View */
 	private $origin;
+
+	/** @var \FindMyFriends\Http\Role */
 	private $role;
 
 	public function __construct(Application\View $origin, Http\Role $role) {

@@ -11,7 +11,10 @@ use Klapuch\Iterator;
  * Demand formatted to be used for public representation
  */
 final class PublicDemands implements Demands {
+	/** @var \FindMyFriends\Domain\Demands */
 	private $origin;
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
 
 	public function __construct(Demands $origin, HashidsInterface $hashids) {

@@ -9,10 +9,18 @@ use Klapuch\Validation;
  * Rule for description
  */
 final class DescriptionRule implements Validation\Rule {
+	/**
+	 * @param mixed[] $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		return false; // not used
 	}
 
+	/**
+	 * @param mixed[] $subject
+	 * @return array
+	 */
 	public function apply($subject): array {
 		if ($this->womanWithBeard($subject['general']['sex'], $subject['beard']))
 			throw new \UnexpectedValueException('Women do not have beards');

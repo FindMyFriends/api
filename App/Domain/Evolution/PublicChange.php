@@ -10,7 +10,10 @@ use Klapuch\Output;
  * Evolution change formatted to be used for public representation
  */
 final class PublicChange implements Change {
+	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
 
 	public function __construct(Change $origin, HashidsInterface $hashids) {

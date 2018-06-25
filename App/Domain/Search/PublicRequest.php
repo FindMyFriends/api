@@ -9,6 +9,7 @@ use Klapuch\Output;
  * Request formatted to be used for public representation
  */
 final class PublicRequest implements Request {
+	/** @var \FindMyFriends\Domain\Search\Request */
 	private $origin;
 
 	public function __construct(Request $origin) {

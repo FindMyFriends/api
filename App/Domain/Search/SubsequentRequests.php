@@ -12,7 +12,10 @@ use Klapuch\Storage;
  * Request bind to the most first request
  */
 final class SubsequentRequests implements Requests {
+	/** @var int */
 	private $demand;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(int $demand, Storage\MetaPDO $database) {
@@ -51,6 +54,7 @@ final class SubsequentRequests implements Requests {
 		))->rows();
 		foreach ($requests as $request) {
 			yield new class ($request) implements Request {
+				/** @var mixed[] */
 				private $request;
 
 				public function __construct(array $request) {

@@ -10,8 +10,13 @@ use Klapuch\Storage;
  * Reminded password just for one use
  */
 final class ThrowawayRemindedPassword implements Password {
+	/** @var string */
 	private $reminder;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Password */
 	private $origin;
 
 	public function __construct(

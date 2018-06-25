@@ -15,9 +15,16 @@ use Klapuch\Storage;
 use Klapuch\Uri;
 
 final class Get implements Application\View {
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(

@@ -13,7 +13,10 @@ use Klapuch\Storage;
  * Stored change
  */
 final class StoredChange implements Change {
+	/** @var int */
 	private $id;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(int $id, Storage\MetaPDO $database) {

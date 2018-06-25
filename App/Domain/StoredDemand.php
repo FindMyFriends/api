@@ -9,7 +9,10 @@ use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class StoredDemand implements Demand {
+	/** @var int */
 	private $id;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(int $id, Storage\MetaPDO $database) {

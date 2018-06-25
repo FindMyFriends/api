@@ -11,9 +11,16 @@ use Klapuch\Storage;
  * Soulmate belongs to me
  */
 final class OwnedSoulmate implements Soulmate {
+	/** @var \FindMyFriends\Domain\Search\Soulmate */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
 	public function __construct(

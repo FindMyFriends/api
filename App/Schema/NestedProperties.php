@@ -7,6 +7,7 @@ namespace FindMyFriends\Schema;
  * Properties separated with dot
  */
 final class NestedProperties implements Properties {
+	/** @var \FindMyFriends\Schema\Properties */
 	private $origin;
 
 	public function __construct(Properties $origin) {

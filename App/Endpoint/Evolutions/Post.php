@@ -17,11 +17,23 @@ use Klapuch\Validation;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
+
+	/** @var \Klapuch\Application\Request */
 	private $request;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(

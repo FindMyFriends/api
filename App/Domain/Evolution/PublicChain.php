@@ -11,7 +11,10 @@ use Klapuch\Iterator;
  * Evolution chain formatted to be used for public representation
  */
 final class PublicChain implements Chain {
+	/** @var \FindMyFriends\Domain\Evolution\Chain */
 	private $origin;
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
 
 	public function __construct(Chain $origin, HashidsInterface $hashids) {

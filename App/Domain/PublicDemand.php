@@ -10,7 +10,10 @@ use Klapuch\Output;
  * Demand formatted to be used for public representation
  */
 final class PublicDemand implements Demand {
+	/** @var \FindMyFriends\Domain\Demand */
 	private $origin;
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
 
 	public function __construct(Demand $origin, HashidsInterface $hashids) {

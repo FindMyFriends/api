@@ -10,7 +10,10 @@ use Klapuch\Uri;
  * ETag stored in postgres database
  */
 final class PostgresETag implements ETag {
+	/** @var \PDO */
 	private $database;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(\PDO $database, Uri\Uri $uri) {

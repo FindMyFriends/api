@@ -9,6 +9,7 @@ use Klapuch\Dataset;
  * Selection mapped to DB columns
  */
 final class MappedSelection implements Dataset\Selection {
+	/** @var \Klapuch\Dataset\Selection */
 	private $origin;
 
 	public function __construct(Dataset\Selection $origin) {

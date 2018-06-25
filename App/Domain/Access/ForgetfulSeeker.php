@@ -9,7 +9,10 @@ use Klapuch\Storage;
  * Forgetful seeker is the one who forget password
  */
 final class ForgetfulSeeker implements Seeker {
+	/** @var string */
 	private $reminder;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(string $reminder, Storage\MetaPDO $database) {

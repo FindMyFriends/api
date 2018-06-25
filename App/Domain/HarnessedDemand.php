@@ -10,7 +10,10 @@ use Klapuch\Output;
  * Demand harnessed by callback
  */
 final class HarnessedDemand implements Demand {
+	/** @var \FindMyFriends\Domain\Demand */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Demand $origin, Misc\Callback $callback) {

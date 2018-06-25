@@ -8,6 +8,8 @@ use Elasticsearch;
 final class RelationshipEvolutions {
 	private const INDEX = 'relationships',
 		TYPE = 'evolutions';
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
 	public function __construct(Elasticsearch\Client $elasticsearch) {

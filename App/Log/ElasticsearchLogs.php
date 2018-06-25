@@ -14,6 +14,8 @@ final class ElasticsearchLogs implements Log\Logs {
 		'index' => 'logs',
 		'type' => 'pile',
 	];
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
 	public function __construct(Elasticsearch\Client $elasticsearch) {

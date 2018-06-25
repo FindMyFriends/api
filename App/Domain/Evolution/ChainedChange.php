@@ -9,6 +9,7 @@ use Klapuch\Output;
  * Evolution change called sequentially one by one behaving as a single one
  */
 final class ChainedChange implements Change {
+	/** @var \FindMyFriends\Domain\Evolution\Change[] */
 	private $origins;
 
 	public function __construct(Change ...$origins) {

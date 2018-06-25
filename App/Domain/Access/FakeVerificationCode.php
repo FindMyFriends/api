@@ -6,6 +6,7 @@ namespace FindMyFriends\Domain\Access;
 use Klapuch\Output;
 
 final class FakeVerificationCode implements VerificationCode {
+	/** @var \Klapuch\Output\Format|null */
 	private $format;
 
 	public function __construct(?Output\Format $format = null) {

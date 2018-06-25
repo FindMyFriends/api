@@ -9,10 +9,18 @@ use Klapuch\Validation;
  * Rule for evolution
  */
 final class EvolutionRule implements Validation\Rule {
+	/**
+	 * @param mixed[] $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		return false; // not used
 	}
 
+	/**
+	 * @param mixed[] $subject
+	 * @return array
+	 */
 	public function apply($subject): array {
 		return array_replace_recursive(
 			[

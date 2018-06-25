@@ -99,7 +99,10 @@ echo (new class(
 		$_SERVER['REQUEST_METHOD']
 	)
 ) implements Output\Template {
+	/** @var \Klapuch\Log\Logs */
 	private $logs;
+
+	/** @var \Klapuch\Routing\Routes */
 	private $routes;
 
 	public function __construct(Log\Logs $logs, Routing\Routes $routes) {

@@ -8,7 +8,11 @@ namespace FindMyFriends\Domain\Access;
  */
 final class ConstantSeeker implements Seeker {
 	private const SENSITIVE_COLUMNS = ['id', 'password'];
+
+	/** @var string */
 	private $id;
+
+	/** @var mixed[] */
 	private $properties;
 
 	public function __construct(string $id, array $properties) {

@@ -8,7 +8,10 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class ConcurrentlyCreatedResponse implements Application\Response {
+	/** @var \Klapuch\Application\Response */
 	private $origin;
+
+	/** @var \FindMyFriends\Http\ETag */
 	private $eTag;
 
 	public function __construct(Application\Response $origin, Http\ETag $eTag) {

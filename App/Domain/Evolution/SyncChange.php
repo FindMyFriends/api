@@ -11,8 +11,13 @@ use Klapuch\Output;
  * Change synced with elasticsearch
  */
 final class SyncChange implements Change {
+	/** @var int */
 	private $id;
+
+	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
+
+	/** @var \FindMyFriends\Elasticsearch\RelationshipEvolutions */
 	private $elasticsearch;
 
 	public function __construct(int $id, Change $origin, Elasticsearch\Client $elasticsearch) {

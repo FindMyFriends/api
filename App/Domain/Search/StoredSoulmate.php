@@ -12,7 +12,10 @@ use Klapuch\Storage;
  * Persisted soulmate
  */
 final class StoredSoulmate implements Soulmate {
+	/** @var int */
 	private $id;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(int $id, Storage\MetaPDO $database) {

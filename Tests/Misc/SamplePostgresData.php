@@ -6,8 +6,13 @@ namespace FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SamplePostgresData implements Sample {
+	/** @var \PDO */
 	private $database;
+
+	/** @var string */
 	private $sample;
+
+	/** @var mixed[] */
 	private $data;
 
 	public function __construct(\PDO $database, string $sample, array $data = []) {

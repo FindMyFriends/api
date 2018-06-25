@@ -9,6 +9,7 @@ use Klapuch\Output;
  * Soulmate called sequentially one by one behaving as a single one
  */
 final class ChainedSoulmate implements Soulmate {
+	/** @var \FindMyFriends\Domain\Search\Soulmate[] */
 	private $origins;
 
 	public function __construct(Soulmate ...$origins) {

@@ -4,3 +4,22 @@ parameters:
     ignoreErrors:
         - '~Call to an undefined method object::print\(\)~'
         - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~'
+
+        # Probably bug
+        - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable, array<int, mixed> given~'
+
+        # Wait for PHP 7.3 solution
+        - '~Parameter #1 $json of function json_decode expects string, string|false given~'
+        - '~Method FindMyFriends\\Misc\\JsonPrintedObjects::serialization\(\) should return string but returns string\|false~'
+
+        # Fakes, intentional fails
+        - '~Method FindMyFriends\\Http\\FakeRole::allowed\(\) should return bool but returns bool\|null~'
+        - '~Method FindMyFriends\\Http\\FakeETag::exists\(\) should return bool but returns bool\|null~'
+        - '~Method FindMyFriends\\Http\\FakeETag::get\(\) should return string but returns string\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeVerificationCode::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::id\(\) should return string but returns string\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::properties\(\) should return array but returns array\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakePassword::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeForgottenPasswords::remind\(\) should return FindMyFriends\\Domain\\Access\\Password but returns FindMyFriends\\Domain\\Access\\Password\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::enter\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
+        - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::exit\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'

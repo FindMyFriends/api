@@ -9,6 +9,7 @@ use Klapuch\Output;
  * Demand called sequentially one by one behaving as a single one
  */
 final class ChainedDemand implements Demand {
+	/** @var \FindMyFriends\Domain\Demand[] */
 	private $origins;
 
 	public function __construct(Demand ...$origins) {

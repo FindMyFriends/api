@@ -13,7 +13,10 @@ use Klapuch\Storage;
  * Chain for one particular seeker
  */
 final class IndividualChain implements Chain {
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Access\Seeker $seeker, Storage\MetaPDO $database) {

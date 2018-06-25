@@ -14,9 +14,16 @@ use Klapuch\Uri;
  * Returning 206 status code for not last page
  */
 final class PaginatedResponse implements Application\Response {
+	/** @var \Klapuch\Application\Response */
 	private $origin;
+
+	/** @var int */
 	private $page;
+
+	/** @var \Klapuch\UI\Pagination */
 	private $pagination;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(

@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace FindMyFriends\Http;
 
 final class FakeETag implements ETag {
+	/** @var bool|null */
 	private $exists;
+
+	/** @var null|string */
 	private $get;
 
 	public function __construct(?bool $exists = null, ?string $get = null) {

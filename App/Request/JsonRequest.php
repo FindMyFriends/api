@@ -7,6 +7,7 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class JsonRequest implements Application\Request {
+	/** @var \Klapuch\Application\Request */
 	private $origin;
 
 	public function __construct(Application\Request $origin) {

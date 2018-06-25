@@ -23,7 +23,7 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 		$configuration['RABBITMQ']['vhost']
 	),
 	new Log\ChainedLogs(
-		new Log\FilesystemLogs(
+		new FindMyFriends\Log\FilesystemLogs(
 			new Log\DynamicLocation(
 				sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory'])
 			)

@@ -7,6 +7,7 @@ namespace FindMyFriends\Domain\Access;
  * Fake
  */
 final class FakeForgottenPasswords implements ForgottenPasswords {
+	/** @var \FindMyFriends\Domain\Access\Password|null */
 	private $password;
 
 	public function __construct(?Password $password = null) {

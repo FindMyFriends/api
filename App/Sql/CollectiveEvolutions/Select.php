@@ -7,6 +7,7 @@ use FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class Select implements Sql\Select {
+	/** @var \FindMyFriends\Sql\Description\Select */
 	private $select;
 
 	public function __construct(array $additionalColumns = []) {

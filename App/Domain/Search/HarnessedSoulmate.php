@@ -10,7 +10,10 @@ use Klapuch\Output;
  * Soulmate harnessed by callback
  */
 final class HarnessedSoulmate implements Soulmate {
+	/** @var \FindMyFriends\Domain\Search\Soulmate */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Soulmate $origin, Misc\Callback $callback) {

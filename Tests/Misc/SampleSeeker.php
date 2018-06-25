@@ -7,7 +7,10 @@ use Klapuch\Sql\AnsiUpdate;
 use Klapuch\Storage;
 
 final class SampleSeeker implements Sample {
+	/** @var mixed[] */
 	private $samples;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Storage\MetaPDO $database, array $samples = []) {

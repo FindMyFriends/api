@@ -7,6 +7,7 @@ namespace FindMyFriends\Misc;
  * Callback with assurance that every potential error will be transformed to HTTP status code suited (REST) API
  */
 final class ApiErrorCallback implements Callback {
+	/** @var int */
 	private $code;
 
 	public function __construct(int $code) {

@@ -10,8 +10,13 @@ use Klapuch\Storage;
  * Verification code which always exists
  */
 final class ExistingVerificationCode implements VerificationCode {
+	/** @var \FindMyFriends\Domain\Access\VerificationCode */
 	private $origin;
+
+	/** @var string */
 	private $code;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(

@@ -18,10 +18,20 @@ use Klapuch\Validation;
 
 final class Put implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/put.json';
+
+	/** @var \Klapuch\Application\Request */
 	private $request;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(

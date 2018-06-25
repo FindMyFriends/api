@@ -13,8 +13,14 @@ final class JsonError implements Application\Response {
 	private const HEADERS = ['content-type' => 'application/json; charset=utf8'];
 	private const CODES = [400, 599],
 		DELEGATE = 0;
+
+	/** @var \Throwable */
 	private $error;
+
+	/** @var mixed[] */
 	private $headers;
+
+	/** @var int */
 	private $status;
 
 	public function __construct(

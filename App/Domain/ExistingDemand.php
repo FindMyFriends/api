@@ -7,8 +7,13 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class ExistingDemand implements Demand {
+	/** @var \FindMyFriends\Domain\Demand */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(Demand $origin, int $id, \PDO $database) {

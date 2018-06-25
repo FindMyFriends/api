@@ -10,7 +10,10 @@ use Klapuch\Storage;
  * Secure entrance for entering seekers to the system
  */
 final class SecureEntrance implements Entrance {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(Storage\MetaPDO $database, Encryption\Cipher $cipher) {

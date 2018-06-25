@@ -6,7 +6,10 @@ namespace FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SampleDescription implements Sample {
+	/** @var mixed[] */
 	private $description;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(\PDO $database, array $description = []) {

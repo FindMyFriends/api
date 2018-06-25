@@ -11,7 +11,10 @@ use Klapuch\Application;
 use Klapuch\Storage;
 
 final class Delete implements Application\View {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(Storage\MetaPDO $database, Access\Seeker $seeker) {

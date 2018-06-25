@@ -6,6 +6,7 @@ namespace FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class InsertInto implements Sql\InsertInto {
+	/** @var \Klapuch\Sql\PgInsertInto */
 	private $insert;
 
 	public function __construct(string $table, array $additionalParameters = []) {

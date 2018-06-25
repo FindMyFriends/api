@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Access;
 
+use Klapuch\Storage;
+
 /**
  * Entrance to API with valid token
  */
 final class ApiEntrance implements Entrance {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	public function __construct(\PDO $database) {
+	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 

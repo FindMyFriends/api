@@ -10,7 +10,11 @@ use Klapuch\Uri;
  */
 final class CreatedResourceUrl implements Uri\Uri {
 	private const DELIMITER = '/';
+
+	/** @var \Klapuch\Uri\Uri */
 	private $origin;
+
+	/** @var mixed[] */
 	private $parameters;
 
 	public function __construct(Uri\Uri $origin, array $parameters) {
@@ -61,7 +65,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 */
 	private function replacements(array $placeholders, array $parameters): array {
 		$lost = $this->lost($placeholders, $parameters);
-		if (!empty($lost))
+		if ($lost !== [])
 			throw new \UnexpectedValueException($this->format($lost));
 		return array_map(
 			function(string $placeholder) use ($parameters) {

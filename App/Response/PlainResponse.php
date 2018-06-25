@@ -7,8 +7,13 @@ use Klapuch\Application;
 use Klapuch\Output;
 
 final class PlainResponse implements Application\Response {
+	/** @var \Klapuch\Output\Format */
 	private $format;
+
+	/** @var mixed[] */
 	private $headers;
+
+	/** @var int */
 	private $status;
 
 	public function __construct(

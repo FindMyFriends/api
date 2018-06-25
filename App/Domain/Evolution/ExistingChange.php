@@ -10,8 +10,13 @@ use Klapuch\Storage;
  * Change which belongs always to some chain
  */
 final class ExistingChange implements Change {
+	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(Change $origin, int $id, \PDO $database) {

@@ -10,7 +10,10 @@ use Klapuch\Storage;
 use PhpAmqpLib;
 
 final class Consumer extends Task\Consumer {
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(

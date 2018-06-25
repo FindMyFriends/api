@@ -6,7 +6,10 @@ namespace FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class ColorEnum implements Enum {
+	/** @var string */
 	private $set;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(string $set, \PDO $database) {

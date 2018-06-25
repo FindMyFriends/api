@@ -9,6 +9,7 @@ use Klapuch\Log;
  * Logs stored on the filesystem
  */
 final class FilesystemLogs implements Log\Logs {
+	/** @var \SplFileInfo */
 	private $location;
 
 	public function __construct(\SplFileInfo $location) {

@@ -8,7 +8,10 @@ use Klapuch\Output;
 use Klapuch\Uri;
 
 final class CreatedResponse implements Application\Response {
+	/** @var \Klapuch\Application\Response */
 	private $origin;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(Application\Response $origin, Uri\Uri $uri) {

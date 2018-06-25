@@ -14,8 +14,14 @@ use Klapuch\Storage;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
+
+	/** @var \Klapuch\Application\Request */
 	private $request;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(

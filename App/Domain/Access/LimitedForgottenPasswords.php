@@ -11,8 +11,11 @@ use Klapuch\Storage;
 final class LimitedForgottenPasswords implements ForgottenPasswords {
 	private const ATTEMPT_LIMIT = 3,
 		HOUR_LIMIT = 24;
-	// 3 attempts in last 24 hours
+
+	/** @var \FindMyFriends\Domain\Access\ForgottenPasswords */
 	private $origin;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(ForgottenPasswords $origin, Storage\MetaPDO $database) {

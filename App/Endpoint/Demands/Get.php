@@ -24,9 +24,17 @@ final class Get implements Application\View {
 		'general.sex',
 		'created_at',
 	];
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(

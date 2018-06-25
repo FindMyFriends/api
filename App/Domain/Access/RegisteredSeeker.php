@@ -9,7 +9,10 @@ use Klapuch\Storage;
  * Already registered seeker in the system
  */
 final class RegisteredSeeker implements Seeker {
+	/** @var string */
 	private $id;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(string $id, Storage\MetaPDO $database) {

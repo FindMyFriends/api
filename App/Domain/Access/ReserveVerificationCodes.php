@@ -10,6 +10,7 @@ use Klapuch\Storage;
  * With the "lost" is meant that the code was not received or occurred other issue
  */
 final class ReserveVerificationCodes implements VerificationCodes {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Storage\MetaPDO $database) {
@@ -29,7 +30,7 @@ final class ReserveVerificationCodes implements VerificationCodes {
 			AND used_at IS NULL',
 			[$email]
 		))->field();
-		if (!empty($code))
+		if (strlen((string) $code) !== 0)
 			return new ThrowawayVerificationCode($code, $this->database);
 		throw new \UnexpectedValueException('For the given email, there is no valid verification code');
 	}

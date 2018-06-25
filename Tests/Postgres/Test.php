@@ -21,7 +21,11 @@ final class Test extends Tester\TestCase {
 	public function testPostgres() {
 		(new class(new \SplFileInfo(__DIR__), $this->database) implements Misc\Assertion {
 			private const PATTERN = '~\.sql$~i';
+
+			/** @var \SplFileInfo */
 			private $source;
+
+			/** @var \PDO */
 			private $database;
 
 			public function __construct(\SplFileInfo $source, \PDO $database) {

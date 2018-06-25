@@ -7,8 +7,6 @@ use FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class Set implements Sql\Set {
-	private $set;
-	private $parameters;
 	private const CONDITIONS = [
 		'general_age' => ['general_age_from', 'general_age_to'],
 		'location_met_at' => ['location_met_at_moment', 'location_met_at_timeline_side', 'location_met_at_approximation'],
@@ -21,6 +19,12 @@ final class Set implements Sql\Set {
 		'location_coordinates' => 'POINT(:location_coordinates_latitude, :location_coordinates_longitude)',
 		'note' => ':note',
 	];
+
+	/** @var \FindMyFriends\Sql\Description\Set */
+	private $set;
+
+	/** @var mixed[] */
+	private $parameters;
 
 	public function __construct(Sql\Clause $clause, array $parameters) {
 		$this->parameters = $parameters;

@@ -10,7 +10,10 @@ use Klapuch\Output;
  * Change harnessed by callback
  */
 final class HarnessedChange implements Change {
+	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Change $origin, Misc\Callback $callback) {

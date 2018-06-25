@@ -11,7 +11,10 @@ use Klapuch\Uri;
  * <https://example.com>; rel="homepage", ...
  */
 final class HeaderLink implements Output\Format {
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
+
+	/** @var mixed[] */
 	private $moves;
 
 	public function __construct(Uri\Uri $uri, array $moves = []) {
@@ -19,6 +22,11 @@ final class HeaderLink implements Output\Format {
 		$this->moves = $moves;
 	}
 
+	/**
+	 * @param mixed $tag
+	 * @param mixed|null $content
+	 * @return \Klapuch\Output\Format
+	 */
 	public function with($tag, $content = null): Output\Format {
 		return new self($this->uri, [$tag => $content] + $this->moves);
 	}
@@ -47,6 +55,11 @@ final class HeaderLink implements Output\Format {
 		);
 	}
 
+	/**
+	 * @param mixed $tag
+	 * @param callable $adjustment
+	 * @return \Klapuch\Output\Format
+	 */
 	public function adjusted($tag, callable $adjustment): Output\Format {
 		return new self(
 			$this->uri,

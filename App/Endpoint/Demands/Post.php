@@ -18,11 +18,23 @@ use PhpAmqpLib;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
+
+	/** @var \Hashids\HashidsInterface */
 	private $hashids;
+
+	/** @var \Klapuch\Application\Request */
 	private $request;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \PhpAmqpLib\Connection\AbstractConnection */
 	private $rabbitMq;
+
+	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(

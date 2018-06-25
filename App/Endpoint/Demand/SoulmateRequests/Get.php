@@ -15,7 +15,11 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Uri\Uri $url, Storage\MetaPDO $database) {

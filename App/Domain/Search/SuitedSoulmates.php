@@ -13,8 +13,13 @@ use Klapuch\Storage;
  * Soulmates suited for the particular seeker
  */
 final class SuitedSoulmates implements Soulmates {
+	/** @var int */
 	private $demand;
+
+	/** @var \FindMyFriends\Elasticsearch\RelationshipEvolutions */
 	private $elasticsearch;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(
@@ -127,7 +132,10 @@ final class SuitedSoulmates implements Soulmates {
 
 	private function query(array $demand): array {
 		$bool = (new class($demand, $this->database) {
+			/** @var mixed[] */
 			private $demand;
+
+			/** @var \PDO */
 			private $database;
 
 			public function __construct(array $demand, \PDO $database) {

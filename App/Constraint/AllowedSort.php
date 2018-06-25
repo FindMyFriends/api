@@ -9,7 +9,10 @@ use Klapuch\Dataset;
  * Only allowed sorts
  */
 final class AllowedSort extends Dataset\Sort {
+	/** @var \Klapuch\Dataset\Sort */
 	private $origin;
+
+	/** @var mixed[] */
 	private $allowedSorts;
 
 	public function __construct(Dataset\Sort $origin, array $allowedSorts) {
@@ -32,7 +35,7 @@ final class AllowedSort extends Dataset\Sort {
 	}
 
 	private function allowed(array $sorts, array $allowedSorts): bool {
-		return empty($this->diff($sorts, $allowedSorts));
+		return $this->diff($sorts, $allowedSorts) === [];
 	}
 
 	private function diff(array $sorts, array $allowedSorts): array {

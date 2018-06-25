@@ -10,7 +10,10 @@ use FindMyFriends\Misc;
  * Entrance harnessed by callback
  */
 final class HarnessedEntrance implements Access\Entrance {
+	/** @var \FindMyFriends\Domain\Access\Entrance */
 	private $origin;
+
+	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
 	public function __construct(Access\Entrance $origin, Misc\Callback $callback) {

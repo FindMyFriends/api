@@ -7,8 +7,13 @@ use Klapuch\Storage;
 use Tester\Assert;
 
 final class TableCount implements Assertion {
+	/** @var \PDO */
 	private $database;
+
+	/** @var string */
 	private $table;
+
+	/** @var int */
 	private $count;
 
 	public function __construct(\PDO $database, string $table, int $count) {

@@ -10,8 +10,13 @@ use Klapuch\Storage;
  * Always existing soulmate match
  */
 final class ExistingSoulmate implements Soulmate {
+	/** @var \FindMyFriends\Domain\Search\Soulmate */
 	private $origin;
+
+	/** @var int */
 	private $id;
+
+	/** @var \PDO */
 	private $database;
 
 	public function __construct(Soulmate $origin, int $id, \PDO $database) {

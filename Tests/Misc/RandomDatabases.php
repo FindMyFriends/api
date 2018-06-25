@@ -7,7 +7,10 @@ use Klapuch\Storage;
 use Predis;
 
 final class RandomDatabases implements Databases {
+	/** @var mixed[] */
 	private $credentials;
+
+	/** @var string */
 	private $name;
 
 	public function __construct(array $credentials) {
@@ -40,6 +43,7 @@ final class RandomDatabases implements Databases {
 				$this->credentials['password']
 			),
 			new class implements Predis\ClientInterface {
+				/** @var mixed|null */
 				private $cache;
 
 				public function getProfile(): void {
@@ -57,6 +61,10 @@ final class RandomDatabases implements Databases {
 				public function getConnection(): void {
 				}
 
+				/**
+				 * @param string $method
+				 * @param mixed[] $arguments
+				 */
 				public function createCommand($method, $arguments = []): void {
 				}
 

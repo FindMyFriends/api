@@ -11,12 +11,17 @@ use Klapuch\Validation;
  * NOTE: Ruined by JsonSchema library :(
  */
 final class StructuredJson implements Validation\Rule {
+	/** @var \SplFileInfo */
 	private $schema;
 
 	public function __construct(\SplFileInfo $schema) {
 		$this->schema = $schema;
 	}
 
+	/**
+	 * @param mixed $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		return $this->validator($this->forValidation($subject))->isValid();
 	}
@@ -50,10 +55,18 @@ final class StructuredJson implements Validation\Rule {
 		return sprintf('%s (%s)', $error['message'], $error['property']);
 	}
 
+	/**
+	 * @param mixed $subject
+	 * @return \stdClass
+	 */
 	private function forValidation($subject): \stdClass {
 		return (object) json_decode(json_encode($subject));
 	}
 
+	/**
+	 * @param mixed $subject
+	 * @return array
+	 */
 	private function forOutput($subject): array {
 		return json_decode(json_encode($subject), true);
 	}

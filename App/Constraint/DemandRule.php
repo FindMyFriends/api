@@ -9,10 +9,18 @@ use Klapuch\Validation;
  * Rule for demand
  */
 final class DemandRule implements Validation\Rule {
+	/**
+	 * @param mixed[] $subject
+	 * @return bool
+	 */
 	public function satisfied($subject): bool {
 		return false; // not used
 	}
 
+	/**
+	 * @param mixed[] $subject
+	 * @return array
+	 */
 	public function apply($subject): array {
 		if ($subject['location']['met_at']['timeline_side'] === 'exactly' && $subject['location']['met_at']['approximation'] !== null) {
 			throw new \UnexpectedValueException(

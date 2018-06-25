@@ -16,9 +16,17 @@ use Klapuch\Uri;
 
 final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
+
+	/** @var mixed[] */
 	private $hashids;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
 	public function __construct(

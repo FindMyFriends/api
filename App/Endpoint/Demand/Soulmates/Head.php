@@ -14,8 +14,13 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Head implements Application\View {
+	/** @var \Klapuch\Uri\Uri */
 	private $url;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
 	public function __construct(

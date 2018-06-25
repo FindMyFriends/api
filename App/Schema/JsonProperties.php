@@ -7,6 +7,7 @@ namespace FindMyFriends\Schema;
  * Properties gathered from JSON
  */
 final class JsonProperties implements Properties {
+	/** @var \SplFileInfo */
 	private $schema;
 
 	public function __construct(\SplFileInfo $schema) {

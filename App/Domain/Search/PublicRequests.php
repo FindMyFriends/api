@@ -10,6 +10,7 @@ use Klapuch\Iterator;
  * Requests formatted to be used for public representation
  */
 final class PublicRequests implements Requests {
+	/** @var \FindMyFriends\Domain\Search\Requests */
 	private $origin;
 
 	public function __construct(Requests $origin) {

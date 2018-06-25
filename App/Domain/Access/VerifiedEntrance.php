@@ -9,7 +9,10 @@ use Klapuch\Storage;
  * Verified entrance
  */
 final class VerifiedEntrance implements Entrance {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \FindMyFriends\Domain\Access\Entrance */
 	private $origin;
 
 	public function __construct(Storage\MetaPDO $database, Entrance $origin) {

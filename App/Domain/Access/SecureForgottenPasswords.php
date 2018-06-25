@@ -9,6 +9,7 @@ use Klapuch\Storage;
  * Works just with secure forgotten passwords
  */
 final class SecureForgottenPasswords implements ForgottenPasswords {
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
 	public function __construct(Storage\MetaPDO $database) {

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Access;
 
 final class FakeEntrance implements Entrance {
+	/** @var \FindMyFriends\Domain\Access\Seeker|null */
 	private $seeker;
 
 	public function __construct(?Seeker $seeker = null) {

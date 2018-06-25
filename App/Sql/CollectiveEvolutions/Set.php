@@ -7,6 +7,7 @@ use FindMyFriends\Sql\Description;
 use Klapuch\Sql;
 
 final class Set implements Sql\Set {
+	/** @var \FindMyFriends\Sql\Description\Set */
 	private $set;
 
 	public function __construct(Sql\Clause $clause, array $parameters) {

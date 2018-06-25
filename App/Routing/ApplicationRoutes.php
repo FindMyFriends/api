@@ -22,12 +22,25 @@ use Predis;
  * Routes for whole application
  */
 final class ApplicationRoutes implements Routing\Routes {
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
+
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
+
+	/** @var \Predis\ClientInterface */
 	private $redis;
+
+	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
+
+	/** @var \PhpAmqpLib\Connection\AMQPLazyConnection */
 	private $rabbitMq;
+
+	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
+
+	/** @var mixed[] */
 	private $hashids;
 
 	public function __construct(
