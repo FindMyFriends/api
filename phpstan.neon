@@ -5,9 +5,6 @@ parameters:
     exceptionRules:
         checkedExceptions:
             - UnexpectedValueException
-        ignoredExceptions:
-            - ReflectionException
-            - Exception
     ignoreErrors:
         - '~Call to an undefined method object::print\(\)~'
         - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~'
