@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := check
-.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install
+.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
 
-check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests
-ci: validate-composer.lock lint phpcpd phpstan phpcs tests tester-coverage
+check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
+ci: validate-composer.lock lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint generate-schemas move-schemas
 
 lint:
@@ -25,6 +25,12 @@ phpcbf:
 
 tests:
 	vendor/bin/tester $(TESTER_ARGS) Tests/
+
+count-postgres-tests:
+	@printf "Number of PostgreSQL tests: "
+	@cat Tests/Postgres/*.sql | grep -c "CREATE FUNCTION tests."
+	@printf "Number of PostgreSQL assertions: "
+	@cat Tests/Postgres/*.sql | grep -c "PERFORM assert."
 
 tester-coverage:
 	vendor/bin/tester $(TESTER_ARGS) -d extension=xdebug.so Tests/ --coverage tester-coverage.xml --coverage-src App/
