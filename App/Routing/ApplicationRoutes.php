@@ -143,7 +143,14 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Http\ChosenRole($seeker, ['member'])
 			),
 			'evolutions [OPTIONS]' => new Endpoint\Preflight(
-				new Endpoint\Evolutions\Options($this->database, $this->redis),
+				new View\AuthenticatedView(
+					new Endpoint\Evolutions\Options(
+						$this->database,
+						$this->redis,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				),
 				new Application\PlainRequest()
 			),
 			'evolutions [POST]' => new View\AuthenticatedView(

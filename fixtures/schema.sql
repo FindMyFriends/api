@@ -14,8 +14,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 CREATE SCHEMA access;
 CREATE SCHEMA http;
+CREATE SCHEMA log;
 
-SET search_path = public, pg_catalog, access, http;
+SET search_path = public, pg_catalog, access, http, log;
 
 -- TYPES --
 CREATE TYPE timeline_sides AS ENUM (
@@ -1783,6 +1784,92 @@ CREATE VIEW collective_evolutions AS
     JOIN printed_descriptions printed_description ON evolution.description_id = printed_description.id
     JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id;
 
+CREATE FUNCTION prioritized_evolution_columns() RETURNS TABLE (
+  columns jsonb,
+  seeker_id integer
+)
+AS $BODY$
+DECLARE
+  v_columns CONSTANT text[] DEFAULT ARRAY[
+     'beard_color_id',
+     'beard_length',
+     'beard_style',
+     'body_breast_size',
+     'body_build_id',
+     'body_height',
+     'body_weight',
+     'eyebrow_care',
+     'eyebrow_color_id',
+     'face_care',
+     'face_freckles',
+     'face_shape_id',
+     'general_age',
+     'general_ethnic_group',
+     'general_firstname',
+     'general_lastname',
+     'general_sex',
+     'hair_color_id',
+     'hair_highlights',
+     'hair_length',
+     'hair_nature',
+     'hair_roots',
+     'hair_style_id',
+     'hands_care',
+     'hands_hair',
+     'hands_hair_amount',
+     'hands_hair_color_id',
+     'hands_joint_visibility',
+     'hands_nails_care',
+     'hands_nails_color_id',
+     'hands_nails_length',
+     'hands_vein_visibility',
+     'left_eye_color_id',
+     'left_eye_lenses',
+     'right_eye_color_id',
+     'right_eye_lenses',
+     'tooth_braces',
+     'tooth_care'
+  ];
+  v_full_query text;
+  column_parts record;
+BEGIN
+  SELECT string_agg(format('COUNT(DISTINCT %I) AS %I', column_name, column_name), ',') AS distinct_part,
+    string_agg(format('%L,%I', column_name, column_name), ',') AS row_part
+  FROM unnest(v_columns) AS column_name
+  INTO column_parts;
+
+  v_full_query = format($$
+    WITH distinct_part AS (
+      SELECT %s, seeker_id
+      FROM collective_evolutions
+      GROUP BY seeker_id
+    ), json_query AS (
+      SELECT json_build_object(%s) AS json_row, seeker_id
+      FROM distinct_part
+    ), each_from_json_query AS (
+      SELECT (json_each(json_query.json_row)).key::text, (json_each(json_query.json_row)).value::text::integer, seeker_id
+      FROM json_query
+    ), ranked_rows AS (
+      SELECT *, row_number() OVER (PARTITION BY seeker_id ORDER BY value DESC) AS position
+      FROM each_from_json_query
+    )
+    SELECT jsonb_object_agg(key, value), seeker_id
+    FROM ranked_rows
+    WHERE position <= 5
+    GROUP BY seeker_id
+  $$, column_parts.distinct_part, column_parts.row_part);
+  RETURN QUERY EXECUTE v_full_query;
+END
+$BODY$
+LANGUAGE plpgsql
+VOLATILE
+STRICT;
+
+CREATE MATERIALIZED VIEW prioritized_evolution_fields AS
+	SELECT * FROM prioritized_evolution_columns();
+CREATE UNIQUE INDEX prioritized_evolution_fields_view_ukey ON prioritized_evolution_fields (seeker_id);
+REFRESH MATERIALIZED VIEW CONCURRENTLY prioritized_evolution_fields;
+
 CREATE FUNCTION base_evolution(in_seeker_id seekers.id%type) RETURNS TABLE (
   id evolutions.id%type,
   description_id evolutions.description_id%type
@@ -2034,8 +2121,35 @@ CREATE TABLE access.verification_codes (
 );
 CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
 
-
-CREATE TYPE log.severity AS ENUM (
-  'relevant',
-  'irrelevant'
+-- TABLES --
+CREATE TABLE log.cron_jobs (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  marked_at timestamp with time zone NOT NULL DEFAULT now(),
+  name text NOT NULL,
+  self_id integer,
+  status job_statuses NOT NULL,
+  CONSTRAINT cron_jobs_id_fk FOREIGN KEY (self_id) REFERENCES log.cron_jobs(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE FUNCTION cron_jobs_trigger_row_bi() RETURNS trigger
+AS $$
+BEGIN
+  IF (
+    new.status = 'processing' AND (
+      SELECT status NOT IN ('succeed', 'failed')
+      FROM log.cron_jobs
+      WHERE name = new.name
+      ORDER BY id DESC
+      LIMIT 1
+    )
+  ) THEN
+    RAISE EXCEPTION USING MESSAGE = format('Job "%s" can not be run, because previous is not fulfilled.', new.name);
+  END IF;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER cron_jobs_row_bi_trigger BEFORE INSERT ON log.cron_jobs FOR EACH ROW EXECUTE PROCEDURE cron_jobs_trigger_row_bi();
+-----

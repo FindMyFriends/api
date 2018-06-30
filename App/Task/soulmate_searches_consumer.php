@@ -24,9 +24,7 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 	),
 	new Log\ChainedLogs(
 		new FindMyFriends\Log\FilesystemLogs(
-			new Log\DynamicLocation(
-				sprintf('%s/../../%s', __DIR__, $configuration['LOGS']['directory'])
-			)
+			new Log\DynamicLocation($configuration['LOGS']['directory'])
 		),
 		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
 	),

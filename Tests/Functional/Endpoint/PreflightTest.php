@@ -35,13 +35,23 @@ final class PreflightTest extends Tester\TestCase {
 	}
 
 	public function testDomainOptions() {
+		$token = $this->token();
 		foreach ($this->endpoints() as $endpoint) {
-			$response = $this->response($endpoint);
+			$response = $this->response($endpoint, [sprintf('Authorization: Bearer %s', $token)]);
 			Assert::same(HTTP_OK, $response->code());
 			Assert::notSame([], json_decode((string) $response->body()));
 			$headers = $response->headers();
 			Assert::same('application/json; charset=utf8', $headers['Content-Type']);
 		}
+	}
+
+	private function token(): string {
+		session_start();
+		$_SESSION['id'] = '1';
+		$sessionId = session_id();
+		chown(sprintf('/tmp/sess_%s', $sessionId), 'www-data');
+		session_write_close();
+		return $sessionId;
 	}
 
 	private function endpoints(): array {

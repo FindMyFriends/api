@@ -53,25 +53,20 @@ IMMUTABLE;
 
 
 CREATE TYPE error AS (message text, state text);
-CREATE FUNCTION assert.throws(query TEXT, expected error) RETURNS void
+CREATE FUNCTION assert.throws(query text, expected error) RETURNS void
 AS $BODY$
-DECLARE
-  result boolean DEFAULT TRUE;
 BEGIN
     EXECUTE query;
-    result = FALSE;
+    RAISE EXCEPTION USING
+      ERRCODE = 'C1',
+      MESSAGE = 'EXCEPTION WAS NOT THROWN',
+      HINT = format('EXPECTED EXCEPTION WAS "%s"', expected);
     EXCEPTION WHEN OTHERS THEN
     IF (expected.message IS NOT NULL AND expected.message != SQLERRM) THEN
         RAISE EXCEPTION USING MESSAGE = format('EXPECTED EXCEPTION WITH MESSAGE "%s", BUT GIVEN "%s"', expected.message, SQLERRM);
     END IF;
     IF (expected.state IS NOT NULL AND expected.state != SQLSTATE) THEN
         RAISE EXCEPTION USING MESSAGE = format('EXPECTED EXCEPTION WITH SQLSTATE "%s", BUT GIVEN "%s"', expected.state, SQLSTATE);
-    END IF;
-
-    IF (result IS FALSE) THEN
-      RAISE EXCEPTION USING
-        MESSAGE = 'EXCEPTION WAS NOT THROWN',
-        HINT = format('EXPECTED EXCEPTION WAS "%s"', expected);
     END IF;
 END
 $BODY$
