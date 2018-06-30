@@ -37,7 +37,7 @@ final class RepeatedJob implements Job {
 				SELECT 1
 				FROM log.cron_jobs
 				WHERE name = :name
-				AND status IN ('succeed')
+				AND status = 'succeed'
 				GROUP BY name
 				HAVING MAX(marked_at) + :interval <= now()
 			)",
