@@ -317,8 +317,8 @@ LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   RETURN int4range(
-    (EXTRACT('year' from now) - upper(year))::INTEGER,
-    (EXTRACT('year' from now) - lower(year))::INTEGER
+    (EXTRACT('year' from now) - upper(year))::integer,
+    (EXTRACT('year' from now) - lower(year))::integer
   );
 END
 $$;
@@ -328,8 +328,8 @@ LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   RETURN int4range(
-    (SELECT extract('year' from lower(now)) - upper(year))::INTEGER,
-    (SELECT extract('year' from lower(now)) - lower(year))::INTEGER
+    (SELECT extract('year' from lower(now)) - upper(year))::integer,
+    (SELECT extract('year' from lower(now)) - lower(year))::integer
   );
 END
 $$;
@@ -344,7 +344,7 @@ BEGIN
   DELETE FROM descriptions
   WHERE id = v_description_id
   RETURNING face_id, general_id, body_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id
-    INTO description;
+  INTO description;
 
   DELETE FROM faces
   WHERE id = description.face_id;
@@ -361,7 +361,7 @@ BEGIN
   DELETE FROM hands
   WHERE id = description.hand_id
   RETURNING nail_id, hand_hair_id
-    INTO hand;
+  INTO hand;
 
   DELETE FROM hand_hair WHERE id = hand.hand_hair_id;
   DELETE FROM nails WHERE id = hand.nail_id;
@@ -375,19 +375,19 @@ CREATE FUNCTION inserted_description(description flat_description) RETURNS integ
 LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_beard_id INTEGER;
-  v_tooth_id INTEGER;
-  v_eyebrow_id INTEGER;
-  v_left_eye_id INTEGER;
-  v_right_eye_id INTEGER;
-  v_hand_nail_id INTEGER;
-  v_hand_hair_id INTEGER;
-  v_face_id INTEGER;
-  v_body_id INTEGER;
-  v_hand_id INTEGER;
-  v_general_id INTEGER;
-  v_hair_id INTEGER;
-  v_description_id INTEGER;
+  v_beard_id integer;
+  v_tooth_id integer;
+  v_eyebrow_id integer;
+  v_left_eye_id integer;
+  v_right_eye_id integer;
+  v_hand_nail_id integer;
+  v_hand_hair_id integer;
+  v_face_id integer;
+  v_body_id integer;
+  v_hand_id integer;
+  v_general_id integer;
+  v_hair_id integer;
+  v_description_id integer;
 BEGIN
   INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
     description.general_sex,
@@ -397,7 +397,7 @@ BEGIN
     description.general_lastname
   )
   RETURNING id
-    INTO v_general_id;
+  INTO v_general_id;
   INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
     description.hair_style_id,
     description.hair_color_id,
@@ -407,58 +407,58 @@ BEGIN
     description.hair_nature
   )
   RETURNING id
-    INTO v_hair_id;
+  INTO v_hair_id;
   INSERT INTO beards (color_id, length, style) VALUES (
     description.beard_color_id,
     description.beard_length,
     description.beard_style
   )
   RETURNING id
-    INTO v_beard_id;
+  INTO v_beard_id;
   INSERT INTO teeth (care, braces) VALUES (
     description.tooth_care,
     description.tooth_braces
   )
   RETURNING id
-    INTO v_tooth_id;
+  INTO v_tooth_id;
   INSERT INTO eyebrows (color_id, care) VALUES (
     description.eyebrow_color_id,
     description.eyebrow_care
   )
   RETURNING id
-    INTO v_eyebrow_id;
+  INTO v_eyebrow_id;
   INSERT INTO eyes (color_id, lenses) VALUES (
     description.left_eye_color_id,
     description.left_eye_lenses
   )
   RETURNING id
-    INTO v_left_eye_id;
+  INTO v_left_eye_id;
   INSERT INTO eyes (color_id, lenses) VALUES (
     description.right_eye_color_id,
     description.right_eye_lenses
   )
   RETURNING id
-    INTO v_right_eye_id;
+  INTO v_right_eye_id;
   INSERT INTO nails (color_id, length, care) VALUES (
     description.nail_color_id,
     description.nail_length,
     description.nail_care
   )
   RETURNING id
-    INTO v_hand_nail_id;
+  INTO v_hand_nail_id;
   INSERT INTO hand_hair (color_id, amount) VALUES (
     description.hand_hair_color_id,
     description.hand_hair_amount
   )
   RETURNING id
-    INTO v_hand_hair_id;
+  INTO v_hand_hair_id;
   INSERT INTO faces (freckles, care, shape_id) VALUES (
     description.face_freckles,
     description.face_care,
     description.face_shape_id
   )
   RETURNING id
-    INTO v_face_id;
+  INTO v_face_id;
   INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
     description.body_build_id,
     description.body_weight,
@@ -466,7 +466,7 @@ BEGIN
     description.body_breast_size
   )
   RETURNING id
-    INTO v_body_id;
+  INTO v_body_id;
   INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
     v_hand_nail_id,
     description.hand_care,
@@ -475,7 +475,7 @@ BEGIN
     v_hand_hair_id
   )
   RETURNING id
-    INTO v_hand_id;
+  INTO v_hand_id;
   INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id) VALUES (
     v_general_id,
     v_body_id,
@@ -495,13 +495,13 @@ CREATE FUNCTION updated_description(description flat_description) RETURNS intege
 LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_beard_id INTEGER;
-  v_tooth_id INTEGER;
-  v_eyebrow_id INTEGER;
-  v_left_eye_id INTEGER;
-  v_right_eye_id INTEGER;
-  v_hand_nail_id INTEGER;
-  v_hand_hair_id INTEGER;
+  v_beard_id integer;
+  v_tooth_id integer;
+  v_eyebrow_id integer;
+  v_left_eye_id integer;
+  v_right_eye_id integer;
+  v_hand_nail_id integer;
+  v_hand_hair_id integer;
   parts RECORD;
 BEGIN
   SELECT *
@@ -531,35 +531,35 @@ BEGIN
     description.beard_style
   )
   RETURNING id
-    INTO v_beard_id;
+  INTO v_beard_id;
 
   INSERT INTO teeth (care, braces) VALUES (
     description.tooth_care,
     description.tooth_braces
   )
   RETURNING id
-    INTO v_tooth_id;
+  INTO v_tooth_id;
 
   INSERT INTO eyebrows (color_id, care) VALUES (
     description.eyebrow_color_id,
     description.eyebrow_care
   )
   RETURNING id
-    INTO v_eyebrow_id;
+  INTO v_eyebrow_id;
 
   INSERT INTO eyes (color_id, lenses) VALUES (
     description.left_eye_color_id,
     description.left_eye_lenses
   )
   RETURNING id
-    INTO v_left_eye_id;
+  INTO v_left_eye_id;
 
   INSERT INTO eyes (color_id, lenses) VALUES (
     description.right_eye_color_id,
     description.right_eye_lenses
   )
   RETURNING id
-    INTO v_right_eye_id;
+  INTO v_right_eye_id;
 
   UPDATE faces
   SET freckles = description.face_freckles,
@@ -580,14 +580,14 @@ BEGIN
     description.nail_care
   )
   RETURNING id
-    INTO v_hand_nail_id;
+  INTO v_hand_nail_id;
 
   INSERT INTO hand_hair (color_id, amount) VALUES (
     description.hand_hair_color_id,
     description.hand_hair_amount
   )
   RETURNING id
-    INTO v_hand_hair_id;
+  INTO v_hand_hair_id;
 
   UPDATE hands
   SET nail_id = v_hand_nail_id,
@@ -1317,82 +1317,47 @@ CREATE VIEW complete_descriptions AS
     LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 
 
-CREATE VIEW printed_descriptions AS
+CREATE VIEW flat_descriptions AS
   SELECT
-    complete_descriptions.id,
-      ROW((complete_descriptions.general).id, (complete_descriptions.general).sex, (complete_descriptions.general).ethnic_group_id, (complete_descriptions.general).birth_year, (complete_descriptions.general).firstname, (complete_descriptions.general).lastname)::general AS general,
+    (complete_descriptions.beard).color_id AS beard_color_id,
+    (complete_descriptions.beard).length AS beard_length,
+    (complete_descriptions.beard).style AS beard_style,
+    (complete_descriptions.body).breast_size AS body_breast_size,
+    (complete_descriptions.body).build_id AS body_build_id,
+    (complete_descriptions.body).height AS body_height,
+    (complete_descriptions.body).weight AS body_weight,
+    (complete_descriptions.eyebrow).care AS eyebrow_care,
+    (complete_descriptions.eyebrow).color_id AS eyebrow_color_id,
+    (complete_descriptions.face).care AS face_care,
+    (complete_descriptions.face).freckles AS face_freckles,
+    (complete_descriptions.face).shape_id AS face_shape_id,
     (complete_descriptions.general).birth_year AS general_birth_year,
     (complete_descriptions.general).ethnic_group_id AS general_ethnic_group_id,
     (complete_descriptions.general).firstname AS general_firstname,
     (complete_descriptions.general).lastname AS general_lastname,
     (complete_descriptions.general).sex AS general_sex,
-    complete_descriptions.ethnic_group AS general_ethnic_group,
-    complete_descriptions.body,
-    complete_descriptions.body_build,
-    (complete_descriptions.face).freckles AS face_freckles,
-    (complete_descriptions.face).care AS face_care,
-      ROW((complete_descriptions.beard).id, (complete_descriptions.beard).color_id, (complete_descriptions.beard).length, (complete_descriptions.beard).style)::beards AS beard,
-    complete_descriptions.eyebrow,
-    (complete_descriptions.face).shape_id AS face_shape_id,
-    complete_descriptions.face_shape AS face_shape,
-    complete_descriptions.tooth,
-    complete_descriptions.left_eye,
-    complete_descriptions.right_eye,
-      ROW((complete_descriptions.nail).id, (complete_descriptions.nail).color_id, (complete_descriptions.nail).length, (complete_descriptions.nail).care)::nails AS hands_nails,
-    (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
-    (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
+    (complete_descriptions.hair).color_id AS hair_color_id,
+    (complete_descriptions.hair).highlights AS hair_highlights,
+    (complete_descriptions.hair).length AS hair_length,
+    (complete_descriptions.hair).nature AS hair_nature,
+    (complete_descriptions.hair).roots AS hair_roots,
+    (complete_descriptions.hair).style_id AS hair_style_id,
     (complete_descriptions.hand).care AS hands_care,
-    complete_descriptions.hand_hair AS hands_hair,
-      ROW((complete_descriptions.hair).id, (complete_descriptions.hair).style_id, (complete_descriptions.hair).color_id, (complete_descriptions.hair).length, (complete_descriptions.hair).highlights, (complete_descriptions.hair).roots, (complete_descriptions.hair).nature)::hair AS hair,
-    complete_descriptions.hair_style
+    (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
+    (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
+    (complete_descriptions.hand_hair).amount AS hands_hair_amount,
+    (complete_descriptions.hand_hair).color_id AS hands_hair_color_id,
+    (complete_descriptions.left_eye).color_id AS left_eye_color_id,
+    (complete_descriptions.left_eye).lenses AS left_eye_lenses,
+    (complete_descriptions.nail).care AS hands_nails_care,
+    (complete_descriptions.nail).color_id AS hands_nails_color_id,
+    (complete_descriptions.nail).length AS hands_nails_length,
+    (complete_descriptions.right_eye).color_id AS right_eye_color_id,
+    (complete_descriptions.right_eye).lenses AS right_eye_lenses,
+    (complete_descriptions.tooth).braces AS tooth_braces,
+    (complete_descriptions.tooth).care AS tooth_care,
+    complete_descriptions.id
   FROM complete_descriptions;
-
-CREATE VIEW flat_descriptions AS
-  SELECT
-    printed_descriptions.id,
-    printed_descriptions.general_birth_year,
-    printed_descriptions.general_ethnic_group,
-    printed_descriptions.general_firstname,
-    printed_descriptions.general_lastname,
-    printed_descriptions.general_sex,
-    (printed_descriptions.body).weight AS body_weight,
-    (printed_descriptions.body).height AS body_height,
-    (printed_descriptions.body).breast_size AS body_breast_size,
-    printed_descriptions.body_build,
-    (printed_descriptions.hair).color_id AS hair_color_id,
-    (printed_descriptions.hair).style_id AS hair_style_id,
-    (printed_descriptions.hair).length AS hair_length,
-    (printed_descriptions.hair).highlights AS hair_highlights,
-    (printed_descriptions.hair).roots AS hair_roots,
-    (printed_descriptions.hair).nature AS hair_nature,
-    printed_descriptions.hair_style,
-    (printed_descriptions.hands_nails).color_id AS hands_nails_color_id,
-    (printed_descriptions.hands_nails).care AS hands_nails_care,
-    (printed_descriptions.beard).color_id AS beard_color_id,
-    (printed_descriptions.beard).length AS beard_length,
-    (printed_descriptions.beard).style AS beard_style,
-    (printed_descriptions.eyebrow).color_id AS eyebrow_color_id,
-    (printed_descriptions.eyebrow).care AS eyebrow_care,
-    (printed_descriptions.tooth).care AS tooth_care,
-    (printed_descriptions.tooth).braces AS tooth_braces,
-    (printed_descriptions.left_eye).color_id AS left_eye_color_id,
-    (printed_descriptions.left_eye).lenses AS left_eye_lenses,
-    (printed_descriptions.right_eye).color_id AS right_eye_color_id,
-    (printed_descriptions.right_eye).lenses AS right_eye_lenses,
-    (printed_descriptions.hands_hair).color_id AS hands_hair_color_id,
-    (printed_descriptions.hands_hair).amount AS hands_hair_amount,
-    printed_descriptions.face_freckles,
-    printed_descriptions.face_care,
-    printed_descriptions.eyebrow,
-    printed_descriptions.face_shape,
-    printed_descriptions.tooth,
-    printed_descriptions.left_eye,
-    printed_descriptions.right_eye,
-    (printed_descriptions.hands_nails).length AS hands_nails_length,
-    printed_descriptions.hands_vein_visibility,
-    printed_descriptions.hands_joint_visibility,
-    printed_descriptions.hands_care
-  FROM printed_descriptions;
 
 CREATE TYPE elasticsearch_body AS (
   build_id smallint,
@@ -1533,56 +1498,53 @@ CREATE VIEW elasticsearch_demands AS
 
 CREATE VIEW collective_demands AS
   SELECT
-    printed_description.general_birth_year,
-    year_to_age(printed_description.general_birth_year, (location.met_at).moment) AS general_age,
-    printed_description.face_shape_id,
-    printed_description.hands_vein_visibility,
-    printed_description.hands_joint_visibility,
-    printed_description.hands_care,
-    printed_description.hands_hair,
-    (printed_description.body).build_id AS body_build_id,
-    printed_description.general_ethnic_group_id,
-    flat_description.general_firstname,
-    flat_description.general_lastname,
-    flat_description.general_sex,
-    flat_description.body_weight,
-    flat_description.body_height,
-    flat_description.body_breast_size,
-    flat_description.hands_nails_color_id,
-    flat_description.hands_nails_length,
-    flat_description.hands_nails_care,
-    flat_description.beard_color_id,
-    flat_description.beard_length,
-    flat_description.beard_style,
-    flat_description.eyebrow_color_id,
-    flat_description.eyebrow_care,
-    flat_description.tooth_care,
-    flat_description.tooth_braces,
-    flat_description.left_eye_color_id,
-    flat_description.left_eye_lenses,
-    flat_description.right_eye_color_id,
-    flat_description.right_eye_lenses,
-    flat_description.hands_hair_color_id,
-    flat_description.hands_hair_amount,
-    flat_description.face_freckles,
-    flat_description.face_care,
-    flat_description.hair_color_id,
-    flat_description.hair_style_id,
-    flat_description.hair_length,
-    flat_description.hair_highlights,
-    flat_description.hair_roots,
-    flat_description.hair_nature,
-    flat_description.hair_style,
-    location.met_at AS location_met_at,
-    location.coordinates AS location_coordinates,
-    demand.id,
-    demand.seeker_id,
-    demand.created_at,
-    demand.note
-  FROM demands demand
-    JOIN printed_descriptions printed_description ON demand.description_id = printed_description.id
-    JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id
-    JOIN locations location ON location.id = demand.location_id;
+    demands.created_at,
+    demands.id,
+    demands.note,
+    demands.seeker_id,
+    flat_descriptions.beard_color_id,
+    flat_descriptions.beard_length,
+    flat_descriptions.beard_style,
+    flat_descriptions.body_breast_size,
+    flat_descriptions.body_build_id,
+    flat_descriptions.body_height,
+    flat_descriptions.body_weight,
+    flat_descriptions.eyebrow_care,
+    flat_descriptions.eyebrow_color_id,
+    flat_descriptions.face_care,
+    flat_descriptions.face_freckles,
+    flat_descriptions.face_shape_id,
+    flat_descriptions.general_birth_year,
+    flat_descriptions.general_ethnic_group_id,
+    flat_descriptions.general_firstname,
+    flat_descriptions.general_lastname,
+    flat_descriptions.general_sex,
+    flat_descriptions.hair_color_id,
+    flat_descriptions.hair_highlights,
+    flat_descriptions.hair_length,
+    flat_descriptions.hair_nature,
+    flat_descriptions.hair_roots,
+    flat_descriptions.hair_style_id,
+    flat_descriptions.hands_care,
+    flat_descriptions.hands_hair_amount,
+    flat_descriptions.hands_hair_color_id,
+    flat_descriptions.hands_joint_visibility,
+    flat_descriptions.hands_nails_care,
+    flat_descriptions.hands_nails_color_id,
+    flat_descriptions.hands_nails_length,
+    flat_descriptions.hands_vein_visibility,
+    flat_descriptions.left_eye_color_id,
+    flat_descriptions.left_eye_lenses,
+    flat_descriptions.right_eye_color_id,
+    flat_descriptions.right_eye_lenses,
+    flat_descriptions.tooth_braces,
+    flat_descriptions.tooth_care,
+    locations.coordinates AS location_coordinates,
+    locations.met_at AS location_met_at,
+    year_to_age(flat_descriptions.general_birth_year, (locations.met_at).moment) AS general_age
+  FROM demands
+    JOIN flat_descriptions ON flat_descriptions.id = demands.description_id
+    JOIN locations ON locations.id = demands.location_id;
 
 CREATE FUNCTION collective_demands_trigger_row_ii() RETURNS trigger
 AS $$
@@ -1732,57 +1694,49 @@ CREATE TRIGGER collective_demands_row_iu_trigger INSTEAD OF UPDATE ON collective
 
 CREATE VIEW collective_evolutions AS
   SELECT
-    printed_description.general_birth_year,
-    year_to_age(printed_description.general_birth_year, evolution.evolved_at) AS general_age,
-    printed_description.body_build,
-    printed_description.face_shape,
-    printed_description.face_shape_id,
-    printed_description.hands_vein_visibility,
-    printed_description.hands_joint_visibility,
-    printed_description.hands_care,
-    printed_description.hands_hair,
-    (printed_description.body).build_id AS body_build_id,
-    printed_description.general_ethnic_group_id,
-    flat_description.general_firstname,
-    flat_description.general_lastname,
-    flat_description.general_sex,
-    flat_description.body_weight,
-    flat_description.body_height,
-    flat_description.body_breast_size,
-    flat_description.hands_nails_color_id,
-    flat_description.hands_nails_length,
-    flat_description.hands_nails_care,
-    flat_description.beard_color_id,
-    flat_description.beard_length,
-    flat_description.beard_style,
-    flat_description.eyebrow_color_id,
-    flat_description.eyebrow_care,
-    flat_description.tooth_care,
-    flat_description.tooth_braces,
-    flat_description.left_eye_color_id,
-    flat_description.left_eye_lenses,
-    flat_description.right_eye_color_id,
-    flat_description.right_eye_lenses,
-    flat_description.hands_hair_color_id,
-    flat_description.hands_hair_amount,
-    flat_description.general_ethnic_group,
-    flat_description.face_freckles,
-    flat_description.face_care,
-    flat_description.left_eye,
-    flat_description.right_eye,
-    flat_description.hair_color_id,
-    flat_description.hair_style_id,
-    flat_description.hair_length,
-    flat_description.hair_highlights,
-    flat_description.hair_roots,
-    flat_description.hair_nature,
-    flat_description.hair_style,
-    evolution.id,
-    evolution.seeker_id,
-    evolution.evolved_at
-  FROM evolutions evolution
-    JOIN printed_descriptions printed_description ON evolution.description_id = printed_description.id
-    JOIN flat_descriptions flat_description ON flat_description.id = printed_description.id;
+    evolutions.evolved_at,
+    evolutions.id,
+    evolutions.seeker_id,
+    flat_descriptions.beard_color_id,
+    flat_descriptions.beard_length,
+    flat_descriptions.beard_style,
+    flat_descriptions.body_breast_size,
+    flat_descriptions.body_build_id,
+    flat_descriptions.body_height,
+    flat_descriptions.body_weight,
+    flat_descriptions.eyebrow_care,
+    flat_descriptions.eyebrow_color_id,
+    flat_descriptions.face_care,
+    flat_descriptions.face_freckles,
+    flat_descriptions.face_shape_id,
+    flat_descriptions.general_birth_year,
+    flat_descriptions.general_ethnic_group_id,
+    flat_descriptions.general_firstname,
+    flat_descriptions.general_lastname,
+    flat_descriptions.general_sex,
+    flat_descriptions.hair_color_id,
+    flat_descriptions.hair_highlights,
+    flat_descriptions.hair_length,
+    flat_descriptions.hair_nature,
+    flat_descriptions.hair_roots,
+    flat_descriptions.hair_style_id,
+    flat_descriptions.hands_care,
+    flat_descriptions.hands_hair_amount,
+    flat_descriptions.hands_hair_color_id,
+    flat_descriptions.hands_joint_visibility,
+    flat_descriptions.hands_nails_care,
+    flat_descriptions.hands_nails_color_id,
+    flat_descriptions.hands_nails_length,
+    flat_descriptions.hands_vein_visibility,
+    flat_descriptions.left_eye_color_id,
+    flat_descriptions.left_eye_lenses,
+    flat_descriptions.right_eye_color_id,
+    flat_descriptions.right_eye_lenses,
+    flat_descriptions.tooth_braces,
+    flat_descriptions.tooth_care,
+    year_to_age(flat_descriptions.general_birth_year, evolutions.evolved_at) AS general_age
+  FROM evolutions
+    JOIN flat_descriptions ON flat_descriptions.id = evolutions.description_id;
 
 CREATE FUNCTION prioritized_evolution_columns() RETURNS TABLE (
   columns jsonb,
@@ -1804,7 +1758,7 @@ DECLARE
      'face_freckles',
      'face_shape_id',
      'general_age',
-     'general_ethnic_group',
+     'general_ethnic_group_id',
      'general_firstname',
      'general_lastname',
      'general_sex',
@@ -1815,7 +1769,6 @@ DECLARE
      'hair_roots',
      'hair_style_id',
      'hands_care',
-     'hands_hair',
      'hands_hair_amount',
      'hands_hair_color_id',
      'hands_joint_visibility',
@@ -1926,7 +1879,7 @@ BEGIN
   INTO v_birth_year;
 
   IF (v_birth_year IS NULL) THEN
-    RAISE EXCEPTION USING MESSAGE = FORMAT('Base evolution for seeker %L was not created.', new.seeker_id);
+    RAISE EXCEPTION USING MESSAGE = format('Base evolution for seeker %L was not created.', new.seeker_id);
   END IF;
 
   v_description_id = inserted_description(
