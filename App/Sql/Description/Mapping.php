@@ -35,7 +35,7 @@ final class Mapping implements Sql\Mapping {
 		'hands_joint_visibility' => 'hands.joint_visibility',
 		'hands_nails_care' => 'hands.nails.care',
 		'hands_nails_color_id' => 'hands.nails.color_id',
-		'hands_nails_length' => 'hands.nails_length',
+		'hands_nails_length' => 'hands.nails.length',
 		'hands_vein_visibility' => 'hands.vein_visibility',
 		'left_eye_color_id' => 'eye.left.color_id',
 		'left_eye_lenses' => 'eye.left.lenses',
