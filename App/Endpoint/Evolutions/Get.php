@@ -55,6 +55,7 @@ final class Get implements Application\View {
 			),
 			$this->hashids
 		);
+		$count = $evolution->count(new Dataset\EmptySelection());
 		return new Response\PartialResponse(
 			new Response\PaginatedResponse(
 				new Response\JsonResponse(
@@ -78,14 +79,15 @@ final class Get implements Application\View {
 									)
 								)
 							)
-						)
+						),
+						['X-Total-Count' => $count]
 					)
 				),
 				$parameters['page'],
 				new UI\AttainablePagination(
 					$parameters['page'],
 					$parameters['per_page'],
-					$evolution->count(new Dataset\EmptySelection())
+					$count
 				),
 				$this->url
 			),

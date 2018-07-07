@@ -42,6 +42,20 @@ final class GetTest extends Tester\TestCase {
 		))->assert();
 	}
 
+	public function testIncludedCountHeader() {
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->database))->try();
+		$headers = (new Endpoint\Evolutions\Get(
+			new Hashids(),
+			new Uri\FakeUri('/', 'evolutions', []),
+			$this->database,
+			new Access\FakeSeeker((string) $seeker)
+		))->response(['page' => 1, 'per_page' => 10, 'sort' => ''])->headers();
+		Assert::same(2, $headers['X-Total-Count']);
+	}
+
 	public function testMatchingSorts() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
