@@ -11,6 +11,7 @@ namespace FindMyFriends\Functional\Endpoint\Evolutions;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
+use FindMyFriends\Schema\Evolution;
 use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Uri;
@@ -39,6 +40,24 @@ final class GetTest extends Tester\TestCase {
 			$demands,
 			new \SplFileInfo(__DIR__ . '/../../../../App/Endpoint/Evolution/schema/get.json')
 		))->assert();
+	}
+
+	public function testMatchingSorts() {
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		$this->database->exec('REFRESH MATERIALIZED VIEW prioritized_evolution_fields');
+		Assert::same(
+			[],
+			array_diff(
+				array_keys(
+					(new Evolution\PrioritizedColumns(
+						$this->database,
+						new Access\FakeSeeker((string) $seeker)
+					))->values()
+				),
+				Endpoint\Evolutions\Get::SORTS
+			)
+		);
 	}
 }
 
