@@ -6,12 +6,12 @@ psql -U postgres find_my_friends_test < /var/www/FindMyFriends/fixtures/schema.s
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/plest.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/test_utils.sql;
 psql -U postgres find_my_friends_test < /var/www/FindMyFriends/Tests/fixtures/samples.sql;
-psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http,log;";
+psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http,log,meta;";
 for f in /var/www/FindMyFriends/fixtures/dumps/*.sql; do psql -U postgres -d find_my_friends_test -f $f; done
 
 psql -U postgres -c "DROP DATABASE IF EXISTS find_my_friends";
 psql -U postgres -c "CREATE DATABASE find_my_friends";
 psql -U postgres find_my_friends < /var/www/FindMyFriends/fixtures/schema.sql;
-psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http,log;";
+psql -U postgres -c "ALTER ROLE postgres SET search_path TO public,pg_catalog,access,http,log,meta;";
 for f in /var/www/FindMyFriends/fixtures/dumps/*.sql; do psql -U postgres -d find_my_friends -f $f; done
 psql -U postgres find_my_friends < /var/www/FindMyFriends/fixtures/test.sql;

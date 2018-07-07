@@ -17,7 +17,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class KeyValueMappingTest extends Tester\TestCase {
 	public function testMappingOnlyDesiredToApplication() {
 		Assert::same(
-			['_name' => 'xxx', '_lastname' => 'yyy'],
+			['_lastname' => 'yyy', '_name' => 'xxx'],
 			(new Sql\KeyValueMapping(
 				[
 					'name' => '_name',
@@ -30,7 +30,7 @@ final class KeyValueMappingTest extends Tester\TestCase {
 
 	public function testMappingOnlyDesiredToDatabase() {
 		Assert::same(
-			['name' => 'xxx', 'lastname' => 'yyy'],
+			['lastname' => 'yyy', 'name' => 'xxx'],
 			(new Sql\KeyValueMapping(
 				[
 					'name' => '_name',
@@ -38,6 +38,40 @@ final class KeyValueMappingTest extends Tester\TestCase {
 					'foo' => 'bar',
 				]
 			))->database(['_name' => 'xxx', '_lastname' => 'yyy'])
+		);
+	}
+
+	public function testKeepingOrder() {
+		$mapping = [
+			'general_age' => 'general.age',
+			'general_ethnic_group_id' => 'general.ethnic_group_id',
+			'general_firstname' => 'general.firstname',
+			'general_lastname' => 'general.lastname',
+			'general_sex' => 'general.sex',
+		];
+		Assert::same(
+			[
+				'general.firstname' => 2,
+				'general.lastname' => 3,
+				'general.sex' => 1,
+			],
+			(new Sql\KeyValueMapping($mapping))->application([
+				'general_sex' => 1,
+				'general_lastname' => 3,
+				'general_firstname' => 2,
+			])
+		);
+		Assert::same(
+			[
+				'general_firstname' => 2,
+				'general_lastname' => 3,
+				'general_sex' => 1,
+			],
+			(new Sql\KeyValueMapping($mapping))->database([
+				'general.sex' => 1,
+				'general.lastname' => 3,
+				'general.firstname' => 2,
+			])
 		);
 	}
 }

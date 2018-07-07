@@ -30,7 +30,7 @@ final class PrioritizedColumnsTest extends Tester\TestCase {
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $foreign]))->try();
 		(new Storage\NativeQuery($this->database, 'REFRESH MATERIALIZED VIEW prioritized_evolution_fields'))->execute();
 		$columns = (new Schema\Evolution\PrioritizedColumns($this->database, new Access\FakeSeeker((string) $me)))->values();
-		Assert::count(5, $columns);
+		Assert::count(3, $columns);
 		Assert::same(3, current($columns));
 	}
 

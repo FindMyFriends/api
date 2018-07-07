@@ -15,8 +15,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 CREATE SCHEMA access;
 CREATE SCHEMA http;
 CREATE SCHEMA log;
+CREATE SCHEMA meta;
 
-SET search_path = public, pg_catalog, access, http, log;
+SET search_path = public, pg_catalog, access, http, log, meta;
 
 -- TYPES --
 CREATE TYPE timeline_sides AS ENUM (
@@ -624,6 +625,54 @@ CREATE DOMAIN valid_length AS length
 
 CREATE DOMAIN valid_mass AS mass
   CHECK (is_mass_valid((VALUE)::mass));
+-----
+
+-- TABLES --
+CREATE FUNCTION check_existing_object_column_trigger() RETURNS trigger
+AS $$
+BEGIN
+  IF (
+    NOT EXISTS(
+      SELECT 1
+      FROM information_schema.columns
+      WHERE format('%s.%s', table_schema, table_name)::regclass::oid = new.object
+      AND column_name = new.column
+    )
+  ) THEN
+    RAISE EXCEPTION 'Relation does not exist';
+  END IF;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TABLE meta.prioritized_columns (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  object oid NOT NULL,
+  "column" text NOT NULL,
+  priority smallint NOT NULL DEFAULT 0,
+  CONSTRAINT prioritized_columns_priority_in_range CHECK (priority >= -5 AND priority <= 5)
+);
+
+CREATE TABLE meta.prioritized_application_columns (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  object oid NOT NULL,
+  "column" text NOT NULL,
+  prioritized_column_id smallint,
+  CONSTRAINT prioritized_application_columns_prioritized_column_id_fk FOREIGN KEY (prioritized_column_id) REFERENCES meta.prioritized_columns(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE VIEW meta.columns AS
+  SELECT meta.prioritized_application_columns.object, meta.prioritized_application_columns.column, priority
+  FROM meta.prioritized_columns
+  JOIN meta.prioritized_application_columns ON meta.prioritized_application_columns.prioritized_column_id = meta.prioritized_columns.id
+  UNION ALL
+  SELECT object, "column", priority
+  FROM meta.prioritized_columns;
+
+CREATE TRIGGER prioritized_columns_row_biu_trigger BEFORE INSERT OR UPDATE ON meta.prioritized_columns FOR EACH ROW EXECUTE PROCEDURE check_existing_object_column_trigger();
+CREATE TRIGGER prioritized_application_columns_row_biu_trigger BEFORE INSERT OR UPDATE ON meta.prioritized_application_columns FOR EACH ROW EXECUTE PROCEDURE check_existing_object_column_trigger();
 -----
 
 -- TABLES --
@@ -1802,9 +1851,14 @@ BEGIN
     ), each_from_json_query AS (
       SELECT (json_each(json_query.json_row)).key::text, (json_each(json_query.json_row)).value::text::integer, seeker_id
       FROM json_query
-    ), ranked_rows AS (
-      SELECT *, row_number() OVER (PARTITION BY seeker_id ORDER BY value DESC) AS position
+    ), prioritized_columns AS (
+      SELECT each_from_json_query.*, priority
       FROM each_from_json_query
+      JOIN meta.columns ON meta.columns.column = key
+      WHERE meta.columns.object = 'collective_evolutions'::regclass::oid
+    ), ranked_rows AS (
+      SELECT *, row_number() OVER (PARTITION BY seeker_id ORDER BY value DESC, priority DESC) AS position
+      FROM prioritized_columns
     )
     SELECT jsonb_object_agg(key, value), seeker_id
     FROM ranked_rows
@@ -1819,7 +1873,7 @@ VOLATILE
 STRICT;
 
 CREATE MATERIALIZED VIEW prioritized_evolution_fields AS
-	SELECT * FROM prioritized_evolution_columns();
+  SELECT * FROM prioritized_evolution_columns();
 CREATE UNIQUE INDEX prioritized_evolution_fields_view_ukey ON prioritized_evolution_fields (seeker_id);
 REFRESH MATERIALIZED VIEW CONCURRENTLY prioritized_evolution_fields;
 

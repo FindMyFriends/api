@@ -12,16 +12,16 @@ final class KeyValueMapping implements Mapping {
 	}
 
 	public function application(array $database): array {
-		return array_combine(
-			array_intersect_key($this->map, $database),
-			$database
-		);
+		$keys = array_intersect_key($this->map, $database);
+		ksort($database);
+		ksort($keys);
+		return array_combine($keys, $database);
 	}
 
 	public function database(array $application): array {
-		return array_combine(
-			array_intersect_key(array_flip($this->map), $application),
-			$application
-		);
+		$keys = array_intersect_key(array_flip($this->map), $application);
+		ksort($keys);
+		ksort($application);
+		return array_combine($keys, $application);
 	}
 }

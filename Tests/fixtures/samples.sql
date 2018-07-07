@@ -511,14 +511,14 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.description() RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.description(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, left_eye_id, right_eye_id, beard_id, tooth_id, eyebrow_id) VALUES (
-		(SELECT general FROM samples.general()),
+		(SELECT general FROM samples.general(replacements)),
 		(SELECT body FROM samples.body()),
 		(SELECT face FROM samples.face()),
 		(SELECT hand FROM samples.hand()),
@@ -603,7 +603,7 @@ DECLARE
 BEGIN
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
     samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
-		(SELECT description FROM samples.description()),
+		(SELECT description FROM samples.description(replacements)),
 		 NOW()
 	)
 	RETURNING id
