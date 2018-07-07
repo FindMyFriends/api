@@ -17,13 +17,14 @@ final class ApiErrorCallback implements Callback {
 	/**
 	 * @param callable $action
 	 * @param array $args
+	 * @throws \UnexpectedValueException
 	 * @return mixed
 	 */
 	public function invoke(callable $action, array $args = []) {
 		try {
 			return call_user_func_array($action, $args);
 		} catch (\UnexpectedValueException $ex) {
-			throw new $ex(
+			throw new \UnexpectedValueException(
 				$ex->getMessage(),
 				$this->code,
 				$ex

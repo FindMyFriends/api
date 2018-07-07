@@ -6,8 +6,9 @@ parameters:
         checkedExceptions:
             - UnexpectedValueException
     ignoreErrors:
-        - '~Call to an undefined method object::print\(\)~'
-        - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~'
+        - '~Call to an undefined method object::print\(\)~' # not good
+        - '~UnexpectedValueException is never thrown in the corresponding try block~' # not good
+        - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~' # intentionally
 
         # Probably bug
         - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable, array<int, mixed> given~'
