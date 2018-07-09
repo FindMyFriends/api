@@ -24,7 +24,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	public function testChangingWithValidReminder() {
 		$this->database->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => false, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
 		$password = \Mockery::mock(Access\Password::class);
 		$password->shouldReceive('change')->once()->with('123456789');
 		(new Access\RemindedPassword(
@@ -32,7 +32,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 			$this->database,
 			$password
 		))->change('123456789');
-		Assert::true((new Storage\NativeQuery($this->database, 'SELECT used FROM forgotten_passwords'))->field());
+		Assert::true((new Storage\NativeQuery($this->database, 'SELECT used_at IS NOT NULL FROM forgotten_passwords'))->field());
 		\Mockery::close();
 	}
 
@@ -52,7 +52,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnChangingWithUsedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => true, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
 			$reminder,
 			$this->database,
@@ -65,7 +65,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnUsingCaseInsensitiveReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => false, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
 			strtoupper($reminder),
 			$this->database,

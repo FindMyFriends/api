@@ -26,8 +26,8 @@ final class SecureForgottenPasswords implements ForgottenPasswords {
 			throw new \UnexpectedValueException('The email does not exist');
 		$reminder = (new Storage\TypedQuery(
 			$this->database,
-			"INSERT INTO forgotten_passwords (seeker_id, reminder, reminded_at, used, expire_at) VALUES
-			(?, ?, NOW(), FALSE, NOW() + INTERVAL '31 MINUTE')
+			"INSERT INTO forgotten_passwords (seeker_id, reminder, reminded_at, expire_at) VALUES
+			(?, ?, NOW(), NOW() + INTERVAL '31 MINUTE')
 			RETURNING reminder",
 			[$this->id($email), bin2hex(random_bytes(50)) . ':' . sha1($email)]
 		))->field();

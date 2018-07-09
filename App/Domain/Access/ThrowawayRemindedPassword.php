@@ -45,7 +45,7 @@ final class ThrowawayRemindedPassword implements Password {
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?
-			AND used = TRUE',
+			AND used_at IS NOT NULL',
 			[$reminder]
 		))->field();
 	}

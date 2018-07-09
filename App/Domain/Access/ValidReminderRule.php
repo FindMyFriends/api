@@ -33,7 +33,7 @@ final class ValidReminderRule implements Validation\Rule {
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?
-			AND used = FALSE
+			AND used_at IS NULL
 			AND expire_at > NOW()',
 			[$subject]
 		))->field();

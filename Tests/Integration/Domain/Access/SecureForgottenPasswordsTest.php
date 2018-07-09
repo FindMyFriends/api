@@ -30,7 +30,7 @@ final class SecureForgottenPasswordsTest extends Tester\TestCase {
 			'SELECT * FROM forgotten_passwords'
 		))->row();
 		Assert::same(1, $row['seeker_id']);
-		Assert::false($row['used']);
+		Assert::null($row['used_at']);
 	}
 
 	/**

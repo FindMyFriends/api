@@ -24,7 +24,7 @@ final class ThrowawayRemindedPasswordTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnAlreadyUsedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => true, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		(new Access\ThrowawayRemindedPassword(
 			$reminder,
 			$this->database,
@@ -34,7 +34,7 @@ final class ThrowawayRemindedPasswordTest extends Tester\TestCase {
 
 	public function testUsingUnusedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => false, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => null, 'reminder' => $reminder]))->try();
 		Assert::noError(function() use ($reminder) {
 			(new Access\ThrowawayRemindedPassword(
 				$reminder,

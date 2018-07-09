@@ -288,11 +288,11 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO forgotten_passwords (seeker_id, reminded_at, reminder, used, expire_at) VALUES (
+  INSERT INTO forgotten_passwords (seeker_id, reminded_at, reminder, used_at, expire_at) VALUES (
     samples.random_if_not_exists((SELECT samples.seeker()), replacements, 'seeker_id'),
     samples.random_if_not_exists(NOW()::text, replacements, 'reminded_at')::timestamptz,
     samples.random_if_not_exists(substr(md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text) || md5(random()::text), 1, 141), replacements, 'reminder'),
-    samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'used')::bool,
+    CASE WHEN replacements ->> 'used_at' IS NULL THEN NULL ELSE samples.random_if_not_exists(NOW()::text, replacements, 'used_at')::timestamptz END,
     samples.random_if_not_exists((NOW() + INTERVAL '2 MINUTE')::text, replacements, 'expire_at')::timestamptz
   )
   RETURNING id

@@ -2104,8 +2104,8 @@ CREATE UNIQUE INDEX etags_entity_ukey ON etags USING btree (lower((entity)::text
 CREATE TABLE access.forgotten_passwords (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   seeker_id integer NOT NULL,
-  reminder text NOT NULL,
-  used boolean NOT NULL,
+  reminder text NOT NULL UNIQUE,
+  used_at timestamp with time zone,
   reminded_at timestamp with time zone NOT NULL,
   expire_at timestamp with time zone NOT NULL,
   CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)

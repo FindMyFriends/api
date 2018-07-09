@@ -42,7 +42,7 @@ final class RemindedPassword implements Password {
 				(new Storage\TypedQuery(
 					$this->database,
 					'UPDATE forgotten_passwords
-					SET used = TRUE
+					SET used_at = now()
 					WHERE reminder IS NOT DISTINCT FROM ?',
 					[$this->reminder]
 				))->execute();
@@ -56,7 +56,7 @@ final class RemindedPassword implements Password {
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?
-			AND used = FALSE',
+			AND used_at IS NULL',
 			[$reminder]
 		))->field();
 	}

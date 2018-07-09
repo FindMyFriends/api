@@ -29,7 +29,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 
 	public function testInvalidAsUsedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => true, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		$rule = new Access\ValidReminderRule($this->database);
 		Assert::exception(function() use ($rule, $reminder) {
 			$rule->apply($reminder);
@@ -43,7 +43,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData(
 			$this->database,
 			'forgotten_password',
-			['used' => true, 'reminder' => $reminder, 'reminded_at' => '2004-01-01', 'expire_at' => '2005-01-01']
+			['used_at' => date('Y-m-d'), 'reminder' => $reminder, 'reminded_at' => '2004-01-01', 'expire_at' => '2005-01-01']
 		))->try();
 		$rule = new Access\ValidReminderRule($this->database);
 		Assert::exception(function() use ($rule, $reminder) {
@@ -58,7 +58,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 			$this->database,
 			'forgotten_password',
 			[
-				'used' => false,
+				'used_at' => null,
 				'reminder' => $reminder,
 				'expire_at' => (new \DateTimeImmutable())->format('Y-m-d H:i'),
 			]
