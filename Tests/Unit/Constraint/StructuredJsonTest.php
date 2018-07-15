@@ -33,25 +33,6 @@ final class StructuredJsonTest extends Tester\TestCase {
 		))->apply(['general' => ['firstname' => 'Foo']]);
 	}
 
-	public function testAddingDefaultValues() {
-		Assert::same(
-			['foo' => 'ok', 'bar' => null],
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(__DIR__ . '/../../fixtures/jsonSchema/missingFieldWithDefault.json')
-			))->apply(['foo' => 'ok'])
-		);
-	}
-
-	public function testSatisfactionWithoutPassingDefaultValues() {
-		$subject = ['foo' => 'ok'];
-		Assert::true(
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(__DIR__ . '/../../fixtures/jsonSchema/missingFieldWithDefault.json')
-			))->satisfied($subject)
-		);
-		Assert::same(['foo' => 'ok'], $subject);
-	}
-
 	public function testNoErrorOnEmptyInput() {
 		Assert::noError(function() {
 			(new Constraint\StructuredJson(

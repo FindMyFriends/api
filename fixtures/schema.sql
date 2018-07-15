@@ -32,7 +32,7 @@ CREATE TYPE roles AS ENUM (
 );
 
 CREATE TYPE approximate_timestamptz AS (
-  moment timestamp WITH TIME ZONE,
+  moment timestamp with time zone,
   timeline_side timeline_sides,
   approximation interval
 );
@@ -939,6 +939,14 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER seekers_row_ai_trigger AFTER INSERT ON seekers FOR EACH ROW EXECUTE PROCEDURE seekers_trigger_row_ai();
 
+CREATE TABLE locations (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  coordinates point NOT NULL,
+  met_at approximate_timestamptz NOT NULL,
+  CONSTRAINT locations_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
+  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
+);
+
 
 CREATE TABLE evolutions (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -953,22 +961,12 @@ CREATE TABLE evolutions (
 CREATE INDEX evolutions_description_id_index ON evolutions USING btree (description_id);
 CREATE INDEX evolutions_seeker_id_index ON evolutions USING btree (seeker_id);
 
-CREATE FUNCTION is_evolution_permitted(in_evolution_id evolutions.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+CREATE FUNCTION is_evolution_owned(in_evolution_id evolutions.id%type, in_seeker_id seekers.id%type) RETURNS boolean
 AS $$
 SELECT EXISTS(
   SELECT 1
   FROM evolutions
   WHERE id = in_evolution_id AND seeker_id = in_seeker_id
-) OR (
-  SELECT EXISTS(
-    SELECT 1
-    FROM soulmates
-    WHERE evolution_id = in_evolution_id AND demand_id IN (
-      SELECT id
-      FROM demands
-      WHERE seeker_id = in_seeker_id
-    )
-  )
 );
 $$
 LANGUAGE SQL
@@ -1079,15 +1077,49 @@ LANGUAGE plpgsql;
 CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_ad();
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
 
-CREATE TABLE locations (
+
+CREATE TABLE evolution_locations (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  coordinates point NOT NULL,
-  place text,
-  met_at approximate_timestamptz NOT NULL,
-  CONSTRAINT locations_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
-  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
+  evolution_id integer NOT NULL,
+  location_id integer NOT NULL,
+  assigned_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
+  CONSTRAINT evolution_locations_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT evolution_locations_location_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE VIEW collective_evolution_locations AS
+  SELECT location_id AS id, evolution_id, coordinates, met_at, assigned_at
+  FROM locations
+  JOIN evolution_locations ON evolution_locations.location_id = locations.id;
+
+CREATE FUNCTION is_location_owned(in_location_id locations.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT EXISTS(
+  SELECT 1
+  FROM evolution_locations
+  JOIN evolutions ON evolutions.id = evolution_locations.evolution_id
+  WHERE location_id = in_location_id AND evolutions.seeker_id = in_seeker_id
+);
+$$
+LANGUAGE SQL
+VOLATILE;
+
+CREATE FUNCTION collective_evolution_locations_trigger_row_ii() RETURNS trigger
+AS $$
+BEGIN
+  WITH inserted_location AS (
+    INSERT INTO locations (coordinates, met_at) VALUES (new.coordinates, new.met_at)
+    RETURNING id
+  )
+  INSERT INTO evolution_locations (evolution_id, location_id) VALUES (new.evolution_id, (SELECT id FROM inserted_location));
+  RETURN new;
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER collective_evolution_locations_trigger_row_ii INSTEAD OF INSERT ON collective_evolution_locations FOR EACH ROW EXECUTE PROCEDURE collective_evolution_locations_trigger_row_ii();
 
 CREATE TABLE demands (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1643,9 +1675,8 @@ BEGIN
       new.tooth_braces
     )::flat_description
   );
-  INSERT INTO locations (coordinates, place, met_at) VALUES (
+  INSERT INTO locations (coordinates, met_at) VALUES (
     new.location_coordinates,
-    NULL,
     new.location_met_at
   )
   RETURNING id

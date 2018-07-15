@@ -54,6 +54,10 @@ $seeker = new FindMyFriends\Schema\Seeker\Structure($database);
 $schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Seeker/schema/get.json'));
 $schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Seekers/schema/post.json'));
 
-$seeker = new FindMyFriends\Schema\Token\Structure();
-$schemas->save($seeker->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Token/schema/get.json'));
-$schemas->save($seeker->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Tokens/schema/post.json'));
+$token = new FindMyFriends\Schema\Token\Structure();
+$schemas->save($token->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Token/schema/get.json'));
+$schemas->save($token->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Tokens/schema/post.json'));
+
+$location = new FindMyFriends\Schema\Location\Structure($database);
+$schemas->save($location->get(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Evolution/Locations/schema/get.json'));
+$schemas->save($location->post(), new SplFileInfo(__DIR__ . '/../App/Endpoint/Evolution/Locations/schema/post.json'));

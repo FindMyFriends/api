@@ -10,9 +10,9 @@ final class Set implements Sql\Set {
 	/** @var \FindMyFriends\Sql\Description\Set */
 	private $set;
 
-	public function __construct(Sql\Clause $clause, array $parameters) {
+	public function __construct(Sql\Statement $statement, array $parameters) {
 		$this->set = new Description\Set(
-			$clause,
+			$statement,
 			[
 				'evolved_at' => ':evolved_at',
 				'general_age' => "int4range(:general_age_from, :general_age_to, '[)')",

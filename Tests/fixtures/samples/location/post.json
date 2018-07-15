@@ -1,0 +1,11 @@
+{
+	"coordinates": {
+		"latitude": 50.1,
+		"longitude": 50.2
+	},
+	"met_at": {
+		"moment": "2017-01-01T13:58:10+00:00",
+		"timeline_side": "sooner",
+		"approximation": "PT3H"
+	}
+}

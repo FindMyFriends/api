@@ -55,7 +55,7 @@ final class DeleteTest extends Tester\TestCase {
 				$this->elasticsearch,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);
-		}, \UnexpectedValueException::class, 'You are not permitted to see this evolution change.', HTTP_FORBIDDEN);
+		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.', HTTP_FORBIDDEN);
 	}
 }
 

@@ -26,7 +26,7 @@ final class IndividualDemands implements Demands {
 	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\IndividualDemands\Select())
 					->from(['collective_demands'])
 					->where('seeker_id = :seeker_id', ['seeker_id' => $this->seeker->id()]),
@@ -54,7 +54,7 @@ final class IndividualDemands implements Demands {
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['demands'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),

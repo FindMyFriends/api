@@ -53,6 +53,7 @@ move-schemas:
 	mkdir -p www/schema/demand/soulmate_request
 	mkdir -p www/schema/demand/soulmate
 	mkdir -p www/schema/evolution
+	mkdir -p www/schema/evolution/location
 	mkdir -p www/schema/description
 	mkdir -p www/schema/soulmate
 	mkdir -p www/schema/seeker
@@ -67,6 +68,8 @@ move-schemas:
 	ln -sfn $(PWD)/App/Endpoint/Evolutions/schema/post.json www/schema/evolution/post.json
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/put.json www/schema/evolution/put.json
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/get.json www/schema/evolution/get.json
+	ln -sfn $(PWD)/App/Endpoint/Evolution/Location/schema/get.json www/schema/evolution/location/get.json
+	ln -sfn $(PWD)/App/Endpoint/Evolution/Location/schema/get.json www/schema/evolution/location/post.json
 	ln -sfn $(PWD)/App/Endpoint/Description/schema/get.json www/schema/description/get.json
 	ln -sfn $(PWD)/App/Endpoint/Description/schema/put.json www/schema/description/put.json
 	ln -sfn $(PWD)/App/Endpoint/Descriptions/schema/post.json www/schema/description/post.json

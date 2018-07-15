@@ -103,7 +103,7 @@ final class SuitedSoulmates implements Soulmates {
 	public function matches(Dataset\Selection $selection): \Iterator {
 		$matches = (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
 					->from(['suited_soulmates'])
 					->where('demand_id = ?', [$this->demand]),
@@ -121,7 +121,7 @@ final class SuitedSoulmates implements Soulmates {
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['suited_soulmates'])
 					->where('demand_id = ?', [$this->demand]),

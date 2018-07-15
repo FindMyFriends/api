@@ -38,7 +38,7 @@ final class SubsequentRequests implements Requests {
 	public function all(Dataset\Selection $selection): \Iterator {
 		$requests = (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect([
 					'id',
 					'self_id',
@@ -71,7 +71,7 @@ final class SubsequentRequests implements Requests {
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['soulmate_requests'])
 					->where('demand_id = :demand_id', ['demand_id' => $this->demand]),

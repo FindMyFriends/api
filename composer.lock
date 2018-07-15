@@ -457,12 +457,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "9e0de56931c3fb8f3e3d12708bb73767ae57e853"
+                "reference": "98cea255638f58baea85e8c1b6cb37e83be7a8df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/9e0de56931c3fb8f3e3d12708bb73767ae57e853",
-                "reference": "9e0de56931c3fb8f3e3d12708bb73767ae57e853",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/98cea255638f58baea85e8c1b6cb37e83be7a8df",
+                "reference": "98cea255638f58baea85e8c1b6cb37e83be7a8df",
                 "shasum": ""
             },
             "require": {
@@ -497,7 +497,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2018-04-20T21:39:53+00:00"
+            "time": "2018-07-08T21:18:55+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -792,12 +792,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Sql.git",
-                "reference": "0a924cac3af26cdb58b34ce89c6ab17b4295d771"
+                "reference": "cfeeb00e2b456a7ee9d4148348eb4b288f0622c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Sql/zipball/0a924cac3af26cdb58b34ce89c6ab17b4295d771",
-                "reference": "0a924cac3af26cdb58b34ce89c6ab17b4295d771",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/cfeeb00e2b456a7ee9d4148348eb4b288f0622c1",
+                "reference": "cfeeb00e2b456a7ee9d4148348eb4b288f0622c1",
                 "shasum": ""
             },
             "require": {
@@ -809,7 +809,7 @@
                 "nette/tester": "^2.0",
                 "phing/phing": "^2.16",
                 "phpstan/phpstan": "^0.9.0",
-                "slevomat/coding-standard": "^4.5"
+                "slevomat/coding-standard": "~4.5.0"
             },
             "type": "library",
             "autoload": {
@@ -835,7 +835,7 @@
                 "fluent",
                 "sql"
             ],
-            "time": "2018-05-06T14:12:07+00:00"
+            "time": "2018-07-11T20:02:45+00:00"
         },
         {
             "name": "klapuch/storage",
@@ -843,12 +843,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "6553963d36b3f5000035bfaa416657c4289f5138"
+                "reference": "320f4022c7826b06cd5822152acdc701be47998d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/6553963d36b3f5000035bfaa416657c4289f5138",
-                "reference": "6553963d36b3f5000035bfaa416657c4289f5138",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/320f4022c7826b06cd5822152acdc701be47998d",
+                "reference": "320f4022c7826b06cd5822152acdc701be47998d",
                 "shasum": ""
             },
             "require": {
@@ -894,7 +894,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-04-12T20:10:25+00:00"
+            "time": "2018-07-08T21:17:03+00:00"
         },
         {
             "name": "klapuch/ui",

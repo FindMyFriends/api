@@ -8,10 +8,10 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Evolution change which belongs only to me
+ * Location which belongs only to me
  */
-final class PermittedChange implements Change {
-	/** @var \FindMyFriends\Domain\Evolution\Change */
+final class OwnedLocation implements Location {
+	/** @var \FindMyFriends\Domain\Evolution\Location */
 	private $origin;
 
 	/** @var int */
@@ -24,7 +24,7 @@ final class PermittedChange implements Change {
 	private $owner;
 
 	public function __construct(
-		Change $origin,
+		Location $origin,
 		int $id,
 		Access\Seeker $owner,
 		\PDO $database
@@ -36,22 +36,12 @@ final class PermittedChange implements Change {
 	}
 
 	/**
-	 * @param array $changes
 	 * @throws \UnexpectedValueException
 	 */
-	public function affect(array $changes): void {
-		if (!$this->permitted($this->id))
+	public function forget(): void {
+		if (!$this->owned($this->id, $this->owner))
 			throw $this->exception($this->id);
-		$this->origin->affect($changes);
-	}
-
-	/**
-	 * @throws \UnexpectedValueException
-	 */
-	public function revert(): void {
-		if (!$this->permitted($this->id))
-			throw $this->exception($this->id);
-		$this->origin->revert();
+		$this->origin->forget();
 	}
 
 	/**
@@ -60,24 +50,24 @@ final class PermittedChange implements Change {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format {
-		if (!$this->permitted($this->id))
+		if (!$this->owned($this->id, $this->owner))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
 
-	private function permitted(int $id): bool {
+	private function owned(int $id, Access\Seeker $owner): bool {
 		return (new Storage\NativeQuery(
 			$this->database,
-			'SELECT is_evolution_permitted(:evolution, :seeker)',
-			['evolution' => $id, 'seeker' => $this->owner->id()]
+			'SELECT is_location_owned(:location, :seeker)',
+			['location' => $id, 'seeker' => $owner->id()]
 		))->field();
 	}
 
 	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
-			'You are not permitted to see this evolution change.',
+			'Location does not belong to you',
 			0,
-			new \UnexpectedValueException(sprintf('Evolution change %d is not permitted.', $id))
+			new \UnexpectedValueException(sprintf('Location %d does not belong to you.', $id))
 		);
 	}
 }

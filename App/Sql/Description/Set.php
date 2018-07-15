@@ -89,10 +89,10 @@ final class Set implements Sql\Set {
 	/** @var mixed[] */
 	private $parameters;
 
-	public function __construct(Sql\Clause $clause, array $columns, array $parameters) {
+	public function __construct(Sql\Statement $statement, array $columns, array $parameters) {
 		$this->parameters = $parameters;
 		$this->set = new Sql\AnsiSet(
-			$clause,
+			$statement,
 			array_reduce(
 				array_keys(self::CONDITIONS),
 				function (array $values, string $column): array {

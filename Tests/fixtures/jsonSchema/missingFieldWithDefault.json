@@ -2,11 +2,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "properties": {
     "bar": {
-      "default": null,
       "type": ["string", "null"]
     },
     "foo": {
-      "default": null,
       "type": ["string", "null"]
     }
   },

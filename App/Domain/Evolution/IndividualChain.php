@@ -37,7 +37,7 @@ final class IndividualChain implements Chain {
 	public function changes(Dataset\Selection $selection): \Iterator {
 		$evolutions = (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\CollectiveEvolutions\Select())
 					->from(['collective_evolutions'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
@@ -55,7 +55,7 @@ final class IndividualChain implements Chain {
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
 			$this->database,
-			new Dataset\SelectiveClause(
+			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['evolutions'])
 					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),

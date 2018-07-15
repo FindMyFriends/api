@@ -324,9 +324,8 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO locations (coordinates, place, met_at) VALUES (
+	INSERT INTO locations (coordinates, met_at) VALUES (
 		POINT(random(), random()),
-		samples.random_if_not_exists(md5(random()::text), replacements, 'place'),
 		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(1, 48)))::approximate_timestamptz
 	)
 	RETURNING id
@@ -604,7 +603,23 @@ BEGIN
 	INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
     samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
 		(SELECT description FROM samples.description(replacements)),
-		 NOW()
+		NOW()
+	)
+	RETURNING id
+	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.evolution_location(replacements jsonb = '{}') RETURNS smallint
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id smallint;
+BEGIN
+	INSERT INTO evolution_locations (evolution_id, location_id) VALUES (
+		samples.random_if_not_exists((SELECT samples.evolution(replacements)), replacements, 'evolution_id')::integer,
+		samples.random_if_not_exists((SELECT samples.location(replacements)), replacements, 'location_id')::integer
 	)
 	RETURNING id
 	INTO v_id;

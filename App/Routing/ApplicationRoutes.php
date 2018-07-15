@@ -182,6 +182,33 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
+			'evolutions/{id}/locations [GET]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Locations\Get(
+					$this->hashids['location']['hashid'],
+					$this->hashids['evolution']['hashid'],
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
+			'evolutions/{id}/locations [POST]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Locations\Post(
+					$this->hashids['location']['hashid'],
+					$this->hashids['evolution']['hashid'],
+					new Application\PlainRequest(),
+					$this->uri,
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
+			'evolutions/{evolution_id}/locations/{id} [DELETE]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Locations\Delete(
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
 			'evolutions/{id} [DELETE]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Delete(
 					$this->database,
