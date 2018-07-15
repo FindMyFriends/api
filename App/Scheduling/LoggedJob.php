@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Cron;
+namespace FindMyFriends\Scheduling;
 
 use Klapuch\Log;
 
 final class LoggedJob implements Job {
-	/** @var \FindMyFriends\Cron\Job */
+	/** @var \FindMyFriends\Scheduling\Job */
 	private $origin;
 
 	/** @var \Klapuch\Log\Logs */

@@ -6,9 +6,9 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Integration\Cron;
+namespace FindMyFriends\Integration\Scheduling;
 
-use FindMyFriends\Cron;
+use FindMyFriends\Scheduling;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
 use Tester;
@@ -21,8 +21,8 @@ final class RepeatedJobTest extends Tester\TestCase {
 
 	public function testFirstJobFulfillAlways() {
 		ob_start();
-		(new Cron\RepeatedJob(
-			new Cron\FakeJob(function () {
+		(new Scheduling\RepeatedJob(
+			new Scheduling\FakeJob(function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10H',
@@ -38,8 +38,8 @@ final class RepeatedJobTest extends Tester\TestCase {
 			['FakeJob', 'processing']
 		))->execute();
 		ob_start();
-		(new Cron\RepeatedJob(
-			new Cron\FakeJob(function () {
+		(new Scheduling\RepeatedJob(
+			new Scheduling\FakeJob(function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10H',
@@ -55,8 +55,8 @@ final class RepeatedJobTest extends Tester\TestCase {
 			['FakeJob', 'succeed']
 		))->execute();
 		ob_start();
-		(new Cron\RepeatedJob(
-			new Cron\FakeJob(function () {
+		(new Scheduling\RepeatedJob(
+			new Scheduling\FakeJob(function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10M',
@@ -77,8 +77,8 @@ final class RepeatedJobTest extends Tester\TestCase {
 			['FakeJob', 'succeed']
 		))->execute();
 		ob_start();
-		(new Cron\RepeatedJob(
-			new Cron\FakeJob(function () {
+		(new Scheduling\RepeatedJob(
+			new Scheduling\FakeJob(function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10M',

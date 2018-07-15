@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Cron;
+namespace FindMyFriends\Scheduling;
 
 final class SerialJobs implements Job {
-	/** @var \FindMyFriends\Cron\Job[] */
+	/** @var \FindMyFriends\Scheduling\Job[] */
 	private $origins;
 
 	public function __construct(Job ...$origins) {

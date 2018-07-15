@@ -28,4 +28,4 @@ parameters:
         - '~Method FindMyFriends\\Domain\\Access\\FakeForgottenPasswords::remind\(\) should return FindMyFriends\\Domain\\Access\\Password but returns FindMyFriends\\Domain\\Access\\Password\|null~'
         - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::enter\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
         - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::exit\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
-        - '~Method FindMyFriends\\Cron\\FakeJob::name\(\) should return string but returns string\|null~'
+        - '~Method FindMyFriends\\Scheduling\\FakeJob::name\(\) should return string but returns string\|null~'

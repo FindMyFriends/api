@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := check
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests
 
-PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests Commands www
+PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
 
 check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
@@ -9,13 +9,13 @@ ci: validate-composer.lock lint phpcpd phpstan phpcs tests count-postgres-tests 
 init: lint generate-schemas move-schemas
 
 lint:
-	vendor/bin/parallel-lint -e php,phpt App Tests Commands www
+	vendor/bin/parallel-lint -e php,phpt App Tests www
 
 phpcpd:
 	vendor/bin/phpcpd App --exclude Endpoint/ --exclude Sql/ --exclude Task/
 
 phpstan:
-	vendor/bin/phpstan analyse -l max -c phpstan.neon App Tests/Misc Tests/TestCase Commands
+	vendor/bin/phpstan analyse -l max -c phpstan.neon App Tests/Misc Tests/TestCase
 
 phpcs:
 	vendor/bin/phpcs $(PHPCS_ARGS)
@@ -43,7 +43,7 @@ validate-composer.lock:
 	composer validate --no-check-all --strict
 
 generate-schemas:
-	php Commands/schema.php
+	php App/Scheduling/index.php
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative

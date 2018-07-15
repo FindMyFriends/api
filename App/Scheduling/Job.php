@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Cron;
+namespace FindMyFriends\Scheduling;
 
 interface Job {
 	public function fulfill(): void;

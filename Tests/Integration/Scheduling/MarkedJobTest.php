@@ -6,9 +6,9 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Integration\Cron;
+namespace FindMyFriends\Integration\Scheduling;
 
-use FindMyFriends\Cron;
+use FindMyFriends\Scheduling;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
 use Tester;
@@ -20,7 +20,7 @@ final class MarkedJobTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testSubsequentId() {
-		(new Cron\MarkedJob(new Cron\FakeJob(null, 'FakeJob'), $this->database))->fulfill();
+		(new Scheduling\MarkedJob(new Scheduling\FakeJob(null, 'FakeJob'), $this->database))->fulfill();
 		$rows = (new Storage\TypedQuery(
 			$this->database,
 			'SELECT *
@@ -39,8 +39,8 @@ final class MarkedJobTest extends Tester\TestCase {
 	public function testMarkingExceptionAsFailed() {
 		Assert::exception(
 			function() {
-				(new Cron\MarkedJob(
-					new Cron\FakeJob(function () {
+				(new Scheduling\MarkedJob(
+					new Scheduling\FakeJob(function () {
 						throw new \DomainException('Oops');
 					}, 'FakeJob'),
 					$this->database

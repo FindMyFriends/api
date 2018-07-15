@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Cron;
+namespace FindMyFriends\Scheduling;
 
 use Klapuch\Storage;
 
 final class MarkedJob implements Job {
-	/** @var \FindMyFriends\Cron\Job */
+	/** @var \FindMyFriends\Scheduling\Job */
 	private $origin;
 
 	/** @var \Klapuch\Storage\MetaPDO */

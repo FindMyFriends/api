@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Cron;
+namespace FindMyFriends\Scheduling;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -29,13 +29,6 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 	->setHosts($configuration['ELASTICSEARCH']['hosts'])
 	->build();
 
-$logs = new Log\ChainedLogs(
-	new FindMyFriends\Log\FilesystemLogs(
-		new Log\DynamicLocation($configuration['LOGS']['directory'])
-	),
-	new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
-);
-
 (new LoggedJob(
 	new SerialJobs(
 		new RepeatedJob(
@@ -45,7 +38,14 @@ $logs = new Log\ChainedLogs(
 			),
 			'PT10M',
 			$database
-		)
+		),
+		new MarkedJob(new JsonSchemaJob($database), $database),
+		new MarkedJob(new ElasticsearchReindexJob($elasticsearch), $database)
 	),
-	$logs
+	new Log\ChainedLogs(
+		new FindMyFriends\Log\FilesystemLogs(
+			new Log\DynamicLocation($configuration['LOGS']['directory'])
+		),
+		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
+	)
 ))->fulfill();
