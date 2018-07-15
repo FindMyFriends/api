@@ -24,20 +24,21 @@ final class Delete implements Application\View {
 
 	/**
 	 * @param array $parameters
+	 * @throws \UnexpectedValueException
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Evolution\HarnessedLocation(
-			new Evolution\OwnedLocation(
-				new Evolution\StoredLocation(
+		(new Evolution\ChainedLocation(
+			new Evolution\HarnessedLocation(
+				new Evolution\OwnedLocation(
+					new Evolution\FakeLocation(),
 					$parameters['id'],
+					$this->seeker,
 					$this->database
 				),
-				$parameters['id'],
-				$this->seeker,
-				$this->database
+				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+			new Evolution\StoredLocation($parameters['id'], $this->database)
 		))->forget();
 		return new Response\EmptyResponse();
 	}

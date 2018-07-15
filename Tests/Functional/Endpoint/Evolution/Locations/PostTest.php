@@ -12,7 +12,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Hashids\Hashids;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
@@ -28,8 +27,6 @@ final class PostTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Evolution\Locations\Post(
-			new Hashids(),
-			new Hashids(),
 			new Application\FakeRequest(
 				new Output\FakeFormat(
 					file_get_contents(__DIR__ . '/../../../../fixtures/samples/location/post.json')
@@ -48,8 +45,6 @@ final class PostTest extends Tester\TestCase {
 	public function test400OnBadInput() {
 		Assert::exception(function () {
 			(new Endpoint\Evolution\Locations\Post(
-				new Hashids(),
-				new Hashids(),
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'evolutions', []),
 				$this->database,

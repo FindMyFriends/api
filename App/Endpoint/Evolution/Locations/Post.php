@@ -9,19 +9,12 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Http\CreatedResourceUrl;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
-use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
-
-	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
-
-	/** @var \Hashids\HashidsInterface */
-	private $evolutionHashids;
 
 	/** @var \Klapuch\Application\Request */
 	private $request;
@@ -36,15 +29,11 @@ final class Post implements Application\View {
 	private $seeker;
 
 	public function __construct(
-		HashidsInterface $locationHashids,
-		HashidsInterface $evolutionHashids,
 		Application\Request $request,
 		Uri\Uri $url,
 		Storage\MetaPDO $database,
 		Access\Seeker $seeker
 	) {
-		$this->locationHashids = $locationHashids;
-		$this->evolutionHashids = $evolutionHashids;
 		$this->request = $request;
 		$this->url = $url;
 		$this->database = $database;
@@ -57,18 +46,17 @@ final class Post implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Evolution\PublicLocations(
+		(new Evolution\ChainedLocations(
 			new Evolution\HarnessedLocations(
 				new Evolution\OwnedChangeLocations(
-					new Evolution\ChangeLocations($parameters['id'], $this->database),
+					new Evolution\FakeLocations(),
 					$this->seeker,
 					$parameters['id'],
 					$this->database
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			$this->locationHashids,
-			$this->evolutionHashids
+			new Evolution\ChangeLocations($parameters['id'], $this->database)
 		))->track(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA)

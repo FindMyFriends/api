@@ -193,8 +193,6 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id}/locations [POST]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Locations\Post(
-					$this->hashids['location']['hashid'],
-					$this->hashids['evolution']['hashid'],
 					new Application\PlainRequest(),
 					$this->uri,
 					$this->database,
