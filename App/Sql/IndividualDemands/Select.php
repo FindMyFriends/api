@@ -10,18 +10,15 @@ final class Select implements Sql\Select {
 	/** @var \FindMyFriends\Sql\Description\Select */
 	private $select;
 
-	public function __construct(array $additionalColumns = []) {
+	public function __construct() {
 		$this->select = new Description\Select(
-			array_merge(
-				[
-					'seeker_id',
-					'created_at',
-					'location_coordinates',
-					'location_met_at',
-					'note',
-				],
-				$additionalColumns
-			)
+			[
+				'seeker_id',
+				'created_at',
+				'location_coordinates',
+				'location_met_at',
+				'note',
+			]
 		);
 	}
 

@@ -59,9 +59,7 @@ final class StoredDemand implements Demand {
 			$this->database,
 			(new FindMyFriends\Sql\IndividualDemands\Set(
 				new Sql\AnsiUpdate('collective_demands'),
-				(new Sql\FlatParameters(
-					new Sql\UniqueParameters($description)
-				))->binds()
+				$description
 			))->where('id = :id', ['id' => $this->id])
 		))->execute();
 	}

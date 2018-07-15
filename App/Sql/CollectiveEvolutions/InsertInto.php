@@ -10,10 +10,10 @@ final class InsertInto implements Sql\InsertInto {
 	/** @var \FindMyFriends\Sql\Description\InsertInto */
 	private $insert;
 
-	public function __construct(string $table, array $additionalParameters = []) {
+	public function __construct(string $table) {
 		$this->insert = new Description\InsertInto(
 			$table,
-			$additionalParameters + [
+			[
 				'evolved_at' => ':evolved_at',
 				'seeker_id' => ':seeker',
 			]

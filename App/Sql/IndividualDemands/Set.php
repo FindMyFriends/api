@@ -27,7 +27,9 @@ final class Set implements Sql\Set {
 	private $parameters;
 
 	public function __construct(Sql\Statement $statement, array $parameters) {
-		$this->parameters = $parameters;
+		$this->parameters = (new Sql\FlatParameters(
+			new Sql\UniqueParameters($parameters)
+		))->binds();
 		$this->set = new Description\Set(
 			$statement,
 			array_reduce(
@@ -40,7 +42,7 @@ final class Set implements Sql\Set {
 				},
 				[]
 			),
-			$parameters
+			$this->parameters
 		);
 	}
 

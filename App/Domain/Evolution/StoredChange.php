@@ -29,9 +29,7 @@ final class StoredChange implements Change {
 			$this->database,
 			(new FindMyFriends\Sql\CollectiveEvolutions\Set(
 				new Sql\AnsiUpdate('collective_evolutions'),
-				(new Sql\FlatParameters(
-					new Sql\UniqueParameters($changes)
-				))->binds()
+				$changes
 			))->where('id = :id', ['id' => $this->id])
 		))->execute();
 	}

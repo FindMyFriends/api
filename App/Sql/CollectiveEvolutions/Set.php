@@ -17,7 +17,9 @@ final class Set implements Sql\Set {
 				'evolved_at' => ':evolved_at',
 				'general_age' => "int4range(:general_age_from, :general_age_to, '[)')",
 			],
-			$parameters
+			(new Sql\FlatParameters(
+				new Sql\UniqueParameters($parameters)
+			))->binds()
 		);
 	}
 
