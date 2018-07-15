@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace FindMyFriends\Scheduling\Task;
 
+use FindMyFriends\Scheduling;
 use Klapuch\Storage;
 
-final class RefreshMaterializedViewJob implements Job {
+final class RefreshMaterializedViewJob implements Scheduling\Job {
 	/** @var string */
 	private $view;
 

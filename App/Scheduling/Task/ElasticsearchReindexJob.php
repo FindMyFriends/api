@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace FindMyFriends\Scheduling\Task;
 
 use Elasticsearch\Client;
+use FindMyFriends\Scheduling;
 
-final class ElasticsearchReindexJob implements Job {
+final class ElasticsearchReindexJob implements Scheduling\Job {
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 

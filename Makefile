@@ -43,7 +43,7 @@ validate-composer.lock:
 	composer validate --no-check-all --strict
 
 generate-schemas:
-	php App/Scheduling/index.php
+	php App/Scheduling/index.php JsonSchemaJob
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
