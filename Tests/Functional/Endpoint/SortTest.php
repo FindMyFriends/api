@@ -12,6 +12,7 @@ use FindMyFriends\Endpoint\Demand;
 use FindMyFriends\Endpoint\Demands;
 use FindMyFriends\Endpoint\Evolutions;
 use FindMyFriends\Schema;
+use Klapuch\Dataset;
 use Klapuch\Http;
 use Klapuch\Uri;
 use Tester;
@@ -27,6 +28,24 @@ final class SortTest extends Tester\TestCase {
 		$response = $this->response($endpoint);
 		Assert::same('[]', $response->body());
 		Assert::same(HTTP_OK, $response->code());
+	}
+
+	public function testNumberOfSorts() {
+		if (!class_exists(Dataset\RestSort::class))
+			Assert::fail('Class RestSort is no longer exist and is not possible to check sort occurrence');
+		Assert::same(
+			count($this->sorts()),
+			iterator_count(
+				new \CallbackFilterIterator(
+					new \RecursiveIteratorIterator(
+						new \RecursiveDirectoryIterator(__DIR__ . '/../../../App/Endpoint')
+					),
+					function (\SplFileInfo $file): bool {
+						return strpos(file_get_contents($file->getPathname()), 'new Dataset\RestSort(') !== false;
+					}
+				)
+			)
+		);
 	}
 
 	private function response(string $endpoint): Http\Response {
