@@ -7,22 +7,24 @@ use FindMyFriends\Scheduling;
 use Klapuch\Storage;
 
 final class RefreshMaterializedView implements Scheduling\Job {
-	/** @var string */
-	private $view;
+	private const VIEWS = [
+		'prioritized_evolution_fields',
+	];
 
 	/** @var \PDO */
 	private $database;
 
-	public function __construct(string $view, \PDO $database) {
-		$this->view = $view;
+	public function __construct(\PDO $database) {
 		$this->database = $database;
 	}
 
 	public function fulfill(): void {
-		(new Storage\NativeQuery(
-			$this->database,
-			sprintf('REFRESH MATERIALIZED VIEW CONCURRENTLY %s', $this->view)
-		))->execute();
+		foreach (self::VIEWS as $view) {
+			(new Storage\NativeQuery(
+				$this->database,
+				sprintf('REFRESH MATERIALIZED VIEW CONCURRENTLY %s', $view)
+			))->execute();
+		}
 	}
 
 	public function name(): string {

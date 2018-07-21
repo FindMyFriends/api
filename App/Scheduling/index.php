@@ -33,26 +33,8 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 (new LoggedJob(
 	new SelectedJob(
 		$argv[1],
-		new MarkedJob(
-			new GroupedJob(
-				'cron',
-				new SerialJobs(
-					new RepeatedJob(
-						new MarkedJob(
-							new Task\RefreshMaterializedView('prioritized_evolution_fields', $database),
-							$database
-						),
-						'PT10M',
-						$database
-					)
-				)
-			),
-			$database
-		),
-		new MarkedJob(
-			new Task\RefreshMaterializedView('prioritized_evolution_fields', $database),
-			$database
-		),
+		new MarkedJob(new Task\Cron($database), $database),
+		new MarkedJob(new Task\RefreshMaterializedView($database), $database),
 		new MarkedJob(new Task\GenerateJsonSchema($database), $database),
 		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch), $database),
 		new MarkedJob(

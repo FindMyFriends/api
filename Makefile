@@ -53,6 +53,9 @@ generate-schemas:
 generate-routes:
 	php App/Scheduling/index.php GenerateNginxRoutes
 
+cron:
+	php App/Scheduling/index.php Cron
+
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
 
