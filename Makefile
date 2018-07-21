@@ -1,11 +1,12 @@
 .DEFAULT_GOAL := check
-.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes
+.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes check-test-extensions
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
+CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
-ci: validate-composer.lock lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
+check: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
+ci: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint generate-schemas move-schemas
 
 lint:
@@ -22,6 +23,10 @@ phpcs:
 
 phpcbf:
 	vendor/bin/phpcbf $(PHPCS_ARGS)
+
+check-test-extensions:
+	@echo "Checking PHP test extensions..."
+	@if $(CHECK_TEST_EXTENSIONS) ; then exit 1 ; else echo "Test filenames are OK" ; fi
 
 tests:
 	vendor/bin/tester $(TESTER_ARGS) Tests/
