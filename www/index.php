@@ -27,25 +27,9 @@ $redis = new Predis\Client($configuration['REDIS']['uri']);
 $elasticsearch = Elasticsearch\ClientBuilder::create()
 	->setHosts($configuration['ELASTICSEARCH']['hosts'])
 	->build();
-$database = new Storage\MetaPDO(
-	new Storage\SideCachedPDO(
-		new Storage\SafePDO(
-			$configuration['DATABASE']['dsn'],
-			$configuration['DATABASE']['user'],
-			$configuration['DATABASE']['password']
-		)
-	),
-	$redis
-);
-$rabbitMq = new PhpAmqpLib\Connection\AMQPLazyConnection(
-	$configuration['RABBITMQ']['host'],
-	$configuration['RABBITMQ']['port'],
-	$configuration['RABBITMQ']['user'],
-	$configuration['RABBITMQ']['pass'],
-	$configuration['RABBITMQ']['vhost']
-);
 
 echo (new class(
+	$configuration,
 	new Log\ChainedLogs(
 		new FindMyFriends\Log\FilesystemLogs(
 			new Log\DynamicLocation($configuration['LOGS']['directory'])
@@ -53,69 +37,79 @@ echo (new class(
 		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
 	),
 	new Routing\MatchingRoutes(
-		new Routing\MappedRoutes(
-			new Routing\QueryRoutes(
-				new Routing\PathRoutes(
-					new Routing\ShortcutRoutes(
-						new Routing\HttpMethodRoutes(
-							new FindMyFriends\Routing\ApplicationRoutes(
-								$uri,
-								$database,
-								$redis,
-								$elasticsearch,
-								$rabbitMq,
-								new Encryption\AES256CBC($configuration['KEYS']['password']),
-								$configuration['HASHIDS']
-							),
-							$_SERVER['REQUEST_METHOD']
+		new FindMyFriends\Routing\NginxMatchedRoutes(
+			new FindMyFriends\Routing\ApplicationRoutes(
+				$uri,
+				new Storage\MetaPDO(
+					new Storage\SideCachedPDO(
+						new Storage\SafePDO(
+							$configuration['DATABASE']['dsn'],
+							$configuration['DATABASE']['user'],
+							$configuration['DATABASE']['password']
 						)
 					),
-					$uri
+					$redis
 				),
-				$uri
-			),
-			function(array $match) use ($uri, $configuration): Output\Template {
-				/** @var \Klapuch\Application\View $destination */
-				[$source, $destination] = [key($match), current($match)];
-				return new Application\RawTemplate(
-					$destination->response(
-						(new FindMyFriends\Routing\SuitedHashIdMask(
-							new Routing\TypedMask(
-								new Routing\CombinedMask(
-									new Routing\PathMask($source, $uri),
-									new Routing\QueryMask($source, $uri)
-								)
-							),
-							$configuration['HASHIDS'],
-							$source
-						))->parameters()
-					)
-				);
-			}
+				$redis,
+				$elasticsearch,
+				new PhpAmqpLib\Connection\AMQPLazyConnection(
+					$configuration['RABBITMQ']['host'],
+					$configuration['RABBITMQ']['port'],
+					$configuration['RABBITMQ']['user'],
+					$configuration['RABBITMQ']['pass'],
+					$configuration['RABBITMQ']['vhost']
+				),
+				new Encryption\AES256CBC($configuration['KEYS']['password']),
+				$configuration['HASHIDS']
+			)
 		),
 		$uri,
 		$_SERVER['REQUEST_METHOD']
 	)
 ) implements Output\Template {
-	/** @var \Klapuch\Log\Logs */
-	private $logs;
+	/** @var mixed[] */
+	private $configuration;
 
 	/** @var \Klapuch\Routing\Routes */
 	private $routes;
 
-	public function __construct(Log\Logs $logs, Routing\Routes $routes) {
-		$this->logs = $logs;
+	/** @var \Klapuch\Log\Logs */
+	private $logs;
+
+	public function __construct(
+		array $configuration,
+		Log\Logs $logs,
+		Routing\Routes $routes
+	) {
+		$this->configuration = $configuration;
 		$this->routes = $routes;
+		$this->logs = $logs;
 	}
 
 	public function render(array $variables = []): string {
 		try {
-			return current($this->routes->matches())->render($variables);
-		} catch (\Throwable $ex) {
-			$this->logs->put($ex, new Log\CurrentEnvironment());
-			if ($ex instanceof \UnexpectedValueException) {
+			$match = $this->routes->matches();
+			/** @var \Klapuch\Application\View $destination */
+			[$source, $destination] = [key($match), current($match)];
+			return (new Application\RawTemplate(
+				$destination->response(
+					(new FindMyFriends\Routing\SuitedHashIdMask(
+						$this->configuration['ROUTES'][$source]['types'] ?? [],
+						new Routing\TypedMask(
+							new Routing\CombinedMask(
+								new FindMyFriends\Routing\NginxMask(),
+								new FindMyFriends\Routing\CommonMask()
+							)
+						),
+						$this->configuration['HASHIDS']
+					))->parameters()
+				)
+			))->render();
+		} catch (\Throwable $e) {
+			$this->logs->put($e, new Log\CurrentEnvironment());
+			if ($e instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
-					new FindMyFriends\Response\JsonError($ex)
+					new FindMyFriends\Response\JsonError($e)
 				))->render();
 			}
 			return (new Application\RawTemplate(

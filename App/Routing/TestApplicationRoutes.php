@@ -66,10 +66,10 @@ final class TestApplicationRoutes implements Routing\Routes {
 			),
 			new Encryption\FakeCipher(),
 			[
-				'location' => ['hashid' => new Hashids()],
-				'demand' => ['hashid' => new Hashids()],
-				'evolution' => ['hashid' => new Hashids()],
-				'soulmate' => ['hashid' => new Hashids()],
+				'location' => new Hashids(),
+				'demand' => new Hashids(),
+				'evolution' => new Hashids(),
+				'soulmate' => new Hashids(),
 			]
 		))->matches();
 	}

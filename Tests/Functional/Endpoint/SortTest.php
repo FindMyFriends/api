@@ -11,7 +11,6 @@ namespace FindMyFriends\Functional\Endpoint;
 use FindMyFriends\Endpoint\Demand;
 use FindMyFriends\Endpoint\Demands;
 use FindMyFriends\Endpoint\Evolutions;
-use FindMyFriends\Routing;
 use FindMyFriends\Schema;
 use Klapuch\Http;
 use Klapuch\Uri;
@@ -28,20 +27,6 @@ final class SortTest extends Tester\TestCase {
 		$response = $this->response($endpoint);
 		Assert::same('[]', $response->body());
 		Assert::same(HTTP_OK, $response->code());
-	}
-
-	public function testNumberOfSortsForTest() {
-		Assert::same(
-			count($this->sorts()),
-			count(
-				preg_grep(
-					'~sort=~',
-					array_keys(
-						(new Routing\TestApplicationRoutes())->matches()
-					)
-				)
-			)
-		);
 	}
 
 	private function response(string $endpoint): Http\Response {

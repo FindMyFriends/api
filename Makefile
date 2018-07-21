@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := check
-.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests
+.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
@@ -43,7 +43,10 @@ validate-composer.lock:
 	composer validate --no-check-all --strict
 
 generate-schemas:
-	php App/Scheduling/index.php JsonSchemaJob
+	php App/Scheduling/index.php GenerateJsonSchema
+
+generate-routes:
+	php App/Scheduling/index.php GenerateNginxRoutes
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative

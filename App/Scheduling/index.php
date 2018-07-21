@@ -8,6 +8,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 use Elasticsearch;
 use FindMyFriends;
 use FindMyFriends\Configuration;
+use Klapuch\Configuration\ValidIni;
 use Klapuch\Log;
 use Klapuch\Storage;
 use Predis;
@@ -38,7 +39,7 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 				new SerialJobs(
 					new RepeatedJob(
 						new MarkedJob(
-							new Task\RefreshMaterializedViewJob('prioritized_evolution_fields', $database),
+							new Task\RefreshMaterializedView('prioritized_evolution_fields', $database),
 							$database
 						),
 						'PT10M',
@@ -49,11 +50,18 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 			$database
 		),
 		new MarkedJob(
-			new Task\RefreshMaterializedViewJob('prioritized_evolution_fields', $database),
+			new Task\RefreshMaterializedView('prioritized_evolution_fields', $database),
 			$database
 		),
-		new MarkedJob(new Task\JsonSchemaJob($database), $database),
-		new MarkedJob(new Task\ElasticsearchReindexJob($elasticsearch), $database)
+		new MarkedJob(new Task\GenerateJsonSchema($database), $database),
+		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch), $database),
+		new MarkedJob(
+			new Task\GenerateNginxRoutes(
+				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
+				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
+			),
+			$database
+		)
 	),
 	new Log\ChainedLogs(
 		new FindMyFriends\Log\FilesystemLogs(

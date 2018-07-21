@@ -6,7 +6,7 @@ namespace FindMyFriends\Scheduling\Task;
 use FindMyFriends\Scheduling;
 use FindMyFriends\Schema;
 
-final class JsonSchemaJob implements Scheduling\Job {
+final class GenerateJsonSchema implements Scheduling\Job {
 	/** @var \PDO */
 	private $database;
 
@@ -62,6 +62,6 @@ final class JsonSchemaJob implements Scheduling\Job {
 	}
 
 	public function name(): string {
-		return 'JsonSchemaJob';
+		return 'GenerateJsonSchema';
 	}
 }

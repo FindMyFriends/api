@@ -22,22 +22,16 @@ final class CreatedHashids implements Configuration\Source {
 	 * @return array
 	 */
 	public function read(): array {
-		$hashids = $this->origin->read();
-		return array_reduce(
-			array_keys($hashids),
-			function(array $creations, string $name) use ($hashids): array {
-				$creations[$name] = array_replace(
-					$hashids[$name],
-					[
-						'hashid' => new Hashids(
-							$hashids[$name]['hashid']['salt'],
-							$hashids[$name]['hashid']['length']
-						),
-					]
-				) + array_diff_key($hashids[$name], array_flip(['salt', 'length']));
-				return $creations;
-			},
-			[]
+		$configuration = $this->origin->read();
+		return array_combine(
+			array_keys($configuration),
+			array_map(
+				function (string $salt, int $length): Hashids {
+					return new Hashids($salt, $length);
+				},
+				array_column($configuration, 'salt'),
+				array_column($configuration, 'length')
+			)
 		);
 	}
 }

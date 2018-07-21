@@ -6,7 +6,7 @@ namespace FindMyFriends\Scheduling\Task;
 use Elasticsearch\Client;
 use FindMyFriends\Scheduling;
 
-final class ElasticsearchReindexJob implements Scheduling\Job {
+final class ElasticsearchReindex implements Scheduling\Job {
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
@@ -19,6 +19,6 @@ final class ElasticsearchReindexJob implements Scheduling\Job {
 	}
 
 	public function name(): string {
-		return 'ElasticsearchReindexJob';
+		return 'ElasticsearchReindex';
 	}
 }

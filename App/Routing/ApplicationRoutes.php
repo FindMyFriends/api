@@ -74,9 +74,9 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Endpoint\Demands\Options($this->database, $this->redis),
 				new Application\PlainRequest()
 			),
-			'demands?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+			'demands [GET]' => new View\AuthenticatedView(
 				new Endpoint\Demands\Get(
-					$this->hashids['demand']['hashid'],
+					$this->hashids['demand'],
 					$this->uri,
 					$this->database,
 					$seeker
@@ -85,14 +85,14 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'demands/{id} [GET]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Get(
-					$this->hashids['demand']['hashid'],
+					$this->hashids['demand'],
 					$this->uri,
 					$this->database,
 					$seeker
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{demand_id}/soulmate_requests?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+			'demands/{demand_id}/soulmate_requests [GET]' => new View\AuthenticatedView(
 				new Endpoint\Demand\SoulmateRequests\Get(
 					$this->uri,
 					$this->database
@@ -109,7 +109,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'demands [POST]' => new View\AuthenticatedView(
 				new Endpoint\Demands\Post(
-					$this->hashids['demand']['hashid'],
+					$this->hashids['demand'],
 					new Application\PlainRequest(),
 					$this->uri,
 					$this->database,
@@ -155,7 +155,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions [POST]' => new View\AuthenticatedView(
 				new Endpoint\Evolutions\Post(
-					$this->hashids['evolution']['hashid'],
+					$this->hashids['evolution'],
 					new Application\PlainRequest(),
 					$this->uri,
 					$this->database,
@@ -164,9 +164,9 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'evolutions?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+			'evolutions [GET]' => new View\AuthenticatedView(
 				new Endpoint\Evolutions\Get(
-					$this->hashids['evolution']['hashid'],
+					$this->hashids['evolution'],
 					$this->uri,
 					$this->database,
 					$seeker
@@ -175,7 +175,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id} [GET]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Get(
-					$this->hashids['evolution']['hashid'],
+					$this->hashids['evolution'],
 					$this->uri,
 					$this->database,
 					$seeker
@@ -184,8 +184,8 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id}/locations [GET]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Locations\Get(
-					$this->hashids['location']['hashid'],
-					$this->hashids['evolution']['hashid'],
+					$this->hashids['location'],
+					$this->hashids['evolution'],
 					$this->database,
 					$seeker
 				),
@@ -233,7 +233,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+)&sort=( ([-\s])?.+) [GET]' => new View\AuthenticatedView(
+			'demands/{demand_id}/soulmates [GET]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Soulmates\Get(
 					$this->hashids,
 					$this->uri,
@@ -242,7 +242,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{demand_id}/soulmates?page=(1 \d+)&per_page=(10 \d+) [HEAD]' => new View\AuthenticatedView(
+			'demands/{demand_id}/soulmates [HEAD]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Soulmates\Head(
 					$this->uri,
 					$this->database,
@@ -265,7 +265,6 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Endpoint\Tokens\Delete(),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'.+ [OPTIONS]' => new Endpoint\Options(),
 		];
 	}
 }

@@ -6,7 +6,7 @@ namespace FindMyFriends\Scheduling\Task;
 use FindMyFriends\Scheduling;
 use Klapuch\Storage;
 
-final class RefreshMaterializedViewJob implements Scheduling\Job {
+final class RefreshMaterializedView implements Scheduling\Job {
 	/** @var string */
 	private $view;
 
@@ -26,6 +26,6 @@ final class RefreshMaterializedViewJob implements Scheduling\Job {
 	}
 
 	public function name(): string {
-		return 'RefreshMaterializedViewJob';
+		return 'RefreshMaterializedView';
 	}
 }

@@ -17,85 +17,86 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class SuitedHashIdMaskTest extends Tester\TestCase {
-	public function testMaskWithHashIdOnMatchingPattern() {
+	public function testReplacingMatchToHashid() {
 		Assert::same(
 			['id' => 1],
 			(new Routing\SuitedHashIdMask(
+				['id' => 'hashid-demand'],
 				new FakeMask(['id' => 'jR']),
 				[
-					'demand' => [
-						'hashid' => new Hashids(),
-						'paths' => ['^demand.+$'],
-						'parameters' => ['id' => 'demand'],
-					],
-					'evolution' => [
-						'hashid' => new Hashids('abc'),
-						'paths' => ['^evolution.+$'],
-						'parameters' => ['id' => 'evolution'],
-					],
-				],
-				'demands/jR'
+					'demand' => new Hashids(),
+					'evolution' => new Hashids('abc'),
+				]
 			))->parameters()
 		);
 	}
 
-	public function testNoMatchWithReturnedOrigin() {
+	/**
+	 * @throws \UnexpectedValueException Parameter "foo" is not valid
+	 */
+	public function testThrowingOnInvalidParameters() {
+		(new Routing\SuitedHashIdMask(
+			['id' => 'hashid-demand'],
+			new FakeMask(['id' => 'foo']),
+			[
+				'demand' => new Hashids(),
+				'evolution' => new Hashids('abc'),
+			]
+		))->parameters();
+	}
+
+	public function testKeepingForNoMatch() {
 		Assert::same(
 			['id' => 'jR'],
 			(new Routing\SuitedHashIdMask(
+				['id' => 'hashid-foo'],
 				new FakeMask(['id' => 'jR']),
 				[
-					'demand' => [
-						'hashid' => new Hashids(),
-						'paths' => ['^demand.+$'],
-						'parameters' => ['id' => 'demand'],
-					],
-					'evolution' => [
-						'hashid' => new Hashids('abc'),
-						'paths' => ['^evolution.+$'],
-						'parameters' => ['id' => 'evolution'],
-					],
-				],
-				'ou'
+					'demand' => new Hashids(),
+					'evolution' => new Hashids('abc'),
+				]
 			))->parameters()
 		);
 	}
 
-	public function testUsingReferenceToHashid() {
-		Assert::equal(
-			['id' => 1, 'demand_id' => 2],
-			(new Routing\SuitedHashIdMask(
-				new FakeMask(['id' => 'jR', 'demand_id' => 'Ay']),
-				[
-					'demand' => [
-						'hashid' => new Hashids('abc'),
-						'paths' => ['^demand.+$'],
-						'parameters' => ['id' => 'demand'],
-					],
-					'evolution' => [
-						'hashid' => new Hashids(),
-						'paths' => ['^evolution.+$'],
-						'parameters' => ['id' => 'evolution', 'demand_id' => 'demand'],
-					],
-				],
-				'evolution/jR'
-			))->parameters()
-		);
-	}
-
-	public function testKeepingParameters() {
+	public function testKeepingRestUntouched() {
 		Assert::same(
-			['id' => 1, 'name' => ''],
+			['id' => 1, 'evolution_id' => 2],
 			(new Routing\SuitedHashIdMask(
-				new FakeMask(['id' => 'jR', 'name' => '']),
+				['id' => 'hashid-demand', 'evolution_id' => 'whatever'],
+				new FakeMask(['id' => 'jR', 'evolution_id' => 2]),
 				[
-					'demand' => [
-						'hashid' => new Hashids(),
-						'paths' => ['^demand.+$'],
-						'parameters' => ['id' => 'demand'],
-					],
-				],
-				'demands/jR'
+					'demand' => new Hashids(),
+					'evolution' => new Hashids('abc'),
+				]
+			))->parameters()
+		);
+	}
+
+	public function testMultipleConversion() {
+		Assert::same(
+			['id' => 1, 'evolution_id' => 2],
+			(new Routing\SuitedHashIdMask(
+				['id' => 'hashid-demand', 'evolution_id' => 'hashid-evolution'],
+				new FakeMask(['id' => 'jR', 'evolution_id' => 'Ay']),
+				[
+					'demand' => new Hashids(),
+					'evolution' => new Hashids('abc'),
+				]
+			))->parameters()
+		);
+	}
+
+	public function testPassingOnNothingToConvert() {
+		Assert::same(
+			['page' => 1],
+			(new Routing\SuitedHashIdMask(
+				[],
+				new FakeMask(['page' => 1]),
+				[
+					'demand' => new Hashids(),
+					'evolution' => new Hashids('abc'),
+				]
 			))->parameters()
 		);
 	}

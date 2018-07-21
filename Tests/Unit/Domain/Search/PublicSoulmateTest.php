@@ -31,9 +31,9 @@ final class PublicSoulmateTest extends Tester\TestCase {
 				(new Search\PublicSoulmate(
 					new Search\FakeSoulmate(),
 					[
-						'demand' => ['hashid' => new Hashids('a')],
-						'evolution' => ['hashid' => new Hashids('b')],
-						'soulmate' => ['hashid' => new Hashids('c')],
+						'demand' => new Hashids('a'),
+						'evolution' => new Hashids('b'),
+						'soulmate' => new Hashids('c'),
 					]
 				))->print(
 					new Output\Json(
@@ -66,9 +66,9 @@ final class PublicSoulmateTest extends Tester\TestCase {
 				(new Search\PublicSoulmate(
 					new Search\FakeSoulmate(),
 					[
-						'demand' => ['hashid' => new Hashids('a')],
-						'evolution' => ['hashid' => new Hashids('b')],
-						'soulmate' => ['hashid' => new Hashids('c')],
+						'demand' => new Hashids('a'),
+						'evolution' => new Hashids('b'),
+						'soulmate' => new Hashids('c'),
 					]
 				))->print(
 					new Output\Json(
