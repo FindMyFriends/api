@@ -15,7 +15,7 @@ final class ConcurrentlyControlledResponse implements Application\Response {
 	private $eTag;
 
 	public function __construct(Application\Response $origin, Http\ETag $eTag) {
-		$this->origin = $origin;
+		$this->origin = new CachedResponse($origin);
 		$this->eTag = $eTag;
 	}
 

@@ -46,24 +46,22 @@ final class Get implements Application\View {
 		return new Response\PartialResponse(
 			new Response\JsonResponse(
 				new Response\ConcurrentlyControlledResponse(
-					new Response\CachedResponse(
-						new Response\PlainResponse(
-							(new Domain\PublicDemand(
-								new Domain\HarnessedDemand(
-									new Domain\OwnedDemand(
-										new Domain\StoredDemand(
-											$parameters['id'],
-											$this->database
-										),
+					new Response\PlainResponse(
+						(new Domain\PublicDemand(
+							new Domain\HarnessedDemand(
+								new Domain\OwnedDemand(
+									new Domain\StoredDemand(
 										$parameters['id'],
-										$this->seeker,
 										$this->database
 									),
-									new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+									$parameters['id'],
+									$this->seeker,
+									$this->database
 								),
-								$this->hashids
-							))->print(new Output\Json())
-						)
+								new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+							),
+							$this->hashids
+						))->print(new Output\Json())
 					),
 					new Http\PostgresETag($this->database, $this->url)
 				)
