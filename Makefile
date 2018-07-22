@@ -1,12 +1,12 @@
 .DEFAULT_GOAL := check
-.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes check-test-extensions
+.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
 CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
-ci: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
+check: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs generate-schemas tests count-postgres-tests
+ci: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint generate-schemas move-schemas
 
 lint:
@@ -52,6 +52,12 @@ generate-schemas:
 
 generate-routes:
 	php App/Scheduling/index.php GenerateNginxRoutes
+
+generate-nginx-conf:
+	php App/Scheduling/index.php GenerateNginxConfiguration
+
+check-changed-conf:
+	php App/Scheduling/index.php CheckChangedConfiguration
 
 cron:
 	php App/Scheduling/index.php Cron

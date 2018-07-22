@@ -29,7 +29,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	}
 
 	private function locations(array $source): string {
-		return implode(
+		return '# Automatically generated, do not manually edit' . PHP_EOL . implode(
 			PHP_EOL . PHP_EOL,
 			array_map(
 				function(string $name, array $block): string {

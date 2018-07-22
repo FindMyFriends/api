@@ -37,10 +37,28 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 		new MarkedJob(new Task\RefreshMaterializedView($database), $database),
 		new MarkedJob(new Task\GenerateJsonSchema($database), $database),
 		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch), $database),
+		new FindMyFriends\Scheduling\Task\CheckChangedConfiguration(
+			new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
+			new SerialJobs(
+				new Task\GenerateNginxRoutes(
+					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
+					new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
+				),
+				new FindMyFriends\Scheduling\Task\GenerateNginxConfiguration(
+					new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
+				)
+			)
+		),
 		new MarkedJob(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
+			),
+			$database
+		),
+		new MarkedJob(
+			new FindMyFriends\Scheduling\Task\GenerateNginxConfiguration(
+				new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
 			),
 			$database
 		)
