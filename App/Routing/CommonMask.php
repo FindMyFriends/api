@@ -14,6 +14,7 @@ final class CommonMask implements Routing\Mask {
 			'sort' => $_GET['sort'] ?? '',
 			'page' => $_GET['page'] ?? 1,
 			'per_page' => $_GET['per_page'] ?? 10,
+			'fields' => $_GET['fields'] ?? '',
 		];
 	}
 }
