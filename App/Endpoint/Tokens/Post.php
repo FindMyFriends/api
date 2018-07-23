@@ -9,6 +9,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Encryption;
+use Klapuch\Internal;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -52,7 +53,7 @@ final class Post implements Application\View {
 		))->enter(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA)
-			))->apply(json_decode($this->request->body()->serialization(), true))
+			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 		);
 		return new Response\JsonResponse(
 			new Response\PlainResponse(

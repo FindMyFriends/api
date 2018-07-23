@@ -14,8 +14,7 @@ parameters:
         - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable, array<int, mixed> given~'
 
         # Wait for PHP 7.3 solution
-        - '~Parameter #1 $json of function json_decode expects string, string|false given~'
-        - '~Method FindMyFriends\\Misc\\JsonPrintedObjects::serialization\(\) should return string but returns string\|false~'
+        - '~Parameter #1 \$json of function json_decode expects string, string\|false given~'
 
         # Fakes, intentional fails
         - '~Method FindMyFriends\\Http\\FakeRole::allowed\(\) should return bool but returns bool\|null~'

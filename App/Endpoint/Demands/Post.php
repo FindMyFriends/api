@@ -11,6 +11,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
+use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use Klapuch\Validation;
@@ -74,10 +75,9 @@ final class Post implements Application\View {
 							),
 							new Constraint\DemandRule()
 						))->apply(
-							json_decode(
-								$this->request->body()->serialization(),
-								true
-							)
+							(new Internal\DecodedJson(
+								$this->request->body()->serialization()
+							))->values()
 						)
 					)
 				),

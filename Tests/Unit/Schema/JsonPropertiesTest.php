@@ -74,6 +74,13 @@ final class JsonPropertiesTest extends Tester\TestCase {
 			]
 		);
 	}
+
+	/**
+	 * @throws \UnexpectedValueException Schema can not be loaded
+	 */
+	public function testThrowingOnUnknownFile() {
+		(new Schema\JsonProperties(new \SplFileInfo('foo')))->objects();
+	}
 }
 
 (new JsonPropertiesTest())->run();

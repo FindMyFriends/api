@@ -51,7 +51,7 @@ final class SuitedHashIdMask implements Routing\Mask {
 	 * @return mixed
 	 */
 	private function cast(string $type, $value) {
-		if (preg_match('~^hashid-(?P<type>\w+)$~', $type, $matches) && isset($this->hashids[$matches['type']])) {
+		if (preg_match('~^hashid-(?P<type>\w+)$~', $type, $matches) === 1 && isset($this->hashids[$matches['type']])) {
 			$decode = current($this->hashids[$matches['type']]->decode($value));
 			if ($decode === false)
 				throw new \UnexpectedValueException(sprintf('Parameter "%s" is not valid', $value));

@@ -22,6 +22,7 @@
     "klapuch/dataset": "@dev",
     "klapuch/encryption": "^2.1",
     "klapuch/iterator": "dev-master",
+    "klapuch/internal": "dev-master",
     "klapuch/log": "dev-master as 1.0.0",
     "klapuch/output": "dev-master as 2.6.0",
     "klapuch/routing": "dev-master as 0.0.12",

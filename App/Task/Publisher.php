@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Task;
 
+use Klapuch\Internal;
 use PhpAmqpLib;
 
 abstract class Publisher {
@@ -23,7 +24,7 @@ abstract class Publisher {
 
 	private function message(array $body): PhpAmqpLib\Message\AMQPMessage {
 		return new PhpAmqpLib\Message\AMQPMessage(
-			json_encode($body),
+			(new Internal\EncodedJson($body))->value(),
 			[
 				'content_type' => 'application/json',
 				'delivery_mode' => PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT,

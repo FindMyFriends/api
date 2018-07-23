@@ -10,6 +10,7 @@ use FindMyFriends\Http\CreatedResourceUrl;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
+use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
@@ -60,7 +61,7 @@ final class Post implements Application\View {
 		))->track(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA)
-			))->apply(json_decode($this->request->body()->serialization(), true))
+			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 		);
 		return new Response\CreatedResponse(
 			new Response\EmptyResponse(),

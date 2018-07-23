@@ -80,7 +80,7 @@ final class PatchTest extends Tester\TestCase {
 	public function test400OnEmptyBody() {
 		Assert::exception(function() {
 			(new Endpoint\Soulmate\Patch(
-				new Application\FakeRequest(new Output\FakeFormat('')),
+				new Application\FakeRequest(new Output\FakeFormat('{}')),
 				$this->database,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Misc;
 
+use Klapuch\Internal;
 use Klapuch\Output;
 
 /**
@@ -17,7 +18,7 @@ final class JsonPrintedObjects implements Output\Format {
 	}
 
 	public function serialization(): string {
-		return json_encode(
+		return (new Internal\EncodedJson(
 			array_reduce(
 				$this->prints,
 				function(array $objects, object $object): array {
@@ -27,7 +28,7 @@ final class JsonPrintedObjects implements Output\Format {
 				[]
 			),
 			JSON_PRETTY_PRINT
-		);
+		))->value();
 	}
 
 	/**

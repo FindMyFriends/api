@@ -5,6 +5,7 @@ namespace FindMyFriends\Scheduling\Task;
 
 use FindMyFriends\Scheduling;
 use FindMyFriends\Schema;
+use Klapuch\Internal;
 
 final class GenerateJsonSchema implements Scheduling\Job {
 	/** @var \PDO */
@@ -20,7 +21,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 				@mkdir($file->getPath(), 0777, true); // @ directory may exists
 				file_put_contents(
 					$file->getPathname(),
-					json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+					(new Internal\EncodedJson($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))->value()
 				);
 			}
 		};

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e461cbf6017910c5183f8be588516d8c",
+    "content-hash": "a0d318c5d3f0d9181c51aad86d120872",
     "packages": [
         {
             "name": "dasuos/mail",
@@ -549,16 +549,16 @@
         },
         {
             "name": "klapuch/internal",
-            "version": "0.0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Internal.git",
-                "reference": "12d3d9446c7f6724dde836fb4301732c6cc8b308"
+                "reference": "db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Internal/zipball/12d3d9446c7f6724dde836fb4301732c6cc8b308",
-                "reference": "12d3d9446c7f6724dde836fb4301732c6cc8b308",
+                "url": "https://api.github.com/repos/klapuch/Internal/zipball/db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e",
+                "reference": "db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e",
                 "shasum": ""
             },
             "require": {
@@ -570,7 +570,7 @@
                 "nette/tester": "^1.7",
                 "phing/phing": "^2.16",
                 "phpstan/phpstan": "^0.7.0",
-                "sebastian/phpcpd": "^2.0",
+                "sebastian/phpcpd": "^4.0",
                 "slevomat/coding-standard": "^2.0.0"
             },
             "type": "project",
@@ -592,7 +592,7 @@
             ],
             "description": "PHP improved internals",
             "homepage": "https://www.github.com/klapuch/Internal",
-            "time": "2017-10-14T21:23:18+00:00"
+            "time": "2018-07-22T21:16:36+00:00"
         },
         {
             "name": "klapuch/iterator",
@@ -3021,6 +3021,7 @@
         "klapuch/configuration": 20,
         "klapuch/dataset": 20,
         "klapuch/iterator": 20,
+        "klapuch/internal": 20,
         "klapuch/log": 20,
         "klapuch/output": 20,
         "klapuch/routing": 20,

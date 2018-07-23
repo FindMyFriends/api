@@ -11,6 +11,7 @@ use FindMyFriends\Http;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
+use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use Klapuch\Validation;
@@ -70,7 +71,7 @@ final class Post implements Application\View {
 						(new Validation\ChainedRule(
 							new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 							new Constraint\EvolutionRule()
-						))->apply(json_decode($this->request->body()->serialization(), true))
+						))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 					)
 				),
 			]

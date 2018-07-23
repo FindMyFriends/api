@@ -9,6 +9,7 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
+use Klapuch\Internal;
 use Klapuch\Storage;
 
 final class Patch implements Application\View {
@@ -58,10 +59,9 @@ final class Patch implements Application\View {
 			new Domain\StoredDemand($parameters['id'], $this->database)
 		))->reconsider(
 			(new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)))->apply(
-				json_decode(
-					$this->request->body()->serialization(),
-					true
-				)
+				(new Internal\DecodedJson(
+					$this->request->body()->serialization()
+				))->values()
 			)
 		);
 		return new Response\EmptyResponse();
