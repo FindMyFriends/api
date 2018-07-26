@@ -12,6 +12,11 @@ trait Elasticsearch {
 	protected $elasticsearch;
 
 	protected function setUp(): void {
+		$this->rawSetUp();
+		$this->elasticsearch->indices()->delete(['index' => '*']);
+	}
+
+	protected function rawSetUp(): void {
 		parent::setUp();
 		Tester\Environment::lock('elasticsearch', __DIR__ . '/../temp');
 		$credentials = (new Configuration\ValidIni(
@@ -20,6 +25,5 @@ trait Elasticsearch {
 		$this->elasticsearch = ClientBuilder::create()
 			->setHosts($credentials['ELASTICSEARCH']['hosts'])
 			->build();
-		$this->elasticsearch->indices()->delete(['index' => '*']);
 	}
 }

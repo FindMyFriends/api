@@ -553,12 +553,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Internal.git",
-                "reference": "db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e"
+                "reference": "e4fbefa02ad447afd72a891482c731f141ca78f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Internal/zipball/db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e",
-                "reference": "db573ae4fb7580f2e869dc4b9c11f4ed834cbb8e",
+                "url": "https://api.github.com/repos/klapuch/Internal/zipball/e4fbefa02ad447afd72a891482c731f141ca78f1",
+                "reference": "e4fbefa02ad447afd72a891482c731f141ca78f1",
                 "shasum": ""
             },
             "require": {
@@ -592,7 +592,7 @@
             ],
             "description": "PHP improved internals",
             "homepage": "https://www.github.com/klapuch/Internal",
-            "time": "2018-07-22T21:16:36+00:00"
+            "time": "2018-07-23T20:19:17+00:00"
         },
         {
             "name": "klapuch/iterator",

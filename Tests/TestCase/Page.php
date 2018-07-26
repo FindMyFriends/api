@@ -11,7 +11,7 @@ trait Page {
 		TemplateDatabase::setUp as databaseSetUp;
 	}
 	use Elasticsearch {
-		Elasticsearch::setUp as elasticsearchSetUp;
+		Elasticsearch::rawSetUp as elasticsearchSetUp;
 	}
 	use RabbitMq {
 		RabbitMq::setUp as rabbitMqSetUp;

@@ -9,6 +9,7 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
+use FindMyFriends\Request;
 use FindMyFriends\View;
 use Klapuch\Application;
 use Klapuch\Encryption;
@@ -110,7 +111,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'demands [POST]' => new View\AuthenticatedView(
 				new Endpoint\Demands\Post(
 					$this->hashids['demand'],
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
 					$this->rabbitMq,
@@ -120,7 +121,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'demands/{id} [PUT]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Put(
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
 					$seeker
@@ -129,7 +130,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'demands/{id} [PATCH]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Patch(
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->database,
 					$seeker
 				),
@@ -156,7 +157,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'evolutions [POST]' => new View\AuthenticatedView(
 				new Endpoint\Evolutions\Post(
 					$this->hashids['evolution'],
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
 					$this->elasticsearch,
@@ -193,7 +194,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id}/locations [POST]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Locations\Post(
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
 					$seeker
@@ -217,7 +218,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id} [PUT]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Put(
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
 					$this->elasticsearch,
@@ -227,7 +228,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'soulmates/{id} [PATCH]' => new View\AuthenticatedView(
 				new Endpoint\Soulmate\Patch(
-					new Application\PlainRequest(),
+					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->database,
 					$seeker
 				),
@@ -251,13 +252,13 @@ final class ApplicationRoutes implements Routing\Routes {
 				new Http\ChosenRole($seeker, ['member'])
 			),
 			'seekers [POST]' => new Endpoint\Seekers\Post(
-				new Application\PlainRequest(),
+				new Request\JsonRequest(new Application\PlainRequest()),
 				$this->database,
 				$this->rabbitMq,
 				$this->cipher
 			),
 			'tokens [POST]' => new Endpoint\Tokens\Post(
-				new Application\PlainRequest(),
+				new Request\JsonRequest(new Application\PlainRequest()),
 				$this->database,
 				$this->cipher
 			),
