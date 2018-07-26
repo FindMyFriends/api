@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\Endpoint;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Routing;
 use Klapuch\Http;
 use Klapuch\Uri\FakeUri;
@@ -46,12 +47,7 @@ final class PreflightTest extends Tester\TestCase {
 	}
 
 	private function token(): string {
-		session_start();
-		$_SESSION['id'] = '1';
-		$sessionId = session_id();
-		chown(sprintf('/tmp/sess_%s', $sessionId), 'www-data');
-		session_write_close();
-		return $sessionId;
+		return (new Access\TestingEntrance())->enter([])->id();
 	}
 
 	private function endpoints(): array {
