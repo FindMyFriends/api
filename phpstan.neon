@@ -6,12 +6,19 @@ parameters:
         checkedExceptions:
             - UnexpectedValueException
     ignoreErrors:
-        - '~Call to an undefined method object::print\(\)~' # not good
-        - '~UnexpectedValueException is never thrown in the corresponding try block~' # not good
-        - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~' # intentionally
+        # phpstan-exception-rules
+        - ~PHPDoc tag @throws with type UnexpectedValueException is not compatible with parent~
+        - ~^Catching checked exception UnexpectedValueException as unchecked Throwable is not supported properly in this moment\.~
 
-        # Probably bug
-        - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable, array<int, mixed> given~'
+        # Fine to me
+        - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable~'
+
+        # Not good to ignore
+        - '~Call to an undefined method object::print\(\)~'
+        - '~UnexpectedValueException is never thrown in the corresponding try block~'
+
+        # Intentionally
+        - '~AnonymousClass.+::__construct\(\) does not call parent constructor from Klapuch\\Storage\\MetaPDO~'
 
         # Wait for PHP 7.3 solution
         - '~Parameter #1 \$json of function json_decode expects string, string\|false given~'

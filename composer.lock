@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0d318c5d3f0d9181c51aad86d120872",
+    "content-hash": "2e359c91b58e60bb4a291d0e39613b4c",
     "packages": [
         {
             "name": "dasuos/mail",
@@ -2171,16 +2171,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.0.2",
+            "version": "v4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12"
+                "reference": "bd088dc940a418f09cda079a9b5c7c478890fb8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/35b8caf75e791ba1b2d24fec1552168d72692b12",
-                "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bd088dc940a418f09cda079a9b5c7c478890fb8d",
+                "reference": "bd088dc940a418f09cda079a9b5c7c478890fb8d",
                 "shasum": ""
             },
             "require": {
@@ -2218,7 +2218,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-06-03T11:33:10+00:00"
+            "time": "2018-07-15T17:25:16+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -2271,16 +2271,16 @@
         },
         {
             "name": "pepakriz/phpstan-exception-rules",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pepakriz/phpstan-exception-rules.git",
-                "reference": "6139f1fb5f5066a414eb9d89988c02c1c522bada"
+                "reference": "d59528f464a4018d5076e71d8a37e59167bb3954"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/6139f1fb5f5066a414eb9d89988c02c1c522bada",
-                "reference": "6139f1fb5f5066a414eb9d89988c02c1c522bada",
+                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/d59528f464a4018d5076e71d8a37e59167bb3954",
+                "reference": "d59528f464a4018d5076e71d8a37e59167bb3954",
                 "shasum": ""
             },
             "require": {
@@ -2302,7 +2302,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2-dev"
+                    "dev-master": "0.3-dev"
                 }
             },
             "autoload": {
@@ -2315,7 +2315,7 @@
                 "MIT"
             ],
             "description": "Exception rules for PHPStan",
-            "time": "2018-06-28T07:48:50+00:00"
+            "time": "2018-07-25T06:54:57+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -2433,16 +2433,16 @@
         },
         {
             "name": "phpstan/phpstan-strict-rules",
-            "version": "0.10",
+            "version": "0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "bffdf03fc70602833936dccf6c2eb3be58ed78d6"
+                "reference": "18c0b6e8899606b127c680402ab473a7b67166db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/bffdf03fc70602833936dccf6c2eb3be58ed78d6",
-                "reference": "bffdf03fc70602833936dccf6c2eb3be58ed78d6",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/18c0b6e8899606b127c680402ab473a7b67166db",
+                "reference": "18c0b6e8899606b127c680402ab473a7b67166db",
                 "shasum": ""
             },
             "require": {
@@ -2475,7 +2475,7 @@
                 "MIT"
             ],
             "description": "Extra strict and opinionated rules for PHPStan",
-            "time": "2018-06-22T18:09:47+00:00"
+            "time": "2018-07-06T20:36:44+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -2750,16 +2750,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.1.1",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "70591cda56b4b47c55776ac78e157c4bb6c8b43f"
+                "reference": "5c31f6a97c1c240707f6d786e7e59bfacdbc0219"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/70591cda56b4b47c55776ac78e157c4bb6c8b43f",
-                "reference": "70591cda56b4b47c55776ac78e157c4bb6c8b43f",
+                "url": "https://api.github.com/repos/symfony/console/zipball/5c31f6a97c1c240707f6d786e7e59bfacdbc0219",
+                "reference": "5c31f6a97c1c240707f6d786e7e59bfacdbc0219",
                 "shasum": ""
             },
             "require": {
@@ -2814,11 +2814,11 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-31T10:17:53+00:00"
+            "time": "2018-07-16T14:05:40+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v4.1.1",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
