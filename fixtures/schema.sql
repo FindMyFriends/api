@@ -1893,7 +1893,6 @@ BEGIN
     )
     SELECT jsonb_object_agg(key, value), seeker_id
     FROM ranked_rows
-    WHERE position <= 5
     GROUP BY seeker_id
   $$, column_parts.distinct_part, column_parts.row_part);
   RETURN QUERY EXECUTE v_full_query;
