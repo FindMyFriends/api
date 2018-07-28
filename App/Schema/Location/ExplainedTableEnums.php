@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Schema\Demand;
+namespace FindMyFriends\Schema\Location;
 
 use FindMyFriends\Schema;
 use Predis;
@@ -19,12 +19,17 @@ final class ExplainedTableEnums implements Schema\Enum {
 	}
 
 	public function values(): array {
-		return (new Schema\Description\ExplainedTableEnums(
-			$this->database,
-			$this->redis
-		))->values() + (new Schema\Location\ExplainedTableEnums(
-			$this->database,
-			$this->redis
-		))->values();
+		return [
+			'location' => [
+				'met_at' => [
+					'timeline_side' => (new Schema\CachedEnum(
+						new Schema\PostgresEnum('timeline_sides', $this->database),
+						$this->redis,
+						'timeline_sides',
+						'enum'
+					))->values(),
+				],
+			],
+		];
 	}
 }

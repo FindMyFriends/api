@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Schema\Demand;
+namespace FindMyFriends\Schema\Evolution;
 
 use FindMyFriends\Schema;
 use Predis;

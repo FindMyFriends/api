@@ -35,7 +35,7 @@ final class Options implements Application\View {
 		return new Response\JsonResponse(
 			new Response\PlainResponse(
 				new Output\Json([
-					'options' => (new Schema\Description\ExplainedTableEnums(
+					'options' => (new Schema\Evolution\ExplainedTableEnums(
 						$this->database,
 						$this->redis
 					))->values(),
