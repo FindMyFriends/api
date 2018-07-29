@@ -5,7 +5,9 @@ namespace FindMyFriends\Scheduling\Task;
 
 use FindMyFriends\Scheduling;
 use FindMyFriends\Schema;
+use Klapuch\Http;
 use Klapuch\Internal;
+use Klapuch\Uri;
 
 final class GenerateJsonSchema implements Scheduling\Job {
 	/** @var \PDO */
@@ -17,12 +19,37 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 	public function fulfill(): void {
 		$schemas = new class {
+			/**
+			 * @param string $schema
+			 * @throws \UnexpectedValueException
+			 */
+			public function validate(string $schema): void {
+				$response = (new Http\BasicRequest(
+					'POST',
+					new Uri\ValidUrl('https://www.jsonschemavalidator.net/api/jsonschema/validate'),
+					[
+						CURLOPT_HTTPHEADER => [
+							'Content-Type: application/json',
+							'X-Csrf-Token: LsAV3irUxESTZz-djmy6u5czf122eyTgu3yvdi6MSOwQANDhsOHOQzBZrqPku09Z8KS8BIE406uNXXeAaSycv978wm81:EYgPsfAI3loDTk9UhNmva8lcEE5KwhHSUbD_zTktXHmaO7iA36crJ8eAB0rum1vjF3VeIaKiC4GIPRTtJG8ydDuUdt41',
+						],
+					],
+					(new Internal\EncodedJson(['json' => '', 'schema' => $schema]))->value()
+				))->send();
+				$validation = (new Internal\DecodedJson($response->body()))->values();
+				if ($validation['valid'] === false) {
+					throw new \Exception('JSON schema is not valid');
+				}
+			}
+
 			public function save(array $json, \SplFileInfo $file): void {
 				@mkdir($file->getPath(), 0777, true); // @ directory may exists
-				file_put_contents(
-					$file->getPathname(),
-					(new Internal\EncodedJson($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))->value()
-				);
+				$schema = (new Internal\EncodedJson($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))->value();
+				try {
+					$this->validate($schema);
+				} catch (\UnexpectedValueException $e) {
+					throw new \Exception(sprintf('JSON schema %s is not valid', $file->getPathname()), 0, $e);
+				}
+				file_put_contents($file->getPathname(), $schema);
 			}
 		};
 		$demand = new Schema\Demand\Structure($this->database);
