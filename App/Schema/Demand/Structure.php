@@ -15,6 +15,7 @@ final class Structure {
 
 	public function get(): array {
 		$description = (new Schema\Description\Structure($this->database))->get();
+		$location = (new Schema\Location\Structure($this->database))->post();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -23,35 +24,7 @@ final class Structure {
 				'note' => ['type' => ['string', 'null']],
 				'seeker_id' => ['type' => 'integer'],
 				'id' => ['type' => 'string'],
-				'location' => [
-					'additionalProperties' => false,
-					'properties' => [
-						'coordinates' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'latitude' => ['type' => 'number'],
-								'longitude' => ['type' => 'number'],
-							],
-							'required' => ['latitude', 'longitude'],
-							'type' => 'object',
-						],
-						'met_at' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'moment' => ['type' => ['string'], 'format' => 'date-time'],
-								'timeline_side' => [
-									'type' => ['string'],
-									'enum' => (new Schema\PostgresEnum('timeline_sides', $this->database))->values(),
-								],
-								'approximation' => ['type' => ['string', 'null']],
-							],
-							'required' => ['moment', 'timeline_side', 'approximation'],
-							'type' => 'object',
-						],
-					],
-					'required' => ['coordinates', 'met_at'],
-					'type' => 'object',
-				],
+				'location' => ['properties' => $location['properties']],
 			] + $description['properties'],
 			'required' => array_merge(
 				['created_at', 'note', 'seeker_id', 'id', 'location'],

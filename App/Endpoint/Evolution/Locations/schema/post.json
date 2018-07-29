@@ -2,7 +2,6 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false,
     "properties": {
-        "additionalProperties": false,
         "coordinates": {
             "additionalProperties": false,
             "properties": {
@@ -22,7 +21,6 @@
         "met_at": {
             "additionalProperties": false,
             "properties": {
-                "additionalProperties": false,
                 "moment": {
                     "type": "string",
                     "format": "date-time"
@@ -49,11 +47,11 @@
                 "approximation"
             ],
             "type": "object"
-        },
-        "required": [
-            "coordinates",
-            "met_at"
-        ],
-        "type": "object"
-    }
+        }
+    },
+    "required": [
+        "coordinates",
+        "met_at"
+    ],
+    "type": "object"
 }

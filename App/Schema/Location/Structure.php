@@ -18,7 +18,6 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => [
-				'additionalProperties' => false,
 				'assigned_at' => ['type' => 'string', 'format' => 'date-time'],
 				'evolution_id' => ['type' => 'string'],
 				'id' => ['type' => 'string'],
@@ -34,7 +33,6 @@ final class Structure {
 				'met_at' => [
 					'additionalProperties' => false,
 					'properties' => [
-						'additionalProperties' => false,
 						'moment' => ['type' => 'string', 'format' => 'date-time'],
 						'timeline_side' => [
 							'type' => 'string',
@@ -45,9 +43,9 @@ final class Structure {
 					'required' => ['moment', 'timeline_side', 'approximation'],
 					'type' => 'object',
 				],
-				'required' => ['coordinates', 'met_at', 'assigned_at', 'id', 'evolution_id'],
-				'type' => 'object',
 			],
+			'required' => ['coordinates', 'met_at', 'assigned_at', 'id', 'evolution_id'],
+			'type' => 'object',
 		];
 	}
 
@@ -57,9 +55,9 @@ final class Structure {
 		unset($properties['id']);
 		unset($properties['evolution_id']);
 		unset($properties['assigned_at']);
-		unset($properties['required'][array_search('id', $properties['required'], true)]);
-		unset($properties['required'][array_search('evolution_id', $properties['required'], true)]);
-		unset($properties['required'][array_search('assigned_at', $properties['required'], true)]);
+		unset($get['required'][array_search('id', $get['required'], true)]);
+		unset($get['required'][array_search('evolution_id', $get['required'], true)]);
+		unset($get['required'][array_search('assigned_at', $get['required'], true)]);
 		return $get;
 	}
 }

@@ -392,7 +392,6 @@
             ]
         },
         "location": {
-            "additionalProperties": false,
             "properties": {
                 "coordinates": {
                     "additionalProperties": false,
@@ -414,15 +413,11 @@
                     "additionalProperties": false,
                     "properties": {
                         "moment": {
-                            "type": [
-                                "string"
-                            ],
+                            "type": "string",
                             "format": "date-time"
                         },
                         "timeline_side": {
-                            "type": [
-                                "string"
-                            ],
+                            "type": "string",
                             "enum": [
                                 "exactly",
                                 "sooner",
@@ -444,12 +439,7 @@
                     ],
                     "type": "object"
                 }
-            },
-            "required": [
-                "coordinates",
-                "met_at"
-            ],
-            "type": "object"
+            }
         }
     },
     "required": [

@@ -50,7 +50,7 @@ final class PostTest extends Tester\TestCase {
 				$this->database,
 				new Access\FakeSeeker('1', ['role' => 'member'])
 			))->response(['id' => 1]);
-		}, \UnexpectedValueException::class, 'The property name is not defined and the definition does not allow additional properties');
+		}, \UnexpectedValueException::class, 'The property coordinates is required');
 	}
 }
 
