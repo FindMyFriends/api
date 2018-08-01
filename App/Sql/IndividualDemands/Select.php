@@ -15,8 +15,6 @@ final class Select implements Sql\Select {
 			[
 				'seeker_id',
 				'created_at',
-				'location_coordinates',
-				'location_met_at',
 				'note',
 			]
 		);

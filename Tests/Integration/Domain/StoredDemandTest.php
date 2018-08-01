@@ -110,17 +110,6 @@ final class StoredDemandTest extends Tester\TestCase {
 					],
 					'breast_size' => 'B',
 				],
-				'location' => [
-					'coordinates' => [
-						'latitude' => 10.4,
-						'longitude' => 50.4,
-					],
-					'met_at' => [
-						'moment' => '2017-01-01 00:00:00+00',
-						'timeline_side' => 'sooner',
-						'approximation' => 'PT1H',
-					],
-				],
 				'hands' => [
 					'nails' => [
 						'length' => [
@@ -158,14 +147,6 @@ final class StoredDemandTest extends Tester\TestCase {
 					'hair' => [
 						'color_id' => 8,
 						'amount' => null,
-					],
-				],
-				'location' => [
-					'coordinates' => ['latitude' => 10.4, 'longitude' => 50.4],
-					'met_at' => [
-						'moment' => '2017-01-01T00:00:00+00:00',
-						'timeline_side' => 'sooner',
-						'approximation' => 'PT1H',
 					],
 				],
 				'body' => [

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 use Klapuch\Output;
 
@@ -9,7 +9,7 @@ use Klapuch\Output;
  * Location called sequentially one by one behaving as a single one
  */
 final class ChainedLocation implements Location {
-	/** @var \FindMyFriends\Domain\Evolution\Location[] */
+	/** @var \FindMyFriends\Domain\Place\Location[] */
 	private $locations;
 
 	public function __construct(Location ...$locations) {

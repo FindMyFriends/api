@@ -91,17 +91,6 @@ final class IndividualDemandsTest extends Tester\TestCase {
 					],
 					'breast_size' => 'B',
 				],
-				'location' => [
-					'coordinates' => [
-						'latitude' => 10.4,
-						'longitude' => 50.4,
-					],
-					'met_at' => [
-						'moment' => '2017-01-01 00:00:00+00',
-						'timeline_side' => 'sooner',
-						'approximation' => 'PT1H',
-					],
-				],
 				'hands' => [
 					'nails' => [
 						'length' => [
@@ -126,7 +115,6 @@ final class IndividualDemandsTest extends Tester\TestCase {
 			$this->database,
 			[
 				'seekers' => 1,
-				'locations' => 1,
 				'descriptions' => 1,
 				'demands' => 1,
 				'bodies' => 1,

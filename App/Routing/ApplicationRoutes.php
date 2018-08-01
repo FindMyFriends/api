@@ -143,6 +143,31 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
+			'demands/{id}/locations [GET]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Locations\Get(
+					$this->hashids['location'],
+					$this->hashids['demand'],
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
+			'demands/{id}/locations [POST]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Locations\Post(
+					new Request\JsonRequest(new Application\PlainRequest()),
+					$this->uri,
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
+			'demands/{demand_id}/locations/{id} [DELETE]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Locations\Delete(
+					$this->database,
+					$seeker
+				),
+				new Http\ChosenRole($seeker, ['member'])
+			),
 			'evolutions [OPTIONS]' => new Endpoint\Preflight(
 				new View\AuthenticatedView(
 					new Endpoint\Evolutions\Options(

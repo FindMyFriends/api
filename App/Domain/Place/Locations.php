@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 interface Locations {
 	/**

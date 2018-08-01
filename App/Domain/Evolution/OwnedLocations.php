@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Evolution;
 
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Place;
 use Klapuch\Storage;
 
 /**
  * Locations owned by one particular seeker
  */
-final class OwnedChangeLocations implements Locations {
+final class OwnedLocations implements Place\Locations {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
@@ -19,11 +20,11 @@ final class OwnedChangeLocations implements Locations {
 	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	/** @var \FindMyFriends\Domain\Evolution\Locations */
+	/** @var \FindMyFriends\Domain\Place\Locations */
 	private $origin;
 
 	public function __construct(
-		Locations $origin,
+		Place\Locations $origin,
 		Access\Seeker $owner,
 		int $change,
 		Storage\MetaPDO $database

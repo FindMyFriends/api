@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 use FindMyFriends\Domain\Access;
 use Klapuch\Output;
@@ -11,7 +11,7 @@ use Klapuch\Storage;
  * Location which belongs only to me
  */
 final class OwnedLocation implements Location {
-	/** @var \FindMyFriends\Domain\Evolution\Location */
+	/** @var \FindMyFriends\Domain\Place\Location */
 	private $origin;
 
 	/** @var int */

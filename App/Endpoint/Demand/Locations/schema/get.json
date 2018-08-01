@@ -1,0 +1,70 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "assigned_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "id": {
+            "type": "string"
+        },
+        "coordinates": {
+            "additionalProperties": false,
+            "properties": {
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "latitude",
+                "longitude"
+            ],
+            "type": "object"
+        },
+        "met_at": {
+            "additionalProperties": false,
+            "properties": {
+                "moment": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "timeline_side": {
+                    "type": "string",
+                    "enum": [
+                        "exactly",
+                        "sooner",
+                        "later",
+                        "sooner or later"
+                    ]
+                },
+                "approximation": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "moment",
+                "timeline_side",
+                "approximation"
+            ],
+            "type": "object"
+        },
+        "demand_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "coordinates",
+        "met_at",
+        "assigned_at",
+        "id",
+        "demand_id"
+    ],
+    "type": "object"
+}

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 /**
  * Locations called sequentially one by one behaving as a single one
  */
 final class ChainedLocations implements Locations {
-	/** @var \FindMyFriends\Domain\Evolution\Locations[] */
+	/** @var \FindMyFriends\Domain\Place\Locations[] */
 	private $origins;
 
 	public function __construct(Locations ...$origins) {

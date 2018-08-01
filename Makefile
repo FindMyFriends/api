@@ -67,6 +67,7 @@ composer-install:
 
 move-schemas:
 	mkdir -p www/schema/demand
+	mkdir -p www/schema/demand/location
 	mkdir -p www/schema/demand/soulmate_request
 	mkdir -p www/schema/demand/soulmate
 	mkdir -p www/schema/evolution
@@ -79,6 +80,8 @@ move-schemas:
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/get.json www/schema/demand/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/put.json www/schema/demand/put.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/patch.json www/schema/demand/patch.json
+	ln -sfn $(PWD)/App/Endpoint/Demand/Location/schema/get.json www/schema/demand/location/get.json
+	ln -sfn $(PWD)/App/Endpoint/Demand/Location/schema/get.json www/schema/demand/location/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/Soulmates/schema/get www/schema/demand/soulmate/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/SoulmateRequests/schema/get.json www/schema/demand/soulmate_request/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demands/schema/post.json www/schema/demand/post.json

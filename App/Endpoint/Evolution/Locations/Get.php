@@ -5,6 +5,7 @@ namespace FindMyFriends\Endpoint\Evolution\Locations;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
@@ -43,8 +44,8 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$locations = new Evolution\PublicLocations(
-			new Evolution\HarnessedLocations(
-				new Evolution\OwnedChangeLocations(
+			new Place\HarnessedLocations(
+				new Evolution\OwnedLocations(
 					new Evolution\ChangeLocations($parameters['id'], $this->database),
 					$this->seeker,
 					$parameters['id'],

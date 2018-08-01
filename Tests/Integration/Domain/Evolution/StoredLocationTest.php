@@ -11,9 +11,7 @@ namespace FindMyFriends\Integration\Domain\Evolution;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Klapuch\Storage;
 use Tester;
-use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
@@ -26,19 +24,13 @@ final class StoredLocationTest extends Tester\TestCase {
 		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'location'))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change, 'location_id' => $location]))->try();
 		(new Misc\TableCount($this->database, 'evolution_locations', 1))->assert();
+		(new Misc\TableCount($this->database, 'locations', 2))->assert();
 		(new Evolution\StoredLocation(
 			$location,
 			$this->database
 		))->forget();
 		(new Misc\TableCount($this->database, 'evolution_locations', 0))->assert();
-		Assert::count(
-			0,
-			(new Storage\NativeQuery(
-				$this->database,
-				'SELECT * FROM locations WHERE id = ?',
-				[$location]
-			))->rows()
-		);
+		(new Misc\TableCount($this->database, 'locations', 2))->assert();
 	}
 }
 

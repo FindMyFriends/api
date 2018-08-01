@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Sql\CollectiveEvolutionLocations;
 use Klapuch\Output;
 use Klapuch\Storage;
@@ -10,7 +11,7 @@ use Klapuch\Storage;
 /**
  * Stored location
  */
-final class StoredLocation implements Location {
+final class StoredLocation implements Place\Location {
 	/** @var int */
 	private $id;
 
@@ -25,7 +26,7 @@ final class StoredLocation implements Location {
 	public function forget(): void {
 		(new Storage\TypedQuery(
 			$this->database,
-			'DELETE FROM locations WHERE id = ?',
+			'DELETE FROM evolution_locations WHERE id = ?',
 			[$this->id]
 		))->execute();
 	}

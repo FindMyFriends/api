@@ -14,10 +14,8 @@ final class InsertInto implements Sql\InsertInto {
 		$this->insert = new Description\InsertInto(
 			$table,
 			[
-				'location_met_at' => 'ROW(:location_met_at_moment, :location_met_at_timeline_side, :location_met_at_approximation)',
 				'seeker_id' => ':seeker',
 				'general_age' => 'int4range(:general_age_from, :general_age_to)',
-				'location_coordinates' => 'POINT(:location_coordinates_latitude, :location_coordinates_longitude)',
 				'note' => ':note',
 			]
 		);

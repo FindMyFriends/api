@@ -47,59 +47,10 @@ final class DemandRuleTest extends Tester\TestCase {
 				],
 			],
 		],
-		'location' => [
-			'met_at' => [
-				'moment' => '2015-09-17T13:58:10+00:00',
-				'timeline_side' => 'sooner',
-				'approximation' => 'PT2H',
-			],
-		],
 	];
 
 	public function testApplicationWithAllReturnedValues() {
 		Assert::equal(self::BASE, (new Constraint\DemandRule())->apply(self::BASE));
-	}
-
-
-	/**
-	 * @throws \UnexpectedValueException Exactly timeline side does not have approximation.
-	 */
-	public function testThrowingOnExactlyTimeLineSideWithApproximation() {
-		(new Constraint\DemandRule())->apply(
-			array_replace_recursive(
-				self::BASE,
-				[
-					'location' => [
-						'met_at' => [
-							'moment' => '2015-09-17T13:58:10+00:00',
-							'timeline_side' => 'exactly',
-							'approximation' => 'PT2H',
-						],
-					],
-				]
-			)
-		);
-	}
-
-
-	public function testAllowedApproximationAsNull()
-	{
-		Assert::noError(function() {
-			(new Constraint\DemandRule())->apply(
-				array_replace_recursive(
-					self::BASE,
-					[
-						'location' => [
-							'met_at' => [
-								'moment' => '2015-09-17T13:58:10+00:00',
-								'timeline_side' => 'exactly',
-								'approximation' => null,
-							],
-						],
-					]
-				)
-			);
-		});
 	}
 }
 

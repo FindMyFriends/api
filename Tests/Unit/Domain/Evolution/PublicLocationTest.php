@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Domain\Evolution;
 
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Place;
 use Hashids\Hashids;
 use Klapuch\Output;
 use Tester;
@@ -26,8 +27,7 @@ final class PublicLocationTest extends Tester\TestCase {
 			],
 			json_decode(
 				(new Evolution\PublicLocation(
-					new Evolution\FakeLocation(),
-					new Hashids('a'),
+					new Place\PublicLocation(new Place\FakeLocation(), new Hashids('a')),
 					new Hashids('b')
 				))->print(
 					new Output\Json(

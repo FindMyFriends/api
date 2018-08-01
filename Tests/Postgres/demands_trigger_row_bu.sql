@@ -1,11 +1,10 @@
 CREATE FUNCTION tests.throwing_on_changing_created_at() RETURNS void
 AS $$
 BEGIN
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
     (SELECT samples.seeker()),
     (SELECT samples.description()),
-    NOW(),
-    (SELECT samples.location())
+    NOW()
   );
 
   PERFORM assert.throws(

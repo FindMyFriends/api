@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 use FindMyFriends\Misc;
 use Klapuch\Output;
@@ -10,7 +10,7 @@ use Klapuch\Output;
  * Location harnessed by callback
  */
 final class HarnessedLocation implements Location {
-	/** @var \FindMyFriends\Domain\Evolution\Location */
+	/** @var \FindMyFriends\Domain\Place\Location */
 	private $origin;
 
 	/** @var \FindMyFriends\Misc\Callback */

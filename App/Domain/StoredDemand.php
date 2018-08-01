@@ -33,17 +33,7 @@ final class StoredDemand implements Demand {
 			->with('id', $demand['id'])
 			->with('seeker_id', $demand['seeker_id'])
 			->with('created_at', $demand['created_at'])
-			->with('note', $demand['note'])
-			->with(
-				'location',
-				[
-					'coordinates' => [
-						'latitude' => $demand['location_coordinates']['x'],
-						'longitude' => $demand['location_coordinates']['y'],
-					],
-					'met_at' => $demand['location_met_at'],
-				]
-			);
+			->with('note', $demand['note']);
 	}
 
 	public function retract(): void {

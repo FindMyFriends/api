@@ -19,7 +19,6 @@ final class Structure {
 			'additionalProperties' => false,
 			'properties' => [
 				'assigned_at' => ['type' => 'string', 'format' => 'date-time'],
-				'evolution_id' => ['type' => 'string'],
 				'id' => ['type' => 'string'],
 				'coordinates' => [
 					'additionalProperties' => false,
@@ -44,7 +43,7 @@ final class Structure {
 					'type' => 'object',
 				],
 			],
-			'required' => ['coordinates', 'met_at', 'assigned_at', 'id', 'evolution_id'],
+			'required' => ['coordinates', 'met_at', 'assigned_at', 'id'],
 			'type' => 'object',
 		];
 	}
@@ -53,10 +52,8 @@ final class Structure {
 		$get = $this->get();
 		$properties = &$get['properties'];
 		unset($properties['id']);
-		unset($properties['evolution_id']);
 		unset($properties['assigned_at']);
 		unset($get['required'][array_search('id', $get['required'], true)]);
-		unset($get['required'][array_search('evolution_id', $get['required'], true)]);
 		unset($get['required'][array_search('assigned_at', $get['required'], true)]);
 		return $get;
 	}

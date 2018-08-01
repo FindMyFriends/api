@@ -3,29 +3,22 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use FindMyFriends\Domain\Place;
 use Hashids\HashidsInterface;
 use Klapuch\Output;
 
 /**
  * Location formatted to be used for public representation
  */
-final class PublicLocation implements Location {
-	/** @var \FindMyFriends\Domain\Evolution\Location */
+final class PublicLocation implements Place\Location {
+	/** @var \FindMyFriends\Domain\Place\Location */
 	private $origin;
-
-	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
 
 	/** @var \Hashids\HashidsInterface */
 	private $evolutionHashids;
 
-	public function __construct(
-		Location $origin,
-		HashidsInterface $locationHashids,
-		HashidsInterface $evolutionHashids
-	) {
+	public function __construct(Place\Location $origin, HashidsInterface $evolutionHashids) {
 		$this->origin = $origin;
-		$this->locationHashids = $locationHashids;
 		$this->evolutionHashids = $evolutionHashids;
 	}
 
@@ -43,10 +36,6 @@ final class PublicLocation implements Location {
 	 */
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('id', [$this->locationHashids, 'encode'])
-			->adjusted('evolution_id', [$this->evolutionHashids, 'encode'])
-			->adjusted('assigned_at', function(string $datetime): string {
-				return (new \DateTime($datetime))->format(\DateTime::ATOM);
-			});
+			->adjusted('evolution_id', [$this->evolutionHashids, 'encode']);
 	}
 }

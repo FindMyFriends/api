@@ -1094,18 +1094,6 @@ CREATE VIEW collective_evolution_locations AS
   FROM locations
   JOIN evolution_locations ON evolution_locations.location_id = locations.id;
 
-CREATE FUNCTION is_location_owned(in_location_id locations.id%type, in_seeker_id seekers.id%type) RETURNS boolean
-AS $$
-SELECT EXISTS(
-  SELECT 1
-  FROM evolution_locations
-  JOIN evolutions ON evolutions.id = evolution_locations.evolution_id
-  WHERE location_id = in_location_id AND evolutions.seeker_id = in_seeker_id
-);
-$$
-LANGUAGE SQL
-VOLATILE;
-
 CREATE FUNCTION collective_evolution_locations_trigger_row_ii() RETURNS trigger
 AS $$
 BEGIN
@@ -1126,11 +1114,8 @@ CREATE TABLE demands (
   seeker_id integer NOT NULL,
   description_id integer NOT NULL UNIQUE,
   created_at timestamp WITH TIME ZONE NOT NULL,
-  location_id integer NOT NULL UNIQUE,
   note character varying(150),
   CONSTRAINT demands_descriptions_id_fk FOREIGN KEY (description_id) REFERENCES descriptions(id)
-    ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT demands_locations_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
@@ -1138,8 +1123,6 @@ CREATE FUNCTION demands_trigger_row_ad() RETURNS trigger
 AS $$
 BEGIN
   PERFORM deleted_description(old.description_id);
-  DELETE FROM locations
-  WHERE id = old.location_id;
   RETURN old;
 END;
 $$
@@ -1195,6 +1178,54 @@ SELECT seeker_id = (SELECT seeker_id FROM evolution_seeker) FROM demand_seeker
 $$
 LANGUAGE SQL
 STABLE;
+
+CREATE TABLE demand_locations (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  demand_id integer NOT NULL,
+  location_id integer NOT NULL,
+  assigned_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
+  CONSTRAINT demand_locations_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT demand_locations_location_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
+    ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE VIEW collective_demand_locations AS
+  SELECT location_id AS id, demand_id, coordinates, met_at, assigned_at
+  FROM locations
+  JOIN demand_locations ON demand_locations.location_id = locations.id;
+
+CREATE FUNCTION is_location_owned(in_location_id locations.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT EXISTS(
+  SELECT 1
+  FROM demand_locations
+  JOIN demands ON demands.id = demand_locations.demand_id
+  WHERE location_id = in_location_id AND demands.seeker_id = in_seeker_id
+) OR EXISTS (
+  SELECT 1
+  FROM evolution_locations
+  JOIN evolutions ON evolutions.id = evolution_locations.evolution_id
+  WHERE location_id = in_location_id AND evolutions.seeker_id = in_seeker_id
+);
+$$
+LANGUAGE SQL
+VOLATILE;
+
+CREATE FUNCTION collective_demand_locations_trigger_row_ii() RETURNS trigger
+AS $$
+BEGIN
+  WITH inserted_location AS (
+    INSERT INTO locations (coordinates, met_at) VALUES (new.coordinates, new.met_at)
+    RETURNING id
+  )
+  INSERT INTO demand_locations (demand_id, location_id) VALUES (new.demand_id, (SELECT id FROM inserted_location));
+  RETURN new;
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER collective_demand_locations_trigger_row_ii INSTEAD OF INSERT ON collective_demand_locations FOR EACH ROW EXECUTE PROCEDURE collective_demand_locations_trigger_row_ii();
 
 
 CREATE TABLE soulmates (
@@ -1620,17 +1651,13 @@ CREATE VIEW collective_demands AS
     flat_descriptions.right_eye_lenses,
     flat_descriptions.tooth_braces,
     flat_descriptions.tooth_care,
-    locations.coordinates AS location_coordinates,
-    locations.met_at AS location_met_at,
-    year_to_age(flat_descriptions.general_birth_year, (locations.met_at).moment) AS general_age
+    year_to_age(flat_descriptions.general_birth_year, demands.created_at) AS general_age
   FROM demands
-    JOIN flat_descriptions ON flat_descriptions.id = demands.description_id
-    JOIN locations ON locations.id = demands.location_id;
+    JOIN flat_descriptions ON flat_descriptions.id = demands.description_id;
 
 CREATE FUNCTION collective_demands_trigger_row_ii() RETURNS trigger
 AS $$
 DECLARE
-  v_location_id integer;
   v_description_id integer;
 BEGIN
   v_description_id = inserted_description(
@@ -1638,7 +1665,7 @@ BEGIN
       NULL,
       new.general_sex,
       new.general_ethnic_group_id,
-      age_to_year(new.general_age, (new.location_met_at).moment),
+      age_to_year(new.general_age, COALESCE(new.created_at, now())),
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -1675,18 +1702,11 @@ BEGIN
       new.tooth_braces
     )::flat_description
   );
-  INSERT INTO locations (coordinates, met_at) VALUES (
-    new.location_coordinates,
-    new.location_met_at
-  )
-  RETURNING id
-  INTO v_location_id;
 
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at, note) VALUES (
     new.seeker_id,
     v_description_id,
     NOW(),
-    v_location_id,
     new.note
   )
   RETURNING id
@@ -1700,32 +1720,24 @@ LANGUAGE plpgsql;
 CREATE FUNCTION collective_demands_trigger_row_iu() RETURNS trigger
 AS $$
 DECLARE
-  v_location_id integer;
   v_description_id integer;
 BEGIN
   SELECT
-    location_id,
     description_id
   FROM demands
-    JOIN locations ON locations.id = demands.location_id
   WHERE demands.id = new.id
-  INTO v_location_id, v_description_id;
+  INTO v_description_id;
 
   UPDATE demands
   SET note = new.note
   WHERE demands.id = new.id;
-
-  UPDATE locations
-  SET coordinates = new.location_coordinates,
-    met_at = new.location_met_at
-  WHERE id = v_location_id;
 
   PERFORM updated_description(
     ROW(
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
-      age_to_year(new.general_age, (new.location_met_at).moment),
+      age_to_year(new.general_age, COALESCE(new.created_at, now())),
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -2036,7 +2048,7 @@ BEGIN
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
-      age_to_year(new.general_age, NOW()),
+      age_to_year(new.general_age, now()),
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -2098,7 +2110,6 @@ CREATE VIEW description_parts AS
     description.right_eye_id,
     hand.hand_hair_id,
     description.hand_id,
-    demand.location_id,
     hand.nail_id,
     description.tooth_id
   FROM demands demand

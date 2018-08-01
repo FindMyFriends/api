@@ -3,13 +3,14 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Sql\CollectiveEvolutionLocations;
 use Klapuch\Storage;
 
 /**
  * All the locations from single evolution change
  */
-class ChangeLocations implements Locations {
+class ChangeLocations implements Place\Locations {
 	/** @var int */
 	private $change;
 

@@ -3,14 +3,15 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Evolution;
 
+use FindMyFriends\Domain\Place;
 use Hashids\HashidsInterface;
 use Klapuch\Iterator;
 
 /**
  * Locations formatted to be used for public representation
  */
-final class PublicLocations implements Locations {
-	/** @var \FindMyFriends\Domain\Evolution\Locations */
+final class PublicLocations implements Place\Locations {
+	/** @var \FindMyFriends\Domain\Place\Locations */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */
@@ -20,7 +21,7 @@ final class PublicLocations implements Locations {
 	private $evolutionHashids;
 
 	public function __construct(
-		Locations $origin,
+		Place\Locations $origin,
 		HashidsInterface $locationHashids,
 		HashidsInterface $evolutionHashids
 	) {
@@ -44,10 +45,9 @@ final class PublicLocations implements Locations {
 	public function history(): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->history(),
-			function(Location $location): Location {
+			function(Place\Location $location): Place\Location {
 				return new PublicLocation(
-					$location,
-					$this->locationHashids,
+					new Place\PublicLocation($location, $this->locationHashids),
 					$this->evolutionHashids
 				);
 			}

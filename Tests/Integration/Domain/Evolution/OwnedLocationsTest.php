@@ -10,6 +10,7 @@ namespace FindMyFriends\Integration\Domain\Evolution;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Tester;
@@ -17,21 +18,21 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class OwnedChangeLocationsTest extends Tester\TestCase {
+final class OwnedLocationsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnNotOwned() {
 		Assert::exception(function () {
-			(new Evolution\OwnedChangeLocations(
-				new Evolution\FakeLocations(),
+			(new Evolution\OwnedLocations(
+				new Place\FakeLocations(),
 				new Access\FakeSeeker('1'),
 				1,
 				$this->database
 			))->track([]);
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::exception(function () {
-			(new Evolution\OwnedChangeLocations(
-				new Evolution\FakeLocations(),
+			(new Evolution\OwnedLocations(
+				new Place\FakeLocations(),
 				new Access\FakeSeeker('1'),
 				1,
 				$this->database
@@ -44,8 +45,8 @@ final class OwnedChangeLocationsTest extends Tester\TestCase {
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change]))->try();
 		Assert::noError(function () use ($change, $seeker) {
-			(new Evolution\OwnedChangeLocations(
-				new Evolution\FakeLocations(),
+			(new Evolution\OwnedLocations(
+				new Place\FakeLocations(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,
 				$this->database
@@ -63,8 +64,8 @@ final class OwnedChangeLocationsTest extends Tester\TestCase {
 			);
 		});
 		Assert::noError(function () use ($change, $seeker) {
-			(new Evolution\OwnedChangeLocations(
-				new Evolution\FakeLocations(),
+			(new Evolution\OwnedLocations(
+				new Place\FakeLocations(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,
 				$this->database
@@ -73,4 +74,4 @@ final class OwnedChangeLocationsTest extends Tester\TestCase {
 	}
 }
 
-(new OwnedChangeLocationsTest())->run();
+(new OwnedLocationsTest())->run();

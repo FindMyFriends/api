@@ -15,7 +15,6 @@ final class Structure {
 
 	public function get(): array {
 		$description = (new Schema\Description\Structure($this->database))->get();
-		$location = (new Schema\Location\Structure($this->database))->post();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -24,10 +23,9 @@ final class Structure {
 				'note' => ['type' => ['string', 'null']],
 				'seeker_id' => ['type' => 'integer'],
 				'id' => ['type' => 'string'],
-				'location' => ['properties' => $location['properties']],
 			] + $description['properties'],
 			'required' => array_merge(
-				['created_at', 'note', 'seeker_id', 'id', 'location'],
+				['created_at', 'note', 'seeker_id', 'id'],
 				$description['required']
 			),
 			'type' => 'object',

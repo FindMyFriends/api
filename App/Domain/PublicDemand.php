@@ -31,15 +31,6 @@ final class PublicDemand implements Demand {
 			->adjusted('id', [$this->hashids, 'encode'])
 			->adjusted('created_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
-			})->adjusted('location', function(array $location): array {
-				return array_replace_recursive(
-					$location,
-					[
-						'met_at' => [
-							'moment' => (new \DateTime($location['met_at']['moment']))->format(\DateTime::ATOM),
-						],
-					]
-				);
 			});
 	}
 

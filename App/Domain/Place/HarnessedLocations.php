@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Place;
 
 use FindMyFriends\Misc;
 
@@ -9,7 +9,7 @@ use FindMyFriends\Misc;
  * Locations harnessed by callback
  */
 final class HarnessedLocations implements Locations {
-	/** @var \FindMyFriends\Domain\Evolution\Locations */
+	/** @var \FindMyFriends\Domain\Place\Locations */
 	private $origin;
 
 	/** @var \FindMyFriends\Misc\Callback */

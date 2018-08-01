@@ -6,6 +6,7 @@ namespace FindMyFriends\Endpoint\Evolution\Locations;
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Http\CreatedResourceUrl;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -13,6 +14,7 @@ use Klapuch\Application;
 use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use Klapuch\Validation;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -47,10 +49,10 @@ final class Post implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Evolution\ChainedLocations(
-			new Evolution\HarnessedLocations(
-				new Evolution\OwnedChangeLocations(
-					new Evolution\FakeLocations(),
+		(new Place\ChainedLocations(
+			new Place\HarnessedLocations(
+				new Evolution\OwnedLocations(
+					new Place\FakeLocations(),
 					$this->seeker,
 					$parameters['id'],
 					$this->database
@@ -59,8 +61,9 @@ final class Post implements Application\View {
 			),
 			new Evolution\ChangeLocations($parameters['id'], $this->database)
 		))->track(
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA)
+			(new Validation\ChainedRule(
+				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+				new Constraint\LocationRule()
 			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 		);
 		return new Response\CreatedResponse(

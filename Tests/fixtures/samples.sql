@@ -564,11 +564,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+	INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
 		samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
 		(SELECT description FROM samples.description()),
-		NOW(),
-		(SELECT location FROM samples.location())
+		NOW()
 	)
 	RETURNING id
 	INTO v_id;
@@ -582,11 +581,10 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at) VALUES (
     samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
     (SELECT nullable_description FROM samples.nullable_description(replacements)),
-    NOW(),
-    (SELECT location FROM samples.location())
+    NOW()
   )
   RETURNING id
     INTO v_id;
@@ -619,6 +617,22 @@ DECLARE
 BEGIN
 	INSERT INTO evolution_locations (evolution_id, location_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.evolution(replacements)), replacements, 'evolution_id')::integer,
+		samples.random_if_not_exists((SELECT samples.location(replacements)), replacements, 'location_id')::integer
+	)
+	RETURNING id
+	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION samples.demand_location(replacements jsonb = '{}') RETURNS smallint
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id smallint;
+BEGIN
+	INSERT INTO demand_locations (demand_id, location_id) VALUES (
+		samples.random_if_not_exists((SELECT samples.demand(replacements)), replacements, 'demand_id')::integer,
 		samples.random_if_not_exists((SELECT samples.location(replacements)), replacements, 'location_id')::integer
 	)
 	RETURNING id

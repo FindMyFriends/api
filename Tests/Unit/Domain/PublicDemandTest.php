@@ -22,12 +22,6 @@ final class PublicDemandTest extends Tester\TestCase {
 			[
 				'id' => 'jR',
 				'created_at' => '2017-09-17T13:58:10+00:00',
-				'location' => [
-					'met_at' => [
-						'moment' => '2016-09-17T13:58:10+00:00',
-						'approximation' => 'PT10H',
-					],
-				],
 			],
 			json_decode(
 				(new Domain\PublicDemand(
@@ -38,12 +32,6 @@ final class PublicDemandTest extends Tester\TestCase {
 						[
 							'id' => 1,
 							'created_at' => '2017-09-17 13:58:10.531097+00',
-							'location' => [
-								'met_at' => [
-									'moment' => '2016-09-17 13:58:10.531097+00',
-									'approximation' => 'PT10H',
-								],
-							],
 						]
 					)
 				)->serialization(),

@@ -5,6 +5,7 @@ namespace FindMyFriends\Endpoint\Evolution\Locations;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -28,10 +29,10 @@ final class Delete implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Evolution\ChainedLocation(
-			new Evolution\HarnessedLocation(
-				new Evolution\OwnedLocation(
-					new Evolution\FakeLocation(),
+		(new Place\ChainedLocation(
+			new Place\HarnessedLocation(
+				new Place\OwnedLocation(
+					new Place\FakeLocation(),
 					$parameters['id'],
 					$this->seeker,
 					$this->database

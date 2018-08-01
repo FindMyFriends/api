@@ -17,56 +17,6 @@
         "id": {
             "type": "string"
         },
-        "location": {
-            "properties": {
-                "coordinates": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "latitude": {
-                            "type": "number"
-                        },
-                        "longitude": {
-                            "type": "number"
-                        }
-                    },
-                    "required": [
-                        "latitude",
-                        "longitude"
-                    ],
-                    "type": "object"
-                },
-                "met_at": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "moment": {
-                            "type": "string",
-                            "format": "date-time"
-                        },
-                        "timeline_side": {
-                            "type": "string",
-                            "enum": [
-                                "exactly",
-                                "sooner",
-                                "later",
-                                "sooner or later"
-                            ]
-                        },
-                        "approximation": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "moment",
-                        "timeline_side",
-                        "approximation"
-                    ],
-                    "type": "object"
-                }
-            }
-        },
         "body": {
             "additionalProperties": false,
             "properties": {
@@ -456,7 +406,6 @@
         "note",
         "seeker_id",
         "id",
-        "location",
         "general",
         "face",
         "hair",

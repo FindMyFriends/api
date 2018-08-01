@@ -3,11 +3,10 @@ AS $$
 DECLARE
   v_demand_id demands.id%type;
 BEGIN
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at, note) VALUES (
     (SELECT samples.seeker()),
     (SELECT samples.description()),
     NOW() - INTERVAL '10 MINUTE',
-    (SELECT samples.location()),
     ''
   )
   RETURNING id
@@ -22,11 +21,10 @@ AS $$
 DECLARE
   v_demand_id demands.id%type;
 BEGIN
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at, note) VALUES (
     (SELECT samples.seeker()),
     (SELECT samples.description()),
     NOW() - INTERVAL '10 MINUTE',
-    (SELECT samples.location()),
     'foo'
   )
   RETURNING id
@@ -44,11 +42,10 @@ AS $$
 DECLARE
   v_demand_id demands.id%type;
 BEGIN
-  INSERT INTO demands (seeker_id, description_id, created_at, location_id, note) VALUES (
+  INSERT INTO demands (seeker_id, description_id, created_at, note) VALUES (
     (SELECT samples.seeker()),
     (SELECT samples.description()),
     NOW() - INTERVAL '10 MINUTE',
-    (SELECT samples.location()),
     '  '
   )
   RETURNING id

@@ -21,8 +21,8 @@ final class SampleDemand implements Sample {
 	public function try(): array {
 		return (new Storage\NativeQuery(
 			$this->database,
-			'INSERT INTO demands (seeker_id, description_id, created_at, location_id) VALUES
-			(?, ?, ?, ?)
+			'INSERT INTO demands (seeker_id, description_id, created_at) VALUES
+			(?, ?, ?)
 			RETURNING id',
 			[
 				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new Misc\SamplePostgresData($this->database, 'seeker'))->try()),
@@ -44,7 +44,6 @@ final class SampleDemand implements Sample {
 					))->try()
 				),
 				isset($this->demand['created_at']) ? $this->demand['created_at']->format('Y-m-d') : (new \DateTime())->format('Y-m-d'),
-				current((new SamplePostgresData($this->database, 'location', $this->demand['location'] ?? []))->try()),
 			]
 		))->row();
 	}
