@@ -30,7 +30,7 @@ final class FilesystemLogs implements Log\Logs {
 			new Log\ExceptionsLog($exception)
 		))->content();
 		return <<<TXT
-[{$now->format('Y-m-d H:i')}] {$log['type']}({$log['message']}, {$log['code']})
+[{$now->format('Y-m-d H:i')}] {$log['type']}("{$log['message']}", {$log['code']})
 {$log['file']}:{$log['line']}
 
 TRACE:
