@@ -40,7 +40,7 @@
     "slevomat/coding-standard": "^4.0",
     "sebastian/phpcpd": "^4.0.0",
     "consistence/coding-standard": "^3.0",
-    "phpstan/phpstan": "0.10.1",
+    "phpstan/phpstan": "^0.10.1",
     "phpstan/phpstan-strict-rules": "*",
     "mockery/mockery": "^1.0.0",
     "klapuch/http": "^1.4",

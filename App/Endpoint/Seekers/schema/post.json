@@ -41,8 +41,8 @@
                 "lastname",
                 "firstname",
                 "ethnic_group_id",
-                "birth_year",
-                "sex"
+                "sex",
+                "birth_year"
             ],
             "type": "object"
         }

@@ -25,9 +25,9 @@ final class Structure {
 		unset($properties['firstname']['type'][array_search('null', $properties['firstname']['type'], true)]);
 		unset($properties['lastname']['type'][array_search('null', $properties['lastname']['type'], true)]);
 		$age = array_search('age', $description['properties']['general']['required'], true);
-		if ($age === false || is_string($age))
-			throw new \RuntimeException('Age does not exist');
-		array_splice($description['properties']['general']['required'], $age, 1, 'birth_year');
+		$description['properties']['general']['required'][] = 'birth_year';
+		unset($description['properties']['general']['required'][$age]);
+		$description['properties']['general']['required'] = array_values($description['properties']['general']['required']);
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
