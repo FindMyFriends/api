@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a225292c91a306ba6aaba71ea906a1aa",
+    "content-hash": "99891600d33ee12cb3491ec098eb29ca",
     "packages": [
         {
             "name": "dasuos/mail",
@@ -3035,7 +3035,13 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-apcu": "*",
+        "ext-xsl": "*",
+        "ext-bcmath": "*",
+        "ext-igbinary": "*"
     },
     "platform-dev": []
 }
