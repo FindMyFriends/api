@@ -41,7 +41,7 @@ final class PostTest extends Tester\TestCase {
 		$demand = json_decode($response->body()->serialization(), true);
 		Assert::null($demand);
 		Assert::same(HTTP_CREATED, $response->status());
-		Assert::same('https://localhost/demands/jR', $response->headers()['Spot']);
+		Assert::same('https://localhost/demands/jR', $response->headers()['Location']);
 	}
 
 	public function test400OnBadInput() {
