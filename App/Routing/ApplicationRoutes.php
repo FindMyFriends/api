@@ -144,7 +144,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'demands/{id}/spots [GET]' => new View\AuthenticatedView(
 				new Endpoint\Demand\Spots\Get(
-					$this->hashids['location'],
+					$this->hashids['spot'],
 					$this->hashids['demand'],
 					$this->database,
 					$seeker
@@ -209,7 +209,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			'evolutions/{id}/spots [GET]' => new View\AuthenticatedView(
 				new Endpoint\Evolution\Spots\Get(
-					$this->hashids['location'],
+					$this->hashids['spot'],
 					$this->hashids['evolution'],
 					$this->database,
 					$seeker
