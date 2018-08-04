@@ -43,7 +43,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 	public function testPassingOnOwned() {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change]))->try();
+		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change]))->try();
 		Assert::noError(function () use ($change, $seeker) {
 			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),

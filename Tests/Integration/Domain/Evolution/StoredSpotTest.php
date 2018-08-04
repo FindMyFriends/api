@@ -18,7 +18,7 @@ require __DIR__ . '/../../../bootstrap.php';
 final class StoredSpotTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
-	public function testForgettingByLocation() {
+	public function testForgettingBySpot() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();

@@ -38,7 +38,7 @@ final class ChangeSpotsTest extends Tester\TestCase {
 				],
 			]
 		);
-		(new Misc\TableCount($this->database, 'locations', 1))->assert();
+		(new Misc\TableCount($this->database, 'spots', 1))->assert();
 		(new Misc\TableCount($this->database, 'evolution_spots', 1))->assert();
 	}
 
@@ -51,8 +51,8 @@ final class ChangeSpotsTest extends Tester\TestCase {
 			$change1,
 			$this->database
 		))->history();
-		$location = $spots->current();
-		Assert::contains(sprintf('"evolution_id": %d', $change1), $location->print(new Output\Json())->serialization());
+		$spot = $spots->current();
+		Assert::contains(sprintf('"evolution_id": %d', $change1), $spot->print(new Output\Json())->serialization());
 		$spots->next();
 		Assert::null($spots->current());
 	}

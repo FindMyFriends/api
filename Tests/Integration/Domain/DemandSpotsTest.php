@@ -38,7 +38,7 @@ final class DemandSpotsTest extends Tester\TestCase {
 				],
 			]
 		);
-		(new Misc\TableCount($this->database, 'locations', 1))->assert();
+		(new Misc\TableCount($this->database, 'spots', 1))->assert();
 		(new Misc\TableCount($this->database, 'demand_spots', 1))->assert();
 	}
 
@@ -51,8 +51,8 @@ final class DemandSpotsTest extends Tester\TestCase {
 			$demand1,
 			$this->database
 		))->history();
-		$location = $spots->current();
-		Assert::contains(sprintf('"demand_id": %d', $demand1), $location->print(new Output\Json())->serialization());
+		$spot = $spots->current();
+		Assert::contains(sprintf('"demand_id": %d', $demand1), $spot->print(new Output\Json())->serialization());
 		$spots->next();
 		Assert::null($spots->current());
 	}

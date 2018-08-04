@@ -24,7 +24,7 @@ final class DeleteTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand, 'location_id' => $spot]))->try();
+		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand, 'spot_id' => $spot]))->try();
 		$response = (new Endpoint\Demand\Spots\Delete(
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
