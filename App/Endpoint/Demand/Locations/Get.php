@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Endpoint\Demand\Locations;
 
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -43,10 +43,10 @@ final class Get implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		$locations = new Domain\PublicLocations(
+		$locations = new Interaction\PublicLocations(
 			new Place\HarnessedLocations(
-				new Domain\OwnedLocations(
-					new Domain\DemandLocations($parameters['id'], $this->database),
+				new Interaction\OwnedLocations(
+					new Interaction\DemandLocations($parameters['id'], $this->database),
 					$this->seeker,
 					$parameters['id'],
 					$this->database

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Endpoint\Demand;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -38,25 +38,25 @@ final class Patch implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Domain\ChainedDemand(
-			new Domain\HarnessedDemand(
-				new Domain\ExistingDemand(
-					new Domain\FakeDemand(),
+		(new Interaction\ChainedDemand(
+			new Interaction\HarnessedDemand(
+				new Interaction\ExistingDemand(
+					new Interaction\FakeDemand(),
 					$parameters['id'],
 					$this->database
 				),
 				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			),
-			new Domain\HarnessedDemand(
-				new Domain\OwnedDemand(
-					new Domain\FakeDemand(),
+			new Interaction\HarnessedDemand(
+				new Interaction\OwnedDemand(
+					new Interaction\FakeDemand(),
 					$parameters['id'],
 					$this->seeker,
 					$this->database
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Domain\StoredDemand($parameters['id'], $this->database)
+			new Interaction\StoredDemand($parameters['id'], $this->database)
 		))->reconsider(
 			(new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)))->apply(
 				(new Internal\DecodedJson(

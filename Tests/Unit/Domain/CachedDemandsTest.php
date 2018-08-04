@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Unit\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Tester;
@@ -20,10 +20,10 @@ final class CachedDemandsTest extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testMultipleCallsWithSingleExecution() {
-		$origin = $this->mock(Domain\Demands::class);
+		$origin = $this->mock(Interaction\Demands::class);
 		$origin->shouldReceive('count')->once();
 		$origin->shouldReceive('all')->once();
-		$demands = new Domain\CachedDemands($origin);
+		$demands = new Interaction\CachedDemands($origin);
 		Assert::equal($demands->count(new Dataset\FakeSelection()), $demands->count(new Dataset\FakeSelection()));
 		Assert::equal($demands->all(new Dataset\FakeSelection()), $demands->all(new Dataset\FakeSelection()));
 	}

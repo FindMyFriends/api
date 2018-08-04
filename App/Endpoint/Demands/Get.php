@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Endpoint\Demands;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
@@ -50,8 +50,8 @@ final class Get implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		$demands = new Domain\PublicDemands(
-			new Domain\IndividualDemands(
+		$demands = new Interaction\PublicDemands(
+			new Interaction\IndividualDemands(
 				$this->seeker,
 				$this->database
 			),

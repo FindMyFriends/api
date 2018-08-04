@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
 use Klapuch\Output;
 

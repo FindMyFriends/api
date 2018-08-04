@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Endpoint\Demand\Locations;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Http\CreatedResourceUrl;
 use FindMyFriends\Misc;
@@ -51,7 +51,7 @@ final class Post implements Application\View {
 	public function response(array $parameters): Application\Response {
 		(new Place\ChainedLocations(
 			new Place\HarnessedLocations(
-				new Domain\OwnedLocations(
+				new Interaction\OwnedLocations(
 					new Place\FakeLocations(),
 					$this->seeker,
 					$parameters['id'],
@@ -59,7 +59,7 @@ final class Post implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Domain\DemandLocations($parameters['id'], $this->database)
+			new Interaction\DemandLocations($parameters['id'], $this->database)
 		))->track(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

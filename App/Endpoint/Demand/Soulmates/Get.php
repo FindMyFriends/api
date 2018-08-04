@@ -5,7 +5,7 @@ namespace FindMyFriends\Endpoint\Demand\Soulmates;
 
 use Elasticsearch;
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -45,8 +45,8 @@ final class Get implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$soulmates = new Domain\Search\PublicSoulmates(
-			new Domain\Search\SuitedSoulmates(
+		$soulmates = new Search\PublicSoulmates(
+			new Search\SuitedSoulmates(
 				$parameters['demand_id'],
 				$this->elasticsearch,
 				$this->database

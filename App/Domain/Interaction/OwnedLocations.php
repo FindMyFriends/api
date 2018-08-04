@@ -1,8 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
+use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Place;
 use Klapuch\Storage;
 
 /**

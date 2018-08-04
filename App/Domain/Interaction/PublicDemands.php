@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
 use Hashids\HashidsInterface;
 use Klapuch\Dataset;
@@ -11,7 +11,7 @@ use Klapuch\Iterator;
  * Demand formatted to be used for public representation
  */
 final class PublicDemands implements Demands {
-	/** @var \FindMyFriends\Domain\Demands */
+	/** @var \FindMyFriends\Domain\Interaction\Demands */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */

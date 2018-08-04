@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
 use Klapuch\Output;
 
@@ -9,7 +9,7 @@ use Klapuch\Output;
  * Demand called sequentially one by one behaving as a single one
  */
 final class ChainedDemand implements Demand {
-	/** @var \FindMyFriends\Domain\Demand[] */
+	/** @var \FindMyFriends\Domain\Interaction\Demand[] */
 	private $origins;
 
 	public function __construct(Demand ...$origins) {

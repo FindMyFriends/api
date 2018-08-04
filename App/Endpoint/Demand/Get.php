@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Endpoint\Demand;
 
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -47,10 +47,10 @@ final class Get implements Application\View {
 			new Response\JsonResponse(
 				new Response\ConcurrentlyControlledResponse(
 					new Response\PlainResponse(
-						(new Domain\PublicDemand(
-							new Domain\HarnessedDemand(
-								new Domain\OwnedDemand(
-									new Domain\StoredDemand(
+						(new Interaction\PublicDemand(
+							new Interaction\HarnessedDemand(
+								new Interaction\OwnedDemand(
+									new Interaction\StoredDemand(
 										$parameters['id'],
 										$this->database
 									),

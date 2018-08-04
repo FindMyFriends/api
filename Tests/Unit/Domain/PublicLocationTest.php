@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Unit\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use Hashids\Hashids;
 use Klapuch\Output;
@@ -26,7 +26,7 @@ final class PublicLocationTest extends Tester\TestCase {
 				'id' => 'RD',
 			],
 			json_decode(
-				(new Domain\PublicLocation(
+				(new Interaction\PublicLocation(
 					new Place\PublicLocation(new Place\FakeLocation(), new Hashids('a')),
 					new Hashids('b')
 				))->print(

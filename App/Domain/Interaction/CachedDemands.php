@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
 use Klapuch\Dataset;
 
@@ -15,7 +15,7 @@ final class CachedDemands implements Demands {
 	/** @var \Iterator|null */
 	private $all;
 
-	/** @var \FindMyFriends\Domain\Demands */
+	/** @var \FindMyFriends\Domain\Interaction\Demands */
 	private $origin;
 
 	public function __construct(Demands $origin) {

@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Integration\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
@@ -22,7 +22,7 @@ final class DemandLocationsTest extends Tester\TestCase {
 
 	public function testTrackingForDemandChange() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Domain\DemandLocations(
+		(new Interaction\DemandLocations(
 			$demand,
 			$this->database
 		))->track(
@@ -47,7 +47,7 @@ final class DemandLocationsTest extends Tester\TestCase {
 		['id' => $demand2] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand2]))->try();
-		$locations = (new Domain\DemandLocations(
+		$locations = (new Interaction\DemandLocations(
 			$demand1,
 			$this->database
 		))->history();

@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Unit\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use Hashids\Hashids;
 use Klapuch\Output;
 use Tester;
@@ -24,8 +24,8 @@ final class PublicDemandTest extends Tester\TestCase {
 				'created_at' => '2017-09-17T13:58:10+00:00',
 			],
 			json_decode(
-				(new Domain\PublicDemand(
-					new Domain\FakeDemand(),
+				(new Interaction\PublicDemand(
+					new Interaction\FakeDemand(),
 					new Hashids()
 				))->print(
 					new Output\Json(

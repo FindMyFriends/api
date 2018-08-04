@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Routing;
 
 use Elasticsearch;
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Http;
@@ -63,8 +62,8 @@ final class ApplicationRoutes implements Routing\Routes {
 	}
 
 	public function matches(): array {
-		$seeker = (new Domain\Access\HarnessedEntrance(
-			new Domain\Access\RateLimitedEntrance(
+		$seeker = (new Access\HarnessedEntrance(
+			new Access\RateLimitedEntrance(
 				new Access\ApiEntrance($this->database),
 				$this->redis
 			),

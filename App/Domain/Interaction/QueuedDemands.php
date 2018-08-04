@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain;
+namespace FindMyFriends\Domain\Interaction;
 
+use FindMyFriends\Domain\Search;
 use Klapuch\Dataset;
 
 /**
  * Demands able to be queued and later processed
  */
 final class QueuedDemands implements Demands {
-	/** @var \FindMyFriends\Domain\Demands */
+	/** @var \FindMyFriends\Domain\Interaction\Demands */
 	private $origin;
 
 	/** @var \FindMyFriends\Domain\Search\Publisher */

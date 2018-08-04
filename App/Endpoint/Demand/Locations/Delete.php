@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Endpoint\Demand\Locations;
 
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -39,7 +39,7 @@ final class Delete implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Domain\StoredLocation($parameters['id'], $this->database)
+			new Interaction\StoredLocation($parameters['id'], $this->database)
 		))->forget();
 		return new Response\EmptyResponse();
 	}

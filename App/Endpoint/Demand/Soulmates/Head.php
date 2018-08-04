@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Endpoint\Demand\Soulmates;
 
 use Elasticsearch;
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Search;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
@@ -34,7 +34,7 @@ final class Head implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		$count = (new Domain\Search\SuitedSoulmates(
+		$count = (new Search\SuitedSoulmates(
 			$parameters['demand_id'],
 			$this->elasticsearch,
 			$this->database

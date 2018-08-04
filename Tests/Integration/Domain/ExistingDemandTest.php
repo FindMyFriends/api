@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Integration\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
@@ -22,24 +22,24 @@ final class ExistingDemandTest extends Tester\TestCase {
 
 	public function testThrowingOnUnknown() {
 		$ex = Assert::exception(function() {
-			(new Domain\ExistingDemand(
-				new Domain\FakeDemand(),
+			(new Interaction\ExistingDemand(
+				new Interaction\FakeDemand(),
 				1,
 				$this->database
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Demand does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() {
-			(new Domain\ExistingDemand(
-				new Domain\FakeDemand(),
+			(new Interaction\ExistingDemand(
+				new Interaction\FakeDemand(),
 				1,
 				$this->database
 			))->retract();
 		}, \UnexpectedValueException::class, 'Demand does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() {
-			(new Domain\ExistingDemand(
-				new Domain\FakeDemand(),
+			(new Interaction\ExistingDemand(
+				new Interaction\FakeDemand(),
 				1,
 				$this->database
 			))->reconsider([]);
@@ -50,7 +50,7 @@ final class ExistingDemandTest extends Tester\TestCase {
 	public function testPassingWithExisting() {
 		(new Misc\SampleDemand($this->database))->try();
 		Assert::noError(function() {
-			$demand = new Domain\ExistingDemand(new Domain\FakeDemand(), 1, $this->database);
+			$demand = new Interaction\ExistingDemand(new Interaction\FakeDemand(), 1, $this->database);
 			$demand->print(new Output\FakeFormat());
 			$demand->retract();
 			$demand->reconsider([]);

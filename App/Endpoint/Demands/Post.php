@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Endpoint\Demands;
 
 use FindMyFriends\Constraint;
-use FindMyFriends\Domain;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Http;
 use FindMyFriends\Response;
@@ -62,8 +62,8 @@ final class Post implements Application\View {
 			new Uri\RelativeUrl($this->url, 'demands/{id}'),
 			[
 				'id' => $this->hashids->encode(
-					(new Domain\QueuedDemands(
-						new Domain\IndividualDemands(
+					(new Interaction\QueuedDemands(
+						new Interaction\IndividualDemands(
 							$this->seeker,
 							$this->database
 						),

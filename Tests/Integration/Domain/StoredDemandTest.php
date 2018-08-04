@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Integration\Domain;
 
-use FindMyFriends\Domain;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
@@ -24,7 +24,7 @@ final class StoredDemandTest extends Tester\TestCase {
 	public function testRemovingSingleDemand() {
 		(new Misc\SampleDemand($this->database))->try();
 		(new Misc\SampleDemand($this->database))->try();
-		(new Domain\StoredDemand(1, $this->database))->retract();
+		(new Interaction\StoredDemand(1, $this->database))->retract();
 		(new Misc\TableCount($this->database, 'demands', 1))->assert();
 		Assert::same(
 			2,
@@ -42,7 +42,7 @@ final class StoredDemandTest extends Tester\TestCase {
 			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
 		(new Misc\SampleDemand($this->database))->try();
-		$demand = new Domain\StoredDemand(1, $this->database);
+		$demand = new Interaction\StoredDemand(1, $this->database);
 		$demand->reconsider(
 			[
 				'note' => null,
@@ -222,7 +222,7 @@ final class StoredDemandTest extends Tester\TestCase {
 			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
 		(new Misc\SampleDemand($this->database))->try();
-		$demand = new Domain\StoredDemand(1, $this->database);
+		$demand = new Interaction\StoredDemand(1, $this->database);
 		$demand->reconsider(['note' => 'new note']);
 		['note' => $note] = json_decode($demand->print(new Output\Json())->serialization(), true);
 		Assert::same('new note', $note);
