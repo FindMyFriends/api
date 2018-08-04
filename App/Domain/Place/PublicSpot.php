@@ -7,18 +7,18 @@ use Hashids\HashidsInterface;
 use Klapuch\Output;
 
 /**
- * Location formatted to be used for public representation
+ * Spot formatted to be used for public representation
  */
-final class PublicLocation implements Location {
-	/** @var \FindMyFriends\Domain\Place\Location */
+final class PublicSpot implements Spot {
+	/** @var \FindMyFriends\Domain\Place\Spot */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
+	private $spotHashids;
 
-	public function __construct(Location $origin, HashidsInterface $locationHashids) {
+	public function __construct(Spot $origin, HashidsInterface $spotHashids) {
 		$this->origin = $origin;
-		$this->locationHashids = $locationHashids;
+		$this->spotHashids = $spotHashids;
 	}
 
 	/**
@@ -35,7 +35,7 @@ final class PublicLocation implements Location {
 	 */
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('id', [$this->locationHashids, 'encode'])
+			->adjusted('id', [$this->spotHashids, 'encode'])
 			->adjusted('assigned_at', function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});

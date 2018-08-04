@@ -8,9 +8,9 @@ use FindMyFriends\Domain\Place;
 use Klapuch\Storage;
 
 /**
- * Locations owned by one particular seeker
+ * Spots owned by one particular seeker
  */
-final class OwnedLocations implements Place\Locations {
+final class OwnedSpots implements Place\Spots {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
@@ -20,11 +20,11 @@ final class OwnedLocations implements Place\Locations {
 	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	/** @var \FindMyFriends\Domain\Place\Locations */
+	/** @var \FindMyFriends\Domain\Place\Spots */
 	private $origin;
 
 	public function __construct(
-		Place\Locations $origin,
+		Place\Spots $origin,
 		Access\Seeker $owner,
 		int $change,
 		Storage\MetaPDO $database
@@ -36,13 +36,13 @@ final class OwnedLocations implements Place\Locations {
 	}
 
 	/**
-	 * @param mixed[] $location
+	 * @param mixed[] $spot
 	 * @throws \UnexpectedValueException
 	 */
-	public function track(array $location): void {
+	public function track(array $spot): void {
 		if (!$this->owned($this->change, $this->owner))
 			throw $this->exception($this->change);
-		$this->origin->track($location);
+		$this->origin->track($spot);
 	}
 
 	/**

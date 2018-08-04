@@ -22,7 +22,7 @@ final class DemandLocationsTest extends Tester\TestCase {
 
 	public function testTrackingForDemandChange() {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Interaction\DemandLocations(
+		(new Interaction\DemandSpots(
 			$demand,
 			$this->database
 		))->track(
@@ -47,7 +47,7 @@ final class DemandLocationsTest extends Tester\TestCase {
 		['id' => $demand2] = (new Misc\SampleDemand($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand2]))->try();
-		$locations = (new Interaction\DemandLocations(
+		$locations = (new Interaction\DemandSpots(
 			$demand1,
 			$this->database
 		))->history();

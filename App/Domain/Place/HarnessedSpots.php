@@ -6,21 +6,21 @@ namespace FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 
 /**
- * Locations harnessed by callback
+ * Spots harnessed by callback
  */
-final class HarnessedSpots implements Locations {
-	/** @var \FindMyFriends\Domain\Place\Locations */
+final class HarnessedSpots implements Spots {
+	/** @var \FindMyFriends\Domain\Place\Spots */
 	private $origin;
 
 	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
-	public function __construct(Locations $origin, Misc\Callback $callback) {
+	public function __construct(Spots $origin, Misc\Callback $callback) {
 		$this->origin = $origin;
 		$this->callback = $callback;
 	}
 
-	public function track(array $location): void {
+	public function track(array $spot): void {
 		$this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
 	}
 

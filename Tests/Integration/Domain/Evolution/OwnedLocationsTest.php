@@ -23,7 +23,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 
 	public function testThrowingOnNotOwned() {
 		Assert::exception(function () {
-			(new Evolution\OwnedLocations(
+			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
@@ -31,7 +31,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 			))->track([]);
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::exception(function () {
-			(new Evolution\OwnedLocations(
+			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
@@ -45,7 +45,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change]))->try();
 		Assert::noError(function () use ($change, $seeker) {
-			(new Evolution\OwnedLocations(
+			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,
@@ -64,7 +64,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 			);
 		});
 		Assert::noError(function () use ($change, $seeker) {
-			(new Evolution\OwnedLocations(
+			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,

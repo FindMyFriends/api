@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Interaction;
 
 use FindMyFriends\Domain\Place;
-use FindMyFriends\Sql\CollectiveDemandLocations;
+use FindMyFriends\Sql\CollectiveDemandSpots;
 use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Stored location
+ * Stored spot
  */
-final class StoredLocation implements Place\Location {
+final class StoredSpot implements Place\Spot {
 	/** @var int */
 	private $id;
 
@@ -26,28 +26,28 @@ final class StoredLocation implements Place\Location {
 	public function forget(): void {
 		(new Storage\TypedQuery(
 			$this->database,
-			'DELETE FROM demand_locations WHERE id = ?',
+			'DELETE FROM demand_spots WHERE id = ?',
 			[$this->id]
 		))->execute();
 	}
 
 	public function print(Output\Format $format): Output\Format {
-		$location = (new Storage\BuiltQuery(
+		$spot = (new Storage\BuiltQuery(
 			$this->database,
-			(new CollectiveDemandLocations\Select())
-				->from(['collective_demand_locations'])
+			(new CollectiveDemandSpots\Select())
+				->from(['collective_demand_spots'])
 				->where('id = ?', [$this->id])
 		))->row();
-		return $format->with('demand_id', $location['demand_id'])
-			->with('id', $location['id'])
+		return $format->with('demand_id', $spot['demand_id'])
+			->with('id', $spot['id'])
 			->with(
 				'coordinates',
 				[
-					'latitude' => $location['coordinates']['x'],
-					'longitude' => $location['coordinates']['y'],
+					'latitude' => $spot['coordinates']['x'],
+					'longitude' => $spot['coordinates']['y'],
 				]
 			)
-			->with('met_at', $location['met_at'])
-			->with('assigned_at', $location['assigned_at']);
+			->with('met_at', $spot['met_at'])
+			->with('assigned_at', $spot['assigned_at']);
 	}
 }

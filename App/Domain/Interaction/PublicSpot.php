@@ -1,25 +1,25 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Evolution;
+namespace FindMyFriends\Domain\Interaction;
 
 use FindMyFriends\Domain\Place;
 use Hashids\HashidsInterface;
 use Klapuch\Output;
 
 /**
- * Location formatted to be used for public representation
+ * Spot formatted to be used for public representation
  */
-final class PublicLocation implements Place\Location {
-	/** @var \FindMyFriends\Domain\Place\Location */
+final class PublicSpot implements Place\Spot {
+	/** @var \FindMyFriends\Domain\Place\Spot */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */
-	private $evolutionHashids;
+	private $demandHashids;
 
-	public function __construct(Place\Location $origin, HashidsInterface $evolutionHashids) {
+	public function __construct(Place\Spot $origin, HashidsInterface $demandHashids) {
 		$this->origin = $origin;
-		$this->evolutionHashids = $evolutionHashids;
+		$this->demandHashids = $demandHashids;
 	}
 
 	/**
@@ -36,6 +36,6 @@ final class PublicLocation implements Place\Location {
 	 */
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('evolution_id', [$this->evolutionHashids, 'encode']);
+			->adjusted('demand_id', [$this->demandHashids, 'encode']);
 	}
 }

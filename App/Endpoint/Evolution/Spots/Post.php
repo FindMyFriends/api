@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Endpoint\Evolution\Locations;
+namespace FindMyFriends\Endpoint\Evolution\Spots;
 
 use FindMyFriends\Constraint;
 use FindMyFriends\Domain\Access;
@@ -51,7 +51,7 @@ final class Post implements Application\View {
 	public function response(array $parameters): Application\Response {
 		(new Place\ChainedSpots(
 			new Place\HarnessedSpots(
-				new Evolution\OwnedLocations(
+				new Evolution\OwnedSpots(
 					new Place\FakeSpots(),
 					$this->seeker,
 					$parameters['id'],
@@ -59,11 +59,11 @@ final class Post implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Evolution\ChangeLocations($parameters['id'], $this->database)
+			new Evolution\ChangeSpots($parameters['id'], $this->database)
 		))->track(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-				new Constraint\LocationRule()
+				new Constraint\SpotRule()
 			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 		);
 		return new Response\CreatedResponse(

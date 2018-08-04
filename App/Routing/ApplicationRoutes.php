@@ -142,8 +142,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{id}/locations [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Locations\Get(
+			'demands/{id}/spots [GET]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Spots\Get(
 					$this->hashids['location'],
 					$this->hashids['demand'],
 					$this->database,
@@ -151,8 +151,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{id}/locations [POST]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Locations\Post(
+			'demands/{id}/spots [POST]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Spots\Post(
 					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
@@ -160,8 +160,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'demands/{demand_id}/locations/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Locations\Delete(
+			'demands/{demand_id}/spots/{id} [DELETE]' => new View\AuthenticatedView(
+				new Endpoint\Demand\Spots\Delete(
 					$this->database,
 					$seeker
 				),
@@ -207,8 +207,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'evolutions/{id}/locations [GET]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Locations\Get(
+			'evolutions/{id}/spots [GET]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Spots\Get(
 					$this->hashids['location'],
 					$this->hashids['evolution'],
 					$this->database,
@@ -216,8 +216,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'evolutions/{id}/locations [POST]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Locations\Post(
+			'evolutions/{id}/spots [POST]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Spots\Post(
 					new Request\JsonRequest(new Application\PlainRequest()),
 					$this->uri,
 					$this->database,
@@ -225,8 +225,8 @@ final class ApplicationRoutes implements Routing\Routes {
 				),
 				new Http\ChosenRole($seeker, ['member'])
 			),
-			'evolutions/{evolution_id}/locations/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Locations\Delete(
+			'evolutions/{evolution_id}/spots/{id} [DELETE]' => new View\AuthenticatedView(
+				new Endpoint\Evolution\Spots\Delete(
 					$this->database,
 					$seeker
 				),

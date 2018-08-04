@@ -6,9 +6,9 @@ namespace FindMyFriends\Constraint;
 use Klapuch\Validation;
 
 /**
- * Rule for location
+ * Rule for spot
  */
-final class LocationRule implements Validation\Rule {
+final class SpotRule implements Validation\Rule {
 	/**
 	 * @param mixed[] $subject
 	 * @return bool

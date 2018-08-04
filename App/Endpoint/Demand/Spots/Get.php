@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Endpoint\Evolution\Locations;
+namespace FindMyFriends\Endpoint\Demand\Spots;
 
 use FindMyFriends\Domain\Access;
-use FindMyFriends\Domain\Evolution;
+use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -14,10 +14,10 @@ use Klapuch\Storage;
 
 final class Get implements Application\View {
 	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
+	private $spotHashids;
 
 	/** @var \Hashids\HashidsInterface */
-	private $evolutionHashids;
+	private $demandHashids;
 
 	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
@@ -26,13 +26,13 @@ final class Get implements Application\View {
 	private $seeker;
 
 	public function __construct(
-		HashidsInterface $locationHashids,
-		HashidsInterface $evolutionHashids,
+		HashidsInterface $spotHashids,
+		HashidsInterface $demandHashids,
 		Storage\MetaPDO $database,
 		Access\Seeker $seeker
 	) {
-		$this->locationHashids = $locationHashids;
-		$this->evolutionHashids = $evolutionHashids;
+		$this->spotHashids = $spotHashids;
+		$this->demandHashids = $demandHashids;
 		$this->database = $database;
 		$this->seeker = $seeker;
 	}
@@ -43,22 +43,22 @@ final class Get implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		$locations = new Evolution\PublicLocations(
+		$spots = new Interaction\PublicSpots(
 			new Place\HarnessedSpots(
-				new Evolution\OwnedLocations(
-					new Evolution\ChangeLocations($parameters['id'], $this->database),
+				new Interaction\OwnedSpots(
+					new Interaction\DemandSpots($parameters['id'], $this->database),
 					$this->seeker,
 					$parameters['id'],
 					$this->database
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			$this->locationHashids,
-			$this->evolutionHashids
+			$this->spotHashids,
+			$this->demandHashids
 		);
 		return new Response\PlainResponse(
 			new Misc\JsonPrintedObjects(
-				...iterator_to_array($locations->history())
+				...iterator_to_array($spots->history())
 			)
 		);
 	}

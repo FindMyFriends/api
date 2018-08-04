@@ -6,8 +6,8 @@ namespace FindMyFriends\Domain\Place;
 /**
  * Fake
  */
-final class FakeSpots implements Locations {
-	public function track(array $location): void {
+final class FakeSpots implements Spots {
+	public function track(array $spot): void {
 	}
 
 	public function history(): \Iterator {

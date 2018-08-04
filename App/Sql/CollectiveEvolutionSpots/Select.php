@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Sql\CollectiveDemandLocations;
+namespace FindMyFriends\Sql\CollectiveEvolutionSpots;
 
 use Klapuch\Sql;
 
@@ -13,7 +13,7 @@ final class Select implements Sql\Select {
 		$this->select = new Sql\AnsiSelect(
 			[
 				'id',
-				'demand_id',
+				'evolution_id',
 				'coordinates',
 				'met_at',
 				'assigned_at',

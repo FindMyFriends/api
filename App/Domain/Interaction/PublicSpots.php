@@ -8,34 +8,34 @@ use Hashids\HashidsInterface;
 use Klapuch\Iterator;
 
 /**
- * Locations formatted to be used for public representation
+ * Spots formatted to be used for public representation
  */
-final class PublicLocations implements Place\Locations {
-	/** @var \FindMyFriends\Domain\Place\Locations */
+final class PublicSpots implements Place\Spots {
+	/** @var \FindMyFriends\Domain\Place\Spots */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
+	private $spotHashids;
 
 	/** @var \Hashids\HashidsInterface */
 	private $demandHashids;
 
 	public function __construct(
-		Place\Locations $origin,
-		HashidsInterface $locationHashids,
+		Place\Spots $origin,
+		HashidsInterface $spotHashids,
 		HashidsInterface $demandHashids
 	) {
 		$this->origin = $origin;
-		$this->locationHashids = $locationHashids;
+		$this->spotHashids = $spotHashids;
 		$this->demandHashids = $demandHashids;
 	}
 
 	/**
-	 * @param mixed[] $location
+	 * @param mixed[] $spot
 	 * @throws \UnexpectedValueException
 	 */
-	public function track(array $location): void {
-		$this->origin->track($location);
+	public function track(array $spot): void {
+		$this->origin->track($spot);
 	}
 
 	/**
@@ -45,9 +45,9 @@ final class PublicLocations implements Place\Locations {
 	public function history(): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->history(),
-			function(Place\Location $location): Place\Location {
-				return new PublicLocation(
-					new Place\PublicLocation($location, $this->locationHashids),
+			function(Place\Spot $spot): Place\Spot {
+				return new PublicSpot(
+					new Place\PublicSpot($spot, $this->spotHashids),
 					$this->demandHashids
 				);
 			}

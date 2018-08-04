@@ -7,26 +7,26 @@ use Hashids\HashidsInterface;
 use Klapuch\Iterator;
 
 /**
- * Locations formatted to be used for public representation
+ * Spots formatted to be used for public representation
  */
-final class PublicLocations implements Locations {
-	/** @var \FindMyFriends\Domain\Place\Locations */
+final class PublicSpots implements Spots {
+	/** @var \FindMyFriends\Domain\Place\Spots */
 	private $origin;
 
 	/** @var \Hashids\HashidsInterface */
-	private $locationHashids;
+	private $spotHashids;
 
-	public function __construct(Locations $origin, HashidsInterface $locationHashids) {
+	public function __construct(Spots $origin, HashidsInterface $spotHashids) {
 		$this->origin = $origin;
-		$this->locationHashids = $locationHashids;
+		$this->spotHashids = $spotHashids;
 	}
 
 	/**
-	 * @param mixed[] $location
+	 * @param mixed[] $spot
 	 * @throws \UnexpectedValueException
 	 */
-	public function track(array $location): void {
-		$this->origin->track($location);
+	public function track(array $spot): void {
+		$this->origin->track($spot);
 	}
 
 	/**
@@ -36,8 +36,8 @@ final class PublicLocations implements Locations {
 	public function history(): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->history(),
-			function(Location $location): Location {
-				return new PublicLocation($location, $this->locationHashids);
+			function(Spot $spot): Spot {
+				return new PublicSpot($spot, $this->spotHashids);
 			}
 		);
 	}

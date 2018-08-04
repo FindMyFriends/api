@@ -3,16 +3,16 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Place;
 
-interface Locations {
+interface Spots {
 	/**
-	 * Track new location
-	 * @param mixed[] $location
+	 * Track new spot
+	 * @param mixed[] $spot
 	 * @throws \UnexpectedValueException
 	 */
-	public function track(array $location): void;
+	public function track(array $spot): void;
 
 	/**
-	 * History of locations
+	 * History of spots
 	 * @throws \UnexpectedValueException
 	 * @return \Iterator
 	 */

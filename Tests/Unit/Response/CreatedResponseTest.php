@@ -20,7 +20,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class CreatedResponseTest extends Tester\TestCase {
 	public function testPrependLocationHeader() {
 		Assert::same(
-			['Location' => 'http://localhost', 'Accept' => 'text/html'],
+			['Spot' => 'http://localhost', 'Accept' => 'text/html'],
 			(new Response\CreatedResponse(
 				new Application\FakeResponse(new Output\FakeFormat(), ['Accept' => 'text/html']),
 				new Uri\FakeUri('http://localhost', '/books/1')

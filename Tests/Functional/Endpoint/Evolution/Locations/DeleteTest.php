@@ -25,7 +25,7 @@ final class DeleteTest extends Tester\TestCase {
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'location'))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change, 'location_id' => $location]))->try();
-		$response = (new Endpoint\Evolution\Locations\Delete(
+		$response = (new Endpoint\Evolution\Spots\Delete(
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $location]);
@@ -35,11 +35,11 @@ final class DeleteTest extends Tester\TestCase {
 
 	public function test403ForNotOwned() {
 		Assert::exception(function () {
-			(new Endpoint\Evolution\Locations\Delete(
+			(new Endpoint\Evolution\Spots\Delete(
 				$this->database,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
-		}, \UnexpectedValueException::class, 'Location does not belong to you', HTTP_FORBIDDEN);
+		}, \UnexpectedValueException::class, 'Spot does not belong to you', HTTP_FORBIDDEN);
 	}
 }
 

@@ -26,7 +26,7 @@ final class PostTest extends Tester\TestCase {
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		$response = (new Endpoint\Evolution\Locations\Post(
+		$response = (new Endpoint\Evolution\Spots\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
 					file_get_contents(__DIR__ . '/../../../../fixtures/samples/location/post.json')
@@ -39,12 +39,12 @@ final class PostTest extends Tester\TestCase {
 		$location = json_decode($response->body()->serialization(), true);
 		Assert::null($location);
 		Assert::same(HTTP_CREATED, $response->status());
-		Assert::same('https://localhost/evolutions/k5/locations', $response->headers()['Location']);
+		Assert::same('https://localhost/evolutions/k5/locations', $response->headers()['Spot']);
 	}
 
 	public function test400OnBadInput() {
 		Assert::exception(function () {
-			(new Endpoint\Evolution\Locations\Post(
+			(new Endpoint\Evolution\Spots\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'evolutions', []),
 				$this->database,

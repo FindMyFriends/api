@@ -5,9 +5,9 @@ namespace FindMyFriends\Domain\Place;
 
 use Klapuch\Output;
 
-interface Location {
+interface Spot {
 	/**
-	 * Print the location
+	 * Print the spot
 	 * @param \Klapuch\Output\Format $format
 	 * @throws \UnexpectedValueException
 	 * @return \Klapuch\Output\Format

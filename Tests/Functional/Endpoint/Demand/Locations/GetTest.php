@@ -26,7 +26,7 @@ final class GetTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand]))->try();
-		$response = (new Endpoint\Demand\Locations\Get(
+		$response = (new Endpoint\Demand\Spots\Get(
 			new Hashids('a'),
 			new Hashids('b'),
 			$this->database,
@@ -43,13 +43,13 @@ final class GetTest extends Tester\TestCase {
 		Assert::same((new Hashids('b'))->encode($demand), $locations[0]->demand_id);
 		(new Misc\SchemaAssertion(
 			$locations,
-			new \SplFileInfo(__DIR__ . '/../../../../../App/Endpoint/Demand/Locations/schema/get.json')
+			new \SplFileInfo(__DIR__ . '/../../../../../App/Endpoint/Demand/Spots/schema/get.json')
 		))->assert();
 	}
 
 	public function test403ForNotOwned() {
 		Assert::exception(function () {
-			(new Endpoint\Demand\Locations\Get(
+			(new Endpoint\Demand\Spots\Get(
 				new Hashids('a'),
 				new Hashids('b'),
 				$this->database,

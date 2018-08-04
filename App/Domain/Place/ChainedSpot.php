@@ -6,22 +6,22 @@ namespace FindMyFriends\Domain\Place;
 use Klapuch\Output;
 
 /**
- * Location called sequentially one by one behaving as a single one
+ * Spot called sequentially one by one behaving as a single one
  */
-final class ChainedSpot implements Location {
-	/** @var \FindMyFriends\Domain\Place\Location[] */
-	private $locations;
+final class ChainedSpot implements Spot {
+	/** @var \FindMyFriends\Domain\Place\Spot[] */
+	private $spots;
 
-	public function __construct(Location ...$locations) {
-		$this->locations = $locations;
+	public function __construct(Spot ...$spots) {
+		$this->spots = $spots;
 	}
 
 	/**
 	 * @throws \UnexpectedValueException
 	 */
 	public function forget(): void {
-		foreach ($this->locations as $location) {
-			$location->forget();
+		foreach ($this->spots as $spot) {
+			$spot->forget();
 		}
 	}
 

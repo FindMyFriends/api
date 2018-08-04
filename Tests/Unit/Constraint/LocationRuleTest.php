@@ -28,14 +28,14 @@ final class LocationRuleTest extends Tester\TestCase {
 	];
 
 	public function testApplicationWithAllReturnedValues() {
-		Assert::equal(self::BASE, (new Constraint\LocationRule())->apply(self::BASE));
+		Assert::equal(self::BASE, (new Constraint\SpotRule())->apply(self::BASE));
 	}
 
 	/**
 	 * @throws \UnexpectedValueException Exactly timeline side does not have approximation.
 	 */
 	public function testThrowingOnExactlyTimeLineSideWithApproximation() {
-		(new Constraint\LocationRule())->apply(
+		(new Constraint\SpotRule())->apply(
 			array_replace_recursive(
 				self::BASE,
 				[
@@ -57,7 +57,7 @@ final class LocationRuleTest extends Tester\TestCase {
 	public function testAllowedApproximationAsNull()
 	{
 		Assert::noError(function() {
-			(new Constraint\LocationRule())->apply(
+			(new Constraint\SpotRule())->apply(
 				array_replace_recursive(
 					self::BASE,
 					[

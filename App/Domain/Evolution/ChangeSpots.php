@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Evolution;
 
 use FindMyFriends\Domain\Place;
-use FindMyFriends\Sql\CollectiveEvolutionLocations;
+use FindMyFriends\Sql\CollectiveEvolutionSpots;
 use Klapuch\Storage;
 
 /**
- * All the locations from single evolution change
+ * All the spots from single evolution change
  */
-class ChangeLocations implements Place\Locations {
+class ChangeSpots implements Place\Spots {
 	/** @var int */
 	private $change;
 
@@ -22,26 +22,26 @@ class ChangeLocations implements Place\Locations {
 		$this->database = $database;
 	}
 
-	public function track(array $location): void {
+	public function track(array $spot): void {
 		(new Storage\TypedQuery(
 			$this->database,
-			'INSERT INTO collective_evolution_locations (evolution_id, coordinates, met_at) VALUES
+			'INSERT INTO collective_evolution_spots (evolution_id, coordinates, met_at) VALUES
 			(:evolution_id, POINT(:latitude, :longitude), ROW(:moment, :timeline_side, :approximation))',
-			['evolution_id' => $this->change] + $location['coordinates'] + $location['met_at']
+			['evolution_id' => $this->change] + $spot['coordinates'] + $spot['met_at']
 		))->execute();
 	}
 
 	public function history(): \Iterator {
-		$locations = (new Storage\BuiltQuery(
+		$spots = (new Storage\BuiltQuery(
 			$this->database,
-			(new CollectiveEvolutionLocations\Select())
-				->from(['collective_evolution_locations'])
+			(new CollectiveEvolutionSpots\Select())
+				->from(['collective_evolution_spots'])
 				->where('evolution_id = ?', [$this->change])
 		))->rows();
-		foreach ($locations as $location) {
-			yield new StoredLocation(
-				$location['id'],
-				new Storage\MemoryPDO($this->database, $location)
+		foreach ($spots as $spot) {
+			yield new StoredSpot(
+				$spot['id'],
+				new Storage\MemoryPDO($this->database, $spot)
 			);
 		}
 	}

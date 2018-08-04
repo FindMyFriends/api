@@ -8,10 +8,10 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Location which belongs only to me
+ * Spot which belongs only to me
  */
-final class OwnedLocation implements Location {
-	/** @var \FindMyFriends\Domain\Place\Location */
+final class OwnedSpot implements Spot {
+	/** @var \FindMyFriends\Domain\Place\Spot */
 	private $origin;
 
 	/** @var int */
@@ -24,7 +24,7 @@ final class OwnedLocation implements Location {
 	private $owner;
 
 	public function __construct(
-		Location $origin,
+		Spot $origin,
 		int $id,
 		Access\Seeker $owner,
 		\PDO $database
@@ -58,16 +58,16 @@ final class OwnedLocation implements Location {
 	private function owned(int $id, Access\Seeker $owner): bool {
 		return (new Storage\NativeQuery(
 			$this->database,
-			'SELECT is_location_owned(:location, :seeker)',
-			['location' => $id, 'seeker' => $owner->id()]
+			'SELECT is_spot_owned(:spot, :seeker)',
+			['spot' => $id, 'seeker' => $owner->id()]
 		))->field();
 	}
 
 	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
-			'Location does not belong to you',
+			'Spot does not belong to you',
 			0,
-			new \UnexpectedValueException(sprintf('Location %d does not belong to you.', $id))
+			new \UnexpectedValueException(sprintf('Spot %d does not belong to you.', $id))
 		);
 	}
 }

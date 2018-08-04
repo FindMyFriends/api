@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Schema\Location;
+namespace FindMyFriends\Schema\Spot;
 
 use FindMyFriends\Schema;
 use Predis;
@@ -20,7 +20,7 @@ final class ExplainedTableEnums implements Schema\Enum {
 
 	public function values(): array {
 		return [
-			'location' => [
+			'spot' => [
 				'met_at' => [
 					'timeline_side' => (new Schema\CachedEnum(
 						new Schema\PostgresEnum('timeline_sides', $this->database),

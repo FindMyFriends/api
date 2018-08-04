@@ -7,16 +7,16 @@ use FindMyFriends\Misc;
 use Klapuch\Output;
 
 /**
- * Location harnessed by callback
+ * Spot harnessed by callback
  */
-final class HarnessedSpot implements Location {
-	/** @var \FindMyFriends\Domain\Place\Location */
+final class HarnessedSpot implements Spot {
+	/** @var \FindMyFriends\Domain\Place\Spot */
 	private $origin;
 
 	/** @var \FindMyFriends\Misc\Callback */
 	private $callback;
 
-	public function __construct(Location $origin, Misc\Callback $callback) {
+	public function __construct(Spot $origin, Misc\Callback $callback) {
 		$this->origin = $origin;
 		$this->callback = $callback;
 	}

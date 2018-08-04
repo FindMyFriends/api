@@ -26,8 +26,8 @@ final class PublicLocationTest extends Tester\TestCase {
 				'id' => 'RD',
 			],
 			json_decode(
-				(new Evolution\PublicLocation(
-					new Place\PublicLocation(new Place\FakeSpot(), new Hashids('a')),
+				(new Evolution\PublicSpot(
+					new Place\PublicSpot(new Place\FakeSpot(), new Hashids('a')),
 					new Hashids('b')
 				))->print(
 					new Output\Json(

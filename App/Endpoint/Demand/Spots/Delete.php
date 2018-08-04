@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Endpoint\Demand\Locations;
+namespace FindMyFriends\Endpoint\Demand\Spots;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Interaction;
@@ -31,7 +31,7 @@ final class Delete implements Application\View {
 	public function response(array $parameters): Application\Response {
 		(new Place\ChainedSpot(
 			new Place\HarnessedSpot(
-				new Place\OwnedLocation(
+				new Place\OwnedSpot(
 					new Place\FakeSpot(),
 					$parameters['id'],
 					$this->seeker,
@@ -39,7 +39,7 @@ final class Delete implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Interaction\StoredLocation($parameters['id'], $this->database)
+			new Interaction\StoredSpot($parameters['id'], $this->database)
 		))->forget();
 		return new Response\EmptyResponse();
 	}

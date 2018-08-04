@@ -25,7 +25,7 @@ final class StoredLocationTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change, 'location_id' => $location]))->try();
 		(new Misc\TableCount($this->database, 'evolution_locations', 1))->assert();
 		(new Misc\TableCount($this->database, 'locations', 2))->assert();
-		(new Evolution\StoredLocation(
+		(new Evolution\StoredSpot(
 			$location,
 			$this->database
 		))->forget();

@@ -22,7 +22,7 @@ final class ChangeLocationsTest extends Tester\TestCase {
 
 	public function testTrackingForEvolutionChange() {
 		['id' => $change] = (new Misc\SampleEvolution($this->database))->try();
-		(new Evolution\ChangeLocations(
+		(new Evolution\ChangeSpots(
 			$change,
 			$this->database
 		))->track(
@@ -47,7 +47,7 @@ final class ChangeLocationsTest extends Tester\TestCase {
 		['id' => $change2] = (new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change1]))->try();
 		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change2]))->try();
-		$locations = (new Evolution\ChangeLocations(
+		$locations = (new Evolution\ChangeSpots(
 			$change1,
 			$this->database
 		))->history();

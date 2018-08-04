@@ -84,13 +84,13 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$schemas->save($token->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Token/schema/get.json'));
 		$schemas->save($token->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tokens/schema/post.json'));
 
-		$evolutionLocation = new Schema\Evolution\Location\Structure($this->database);
-		$schemas->save($evolutionLocation->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Evolution/Locations/schema/get.json'));
-		$schemas->save($evolutionLocation->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Evolution/Locations/schema/post.json'));
+		$evolutionSpot = new Schema\Evolution\Spot\Structure($this->database);
+		$schemas->save($evolutionSpot->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Evolution/Spots/schema/get.json'));
+		$schemas->save($evolutionSpot->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Evolution/Spots/schema/post.json'));
 
-		$demandLocation = new Schema\Demand\Location\Structure($this->database);
-		$schemas->save($demandLocation->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Locations/schema/get.json'));
-		$schemas->save($demandLocation->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Locations/schema/post.json'));
+		$demandSpot = new Schema\Demand\Spot\Structure($this->database);
+		$schemas->save($demandSpot->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Spots/schema/get.json'));
+		$schemas->save($demandSpot->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Spots/schema/post.json'));
 	}
 
 	public function name(): string {

@@ -26,7 +26,7 @@ final class GetTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
 		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change]))->try();
-		$response = (new Endpoint\Evolution\Locations\Get(
+		$response = (new Endpoint\Evolution\Spots\Get(
 			new Hashids('a'),
 			new Hashids('b'),
 			$this->database,
@@ -49,7 +49,7 @@ final class GetTest extends Tester\TestCase {
 
 	public function test403ForNotOwned() {
 		Assert::exception(function () {
-			(new Endpoint\Evolution\Locations\Get(
+			(new Endpoint\Evolution\Spots\Get(
 				new Hashids('a'),
 				new Hashids('b'),
 				$this->database,
