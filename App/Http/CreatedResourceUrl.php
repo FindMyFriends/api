@@ -6,7 +6,7 @@ namespace FindMyFriends\Http;
 use Klapuch\Uri;
 
 /**
- * Resource used for identification in Spot header after successful POST request with 201 code
+ * Resource used for identification in Location header after successful POST request with 201 code
  */
 final class CreatedResourceUrl implements Uri\Uri {
 	private const DELIMITER = '/';

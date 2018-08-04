@@ -24,7 +24,7 @@ final class CreatedResponse implements Application\Response {
 	}
 
 	public function headers(): array {
-		return ['Spot' => $this->uri->reference()] + $this->origin->headers();
+		return ['Location' => $this->uri->reference()] + $this->origin->headers();
 	}
 
 	public function status(): int {
