@@ -44,7 +44,7 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$locations = new Evolution\PublicLocations(
-			new Place\HarnessedLocations(
+			new Place\HarnessedSpots(
 				new Evolution\OwnedLocations(
 					new Evolution\ChangeLocations($parameters['id'], $this->database),
 					$this->seeker,

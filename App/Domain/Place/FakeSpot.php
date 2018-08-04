@@ -8,7 +8,7 @@ use Klapuch\Output;
 /**
  * Fake
  */
-final class FakeLocation implements Location {
+final class FakeSpot implements Location {
 	public function forget(): void {
 	}
 

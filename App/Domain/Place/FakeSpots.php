@@ -6,7 +6,7 @@ namespace FindMyFriends\Domain\Place;
 /**
  * Fake
  */
-final class FakeLocations implements Locations {
+final class FakeSpots implements Locations {
 	public function track(array $location): void {
 	}
 

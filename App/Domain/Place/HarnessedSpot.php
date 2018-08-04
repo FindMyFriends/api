@@ -9,7 +9,7 @@ use Klapuch\Output;
 /**
  * Location harnessed by callback
  */
-final class HarnessedLocation implements Location {
+final class HarnessedSpot implements Location {
 	/** @var \FindMyFriends\Domain\Place\Location */
 	private $origin;
 

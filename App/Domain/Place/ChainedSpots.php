@@ -6,7 +6,7 @@ namespace FindMyFriends\Domain\Place;
 /**
  * Locations called sequentially one by one behaving as a single one
  */
-final class ChainedLocations implements Locations {
+final class ChainedSpots implements Locations {
 	/** @var \FindMyFriends\Domain\Place\Locations[] */
 	private $origins;
 

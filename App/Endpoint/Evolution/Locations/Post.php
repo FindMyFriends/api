@@ -49,10 +49,10 @@ final class Post implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Place\ChainedLocations(
-			new Place\HarnessedLocations(
+		(new Place\ChainedSpots(
+			new Place\HarnessedSpots(
 				new Evolution\OwnedLocations(
-					new Place\FakeLocations(),
+					new Place\FakeSpots(),
 					$this->seeker,
 					$parameters['id'],
 					$this->database

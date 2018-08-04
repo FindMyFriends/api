@@ -24,7 +24,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 	public function testThrowingOnNotOwned() {
 		Assert::exception(function () {
 			(new Interaction\OwnedLocations(
-				new Place\FakeLocations(),
+				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
 				$this->database
@@ -32,7 +32,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Demand does not belong to you.');
 		Assert::exception(function () {
 			(new Interaction\OwnedLocations(
-				new Place\FakeLocations(),
+				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
 				$this->database
@@ -46,7 +46,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand]))->try();
 		Assert::noError(function () use ($demand, $seeker) {
 			(new Interaction\OwnedLocations(
-				new Place\FakeLocations(),
+				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$demand,
 				$this->database
@@ -65,7 +65,7 @@ final class OwnedLocationsTest extends Tester\TestCase {
 		});
 		Assert::noError(function () use ($demand, $seeker) {
 			(new Interaction\OwnedLocations(
-				new Place\FakeLocations(),
+				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$demand,
 				$this->database

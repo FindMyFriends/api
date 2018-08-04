@@ -44,7 +44,7 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$locations = new Interaction\PublicLocations(
-			new Place\HarnessedLocations(
+			new Place\HarnessedSpots(
 				new Interaction\OwnedLocations(
 					new Interaction\DemandLocations($parameters['id'], $this->database),
 					$this->seeker,

@@ -8,7 +8,7 @@ use Klapuch\Output;
 /**
  * Location called sequentially one by one behaving as a single one
  */
-final class ChainedLocation implements Location {
+final class ChainedSpot implements Location {
 	/** @var \FindMyFriends\Domain\Place\Location[] */
 	private $locations;
 

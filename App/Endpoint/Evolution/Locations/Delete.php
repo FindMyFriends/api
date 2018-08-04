@@ -29,10 +29,10 @@ final class Delete implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Place\ChainedLocation(
-			new Place\HarnessedLocation(
+		(new Place\ChainedSpot(
+			new Place\HarnessedSpot(
 				new Place\OwnedLocation(
-					new Place\FakeLocation(),
+					new Place\FakeSpot(),
 					$parameters['id'],
 					$this->seeker,
 					$this->database

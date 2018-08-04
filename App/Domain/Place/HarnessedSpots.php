@@ -8,7 +8,7 @@ use FindMyFriends\Misc;
 /**
  * Locations harnessed by callback
  */
-final class HarnessedLocations implements Locations {
+final class HarnessedSpots implements Locations {
 	/** @var \FindMyFriends\Domain\Place\Locations */
 	private $origin;
 
