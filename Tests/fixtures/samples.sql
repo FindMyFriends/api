@@ -318,13 +318,13 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.location(replacements jsonb = '{}') RETURNS INTEGER
+CREATE OR REPLACE FUNCTION samples.spot(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO locations (coordinates, met_at) VALUES (
+	INSERT INTO spots (coordinates, met_at) VALUES (
 		POINT(random(), random()),
 		ROW(NOW(), 'sooner'::timeline_sides, format('PT%sH', test_utils.better_random(1, 48)))::approximate_timestamptz
 	)
@@ -609,15 +609,15 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.evolution_location(replacements jsonb = '{}') RETURNS smallint
+CREATE OR REPLACE FUNCTION samples.evolution_spot(replacements jsonb = '{}') RETURNS smallint
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id smallint;
 BEGIN
-	INSERT INTO evolution_locations (evolution_id, location_id) VALUES (
+	INSERT INTO evolution_spots (evolution_id, spot_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.evolution(replacements)), replacements, 'evolution_id')::integer,
-		samples.random_if_not_exists((SELECT samples.location(replacements)), replacements, 'location_id')::integer
+		samples.random_if_not_exists((SELECT samples.spot(replacements)), replacements, 'spot_id')::integer
 	)
 	RETURNING id
 	INTO v_id;
@@ -625,15 +625,15 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.demand_location(replacements jsonb = '{}') RETURNS smallint
+CREATE OR REPLACE FUNCTION samples.demand_spot(replacements jsonb = '{}') RETURNS smallint
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id smallint;
 BEGIN
-	INSERT INTO demand_locations (demand_id, location_id) VALUES (
+	INSERT INTO demand_spots (demand_id, spot_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.demand(replacements)), replacements, 'demand_id')::integer,
-		samples.random_if_not_exists((SELECT samples.location(replacements)), replacements, 'location_id')::integer
+		samples.random_if_not_exists((SELECT samples.spot(replacements)), replacements, 'spot_id')::integer
 	)
 	RETURNING id
 	INTO v_id;

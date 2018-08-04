@@ -66,7 +66,7 @@ final class TestApplicationRoutes implements Routing\Routes {
 			),
 			new Encryption\FakeCipher(),
 			[
-				'location' => new Hashids(),
+				'spot' => new Hashids(),
 				'demand' => new Hashids(),
 				'evolution' => new Hashids(),
 				'soulmate' => new Hashids(),

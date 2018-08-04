@@ -22,7 +22,7 @@ final class ExplainedTableEnums implements Schema\Enum {
 		return (new Schema\Description\ExplainedTableEnums(
 			$this->database,
 			$this->redis
-		))->values() + (new Schema\Location\ExplainedTableEnums(
+		))->values() + (new Schema\Spot\ExplainedTableEnums(
 			$this->database,
 			$this->redis
 		))->values();

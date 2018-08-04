@@ -939,12 +939,12 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER seekers_row_ai_trigger AFTER INSERT ON seekers FOR EACH ROW EXECUTE PROCEDURE seekers_trigger_row_ai();
 
-CREATE TABLE locations (
+CREATE TABLE spots (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   coordinates point NOT NULL,
   met_at approximate_timestamptz NOT NULL,
-  CONSTRAINT locations_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
-  CONSTRAINT locations_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
+  CONSTRAINT spots_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
+  CONSTRAINT spots_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
 );
 
 
@@ -1078,36 +1078,36 @@ CREATE TRIGGER evolutions_row_ad_trigger AFTER DELETE ON evolutions FOR EACH ROW
 CREATE TRIGGER evolutions_row_bd_trigger BEFORE DELETE ON evolutions FOR EACH ROW EXECUTE PROCEDURE evolutions_trigger_row_bd();
 
 
-CREATE TABLE evolution_locations (
+CREATE TABLE evolution_spots (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   evolution_id integer NOT NULL,
-  location_id integer NOT NULL,
+  spot_id integer NOT NULL,
   assigned_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
-  CONSTRAINT evolution_locations_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id)
+  CONSTRAINT evolution_spots_evolution_id_fk FOREIGN KEY (evolution_id) REFERENCES evolutions(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT evolution_locations_location_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
+  CONSTRAINT evolution_spots_spot_id_fk FOREIGN KEY (spot_id) REFERENCES spots(id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE VIEW collective_evolution_locations AS
-  SELECT location_id AS id, evolution_id, coordinates, met_at, assigned_at
-  FROM locations
-  JOIN evolution_locations ON evolution_locations.location_id = locations.id;
+CREATE VIEW collective_evolution_spots AS
+  SELECT spot_id AS id, evolution_id, coordinates, met_at, assigned_at
+  FROM spots
+  JOIN evolution_spots ON evolution_spots.spot_id = spots.id;
 
-CREATE FUNCTION collective_evolution_locations_trigger_row_ii() RETURNS trigger
+CREATE FUNCTION collective_evolution_spots_trigger_row_ii() RETURNS trigger
 AS $$
 BEGIN
-  WITH inserted_location AS (
-    INSERT INTO locations (coordinates, met_at) VALUES (new.coordinates, new.met_at)
+  WITH inserted_spot AS (
+    INSERT INTO spots (coordinates, met_at) VALUES (new.coordinates, new.met_at)
     RETURNING id
   )
-  INSERT INTO evolution_locations (evolution_id, location_id) VALUES (new.evolution_id, (SELECT id FROM inserted_location));
+  INSERT INTO evolution_spots (evolution_id, spot_id) VALUES (new.evolution_id, (SELECT id FROM inserted_spot));
   RETURN new;
 END
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER collective_evolution_locations_trigger_row_ii INSTEAD OF INSERT ON collective_evolution_locations FOR EACH ROW EXECUTE PROCEDURE collective_evolution_locations_trigger_row_ii();
+CREATE TRIGGER collective_evolution_spots_trigger_row_ii INSTEAD OF INSERT ON collective_evolution_spots FOR EACH ROW EXECUTE PROCEDURE collective_evolution_spots_trigger_row_ii();
 
 CREATE TABLE demands (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1179,53 +1179,53 @@ $$
 LANGUAGE SQL
 STABLE;
 
-CREATE TABLE demand_locations (
+CREATE TABLE demand_spots (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   demand_id integer NOT NULL,
-  location_id integer NOT NULL,
+  spot_id integer NOT NULL,
   assigned_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
-  CONSTRAINT demand_locations_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
+  CONSTRAINT demand_spots_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT demand_locations_location_id_fk FOREIGN KEY (location_id) REFERENCES locations(id)
+  CONSTRAINT demand_spots_spot_id_fk FOREIGN KEY (spot_id) REFERENCES spots(id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE VIEW collective_demand_locations AS
-  SELECT location_id AS id, demand_id, coordinates, met_at, assigned_at
-  FROM locations
-  JOIN demand_locations ON demand_locations.location_id = locations.id;
+CREATE VIEW collective_demand_spots AS
+  SELECT spot_id AS id, demand_id, coordinates, met_at, assigned_at
+  FROM spots
+  JOIN demand_spots ON demand_spots.spot_id = spots.id;
 
-CREATE FUNCTION is_location_owned(in_location_id locations.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+CREATE FUNCTION is_spot_owned(in_spot_id spots.id%type, in_seeker_id seekers.id%type) RETURNS boolean
 AS $$
 SELECT EXISTS(
   SELECT 1
-  FROM demand_locations
-  JOIN demands ON demands.id = demand_locations.demand_id
-  WHERE location_id = in_location_id AND demands.seeker_id = in_seeker_id
+  FROM demand_spots
+  JOIN demands ON demands.id = demand_spots.demand_id
+  WHERE spot_id = in_spot_id AND demands.seeker_id = in_seeker_id
 ) OR EXISTS (
   SELECT 1
-  FROM evolution_locations
-  JOIN evolutions ON evolutions.id = evolution_locations.evolution_id
-  WHERE location_id = in_location_id AND evolutions.seeker_id = in_seeker_id
+  FROM evolution_spots
+  JOIN evolutions ON evolutions.id = evolution_spots.evolution_id
+  WHERE spot_id = in_spot_id AND evolutions.seeker_id = in_seeker_id
 );
 $$
 LANGUAGE SQL
 VOLATILE;
 
-CREATE FUNCTION collective_demand_locations_trigger_row_ii() RETURNS trigger
+CREATE FUNCTION collective_demand_spots_trigger_row_ii() RETURNS trigger
 AS $$
 BEGIN
-  WITH inserted_location AS (
-    INSERT INTO locations (coordinates, met_at) VALUES (new.coordinates, new.met_at)
+  WITH inserted_spot AS (
+    INSERT INTO spots (coordinates, met_at) VALUES (new.coordinates, new.met_at)
     RETURNING id
   )
-  INSERT INTO demand_locations (demand_id, location_id) VALUES (new.demand_id, (SELECT id FROM inserted_location));
+  INSERT INTO demand_spots (demand_id, spot_id) VALUES (new.demand_id, (SELECT id FROM inserted_spot));
   RETURN new;
 END
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER collective_demand_locations_trigger_row_ii INSTEAD OF INSERT ON collective_demand_locations FOR EACH ROW EXECUTE PROCEDURE collective_demand_locations_trigger_row_ii();
+CREATE TRIGGER collective_demand_spots_trigger_row_ii INSTEAD OF INSERT ON collective_demand_spots FOR EACH ROW EXECUTE PROCEDURE collective_demand_spots_trigger_row_ii();
 
 
 CREATE TABLE soulmates (
