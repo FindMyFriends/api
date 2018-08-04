@@ -22,20 +22,20 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '~ ^/demands/{id}$',
+					'location' => '~ ^/demands/{id}$',
 					'methods' => ['GET'],
 					'params' => ['id' => '[a-z0-9]+'],
 				],
 				'evolutions/{id}' => [
-					'spot' => '~* ^/evolutions/{name}$',
+					'location' => '~* ^/evolutions/{name}$',
 					'methods' => ['GET'],
 					'params' => ['name' => '[a-z]+'],
 				],
 			]),
 			new \SplFileInfo($destination)
 		))->fulfill();
-		Assert::contains('spot ~ ^/demands/(?<id>[a-z0-9]+)$ {', file_get_contents($destination));
-		Assert::contains('spot ~* ^/evolutions/(?<name>[a-z]+)$ {', file_get_contents($destination));
+		Assert::contains('location ~ ^/demands/(?<id>[a-z0-9]+)$ {', file_get_contents($destination));
+		Assert::contains('location ~* ^/evolutions/(?<name>[a-z]+)$ {', file_get_contents($destination));
 	}
 
 	public function testAddingFastCgiParams() {
@@ -43,7 +43,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '~ ^/demands/{id}$',
+					'location' => '~ ^/demands/{id}$',
 					'methods' => ['GET'],
 					'params' => ['id' => 'X', 'name' => 'Y'],
 				],
@@ -60,13 +60,13 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '= /demands',
+					'location' => '= /demands',
 					'methods' => ['GET'],
 				],
 			]),
 			new \SplFileInfo($destination)
 		))->fulfill();
-		Assert::contains('spot = /demands {', file_get_contents($destination));
+		Assert::contains('location = /demands {', file_get_contents($destination));
 		Assert::notContains('fastcgi_param ROUTE_PARAM_QUERY', file_get_contents($destination));
 	}
 
@@ -75,7 +75,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '~ ^/demands/{id}$',
+					'location' => '~ ^/demands/{id}$',
 					'methods' => ['GET', 'PUT'],
 					'params' => ['id' => 'X', 'name' => 'Y'],
 				],
@@ -90,7 +90,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '~ ^/demands/{id}$',
+					'location' => '~ ^/demands/{id}$',
 					'methods' => ['GET', 'OPTIONS'],
 					'params' => ['id' => 'X', 'name' => 'Y'],
 				],
@@ -105,7 +105,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
 				'demands/{id}' => [
-					'spot' => '~ ^/demands/{id}$',
+					'location' => '~ ^/demands/{id}$',
 					'methods' => ['GET'],
 					'params' => ['id' => 'X', 'name' => 'Y'],
 				],

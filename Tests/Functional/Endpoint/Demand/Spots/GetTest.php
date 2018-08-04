@@ -36,7 +36,7 @@ final class GetTest extends Tester\TestCase {
 		Assert::count(1, $spots);
 		$spotId = (new TypedQuery(
 			$this->database,
-			'SELECT location_id FROM demand_spots WHERE id = ?',
+			'SELECT spot_id FROM demand_spots WHERE id = ?',
 			[$spot]
 		))->field();
 		Assert::same((new Hashids('a'))->encode($spotId), $spots[0]->id);
