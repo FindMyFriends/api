@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint\Demand\Locations;
+namespace FindMyFriends\Functional\Endpoint\Demand\Spots;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
@@ -25,24 +25,24 @@ final class GetTest extends Tester\TestCase {
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand]))->try();
 		$response = (new Endpoint\Demand\Spots\Get(
 			new Hashids('a'),
 			new Hashids('b'),
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $demand]);
-		$locations = json_decode($response->body()->serialization());
-		Assert::count(1, $locations);
-		$locationId = (new TypedQuery(
+		$spots = json_decode($response->body()->serialization());
+		Assert::count(1, $spots);
+		$spotId = (new TypedQuery(
 			$this->database,
-			'SELECT location_id FROM demand_locations WHERE id = ?',
-			[$location]
+			'SELECT location_id FROM demand_spots WHERE id = ?',
+			[$spot]
 		))->field();
-		Assert::same((new Hashids('a'))->encode($locationId), $locations[0]->id);
-		Assert::same((new Hashids('b'))->encode($demand), $locations[0]->demand_id);
+		Assert::same((new Hashids('a'))->encode($spotId), $spots[0]->id);
+		Assert::same((new Hashids('b'))->encode($demand), $spots[0]->demand_id);
 		(new Misc\SchemaAssertion(
-			$locations,
+			$spots,
 			new \SplFileInfo(__DIR__ . '/../../../../../App/Endpoint/Demand/Spots/schema/get.json')
 		))->assert();
 	}

@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint\Evolution\Locations;
+namespace FindMyFriends\Functional\Endpoint\Demand\Spots;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
@@ -22,20 +22,20 @@ final class DeleteTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'location'))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change, 'location_id' => $location]))->try();
-		$response = (new Endpoint\Evolution\Spots\Delete(
+		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
+		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand, 'location_id' => $spot]))->try();
+		$response = (new Endpoint\Demand\Spots\Delete(
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
-		))->response(['id' => $location]);
+		))->response(['id' => $spot]);
 		Assert::same('', $response->body()->serialization());
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 
 	public function test403ForNotOwned() {
 		Assert::exception(function () {
-			(new Endpoint\Evolution\Spots\Delete(
+			(new Endpoint\Demand\Spots\Delete(
 				$this->database,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);

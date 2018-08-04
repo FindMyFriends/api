@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint\Evolution\Locations;
+namespace FindMyFriends\Functional\Endpoint\Evolution\Spots;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
@@ -25,25 +25,25 @@ final class GetTest extends Tester\TestCase {
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $location] = (new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change]))->try();
 		$response = (new Endpoint\Evolution\Spots\Get(
 			new Hashids('a'),
 			new Hashids('b'),
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $change]);
-		$locations = json_decode($response->body()->serialization());
-		Assert::count(1, $locations);
-		$locationId = (new TypedQuery(
+		$spots = json_decode($response->body()->serialization());
+		Assert::count(1, $spots);
+		$spotId = (new TypedQuery(
 			$this->database,
-			'SELECT location_id FROM evolution_locations WHERE id = ?',
-			[$location]
+			'SELECT location_id FROM evolution_spots WHERE id = ?',
+			[$spot]
 		))->field();
-		Assert::same((new Hashids('a'))->encode($locationId), $locations[0]->id);
-		Assert::same((new Hashids('b'))->encode($change), $locations[0]->evolution_id);
+		Assert::same((new Hashids('a'))->encode($spotId), $spots[0]->id);
+		Assert::same((new Hashids('b'))->encode($change), $spots[0]->evolution_id);
 		(new Misc\SchemaAssertion(
-			$locations,
-			new \SplFileInfo(__DIR__ . '/../../../../../App/Endpoint/Evolution/Locations/schema/get.json')
+			$spots,
+			new \SplFileInfo(__DIR__ . '/../../../../../App/Endpoint/Evolution/Spots/schema/get.json')
 		))->assert();
 	}
 

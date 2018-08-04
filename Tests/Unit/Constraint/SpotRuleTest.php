@@ -14,7 +14,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class LocationRuleTest extends Tester\TestCase {
+final class SpotRuleTest extends Tester\TestCase {
 	private const BASE = [
 		'met_at' => [
 			'moment' => '2015-09-17T13:58:10+00:00',
@@ -77,4 +77,4 @@ final class LocationRuleTest extends Tester\TestCase {
 	}
 }
 
-(new LocationRuleTest())->run();
+(new SpotRuleTest())->run();

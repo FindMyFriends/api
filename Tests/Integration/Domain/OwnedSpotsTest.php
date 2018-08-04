@@ -18,7 +18,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class OwnedLocationsTest extends Tester\TestCase {
+final class OwnedSpotsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnNotOwned() {
@@ -74,4 +74,4 @@ final class OwnedLocationsTest extends Tester\TestCase {
 	}
 }
 
-(new OwnedLocationsTest())->run();
+(new OwnedSpotsTest())->run();

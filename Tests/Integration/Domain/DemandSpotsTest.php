@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class DemandLocationsTest extends Tester\TestCase {
+final class DemandSpotsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testTrackingForDemandChange() {
@@ -39,23 +39,23 @@ final class DemandLocationsTest extends Tester\TestCase {
 			]
 		);
 		(new Misc\TableCount($this->database, 'locations', 1))->assert();
-		(new Misc\TableCount($this->database, 'demand_locations', 1))->assert();
+		(new Misc\TableCount($this->database, 'demand_spots', 1))->assert();
 	}
 
 	public function testDemandsForChange() {
 		['id' => $demand1] = (new Misc\SampleDemand($this->database))->try();
 		['id' => $demand2] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_location', ['demand_id' => $demand2]))->try();
-		$locations = (new Interaction\DemandSpots(
+		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand1]))->try();
+		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand2]))->try();
+		$spots = (new Interaction\DemandSpots(
 			$demand1,
 			$this->database
 		))->history();
-		$location = $locations->current();
+		$location = $spots->current();
 		Assert::contains(sprintf('"demand_id": %d', $demand1), $location->print(new Output\Json())->serialization());
-		$locations->next();
-		Assert::null($locations->current());
+		$spots->next();
+		Assert::null($spots->current());
 	}
 }
 
-(new DemandLocationsTest())->run();
+(new DemandSpotsTest())->run();

@@ -17,7 +17,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class ChangeLocationsTest extends Tester\TestCase {
+final class ChangeSpotsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testTrackingForEvolutionChange() {
@@ -39,23 +39,23 @@ final class ChangeLocationsTest extends Tester\TestCase {
 			]
 		);
 		(new Misc\TableCount($this->database, 'locations', 1))->assert();
-		(new Misc\TableCount($this->database, 'evolution_locations', 1))->assert();
+		(new Misc\TableCount($this->database, 'evolution_spots', 1))->assert();
 	}
 
 	public function testEvolutionsForChange() {
 		['id' => $change1] = (new Misc\SampleEvolution($this->database))->try();
 		['id' => $change2] = (new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_location', ['evolution_id' => $change2]))->try();
-		$locations = (new Evolution\ChangeSpots(
+		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change1]))->try();
+		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change2]))->try();
+		$spots = (new Evolution\ChangeSpots(
 			$change1,
 			$this->database
 		))->history();
-		$location = $locations->current();
+		$location = $spots->current();
 		Assert::contains(sprintf('"evolution_id": %d', $change1), $location->print(new Output\Json())->serialization());
-		$locations->next();
-		Assert::null($locations->current());
+		$spots->next();
+		Assert::null($spots->current());
 	}
 }
 
-(new ChangeLocationsTest())->run();
+(new ChangeSpotsTest())->run();
