@@ -16,6 +16,7 @@ CREATE SCHEMA access;
 CREATE SCHEMA http;
 CREATE SCHEMA log;
 CREATE SCHEMA meta;
+CREATE SCHEMA audit;
 
 SET search_path = public, pg_catalog, access, http, log, meta;
 
@@ -628,6 +629,45 @@ CREATE DOMAIN valid_mass AS mass
 -----
 
 -- TABLES --
+----- AUDIT -----
+CREATE DOMAIN audit.operation AS text
+  CHECK (VALUE IN ('INSERT', 'UPDATE', 'DELETE'));
+
+CREATE TABLE audit.history (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "table" text NOT NULL,
+  operation audit.operation NOT NULL,
+  changed_at timestamp with time zone NOT NULL DEFAULT now(),
+  old jsonb,
+  new jsonb
+);
+
+CREATE OR REPLACE FUNCTION audit.trigger_table_audit() RETURNS trigger
+AS $$
+DECLARE
+  r record;
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    r = old;
+  ELSE
+    r = new;
+  END IF;
+
+  EXECUTE format(
+    'INSERT INTO audit.history ("table", operation, old, new) VALUES (%L, %L, %L, %L)',
+    TG_TABLE_NAME,
+    TG_OP,
+    CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
+    CASE WHEN TG_OP IN ('UPDATE') THEN row_to_json(new) ELSE NULL END
+  );
+
+  RETURN r;
+END;
+$$
+LANGUAGE plpgsql;
+-----
+
+
 CREATE FUNCTION check_existing_object_column_trigger() RETURNS trigger
 AS $$
 BEGIN
@@ -946,6 +986,8 @@ CREATE TABLE spots (
   CONSTRAINT spots_met_at_approximation_mix_check CHECK (is_approximate_timestamptz_valid(met_at)),
   CONSTRAINT spots_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
 );
+
+CREATE TRIGGER spots_audit_trigger AFTER UPDATE OR DELETE ON spots FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 
 CREATE TABLE evolutions (
