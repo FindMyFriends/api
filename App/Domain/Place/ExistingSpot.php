@@ -3,14 +3,13 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Domain\Place;
 
-use FindMyFriends\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 
 /**
- * Spot which belongs only to me
+ * Always existing spot to deal with
  */
-final class OwnedSpot implements Spot {
+final class ExistingSpot implements Spot {
 	/** @var \FindMyFriends\Domain\Place\Spot */
 	private $origin;
 
@@ -20,26 +19,17 @@ final class OwnedSpot implements Spot {
 	/** @var \PDO */
 	private $database;
 
-	/** @var \FindMyFriends\Domain\Access\Seeker */
-	private $owner;
-
-	public function __construct(
-		Spot $origin,
-		int $id,
-		Access\Seeker $owner,
-		\PDO $database
-	) {
+	public function __construct(Spot $origin, int $id, \PDO $database) {
 		$this->origin = $origin;
 		$this->id = $id;
 		$this->database = $database;
-		$this->owner = $owner;
 	}
 
 	/**
 	 * @throws \UnexpectedValueException
 	 */
 	public function forget(): void {
-		if (!$this->owned($this->id, $this->owner))
+		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
 		$this->origin->forget();
 	}
@@ -50,7 +40,7 @@ final class OwnedSpot implements Spot {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format {
-		if (!$this->owned($this->id, $this->owner))
+		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
@@ -60,24 +50,24 @@ final class OwnedSpot implements Spot {
 	 * @throws \UnexpectedValueException
 	 */
 	public function move(array $movement): void {
-		if (!$this->owned($this->id, $this->owner))
+		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
 		$this->origin->move($movement);
 	}
 
-	private function owned(int $id, Access\Seeker $owner): bool {
-		return (new Storage\NativeQuery(
+	private function exists(int $id): bool {
+		return (bool) (new Storage\NativeQuery(
 			$this->database,
-			'SELECT is_spot_owned(:spot, :seeker)',
-			['spot' => $id, 'seeker' => $owner->id()]
+			'SELECT 1 FROM spots WHERE id = ?',
+			[$id]
 		))->field();
 	}
 
 	private function exception(int $id): \UnexpectedValueException {
 		return new \UnexpectedValueException(
-			'Spot does not belong to you.',
+			'Spot does not exist',
 			0,
-			new \UnexpectedValueException(sprintf('Spot %d does not belong to you.', $id))
+			new \UnexpectedValueException(sprintf('Spot %d does not exist', $id))
 		);
 	}
 }

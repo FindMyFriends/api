@@ -19,4 +19,10 @@ interface Spot {
 	 * @throws \UnexpectedValueException
 	 */
 	public function forget(): void;
+
+	/**
+	 * Move from one spot to another
+	 * @throws \UnexpectedValueException
+	 */
+	public function move(array $movement): void;
 }

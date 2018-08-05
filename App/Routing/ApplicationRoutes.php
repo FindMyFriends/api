@@ -281,6 +281,16 @@ final class ApplicationRoutes implements Routing\Routes {
 				$this->rabbitMq,
 				$this->cipher
 			),
+			'spots/{id} [PUT]' => new Endpoint\Spot\Put(
+				new Request\JsonRequest(new Application\PlainRequest()),
+				$this->database,
+				$seeker
+			),
+			'spots/{id} [PATCH]' => new Endpoint\Spot\Patch(
+				new Request\JsonRequest(new Application\PlainRequest()),
+				$this->database,
+				$seeker
+			),
 			'tokens [POST]' => new Endpoint\Tokens\Post(
 				new Request\JsonRequest(new Application\PlainRequest()),
 				$this->database,

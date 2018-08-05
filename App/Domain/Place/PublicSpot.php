@@ -40,4 +40,11 @@ final class PublicSpot implements Spot {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function move(array $movement): void {
+		$this->origin->move($movement);
+	}
 }

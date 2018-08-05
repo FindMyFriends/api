@@ -15,4 +15,7 @@ final class FakeSpot implements Spot {
 	public function print(Output\Format $format): Output\Format {
 		return $format;
 	}
+
+	public function move(array $movement): void {
+	}
 }

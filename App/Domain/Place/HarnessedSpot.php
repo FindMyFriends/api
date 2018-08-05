@@ -28,4 +28,8 @@ final class HarnessedSpot implements Spot {
 	public function print(Output\Format $format): Output\Format {
 		return $this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
 	}
+
+	public function move(array $movement): void {
+		$this->callback->invoke([$this->origin, __FUNCTION__], func_get_args());
+	}
 }

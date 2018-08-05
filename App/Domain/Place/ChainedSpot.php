@@ -28,4 +28,13 @@ final class ChainedSpot implements Spot {
 	public function print(Output\Format $format): Output\Format {
 		return $format;
 	}
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function move(array $movement): void {
+		foreach ($this->spots as $spot) {
+			$spot->move($movement);
+		}
+	}
 }

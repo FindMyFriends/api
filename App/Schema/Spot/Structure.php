@@ -57,4 +57,21 @@ final class Structure {
 		unset($get['required'][array_search('assigned_at', $get['required'], true)]);
 		return $get;
 	}
+
+	public function put(): array {
+		return $this->post();
+	}
+
+	public function patch(): array {
+		$put = $this->put();
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => $put['properties'],
+			'anyOf' => array_map(function (string $field): array {
+				return ['required' => [$field]];
+			}, $put['required']),
+			'type' => 'object',
+		];
+	}
 }

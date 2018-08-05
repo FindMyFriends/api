@@ -50,4 +50,8 @@ final class StoredSpot implements Place\Spot {
 			->with('met_at', $spot['met_at'])
 			->with('assigned_at', $spot['assigned_at']);
 	}
+
+	public function move(array $movement): void {
+		// no direct movements
+	}
 }

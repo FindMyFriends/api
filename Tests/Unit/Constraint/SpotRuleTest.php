@@ -31,6 +31,19 @@ final class SpotRuleTest extends Tester\TestCase {
 		Assert::equal(self::BASE, (new Constraint\SpotRule())->apply(self::BASE));
 	}
 
+	public function testPassingOnSomeMissing() {
+		Assert::noError(function () {
+			$base = self::BASE;
+			unset($base['coordinates']);
+			Assert::equal($base, (new Constraint\SpotRule())->apply($base));
+		});
+		Assert::noError(function () {
+			$base = self::BASE;
+			unset($base['met_at']);
+			Assert::equal($base, (new Constraint\SpotRule())->apply($base));
+		});
+	}
+
 	/**
 	 * @throws \UnexpectedValueException Exactly timeline side does not have approximation.
 	 */
@@ -52,7 +65,6 @@ final class SpotRuleTest extends Tester\TestCase {
 			)
 		);
 	}
-
 
 	public function testAllowedApproximationAsNull()
 	{

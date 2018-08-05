@@ -39,7 +39,7 @@ final class DeleteTest extends Tester\TestCase {
 				$this->database,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
-		}, \UnexpectedValueException::class, 'Spot does not belong to you', HTTP_FORBIDDEN);
+		}, \UnexpectedValueException::class, 'Spot does not belong to you.', HTTP_FORBIDDEN);
 	}
 }
 

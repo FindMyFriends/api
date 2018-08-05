@@ -91,6 +91,10 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$demandSpot = new Schema\Demand\Spot\Structure($this->database);
 		$schemas->save($demandSpot->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Spots/schema/get.json'));
 		$schemas->save($demandSpot->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Spots/schema/post.json'));
+
+		$spot = new Schema\Spot\Structure($this->database);
+		$schemas->save($spot->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Spot/schema/put.json'));
+		$schemas->save($spot->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Spot/schema/patch.json'));
 	}
 
 	public function name(): string {

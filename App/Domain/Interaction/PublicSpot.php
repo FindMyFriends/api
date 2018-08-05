@@ -38,4 +38,11 @@ final class PublicSpot implements Place\Spot {
 		return $this->origin->print($format)
 			->adjusted('demand_id', [$this->demandHashids, 'encode']);
 	}
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function move(array $movement): void {
+		$this->origin->move($movement);
+	}
 }
