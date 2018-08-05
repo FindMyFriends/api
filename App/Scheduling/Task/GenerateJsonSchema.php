@@ -23,7 +23,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 			 * @param string $schema
 			 * @throws \UnexpectedValueException
 			 */
-			public function validate(string $schema): void {
+			private function validate(string $schema): void {
 				$response = (new Http\BasicRequest(
 					'POST',
 					new Uri\ValidUrl('https://www.jsonschemavalidator.net/api/jsonschema/validate'),
@@ -52,6 +52,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 				file_put_contents($file->getPathname(), $schema);
 			}
 		};
+
+		$this->withoutRemains();
+
 		$demand = new Schema\Demand\Structure($this->database);
 		$schemas->save($demand->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/schema/get.json'));
 		$schemas->save($demand->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demands/schema/get.json'));
@@ -99,5 +102,29 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 	public function name(): string {
 		return 'GenerateJsonSchema';
+	}
+
+	private function withoutRemains(): void {
+		foreach (new \CallbackFilterIterator(
+			new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator(__DIR__ . '/../../Endpoint', \RecursiveDirectoryIterator::SKIP_DOTS),
+				\RecursiveIteratorIterator::SELF_FIRST,
+				\RecursiveIteratorIterator::CATCH_GET_CHILD
+			),
+			function (\SplFileInfo $file): bool {
+				return $file->isDir() && (
+					file_exists(sprintf('%s/get.json', $file->getPathname()))
+					|| file_exists(sprintf('%s/post.json', $file->getPathname()))
+					|| file_exists(sprintf('%s/put.json', $file->getPathname()))
+					|| file_exists(sprintf('%s/patch.json', $file->getPathname()))
+				);
+			}
+		) as $directory) {
+			/** @var \SplFileInfo $directory */
+			array_map('unlink', glob(sprintf('%s/*.json', $directory->getPathname())));
+			if (!rmdir($directory->getPathName())) {
+				throw new \RuntimeException(sprintf('%s was not removed', $directory->getPathname()));
+			}
+		}
 	}
 }
