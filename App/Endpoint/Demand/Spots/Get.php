@@ -43,23 +43,32 @@ final class Get implements Application\View {
 	 * @return \Klapuch\Application\Response
 	 */
 	public function response(array $parameters): Application\Response {
-		$spots = new Interaction\PublicSpots(
-			new Place\HarnessedSpots(
-				new Interaction\OwnedSpots(
-					new Interaction\DemandSpots($parameters['id'], $this->database),
-					$this->seeker,
-					$parameters['id'],
-					$this->database
-				),
-				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+		return new Response\PartialResponse(
+			new Response\JsonResponse(
+				new Response\PlainResponse(
+					new Misc\JsonPrintedObjects(
+						...iterator_to_array(
+							(new Interaction\PublicSpots(
+								new Place\HarnessedSpots(
+									new Interaction\OwnedSpots(
+										new Interaction\DemandSpots(
+											$parameters['id'],
+											$this->database
+										),
+										$this->seeker,
+										$parameters['id'],
+										$this->database
+									),
+									new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+								),
+								$this->spotHashids,
+								$this->demandHashids
+							))->history()
+						)
+					)
+				)
 			),
-			$this->spotHashids,
-			$this->demandHashids
-		);
-		return new Response\PlainResponse(
-			new Misc\JsonPrintedObjects(
-				...iterator_to_array($spots->history())
-			)
+			$parameters
 		);
 	}
 }
