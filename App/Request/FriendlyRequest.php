@@ -4,15 +4,18 @@ declare(strict_types = 1);
 namespace FindMyFriends\Request;
 
 use Klapuch\Application;
-use Klapuch\Internal;
 use Klapuch\Output;
 
-final class JsonRequest implements Application\Request {
+final class FriendlyRequest implements Application\Request {
 	/** @var \Klapuch\Application\Request */
 	private $origin;
 
-	public function __construct(Application\Request $origin) {
+	/** @var string */
+	private $message;
+
+	public function __construct(Application\Request $origin, string $message) {
 		$this->origin = $origin;
+		$this->message = $message;
 	}
 
 	/**
@@ -20,11 +23,11 @@ final class JsonRequest implements Application\Request {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function body(): Output\Format {
-		return new Output\Json(
-			(new Internal\DecodedJson(
-				$this->origin->body()->serialization()
-			))->values()
-		);
+		try {
+			return $this->origin->body();
+		} catch (\UnexpectedValueException $e) {
+			throw new \UnexpectedValueException($this->message, $e->getCode(), $e);
+		}
 	}
 
 	public function headers(): array {

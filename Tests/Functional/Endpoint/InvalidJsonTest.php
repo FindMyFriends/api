@@ -46,7 +46,10 @@ final class InvalidJsonTest extends Tester\TestCase {
 			$method,
 			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint)),
 			[
-				CURLOPT_HTTPHEADER => [sprintf('Authorization: Bearer %s', $this->token())],
+				CURLOPT_HTTPHEADER => [
+					sprintf('Authorization: Bearer %s', $this->token()),
+					'If-None-Match: "abc"',
+				],
 			],
 			''
 		))->send();

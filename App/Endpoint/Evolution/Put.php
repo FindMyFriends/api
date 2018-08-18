@@ -82,9 +82,12 @@ final class Put implements Application\View {
 				new Constraint\EvolutionRule()
 			))->apply(
 				(new Internal\DecodedJson(
-					(new Request\ConcurrentlyControlledRequest(
-						$this->request,
-						new Http\PostgresETag($this->database, $this->url)
+					(new Request\FriendlyRequest(
+						new Request\ConcurrentlyControlledRequest(
+							$this->request,
+							new Http\PostgresETag($this->database, $this->url)
+						),
+						'You already affected evolution change with newer data.'
 					))->body()->serialization()
 				))->values()
 			)
