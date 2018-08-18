@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\TestCase;
 
-use Elasticsearch\ClientBuilder;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use Klapuch\Configuration;
 use Tester;
 
 trait Elasticsearch {
 	/** @var \Elasticsearch\Client */
 	protected $elasticsearch;
+
+	/** @var \FindMyFriends\Elasticsearch\LazyElasticsearch */
+	protected $lazyElasticsearch;
 
 	protected function setUp(): void {
 		$this->rawSetUp();
@@ -22,8 +25,7 @@ trait Elasticsearch {
 		$credentials = (new Configuration\ValidIni(
 			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
 		))->read();
-		$this->elasticsearch = ClientBuilder::create()
-			->setHosts($credentials['ELASTICSEARCH']['hosts'])
-			->build();
+		$this->lazyElasticsearch = new LazyElasticsearch($credentials['ELASTICSEARCH']['hosts']);
+		$this->elasticsearch = $this->lazyElasticsearch->create();
 	}
 }

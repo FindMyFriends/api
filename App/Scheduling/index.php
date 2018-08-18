@@ -5,9 +5,9 @@ namespace FindMyFriends\Scheduling;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Elasticsearch;
 use FindMyFriends;
 use FindMyFriends\Configuration;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use Klapuch\Configuration\ValidIni;
 use Klapuch\Log;
 use Klapuch\Storage;
@@ -26,9 +26,7 @@ $database = new Storage\MetaPDO(
 	new Predis\Client($configuration['REDIS']['uri'])
 );
 
-$elasticsearch = Elasticsearch\ClientBuilder::create()
-	->setHosts($configuration['ELASTICSEARCH']['hosts'])
-	->build();
+$elasticsearch = new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts']);
 
 (new LoggedJob(
 	new SelectedJob(
@@ -36,7 +34,7 @@ $elasticsearch = Elasticsearch\ClientBuilder::create()
 		new MarkedJob(new Task\Cron($database), $database),
 		new MarkedJob(new Task\RefreshMaterializedView($database), $database),
 		new MarkedJob(new Task\GenerateJsonSchema($database), $database),
-		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch), $database),
+		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch->create()), $database),
 		new FindMyFriends\Scheduling\Task\CheckChangedConfiguration(
 			new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
 			new SerialJobs(

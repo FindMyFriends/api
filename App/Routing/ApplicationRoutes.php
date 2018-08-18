@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Routing;
 
-use Elasticsearch;
 use FindMyFriends\Domain\Access;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
@@ -30,7 +30,7 @@ final class ApplicationRoutes implements Routing\Routes {
 	/** @var \Predis\ClientInterface */
 	private $redis;
 
-	/** @var \Elasticsearch\Client */
+	/** @var \FindMyFriends\Elasticsearch\LazyElasticsearch */
 	private $elasticsearch;
 
 	/** @var \PhpAmqpLib\Connection\AMQPLazyConnection */
@@ -46,7 +46,7 @@ final class ApplicationRoutes implements Routing\Routes {
 		Uri\Uri $uri,
 		Storage\MetaPDO $database,
 		Predis\ClientInterface $redis,
-		Elasticsearch\Client $elasticsearch,
+		LazyElasticsearch $elasticsearch,
 		PhpAmqpLib\Connection\AMQPLazyConnection $rabbitMq,
 		Encryption\Cipher $cipher,
 		array $hashids
@@ -69,236 +69,294 @@ final class ApplicationRoutes implements Routing\Routes {
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 		))->enter((new Application\PlainRequest())->headers());
 		return [
-			'demands [OPTIONS]' => new Endpoint\Preflight(
-				new Endpoint\Demands\Options($this->database, $this->redis),
-				new Application\PlainRequest()
-			),
-			'demands [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demands\Get(
-					$this->hashids['demand'],
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id} [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Get(
-					$this->hashids['demand'],
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{demand_id}/soulmate_requests [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demand\SoulmateRequests\Get(
-					$this->uri,
-					$this->database
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{demand_id}/soulmate_requests [POST]' => new View\AuthenticatedView(
-				new Endpoint\Demand\SoulmateRequests\Post(
-					$this->uri,
-					$this->database,
-					$this->rabbitMq
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands [POST]' => new View\AuthenticatedView(
-				new Endpoint\Demands\Post(
-					$this->hashids['demand'],
-					new Application\PlainRequest(),
-					$this->uri,
-					$this->database,
-					$this->rabbitMq,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id} [PUT]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Put(
-					new Application\PlainRequest(),
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id} [PATCH]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Patch(
-					new Application\PlainRequest(),
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Delete(
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id}/spots [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Spots\Get(
-					$this->hashids['spot'],
-					$this->hashids['demand'],
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{id}/spots [POST]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Spots\Post(
-					new Application\PlainRequest(),
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{demand_id}/spots/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Spots\Delete(
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions [OPTIONS]' => new Endpoint\Preflight(
-				new View\AuthenticatedView(
-					new Endpoint\Evolutions\Options(
+			'demands [OPTIONS]' => function(): Application\View {
+				return new Endpoint\Preflight(
+					new Endpoint\Demands\Options($this->database, $this->redis),
+					new Application\PlainRequest()
+				);
+			},
+			'demands [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demands\Get(
+						$this->hashids['demand'],
+						$this->uri,
 						$this->database,
-						$this->redis,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
-				),
-				new Application\PlainRequest()
-			),
-			'evolutions [POST]' => new View\AuthenticatedView(
-				new Endpoint\Evolutions\Post(
-					$this->hashids['evolution'],
+				);
+			},
+			'demands/{id} [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Get(
+						$this->hashids['demand'],
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{demand_id}/soulmate_requests [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\SoulmateRequests\Get(
+						$this->uri,
+						$this->database
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{demand_id}/soulmate_requests [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\SoulmateRequests\Post(
+						$this->uri,
+						$this->database,
+						$this->rabbitMq
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demands\Post(
+						$this->hashids['demand'],
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$this->rabbitMq,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{id} [PUT]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Put(
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{id} [PATCH]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Patch(
+						new Application\PlainRequest(),
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{id} [DELETE]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Delete(
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{id}/spots [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Spots\Get(
+						$this->hashids['spot'],
+						$this->hashids['demand'],
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{id}/spots [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Spots\Post(
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{demand_id}/spots/{id} [DELETE]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Spots\Delete(
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions [OPTIONS]' => function() use ($seeker): Application\View {
+				return new Endpoint\Preflight(
+					new View\AuthenticatedView(
+						new Endpoint\Evolutions\Options(
+							$this->database,
+							$this->redis,
+							$seeker
+						),
+						new Http\ChosenRole($seeker, ['member'])
+					),
+					new Application\PlainRequest()
+				);
+			},
+			'evolutions [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolutions\Post(
+						$this->hashids['evolution'],
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$this->elasticsearch->create(),
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolutions\Get(
+						$this->hashids['evolution'],
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{id} [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Get(
+						$this->hashids['evolution'],
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{id}/spots [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Spots\Get(
+						$this->hashids['spot'],
+						$this->hashids['evolution'],
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{id}/spots [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Spots\Post(
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{evolution_id}/spots/{id} [DELETE]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Spots\Delete(
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{id} [DELETE]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Delete(
+						$this->database,
+						$this->elasticsearch->create(),
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'evolutions/{id} [PUT]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Evolution\Put(
+						new Application\PlainRequest(),
+						$this->uri,
+						$this->database,
+						$this->elasticsearch->create(),
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'soulmates/{id} [PATCH]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Soulmate\Patch(
+						new Application\PlainRequest(),
+						$this->database,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{demand_id}/soulmates [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Soulmates\Get(
+						$this->hashids,
+						$this->uri,
+						$this->database,
+						$this->elasticsearch->create()
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'demands/{demand_id}/soulmates [HEAD]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Demand\Soulmates\Head(
+						$this->uri,
+						$this->database,
+						$this->elasticsearch->create()
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'seekers [POST]' => function(): Application\View {
+				return new Endpoint\Seekers\Post(
 					new Application\PlainRequest(),
-					$this->uri,
 					$this->database,
-					$this->elasticsearch,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions [GET]' => new View\AuthenticatedView(
-				new Endpoint\Evolutions\Get(
-					$this->hashids['evolution'],
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{id} [GET]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Get(
-					$this->hashids['evolution'],
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{id}/spots [GET]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Spots\Get(
-					$this->hashids['spot'],
-					$this->hashids['evolution'],
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{id}/spots [POST]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Spots\Post(
-					new Application\PlainRequest(),
-					$this->uri,
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{evolution_id}/spots/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Spots\Delete(
-					$this->database,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{id} [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Delete(
-					$this->database,
-					$this->elasticsearch,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'evolutions/{id} [PUT]' => new View\AuthenticatedView(
-				new Endpoint\Evolution\Put(
-					new Application\PlainRequest(),
-					$this->uri,
-					$this->database,
-					$this->elasticsearch,
-					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'soulmates/{id} [PATCH]' => new View\AuthenticatedView(
-				new Endpoint\Soulmate\Patch(
+					$this->rabbitMq,
+					$this->cipher
+				);
+			},
+			'spots/{id} [PUT]' => function() use ($seeker): Application\View {
+				return new Endpoint\Spot\Put(
 					new Application\PlainRequest(),
 					$this->database,
 					$seeker
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{demand_id}/soulmates [GET]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Soulmates\Get(
-					$this->hashids,
-					$this->uri,
+				);
+			},
+			'spots/{id} [PATCH]' => function() use ($seeker): Application\View {
+				return new Endpoint\Spot\Patch(
+					new Application\PlainRequest(),
 					$this->database,
-					$this->elasticsearch
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'demands/{demand_id}/soulmates [HEAD]' => new View\AuthenticatedView(
-				new Endpoint\Demand\Soulmates\Head(
-					$this->uri,
+					$seeker
+				);
+			},
+			'tokens [POST]' => function(): Application\View {
+				return new Endpoint\Tokens\Post(
+					new Application\PlainRequest(),
 					$this->database,
-					$this->elasticsearch
-				),
-				new Http\ChosenRole($seeker, ['member'])
-			),
-			'seekers [POST]' => new Endpoint\Seekers\Post(
-				new Application\PlainRequest(),
-				$this->database,
-				$this->rabbitMq,
-				$this->cipher
-			),
-			'spots/{id} [PUT]' => new Endpoint\Spot\Put(
-				new Application\PlainRequest(),
-				$this->database,
-				$seeker
-			),
-			'spots/{id} [PATCH]' => new Endpoint\Spot\Patch(
-				new Application\PlainRequest(),
-				$this->database,
-				$seeker
-			),
-			'tokens [POST]' => new Endpoint\Tokens\Post(
-				new Application\PlainRequest(),
-				$this->database,
-				$this->cipher
-			),
-			'tokens [DELETE]' => new View\AuthenticatedView(
-				new Endpoint\Tokens\Delete(),
-				new Http\ChosenRole($seeker, ['member'])
-			),
+					$this->cipher
+				);
+			},
+			'tokens [DELETE]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Tokens\Delete(),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
 		];
 	}
 }

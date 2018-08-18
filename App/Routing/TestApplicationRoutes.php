@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Routing;
 
-use Elasticsearch;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use Hashids\Hashids;
 use Klapuch\Encryption;
 use Klapuch\Routing;
@@ -57,7 +57,7 @@ final class TestApplicationRoutes implements Routing\Routes {
 				}
 
 			},
-			Elasticsearch\ClientBuilder::create()->build(),
+			new LazyElasticsearch([]),
 			new PhpAmqpLib\Connection\AMQPLazyConnection(
 				'',
 				'',

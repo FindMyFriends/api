@@ -4,6 +4,7 @@ declare(strict_types = 1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use FindMyFriends\Configuration;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Log;
@@ -24,9 +25,7 @@ $uri = new Uri\CachedUri(
 $configuration = (new Configuration\ApplicationConfiguration())->read();
 
 $redis = new Predis\Client($configuration['REDIS']['uri']);
-$elasticsearch = Elasticsearch\ClientBuilder::create()
-	->setHosts($configuration['ELASTICSEARCH']['hosts'])
-	->build();
+$elasticsearch = new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts']);
 
 echo (new class(
 	$configuration,
@@ -89,10 +88,10 @@ echo (new class(
 	public function render(array $variables = []): string {
 		try {
 			$match = $this->routes->matches();
-			/** @var \Klapuch\Application\View $destination */
+			/** @var \Closure $destination */
 			[$source, $destination] = [key($match), current($match)];
 			return (new Application\RawTemplate(
-				$destination->response(
+				$destination()->response(
 					(new FindMyFriends\Routing\SuitedHashIdMask(
 						$this->configuration['ROUTES'][$source]['types'] ?? [],
 						new Routing\TypedMask(

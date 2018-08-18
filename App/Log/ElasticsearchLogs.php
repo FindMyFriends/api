@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Log;
 
-use Elasticsearch;
+use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use Klapuch\Log;
 
 /**
@@ -15,15 +15,15 @@ final class ElasticsearchLogs implements Log\Logs {
 		'type' => 'pile',
 	];
 
-	/** @var \Elasticsearch\Client */
+	/** @var \FindMyFriends\Elasticsearch\LazyElasticsearch */
 	private $elasticsearch;
 
-	public function __construct(Elasticsearch\Client $elasticsearch) {
+	public function __construct(LazyElasticsearch $elasticsearch) {
 		$this->elasticsearch = $elasticsearch;
 	}
 
 	public function put(\Throwable $exception, Log\Environment $environment): void {
-		$this->elasticsearch->index(self::OPTIONS + ['body' => $this->body($exception, $environment)]);
+		$this->elasticsearch->create()->index(self::OPTIONS + ['body' => $this->body($exception, $environment)]);
 	}
 
 	private function body(\Throwable $exception, Log\Environment $environment): array {

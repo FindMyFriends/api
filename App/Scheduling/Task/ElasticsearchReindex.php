@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Scheduling\Task;
 
-use Elasticsearch\Client;
+use Elasticsearch;
 use FindMyFriends\Scheduling;
 
 final class ElasticsearchReindex implements Scheduling\Job {
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
-	public function __construct(Client $elasticsearch) {
+	public function __construct(Elasticsearch\Client $elasticsearch) {
 		$this->elasticsearch = $elasticsearch;
 	}
 

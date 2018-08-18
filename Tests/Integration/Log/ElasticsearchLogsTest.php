@@ -21,7 +21,7 @@ final class ElasticsearchLogsTest extends Tester\TestCase {
 
 	public function testStoringOnPile() {
 		(new Log\ElasticsearchLogs(
-			$this->elasticsearch
+			$this->lazyElasticsearch
 		))->put(new \RuntimeException('Ooops'), new CurrentEnvironment());
 		sleep(1);
 		$response = $this->elasticsearch->search(['index' => 'logs', 'type' => 'pile']);
