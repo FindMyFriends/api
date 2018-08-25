@@ -31,10 +31,10 @@ final class RegisteredSeekerTest extends Tester\TestCase {
 
 	public function testThrowingOnNotRegisteredSeeker() {
 		$seeker = new Access\RegisteredSeeker('1', $this->database);
-		Assert::exception(function() use ($seeker) {
+		Assert::exception(static function() use ($seeker) {
 			$seeker->id();
 		}, \UnexpectedValueException::class, 'The seeker has not been registered yet');
-		Assert::exception(function() use ($seeker) {
+		Assert::exception(static function() use ($seeker) {
 			$seeker->properties();
 		}, \UnexpectedValueException::class, 'The seeker has not been registered yet');
 	}

@@ -37,7 +37,7 @@ final class SyncChainTest extends Tester\TestCase {
 		$elasticsearch->shouldReceive('index')->once()->andReturn([]);
 		$origin = $this->mock(Evolution\Chain::class);
 		$origin->shouldReceive('extend')->once()->andReturn(10);
-		Assert::noError(function () use ($origin, $elasticsearch) {
+		Assert::noError(static function () use ($origin, $elasticsearch) {
 			(new Evolution\SyncChain(
 				$origin,
 				$elasticsearch

@@ -24,14 +24,14 @@ final class SyncChangeTest extends Tester\TestCase {
 		$origin = $this->mock(Evolution\Change::class);
 		$origin->shouldReceive('revert')->once()->andThrow(\UnexpectedValueException::class, 'OK');
 		$origin->shouldReceive('affect')->once()->andThrow(\UnexpectedValueException::class, 'OK');
-		Assert::exception(function () use ($origin, $elasticsearch) {
+		Assert::exception(static function () use ($origin, $elasticsearch) {
 			(new Evolution\SyncChange(
 				666,
 				$origin,
 				$elasticsearch
 			))->revert();
 		}, \UnexpectedValueException::class, 'OK');
-		Assert::exception(function () use ($origin, $elasticsearch) {
+		Assert::exception(static function () use ($origin, $elasticsearch) {
 			(new Evolution\SyncChange(
 				666,
 				$origin,
@@ -47,14 +47,14 @@ final class SyncChangeTest extends Tester\TestCase {
 		$origin = $this->mock(Evolution\Change::class);
 		$origin->shouldReceive('revert')->once();
 		$origin->shouldReceive('affect')->once();
-		Assert::noError(function () use ($origin, $elasticsearch) {
+		Assert::noError(static function () use ($origin, $elasticsearch) {
 			(new Evolution\SyncChange(
 				666,
 				$origin,
 				$elasticsearch
 			))->revert();
 		});
-		Assert::noError(function () use ($origin, $elasticsearch) {
+		Assert::noError(static function () use ($origin, $elasticsearch) {
 			(new Evolution\SyncChange(
 				666,
 				$origin,

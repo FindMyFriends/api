@@ -65,7 +65,7 @@ final class PostgresETagTest extends Tester\TestCase {
 
 	public function testAllowingAnonymousClasses() {
 		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
-		Assert::noError(function() use ($eTag) {
+		Assert::noError(static function() use ($eTag) {
 			$eTag->set(new class () {
 
 			});

@@ -35,7 +35,7 @@ final class CheckChangedConfiguration implements Scheduling\Job {
 		return iterator_to_array(
 			new Iterator\Mapped(
 				new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->destination->getPathname())),
-				function (\SplFileInfo $file): string {
+				static function (\SplFileInfo $file): string {
 					return (string) md5_file($file->getPathname());
 				}
 			)

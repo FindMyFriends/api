@@ -78,7 +78,7 @@ CONF;
 		$query = implode(
 			'&',
 			array_map(
-				function(string $param): string {
+				static function(string $param): string {
 					return sprintf('%1$s=$%1$s', $param);
 				},
 				array_keys($params)
@@ -94,13 +94,13 @@ CONF;
 			'location %s',
 			str_replace(
 				array_map(
-					function(string $name): string {
+					static function(string $name): string {
 						return sprintf('{%s}', $name);
 					},
 					array_keys($params)
 				),
 				array_map(
-					function(string $name, string $regex): string {
+					static function(string $name, string $regex): string {
 						return sprintf('(?<%s>%s)', $name, $regex);
 					},
 					array_keys($params),

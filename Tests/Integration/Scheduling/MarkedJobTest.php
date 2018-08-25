@@ -40,7 +40,7 @@ final class MarkedJobTest extends Tester\TestCase {
 		Assert::exception(
 			function() {
 				(new Scheduling\MarkedJob(
-					new Scheduling\FakeJob(function () {
+					new Scheduling\FakeJob(static function () {
 						throw new \DomainException('Oops');
 					}, 'FakeJob'),
 					$this->database

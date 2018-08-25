@@ -29,7 +29,7 @@ final class PublicDemand implements Demand {
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
 			->adjusted('id', [$this->hashids, 'encode'])
-			->adjusted('created_at', function(string $datetime): string {
+			->adjusted('created_at', static function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}

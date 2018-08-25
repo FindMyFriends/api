@@ -60,7 +60,7 @@ final class PostTest extends Tester\TestCase {
 			new Encryption\FakeCipher()
 		);
 		$post->response([]);
-		Assert::exception(function() use ($post) {
+		Assert::exception(static function() use ($post) {
 			$post->response([]);
 		}, \UnexpectedValueException::class, 'Email "me@example.com" already exists', HTTP_CONFLICT);
 	}

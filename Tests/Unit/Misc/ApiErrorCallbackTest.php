@@ -16,8 +16,8 @@ require __DIR__ . '/../../bootstrap.php';
 
 final class ApiErrorCallbackTest extends Tester\TestCase {
 	public function testTransformingStatusCodeOnThrowing() {
-		$ex = Assert::exception(function() {
-			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
+		$ex = Assert::exception(static function() {
+			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(static function() {
 				throw new \UnexpectedValueException('ABC', 100);
 			});
 		}, \UnexpectedValueException::class, 'ABC', HTTP_FORBIDDEN);
@@ -25,8 +25,8 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 	}
 
 	public function testRethrowingOnOtherExceptions() {
-		$ex = Assert::exception(function() {
-			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(function() {
+		$ex = Assert::exception(static function() {
+			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(static function() {
 				throw new \DomainException('ABC', 100);
 			});
 		}, \DomainException::class, 'ABC', 100);
@@ -34,7 +34,7 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 	}
 
 	public function testNoExceptionWithoutThrowing() {
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Misc\ApiErrorCallback(
 				HTTP_FORBIDDEN
 			))->invoke('strlen', ['abc']);

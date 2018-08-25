@@ -18,7 +18,7 @@ final class ValueWithUnitRuleTest extends Tester\TestCase {
 	public function testPassingOnBothNull() {
 		$length = ['value' => null, 'unit' => null];
 		Assert::true((new Constraint\ValueWithUnitRule())->satisfied($length));
-		Assert::noError(function() use ($length) {
+		Assert::noError(static function() use ($length) {
 			(new Constraint\ValueWithUnitRule())->apply($length);
 		});
 	}
@@ -26,7 +26,7 @@ final class ValueWithUnitRuleTest extends Tester\TestCase {
 	public function testPassingOnBothContainingSomething() {
 		$length = ['value' => 10, 'unit' => 'mm'];
 		Assert::true((new Constraint\ValueWithUnitRule())->satisfied($length));
-		Assert::noError(function() use ($length) {
+		Assert::noError(static function() use ($length) {
 			(new Constraint\ValueWithUnitRule())->apply($length);
 		});
 	}
@@ -34,7 +34,7 @@ final class ValueWithUnitRuleTest extends Tester\TestCase {
 	public function testThrowingOnValueWithoutUnit() {
 		$length = ['value' => 10, 'unit' => null];
 		Assert::false((new Constraint\ValueWithUnitRule())->satisfied($length));
-		Assert::exception(function() use ($length) {
+		Assert::exception(static function() use ($length) {
 			(new Constraint\ValueWithUnitRule())->apply($length);
 		}, \UnexpectedValueException::class, 'Filled value must have unit and vice versa');
 	}
@@ -42,7 +42,7 @@ final class ValueWithUnitRuleTest extends Tester\TestCase {
 	public function testThrowingOnUnitWithoutValue() {
 		$length = ['value' => null, 'unit' => 'mm'];
 		Assert::false((new Constraint\ValueWithUnitRule())->satisfied($length));
-		Assert::exception(function() use ($length) {
+		Assert::exception(static function() use ($length) {
 			(new Constraint\ValueWithUnitRule())->apply($length);
 		}, \UnexpectedValueException::class, 'Filled value must have unit and vice versa');
 	}

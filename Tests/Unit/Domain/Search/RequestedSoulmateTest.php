@@ -19,14 +19,13 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 	use TestCase\Mockery;
 
 	public function testProcessingWithSuccess() {
-		$demand = 1;
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('succeed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('seek')->once();
-		Assert::noError(function () use ($demand, $requests, $origin, $self) {
+		Assert::noError(static function () use ($requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,
@@ -36,14 +35,13 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 	}
 
 	public function testRethrowingOnFail() {
-		$demand = 1;
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('failed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
 		$origin->shouldReceive('seek')->once()->andThrow(new \DomainException('foo'));
-		Assert::exception(function () use ($demand, $requests, $origin, $self) {
+		Assert::exception(static function () use ($requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,

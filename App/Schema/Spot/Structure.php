@@ -68,7 +68,7 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => $put['properties'],
-			'anyOf' => array_map(function (string $field): array {
+			'anyOf' => array_map(static function (string $field): array {
 				return ['required' => [$field]];
 			}, $put['required']),
 			'type' => 'object',

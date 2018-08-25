@@ -37,7 +37,7 @@ final class PublicChange implements Change {
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
 			->adjusted('id', [$this->hashids, 'encode'])
-			->adjusted('evolved_at', function(string $datetime): string {
+			->adjusted('evolved_at', static function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}

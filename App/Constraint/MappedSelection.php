@@ -21,10 +21,10 @@ final class MappedSelection implements Dataset\Selection {
 			array_keys($this->origin->criteria()),
 			array_reduce(
 				$this->origin->criteria(),
-				function (array $mapping, array $criteria): array {
+				static function (array $mapping, array $criteria): array {
 					$mapping[] = array_combine(
 						array_map(
-							function (string $key): string {
+							static function (string $key): string {
 								return str_replace('.', '_', $key);
 							},
 							array_keys($criteria)

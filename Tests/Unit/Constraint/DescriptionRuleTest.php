@@ -43,7 +43,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 	];
 
 	public function testThrowingOnWomanWithBeard() {
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Constraint\DescriptionRule())->apply(
 				array_replace_recursive(
 					self::BASE,
@@ -57,7 +57,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				)
 			);
 		}, \UnexpectedValueException::class, 'Women do not have beards');
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Constraint\DescriptionRule())->apply(
 				array_replace_recursive(
 					self::BASE,
@@ -125,7 +125,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnValuesWithoutUnits(array $part) {
 		$ex = Assert::exception(
-			function() use ($part) {
+			static function() use ($part) {
 				(new Constraint\DescriptionRule())->apply(array_replace_recursive(self::BASE, $part));
 			},
 			\UnexpectedValueException::class

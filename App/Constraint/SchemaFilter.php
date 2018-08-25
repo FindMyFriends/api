@@ -88,7 +88,7 @@ final class SchemaFilter extends Dataset\Filter {
 					implode(
 						', ',
 						array_map(
-							function (string $value): string {
+							static function (string $value): string {
 								return sprintf("'%s'", $value);
 							},
 							$rules['enum']

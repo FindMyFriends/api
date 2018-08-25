@@ -56,7 +56,7 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
 		$request = new Search\SubsequentRequests($demand, $this->database);
 		$request->refresh('processing');
-		Assert::exception(function () use ($request) {
+		Assert::exception(static function () use ($request) {
 			$request->refresh('processing');
 		}, \UnexpectedValueException::class, 'Seeking for soulmate is already in progress');
 	}

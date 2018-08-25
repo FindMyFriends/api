@@ -32,31 +32,31 @@ final class SelectedJobTest extends Tester\TestCase {
 		(new Scheduling\SelectedJob(
 			'regenerate',
 			new Scheduling\FakeJob(
-				function() {
+				static function() {
 					echo 'XX';
 				},
 				'a'
 			),
 			new Scheduling\FakeJob(
-				function() {
+				static function() {
 					echo 'XX';
 				},
 				'b'
 			),
 			new Scheduling\FakeJob(
-				function() {
+				static function() {
 					echo 'XX';
 				},
 				'regenerate'
 			),
 			new Scheduling\FakeJob(
-				function() {
+				static function() {
 					echo 'OK';
 				},
 				'regenerate'
 			),
 			new Scheduling\FakeJob(
-				function() {
+				static function() {
 					echo 'XX';
 				},
 				'c'

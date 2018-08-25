@@ -130,7 +130,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		};
 		$register($email);
 		Assert::exception(
-			function() use ($register, $email) {
+			static function() use ($register, $email) {
 				$register(strtoupper($email));
 			},
 			\UnexpectedValueException::class,

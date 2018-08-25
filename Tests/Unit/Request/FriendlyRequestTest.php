@@ -18,7 +18,7 @@ require __DIR__ . '/../../bootstrap.php';
 
 final class FriendlyRequestTest extends Tester\TestCase {
 	public function testRethrowingWithSameCodeAndChainedPrevious() {
-		$e = Assert::exception(function () {
+		$e = Assert::exception(static function () {
 			(new Request\FriendlyRequest(
 				new class implements Application\Request {
 					public function body(): Output\Format {

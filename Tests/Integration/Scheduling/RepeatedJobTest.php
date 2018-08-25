@@ -22,7 +22,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 	public function testFirstJobFulfillAlways() {
 		ob_start();
 		(new Scheduling\RepeatedJob(
-			new Scheduling\FakeJob(function () {
+			new Scheduling\FakeJob(static function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10H',
@@ -39,7 +39,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		))->execute();
 		ob_start();
 		(new Scheduling\RepeatedJob(
-			new Scheduling\FakeJob(function () {
+			new Scheduling\FakeJob(static function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10H',
@@ -56,7 +56,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		))->execute();
 		ob_start();
 		(new Scheduling\RepeatedJob(
-			new Scheduling\FakeJob(function () {
+			new Scheduling\FakeJob(static function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10M',
@@ -78,7 +78,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		))->execute();
 		ob_start();
 		(new Scheduling\RepeatedJob(
-			new Scheduling\FakeJob(function () {
+			new Scheduling\FakeJob(static function () {
 				echo 'OK';
 			}, 'FakeJob'),
 			'PT10M',

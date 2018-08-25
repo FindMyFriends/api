@@ -21,7 +21,7 @@ final class JsonPrintedObjects implements Output\Format {
 		return (new Internal\EncodedJson(
 			array_reduce(
 				$this->prints,
-				function(array $objects, object $object): array {
+				static function(array $objects, object $object): array {
 					$objects[] = json_decode($object->print(new Output\Json())->serialization(), true);
 					return $objects;
 				},
@@ -46,12 +46,12 @@ final class JsonPrintedObjects implements Output\Format {
 	public function adjusted($tag, callable $adjustment): Output\Format {
 		return new Output\Json(
 			array_map(
-				function(Output\Format $format): array {
+				static function(Output\Format $format): array {
 					return json_decode($format->serialization(), true);
 				},
 				array_reduce(
 					$this->prints,
-					function(array $objects, object $object) use ($tag, $adjustment): array {
+					static function(array $objects, object $object) use ($tag, $adjustment): array {
 						$objects[] = $object->print(new Output\Json())->adjusted($tag, $adjustment);
 						return $objects;
 					},

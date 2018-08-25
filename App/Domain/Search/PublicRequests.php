@@ -29,7 +29,7 @@ final class PublicRequests implements Requests {
 	public function all(Dataset\Selection $selection): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->all($selection),
-			function(Request $request): Request {
+			static function(Request $request): Request {
 				return new PublicRequest($request);
 			}
 		);

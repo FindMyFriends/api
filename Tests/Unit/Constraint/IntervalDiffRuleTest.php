@@ -17,7 +17,7 @@ require __DIR__ . '/../../bootstrap.php';
 final class IntervalDiffRuleTest extends Tester\TestCase {
 	public function testAllowingInRange() {
 		Assert::true((new Constraint\IntervalDiffRule('PT20H'))->satisfied('PT10H'));
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Constraint\IntervalDiffRule('PT20H'))->apply('PT10H');
 		});
 	}
@@ -28,7 +28,7 @@ final class IntervalDiffRuleTest extends Tester\TestCase {
 
 	public function testThrowingOutOfMax() {
 		Assert::false((new Constraint\IntervalDiffRule('PT20H'))->satisfied('P1D'));
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Constraint\IntervalDiffRule('PT20H'))->apply('P1D');
 		}, \UnexpectedValueException::class, 'Max diff is "PT20H", given "P1D"');
 	}

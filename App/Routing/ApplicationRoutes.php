@@ -351,7 +351,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					$this->cipher
 				);
 			},
-			'tokens [DELETE]' => function() use ($seeker): Application\View {
+			'tokens [DELETE]' => static function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Tokens\Delete(),
 					new Http\ChosenRole($seeker, ['member'])

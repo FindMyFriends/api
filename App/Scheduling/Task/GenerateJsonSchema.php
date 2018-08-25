@@ -111,7 +111,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 				\RecursiveIteratorIterator::SELF_FIRST,
 				\RecursiveIteratorIterator::CATCH_GET_CHILD
 			),
-			function (\SplFileInfo $file): bool {
+			static function (\SplFileInfo $file): bool {
 				return $file->isDir() && (
 					file_exists(sprintf('%s/get.json', $file->getPathname()))
 					|| file_exists(sprintf('%s/post.json', $file->getPathname()))

@@ -18,7 +18,7 @@ final class AgeRangeRuleTest extends Tester\TestCase {
 	public function testPassingOnFromAndToAsProperRange() {
 		$age = ['from' => 20, 'to' => 30];
 		Assert::true((new Constraint\AgeRangeRule())->satisfied($age));
-		Assert::noError(function() use ($age) {
+		Assert::noError(static function() use ($age) {
 			(new Constraint\AgeRangeRule())->apply($age);
 		});
 	}
@@ -26,7 +26,7 @@ final class AgeRangeRuleTest extends Tester\TestCase {
 	public function testPassingOnFromAndToAsSame() {
 		$age = ['from' => 30, 'to' => 30];
 		Assert::true((new Constraint\AgeRangeRule())->satisfied($age));
-		Assert::noError(function() use ($age) {
+		Assert::noError(static function() use ($age) {
 			(new Constraint\AgeRangeRule())->apply($age);
 		});
 	}
@@ -34,7 +34,7 @@ final class AgeRangeRuleTest extends Tester\TestCase {
 	public function testThrowingForSwapped() {
 		$age = ['from' => 30, 'to' => 10];
 		Assert::false((new Constraint\AgeRangeRule())->satisfied($age));
-		Assert::exception(function() use ($age) {
+		Assert::exception(static function() use ($age) {
 			(new Constraint\AgeRangeRule())->apply($age);
 		}, \UnexpectedValueException::class, 'Age must be properly ordered as range');
 	}

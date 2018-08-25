@@ -56,7 +56,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 */
 	private function placeholders(array $parts): array {
 		return array_map(
-			function(string $placeholder): string {
+			static function(string $placeholder): string {
 				return str_replace(['{', '}'], '', $placeholder);
 			},
 			preg_grep('~^{.+}$~', $parts)
@@ -75,7 +75,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 		if ($lost !== [])
 			throw new \UnexpectedValueException($this->format($lost));
 		return array_map(
-			function(string $placeholder) use ($parameters) {
+			static function(string $placeholder) use ($parameters) {
 				return $parameters[$placeholder];
 			},
 			$placeholders
@@ -91,7 +91,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	private function lost(array $placeholders, array $parameters): array {
 		return array_filter(
 			$placeholders,
-			function(string $placeholder) use ($parameters): bool {
+			static function(string $placeholder) use ($parameters): bool {
 				return !isset($parameters[$placeholder]);
 			}
 		);

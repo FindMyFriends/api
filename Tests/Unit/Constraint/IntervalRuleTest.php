@@ -17,14 +17,14 @@ require __DIR__ . '/../../bootstrap.php';
 final class IntervalRuleTest extends Tester\TestCase {
 	public function testPassingWithIso8601() {
 		Assert::true((new Constraint\IntervalRule())->satisfied('PT10H'));
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Constraint\IntervalRule())->apply('PT10H');
 		});
 	}
 
 	public function testFailingOnCustomFormat() {
 		Assert::false((new Constraint\IntervalRule())->satisfied('PT10Habc'));
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Constraint\IntervalRule())->apply('PT10Habc');
 		}, \UnexpectedValueException::class, 'Interval must be in ISO8601');
 	}

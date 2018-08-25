@@ -35,8 +35,16 @@
 		<exclude name="SlevomatCodingStandard.Namespaces.UnusedUses.MismatchingCaseSensitivity"/>
 		<exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment.OneLinePropertyComment"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator.DisallowedShortTernaryOperator"/>
-		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowEmpty.DisallowedEmpty"/> <!-- TODO: Temporary -->
 		<exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
+		<exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/> <!-- TODO: Does not work -->
+		<exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/> <!-- TODO: Does not work -->
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
+		<properties>
+			<property name="linesCountBeforeFirstUse" type="int" value="0"/>
+		</properties>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
@@ -45,7 +53,7 @@
 		</properties>
 	</rule>
 
-    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
 		<properties>
 			<property name="linesCountBetweenDescriptionAndAnnotations" type="int" value="0"/>
 		</properties>
@@ -77,7 +85,7 @@
 		<exclude-pattern>Tests/Integration</exclude-pattern>
 		<exclude-pattern>Tests/Postgres</exclude-pattern>
 		<exclude-pattern>Tests/Functional</exclude-pattern>
-        <exclude-pattern>Tests/Elastic</exclude-pattern>
+		<exclude-pattern>Tests/Elastic</exclude-pattern>
 	</rule>
 
 	<rule ref="Squiz.Commenting.FunctionComment.InvalidTypeHint">

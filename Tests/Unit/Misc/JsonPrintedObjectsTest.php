@@ -79,7 +79,7 @@ final class JsonPrintedObjectsTest extends Tester\TestCase {
 						return new Output\Json(['c' => 'd']);
 					}
 				}
-			))->adjusted(null, function (array $input): array {
+			))->adjusted(null, static function (array $input): array {
 				return array_map('strtoupper', $input);
 			})->serialization()
 		);

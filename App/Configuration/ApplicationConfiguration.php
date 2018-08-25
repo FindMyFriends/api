@@ -48,9 +48,8 @@ final class ApplicationConfiguration implements Configuration\Source {
 					self::HASHIDS_SECRET_CONFIGURATION,
 					self::ROUTES,
 				],
-				function(string $key, string $location): string {
-					$key .= filemtime($location);
-					return $key;
+				static function(string $key, string $location): string {
+					return $key . filemtime($location);
 				},
 				''
 			)

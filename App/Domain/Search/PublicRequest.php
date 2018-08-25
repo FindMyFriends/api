@@ -18,7 +18,7 @@ final class PublicRequest implements Request {
 
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('searched_at', function (string $datetime): string {
+			->adjusted('searched_at', static function (string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}

@@ -36,7 +36,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 			new Access\FakeEntrance(new Access\FakeSeeker('1')),
 			$this->redis
 		);
-		Assert::noError(function () use ($entrance) {
+		Assert::noError(static function () use ($entrance) {
 			$entrance->enter([]);
 			$entrance->enter([]);
 		});

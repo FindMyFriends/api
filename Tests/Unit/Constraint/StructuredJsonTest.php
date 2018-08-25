@@ -34,7 +34,7 @@ final class StructuredJsonTest extends Tester\TestCase {
 	}
 
 	public function testNoErrorOnEmptyInput() {
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(__DIR__ . '/../../fixtures/jsonSchema/missingFieldWithDefault.json')
 			))->satisfied([]);

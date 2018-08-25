@@ -25,7 +25,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 		$eTag = $this->mock(Http\ETag::class);
 		$eTag->shouldReceive('exists')->andReturn(false)->once();
 		$eTag->shouldReceive('set')->once();
-		Assert::noError(function() use ($eTag) {
+		Assert::noError(static function() use ($eTag) {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), []),
 				$eTag
@@ -34,7 +34,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 	}
 
 	public function testThrowingOnSecondSameRequestsWithoutETag() {
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), []),
 				new Http\FakeETag(true, '')
@@ -43,7 +43,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 	}
 
 	public function testThrowingOnNotMatchingETag() {
-		Assert::exception(function() {
+		Assert::exception(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), ['If-Match' => '"abc"']),
 				new Http\FakeETag(true, '"foo"')
@@ -52,7 +52,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 	}
 
 	public function testPassingOnNotMatchingETagForInvertedHeader() {
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), ['If-None-Match' => '"abc"']),
 				new Http\FakeETag(true, '"foo"')

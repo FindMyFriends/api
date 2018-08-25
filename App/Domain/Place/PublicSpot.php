@@ -36,7 +36,7 @@ final class PublicSpot implements Spot {
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
 			->adjusted('id', [$this->spotHashids, 'encode'])
-			->adjusted('assigned_at', function(string $datetime): string {
+			->adjusted('assigned_at', static function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}

@@ -32,12 +32,12 @@ final class SpotRuleTest extends Tester\TestCase {
 	}
 
 	public function testPassingOnSomeMissing() {
-		Assert::noError(function () {
+		Assert::noError(static function () {
 			$base = self::BASE;
 			unset($base['coordinates']);
 			Assert::equal($base, (new Constraint\SpotRule())->apply($base));
 		});
-		Assert::noError(function () {
+		Assert::noError(static function () {
 			$base = self::BASE;
 			unset($base['met_at']);
 			Assert::equal($base, (new Constraint\SpotRule())->apply($base));
@@ -68,7 +68,7 @@ final class SpotRuleTest extends Tester\TestCase {
 
 	public function testAllowedApproximationAsNull()
 	{
-		Assert::noError(function() {
+		Assert::noError(static function() {
 			(new Constraint\SpotRule())->apply(
 				array_replace_recursive(
 					self::BASE,

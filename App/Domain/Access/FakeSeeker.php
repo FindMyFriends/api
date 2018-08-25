@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Access;
 
 final class FakeSeeker implements Seeker {
-	/** @var null|string */
+	/** @var string|null */
 	private $id;
 
 	/** @var mixed[]|null */

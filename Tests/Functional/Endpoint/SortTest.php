@@ -41,7 +41,7 @@ final class SortTest extends Tester\TestCase {
 					new \RecursiveIteratorIterator(
 						new \RecursiveDirectoryIterator(__DIR__ . '/../../../App/Endpoint')
 					),
-					function (\SplFileInfo $file): bool {
+					static function (\SplFileInfo $file): bool {
 						return strpos(file_get_contents($file->getPathname()), 'new Dataset\RestSort(') !== false;
 					}
 				)

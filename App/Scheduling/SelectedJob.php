@@ -22,7 +22,7 @@ final class SelectedJob implements Job {
 		/** @var \FindMyFriends\Scheduling\Job[] $choices */
 		$choices = array_combine(
 			array_map(
-				function(Job $origin): string {
+				static function(Job $origin): string {
 					return $origin->name();
 				},
 				$this->origins

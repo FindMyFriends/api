@@ -21,7 +21,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 
 	public function testInvalidAsUnknownReminder() {
 		$rule = new Access\ValidReminderRule($this->database);
-		Assert::exception(function() use ($rule) {
+		Assert::exception(static function() use ($rule) {
 			$rule->apply('123');
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
 		Assert::false($rule->satisfied('123'));
@@ -31,7 +31,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		$rule = new Access\ValidReminderRule($this->database);
-		Assert::exception(function() use ($rule, $reminder) {
+		Assert::exception(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
 		Assert::false($rule->satisfied($reminder));
@@ -46,7 +46,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 			['used_at' => date('Y-m-d'), 'reminder' => $reminder, 'reminded_at' => '2004-01-01', 'expire_at' => '2005-01-01']
 		))->try();
 		$rule = new Access\ValidReminderRule($this->database);
-		Assert::exception(function() use ($rule, $reminder) {
+		Assert::exception(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
 		Assert::false($rule->satisfied($reminder));
@@ -64,7 +64,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 			]
 		))->try();
 		$rule = new Access\ValidReminderRule($this->database);
-		Assert::noError(function() use ($rule, $reminder) {
+		Assert::noError(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		});
 		Assert::true($rule->satisfied($reminder));

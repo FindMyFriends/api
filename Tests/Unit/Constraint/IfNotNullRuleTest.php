@@ -25,7 +25,7 @@ final class IfNotNullRuleTest extends Tester\TestCase {
 	public function testUsingRuleForNotNull() {
 		$rule = new Validation\FakeRule(false, new \DomainException('foo'));
 		Assert::false((new Constraint\IfNotNullRule($rule))->satisfied('X'));
-		Assert::exception(function() use ($rule) {
+		Assert::exception(static function() use ($rule) {
 			(new Constraint\IfNotNullRule($rule))->apply('X');
 		}, \DomainException::class, 'foo');
 	}

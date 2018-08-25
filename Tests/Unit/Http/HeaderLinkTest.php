@@ -97,7 +97,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 				['first' => 1]
 			))->adjusted(
 				'first',
-				function(int $page): int {
+				static function(int $page): int {
 					return $page + 1;
 				}
 			)->serialization()

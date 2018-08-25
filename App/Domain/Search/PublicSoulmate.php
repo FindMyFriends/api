@@ -29,10 +29,10 @@ final class PublicSoulmate implements Soulmate {
 			->adjusted('evolution_id', function (?int $id): ?string {
 				return $id === null ? $id : $this->hashids['evolution']->encode($id);
 			})
-			->adjusted('searched_at', function (string $datetime): string {
+			->adjusted('searched_at', static function (string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})
-			->adjusted('related_at', function (?string $datetime): ?string {
+			->adjusted('related_at', static function (?string $datetime): ?string {
 				return $datetime === null ? $datetime : (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}

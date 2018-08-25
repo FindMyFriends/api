@@ -26,7 +26,7 @@ final class CreatedHashids implements Configuration\Source {
 		return array_combine(
 			array_keys($configuration),
 			array_map(
-				function (string $salt, int $length): Hashids {
+				static function (string $salt, int $length): Hashids {
 					return new Hashids($salt, $length);
 				},
 				array_column($configuration, 'salt'),
