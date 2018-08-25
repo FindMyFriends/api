@@ -39,7 +39,7 @@ final class Delete implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Interaction\StoredSpot($parameters['id'], $this->database)
+			new Interaction\StoredSpot($parameters['demand_id'], $this->database)
 		))->forget();
 		return new Response\EmptyResponse();
 	}
