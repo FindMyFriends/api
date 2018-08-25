@@ -35,7 +35,7 @@ final class Structure {
 						'moment' => ['type' => 'string', 'format' => 'date-time'],
 						'timeline_side' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresEnum('timeline_sides', $this->database))->values(),
+							'enum' => (new Schema\PostgresEnum('timeline_sides_enum', $this->database))->values(),
 						],
 						'approximation' => ['type' => ['string', 'null']],
 					],

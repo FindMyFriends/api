@@ -21,16 +21,22 @@ CREATE SCHEMA audit;
 SET search_path = public, pg_catalog, access, http, log, meta;
 
 -- TYPES --
-CREATE TYPE timeline_sides AS ENUM (
+CREATE TYPE timeline_sides_enum AS ENUM (
   'exactly',
   'sooner',
   'later',
   'sooner or later'
 );
 
-CREATE TYPE roles AS ENUM (
+CREATE DOMAIN timeline_sides AS text
+  CHECK (VALUE = ANY(enum_range(NULL::timeline_sides_enum)::text[]));
+
+CREATE TYPE roles_enum AS ENUM (
   'member'
 );
+
+CREATE DOMAIN roles AS text
+  CHECK (VALUE = ANY(enum_range(NULL::roles_enum)::text[]));
 
 CREATE TYPE approximate_timestamptz AS (
   moment timestamp with time zone,
@@ -38,24 +44,33 @@ CREATE TYPE approximate_timestamptz AS (
   approximation interval
 );
 
-CREATE TYPE breast_sizes AS ENUM (
+CREATE TYPE breast_sizes_enum AS ENUM (
   'A',
   'B',
   'C',
   'D'
 );
 
+CREATE DOMAIN breast_sizes AS text
+  CHECK (VALUE = ANY(enum_range(NULL::breast_sizes_enum)::text[]));
 
-CREATE TYPE sex AS ENUM (
+
+CREATE TYPE sex_enum AS ENUM (
   'man',
   'woman'
 );
 
+CREATE DOMAIN sex AS text
+  CHECK (VALUE = ANY(enum_range(NULL::sex_enum)::text[]));
 
-CREATE TYPE length_units AS ENUM (
+
+CREATE TYPE length_units_enum AS ENUM (
   'mm',
   'cm'
 );
+
+CREATE DOMAIN length_units AS text
+  CHECK (VALUE = ANY(enum_range(NULL::length_units_enum)::text[]));
 
 CREATE TYPE length AS (
   value numeric,
@@ -63,9 +78,12 @@ CREATE TYPE length AS (
 );
 
 
-CREATE TYPE mass_units AS ENUM (
+CREATE TYPE mass_units_enum AS ENUM (
   'kg'
 );
+
+CREATE DOMAIN mass_units AS text
+  CHECK (VALUE = ANY(enum_range(NULL::mass_units_enum)::text[]));
 
 CREATE TYPE job_statuses AS ENUM (
   'pending',

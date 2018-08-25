@@ -22,13 +22,13 @@ final class ExplainedTableEnums implements Schema\Enum {
 		return [
 			'definitions' => [
 				'length_unit' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('length_units', $this->database),
+					new Schema\PostgresEnum('length_units_enum', $this->database),
 					$this->redis,
 					'length_units',
 					'enum'
 				))->values(),
 				'mass_unit' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('mass_units', $this->database),
+					new Schema\PostgresEnum('mass_units_enum', $this->database),
 					$this->redis,
 					'mass_units',
 					'enum'
@@ -50,7 +50,7 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'table'
 				))->values(),
 				'breast_size' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('breast_sizes', $this->database),
+					new Schema\PostgresEnum('breast_sizes_enum', $this->database),
 					$this->redis,
 					'breast_sizes',
 					'enum'
@@ -120,7 +120,7 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'table'
 				))->values(),
 				'sex' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('sex', $this->database),
+					new Schema\PostgresEnum('sex_enum', $this->database),
 					$this->redis,
 					'sex',
 					'enum'

@@ -33,11 +33,11 @@ final class Structure {
 				],
 				'length_unit' => [
 					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new Schema\PostgresEnum('length_units', $this->database))->values()),
+					'enum' => array_merge([null], (new Schema\PostgresEnum('length_units_enum', $this->database))->values()),
 				],
 				'mass_unit' => [
 					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new Schema\PostgresEnum('mass_units', $this->database))->values()),
+					'enum' => array_merge([null], (new Schema\PostgresEnum('mass_units_enum', $this->database))->values()),
 				],
 				'age' => [
 					'type' => ['integer'],
@@ -71,7 +71,7 @@ final class Structure {
 						],
 						'breast_size' => [
 							'type' => ['string', 'null'],
-							'enum' => array_merge([null], (new Schema\PostgresEnum('breast_sizes', $this->database))->values()),
+							'enum' => array_merge([null], (new Schema\PostgresEnum('breast_sizes_enum', $this->database))->values()),
 						],
 					],
 					'required' => [
@@ -180,7 +180,7 @@ final class Structure {
 						'firstname' => ['type' => ['string', 'null']],
 						'sex' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresEnum('sex', $this->database))->values(),
+							'enum' => (new Schema\PostgresEnum('sex_enum', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
 						'ethnic_group_id' => ['type' => 'integer'],
