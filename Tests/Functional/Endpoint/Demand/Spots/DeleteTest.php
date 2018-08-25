@@ -28,7 +28,7 @@ final class DeleteTest extends Tester\TestCase {
 		$response = (new Endpoint\Demand\Spots\Delete(
 			$this->database,
 			new Access\FakeSeeker((string) $seeker)
-		))->response(['id' => $spot, 'demand_id' => $demand]);
+		))->response(['id' => $spot]);
 		Assert::same('', $response->body()->serialization());
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
@@ -38,7 +38,7 @@ final class DeleteTest extends Tester\TestCase {
 			(new Endpoint\Demand\Spots\Delete(
 				$this->database,
 				new Access\FakeSeeker('1')
-			))->response(['id' => 1, 'demand_id' => 2]);
+			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.', HTTP_FORBIDDEN);
 	}
 }

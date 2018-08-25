@@ -39,7 +39,7 @@ final class Delete implements Application\View {
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Evolution\StoredSpot($parameters['evolution_id'], $this->database)
+			new Evolution\StoredSpot($parameters['id'], $this->database)
 		))->forget();
 		return new Response\EmptyResponse();
 	}
