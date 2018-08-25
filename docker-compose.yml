@@ -48,6 +48,14 @@ services:
       networks:
         - fmf
 
+    redis-identity:
+      image: redis:alpine
+      container_name: find-my-friends-redis-identity
+      ports:
+      - 6381:6381
+      networks:
+      - fmf
+
     redis-test:
       build: docker/redis-test
       container_name: find-my-friends-redis-test

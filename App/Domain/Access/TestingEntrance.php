@@ -11,7 +11,6 @@ final class TestingEntrance implements Entrance {
 		session_start();
 		$_SESSION['id'] = '1';
 		$sessionId = session_id();
-		chown(sprintf('/tmp/sess_%s', $sessionId), 'www-data');
 		session_write_close();
 		return new FakeSeeker($sessionId);
 	}

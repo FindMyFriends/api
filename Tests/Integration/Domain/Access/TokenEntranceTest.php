@@ -48,6 +48,7 @@ final class TokenEntranceTest extends Tester\TestCase {
 
 	public function testDeletingSessionOnExit() {
 		session_start();
+		session_regenerate_id(true);
 		$_SESSION['id'] = '1';
 		Assert::true(isset($_SESSION['id']));
 		(new Access\TokenEntrance(new Access\FakeEntrance(new Access\FakeSeeker())))->exit();
