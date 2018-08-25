@@ -35,6 +35,7 @@ final class PostTest extends Tester\TestCase {
 		))->response([]);
 		$access = json_decode($response->body()->serialization(), true);
 		Assert::true(isset($access['token']));
+		Assert::true(isset($access['expiration']));
 		Assert::same(HTTP_CREATED, $response->status());
 	}
 

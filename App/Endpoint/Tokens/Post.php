@@ -57,7 +57,7 @@ final class Post implements Application\View {
 		);
 		return new Response\JsonResponse(
 			new Response\PlainResponse(
-				new Output\Json(['token' => $seeker->id()]),
+				new Output\Json(['token' => $seeker->id(), 'expiration' => (int) ini_get('session.gc_maxlifetime')]),
 				[],
 				HTTP_CREATED
 			)
