@@ -62,7 +62,6 @@ final class PostgresETagTest extends Tester\TestCase {
 		Assert::notSame('123', $current['tag']);
 	}
 
-
 	public function testAllowingAnonymousClasses() {
 		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
 		Assert::noError(static function() use ($eTag) {

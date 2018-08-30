@@ -119,7 +119,6 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		Assert::equal($expectation, (new Constraint\DescriptionRule())->apply($expectation));
 	}
 
-
 	/**
 	 * @dataProvider valuesWithoutUnits
 	 */

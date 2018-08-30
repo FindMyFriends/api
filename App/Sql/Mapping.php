@@ -5,5 +5,6 @@ namespace FindMyFriends\Sql;
 
 interface Mapping {
 	public function application(array $database): array;
+
 	public function database(array $application): array;
 }

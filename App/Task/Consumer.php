@@ -48,6 +48,8 @@ abstract class Consumer {
 	}
 
 	abstract protected function action(array $body): void;
+
 	abstract protected function queue(): string;
+
 	abstract protected function key(): string;
 }
