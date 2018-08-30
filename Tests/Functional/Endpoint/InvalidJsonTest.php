@@ -19,11 +19,13 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 final class InvalidJsonTest extends Tester\TestCase {
+	private const AUTHORIZED = true;
+
 	/**
-	 * @dataProvider sorts
+	 * @dataProvider endpoints
 	 */
-	public function testInvalidJsonInput(string $endpoint, string $method) {
-		$response = $this->response($endpoint, $method);
+	public function testInvalidJsonInput(string $endpoint, string $method, bool $authorized) {
+		$response = $this->response($endpoint, $method, $authorized);
 		Assert::same(['message' => 'JSON is not valid'], json_decode($response->body(), true));
 		Assert::same(HTTP_BAD_REQUEST, $response->code());
 	}
@@ -38,16 +40,18 @@ final class InvalidJsonTest extends Tester\TestCase {
 		);
 		if (array_intersect($ignores, $routes) !== $ignores)
 			Assert::fail('Some of the ignored routes not exists anymore.');
-		Assert::same(count($this->sorts()), count(array_diff($routes, $ignores)));
+		Assert::same(count($this->endpoints()), count(array_diff($routes, $ignores)));
 	}
 
-	private function response(string $endpoint, string $method): Http\Response {
+	private function response(string $endpoint, string $method, bool $authorized): Http\Response {
 		return (new Http\BasicRequest(
 			$method,
 			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint)),
 			[
 				CURLOPT_HTTPHEADER => [
-					sprintf('Authorization: Bearer %s', $this->token()),
+					$authorized
+						? sprintf('Authorization: Bearer %s', (new Access\TestingEntrance())->enter([])->id())
+						: null,
 					'If-None-Match: "abc"',
 				],
 			],
@@ -55,25 +59,22 @@ final class InvalidJsonTest extends Tester\TestCase {
 		))->send();
 	}
 
-	private function token(): string {
-		return (new Access\TestingEntrance())->enter([])->id();
-	}
-
-	protected function sorts(): array {
+	protected function endpoints(): array {
 		$config = (new Configuration\ApplicationConfiguration())->read();
 		return [
-			['demands', 'POST'],
-			[sprintf('demands/%s', $config['HASHIDS']['demand']->encode(1)), 'PUT'],
-			[sprintf('demands/%s', $config['HASHIDS']['demand']->encode(1)), 'PATCH'],
-			['evolutions', 'POST'],
-			[sprintf('evolutions/%s', $config['HASHIDS']['evolution']->encode(1)), 'PUT'],
-			['seekers', 'POST'],
-			['tokens', 'POST'],
-			[sprintf('soulmates/%s', $config['HASHIDS']['soulmate']->encode(1)), 'PATCH'],
-			[sprintf('evolutions/%s/spots', $config['HASHIDS']['evolution']->encode(1)), 'POST'],
-			[sprintf('demands/%s/spots', $config['HASHIDS']['demand']->encode(1)), 'POST'],
-			[sprintf('spots/%s', $config['HASHIDS']['spot']->encode(1)), 'PUT'],
-			[sprintf('spots/%s', $config['HASHIDS']['spot']->encode(1)), 'PATCH'],
+			['activations', 'POST', !self::AUTHORIZED],
+			['demands', 'POST', self::AUTHORIZED],
+			[sprintf('demands/%s', $config['HASHIDS']['demand']->encode(1)), 'PUT', self::AUTHORIZED],
+			[sprintf('demands/%s', $config['HASHIDS']['demand']->encode(1)), 'PATCH', self::AUTHORIZED],
+			['evolutions', 'POST', self::AUTHORIZED],
+			[sprintf('evolutions/%s', $config['HASHIDS']['evolution']->encode(1)), 'PUT', self::AUTHORIZED],
+			['seekers', 'POST', self::AUTHORIZED],
+			['tokens', 'POST', self::AUTHORIZED],
+			[sprintf('soulmates/%s', $config['HASHIDS']['soulmate']->encode(1)), 'PATCH', self::AUTHORIZED],
+			[sprintf('evolutions/%s/spots', $config['HASHIDS']['evolution']->encode(1)), 'POST', self::AUTHORIZED],
+			[sprintf('demands/%s/spots', $config['HASHIDS']['demand']->encode(1)), 'POST', self::AUTHORIZED],
+			[sprintf('spots/%s', $config['HASHIDS']['spot']->encode(1)), 'PUT', self::AUTHORIZED],
+			[sprintf('spots/%s', $config['HASHIDS']['spot']->encode(1)), 'PATCH', self::AUTHORIZED],
 		];
 	}
 }

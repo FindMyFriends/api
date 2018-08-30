@@ -69,6 +69,15 @@ final class ApplicationRoutes implements Routing\Routes {
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 		))->enter((new Application\PlainRequest())->headers());
 		return [
+			'activations [POST]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Activations\Post(
+						new Application\PlainRequest(),
+						$this->database
+					),
+					new Http\ChosenRole($seeker, ['guest'])
+				);
+			},
 			'descriptions [OPTIONS]' => function(): Application\View {
 				return new Endpoint\Preflight(
 					new Endpoint\Descriptions\Options($this->database, $this->redis),

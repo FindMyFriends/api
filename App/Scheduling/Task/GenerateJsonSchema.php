@@ -98,6 +98,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$spot = new Schema\Spot\Structure($this->database);
 		$schemas->save($spot->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Spot/schema/put.json'));
 		$schemas->save($spot->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Spot/schema/patch.json'));
+
+		$activation = new Schema\Activation\Structure();
+		$schemas->save($activation->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Activations/schema/post.json'));
 	}
 
 	public function name(): string {

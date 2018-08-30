@@ -66,6 +66,7 @@ composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
 move-schemas:
+	mkdir -p www/schema/activation
 	mkdir -p www/schema/demand
 	mkdir -p www/schema/demand/soulmate
 	mkdir -p www/schema/demand/soulmate_request
@@ -78,6 +79,7 @@ move-schemas:
 	mkdir -p www/schema/spot
 	mkdir -p www/schema/token
 
+	ln -sfn $(PWD)/App/Endpoint/Activations/schema/post.json www/schema/activation/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/SoulmateRequests/schema/get.json www/schema/demand/soulmate_request/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/Soulmates/schema/get www/schema/demand/soulmate/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/get.json www/schema/demand/spot/get.json
