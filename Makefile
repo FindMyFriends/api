@@ -63,7 +63,7 @@ cron:
 	php App/Scheduling/index.php Cron
 
 composer-install:
-	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
+	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
 move-schemas:
 	mkdir -p www/schema/demand
