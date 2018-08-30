@@ -38,7 +38,6 @@
 		<exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
 		<exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/> <!-- TODO: Does not work -->
-		<exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/> <!-- TODO: Does not work -->
 	</rule>
 
 	<rule ref="Squiz.WhiteSpace.FunctionSpacing.After"> <!-- Override rule from Consistence -->
