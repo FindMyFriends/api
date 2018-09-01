@@ -9,6 +9,12 @@ use FindMyFriends\Sql\Description;
 use Klapuch\Storage;
 
 final class PrioritizedColumns implements Schema\Columns {
+	private const DEFAULT_COLUMNS = [
+		'general_sex' => 1,
+		'general_firstname' => 2,
+		'general_lastname' => 3,
+	];
+
 	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
@@ -28,8 +34,10 @@ final class PrioritizedColumns implements Schema\Columns {
 			WHERE seeker_id = ?',
 			[$this->seeker->id()]
 		))->field();
-		return $columns === false ?
-			[] :
-			(new Description\Mapping())->application(json_decode($columns, true));
+		return (new Description\Mapping())->application(
+			$columns === false
+				? self::DEFAULT_COLUMNS
+				: json_decode($columns, true)
+		);
 	}
 }

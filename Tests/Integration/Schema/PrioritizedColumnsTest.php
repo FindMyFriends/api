@@ -34,11 +34,15 @@ final class PrioritizedColumnsTest extends Tester\TestCase {
 		Assert::same(3, current($columns));
 	}
 
-	public function testEmptyForNoAvailableColumns() {
-		$columns = (new Schema\Evolution\PrioritizedColumns($this->database, new Access\FakeSeeker('1')))->values();
-		Assert::count(0, $columns);
+	public function testAddingAnyColumnsForSeekerWithoutRefresh() {
+		['id' => $me] = (new Misc\SampleSeeker($this->database))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
+		$columns = (new Schema\Evolution\PrioritizedColumns($this->database, new Access\FakeSeeker((string) $me)))->values();
+		Assert::count(3, $columns);
+		Assert::same(1, $columns['general.sex']);
+		Assert::same(2, $columns['general.firstname']);
+		Assert::same(3, $columns['general.lastname']);
 	}
-
 }
 
 (new PrioritizedColumnsTest())->run();
