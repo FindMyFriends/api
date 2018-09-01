@@ -1991,7 +1991,8 @@ ORDER BY evolved_at DESC
 LIMIT 1
 $$
 LANGUAGE SQL
-STABLE;
+STABLE
+ROWS 1;
 
 CREATE FUNCTION cascade_update_birth_year(
   in_description_id descriptions.id%type,
