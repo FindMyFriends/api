@@ -31,14 +31,6 @@ final class Structure {
 					'required' => ['lenses', 'color_id'],
 					'type' => 'object',
 				],
-				'length_unit' => [
-					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new Schema\PostgresEnum('length_units_enum', $this->database))->values()),
-				],
-				'mass_unit' => [
-					'type' => ['null', 'string'],
-					'enum' => array_merge([null], (new Schema\PostgresEnum('mass_units_enum', $this->database))->values()),
-				],
 				'age' => [
 					'type' => ['integer'],
 					'minimum' => 15,
@@ -51,34 +43,12 @@ final class Structure {
 					'additionalProperties' => false,
 					'properties' => [
 						'build_id' => ['type' => ['integer', 'null']],
-						'weight' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'value' => ['type' => ['number', 'null']],
-								'unit' => ['$ref' => '#/definitions/mass_unit'],
-							],
-							'type' => 'object',
-							'required' => ['value', 'unit'],
-						],
-						'height' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'value' => ['type' => ['number', 'null']],
-								'unit' => ['$ref' => '#/definitions/length_unit'],
-							],
-							'type' => 'object',
-							'required' => ['value', 'unit'],
-						],
 						'breast_size' => [
 							'type' => ['string', 'null'],
 							'enum' => array_merge([null], (new Schema\PostgresEnum('breast_sizes_enum', $this->database))->values()),
 						],
 					],
-					'required' => [
-						'build_id',
-						'weight',
-						'height',
-					],
+					'required' => ['build_id'],
 					'type' => 'object',
 				],
 				'hair' => [
@@ -86,22 +56,14 @@ final class Structure {
 					'properties' => [
 						'color_id' => ['type' => ['integer', 'null']],
 						'highlights' => ['type' => ['boolean', 'null']],
-						'length' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'value' => ['type' => ['number', 'null']],
-								'unit' => ['$ref' => '#/definitions/length_unit'],
-							],
-							'type' => 'object',
-							'required' => ['value', 'unit'],
-						],
+						'length_id' => ['type' => ['integer', 'null']],
 						'nature' => ['type' => ['boolean', 'null']],
 						'roots' => ['type' => ['boolean', 'null']],
 						'style_id' => ['type' => ['integer', 'null']],
 					],
 					'required' => [
 						'roots',
-						'length',
+						'length_id',
 						'highlights',
 						'color_id',
 						'nature',
@@ -113,22 +75,11 @@ final class Structure {
 					'additionalProperties' => false,
 					'properties' => [
 						'color_id' => ['type' => ['integer', 'null']],
-						'length' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'value' => ['type' => ['number', 'null']],
-								'unit' => ['$ref' => '#/definitions/length_unit'],
-							],
-							'type' => 'object',
-							'required' => ['value', 'unit'],
-						],
-						'style' => [
-							'additionalProperties' => false,
-							'type' => ['string', 'null'],
-						],
+						'length_id' => ['type' => ['integer', 'null']],
+						'style_id' => ['type' => ['integer', 'null']],
 					],
 					'type' => 'object',
-					'required' => ['color_id', 'length', 'style'],
+					'required' => ['color_id', 'length_id'],
 				],
 				'eye' => [
 					'additionalProperties' => false,
@@ -201,39 +152,18 @@ final class Structure {
 							'additionalProperties' => false,
 							'properties' => [
 								'color_id' => ['type' => ['integer', 'null']],
-								'length' => [
-									'additionalProperties' => false,
-									'properties' => [
-										'value' => ['type' => ['number', 'null']],
-										'unit' => ['$ref' => '#/definitions/length_unit'],
-									],
-									'type' => 'object',
-									'required' => ['value', 'unit'],
-								],
-								'care' => ['$ref' => '#/definitions/rating'],
+								'length_id' => ['type' => ['integer', 'null']],
 							],
-							'required' => ['color_id', 'length', 'care'],
+							'required' => ['color_id', 'length_id'],
 							'type' => 'object',
 						],
 						'care' => ['$ref' => '#/definitions/rating'],
-						'vein_visibility' => ['$ref' => '#/definitions/rating'],
-						'joint_visibility' => ['$ref' => '#/definitions/rating'],
-						'hair' => [
-							'additionalProperties' => false,
-							'properties' => [
-								'color_id' => ['type' => ['integer', 'null']],
-								'amount' => ['type' => ['integer', 'null']],
-							],
-							'required' => ['color_id', 'amount'],
-							'type' => 'object',
-						],
+						'visible_veins' => ['type' => ['boolean', 'null']],
 					],
 					'required' => [
 						'nails',
 						'care',
-						'vein_visibility',
-						'joint_visibility',
-						'hair',
+						'visible_veins',
 					],
 					'type' => 'object',
 				],

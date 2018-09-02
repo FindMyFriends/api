@@ -59,7 +59,7 @@ final class CompleteDescription implements Output\Format {
 				'hair' => [
 					'style_id' => $description['hair_style_id'],
 					'color_id' => $description['hair_color_id'],
-					'length' => $description['hair_length'],
+					'length_id' => $description['hair_length_id'],
 					'highlights' => $description['hair_highlights'],
 					'roots' => $description['hair_roots'],
 					'nature' => $description['hair_nature'],
@@ -69,8 +69,8 @@ final class CompleteDescription implements Output\Format {
 					'color_id' => $description['eyebrow_color_id'],
 				],
 				'beard' => [
-					'length' => $description['beard_length'],
-					'style' => $description['beard_style'],
+					'length_id' => $description['beard_length_id'],
+					'style_id' => $description['beard_style_id'],
 					'color_id' => $description['beard_color_id'],
 				],
 				'eye' => [
@@ -94,23 +94,15 @@ final class CompleteDescription implements Output\Format {
 				],
 				'body' => [
 					'build_id' => $description['body_build_id'],
-					'weight' => $description['body_weight'],
-					'height' => $description['body_height'],
 					'breast_size' => $description['body_breast_size'],
 				],
 				'hands' => [
 					'nails' => [
-						'length' => $description['hands_nails_length'],
-						'care' => $description['hands_nails_care'],
+						'length_id' => $description['hands_nails_length_id'],
 						'color_id' => $description['hands_nails_color_id'],
 					],
-					'vein_visibility' => $description['hands_vein_visibility'],
-					'joint_visibility' => $description['hands_joint_visibility'],
+					'visible_veins' => $description['hands_visible_veins'],
 					'care' => $description['hands_care'],
-					'hair' => [
-						'color_id' => $description['hands_hair_color_id'],
-						'amount' => $description['hands_hair_amount'],
-					],
 				],
 			]
 		);

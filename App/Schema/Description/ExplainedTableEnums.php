@@ -21,18 +21,6 @@ final class ExplainedTableEnums implements Schema\Enum {
 	public function values(): array {
 		return [
 			'definitions' => [
-				'length_unit' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('length_units_enum', $this->database),
-					$this->redis,
-					'length_units',
-					'enum'
-				))->values(),
-				'mass_unit' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('mass_units_enum', $this->database),
-					$this->redis,
-					'mass_units',
-					'enum'
-				))->values(),
 				'eye' => [
 					'color' => (new Schema\CachedEnum(
 						new Schema\ColorEnum('eye_colors', $this->database),
@@ -69,12 +57,30 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'hair_styles',
 					'table'
 				))->values(),
+				'length' => (new Schema\CachedEnum(
+					new Schema\TableEnum('hair_lengths', $this->database),
+					$this->redis,
+					'hair_lengths',
+					'table'
+				))->values(),
 			],
 			'beard' => [
 				'color' => (new Schema\CachedEnum(
 					new Schema\ColorEnum('beard_colors', $this->database),
 					$this->redis,
 					'beard_colors',
+					'table'
+				))->values(),
+				'length' => (new Schema\CachedEnum(
+					new Schema\TableEnum('beard_lengths', $this->database),
+					$this->redis,
+					'beard_lengths',
+					'table'
+				))->values(),
+				'style' => (new Schema\CachedEnum(
+					new Schema\TableEnum('beard_styles', $this->database),
+					$this->redis,
+					'beard_styles',
 					'table'
 				))->values(),
 			],
@@ -94,12 +100,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 						'nail_colors',
 						'table'
 					))->values(),
-				],
-				'hair' => [
-					'color' => (new Schema\CachedEnum(
-						new Schema\ColorEnum('hand_hair_colors', $this->database),
+					'length' => (new Schema\CachedEnum(
+						new Schema\TableEnum('nail_lengths', $this->database),
 						$this->redis,
-						'hand_hair_colors',
+						'nail_lengths',
 						'table'
 					))->values(),
 				],

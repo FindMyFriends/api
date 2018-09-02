@@ -40,21 +40,15 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				'hair' => [
 					'style_id' => 1,
 					'color_id' => 8,
-					'length' => [
-						'value' => 5,
-						'unit' => 'mm',
-					],
+					'length_id' => 1,
 					'highlights' => null,
 					'roots' => null,
 					'nature' => null,
 				],
 				'beard' => [
 					'color_id' => 8,
-					'length' => [
-						'value' => 1,
-						'unit' => 'mm',
-					],
-					'style' => null,
+					'length_id' => 1,
+					'style_id' => null,
 				],
 				'eyebrow' => [
 					'color_id' => 8,
@@ -81,32 +75,15 @@ final class IndividualDemandsTest extends Tester\TestCase {
 				],
 				'body' => [
 					'build_id' => 1,
-					'weight' => [
-						'value' => 120,
-						'unit' => 'kg',
-					],
-					'height' => [
-						'value' => 130,
-						'unit' => 'cm',
-					],
 					'breast_size' => 'B',
 				],
 				'hands' => [
 					'nails' => [
-						'length' => [
-							'value' => 5,
-							'unit' => 'mm',
-						],
-						'care' => null,
+						'length_id' => 1,
 						'color_id' => 8,
 					],
-					'vein_visibility' => null,
-					'joint_visibility' => null,
+					'visible_veins' => null,
 					'care' => null,
-					'hair' => [
-						'color_id' => 8,
-						'amount' => null,
-					],
 				],
 			]
 		);

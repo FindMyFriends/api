@@ -45,10 +45,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+	INSERT INTO hair (style_id, color_id, length_id, highlights, roots, nature) VALUES (
 		(SELECT id FROM hair_styles ORDER BY random() LIMIT 1),
 		(SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1),
-		ROW(test_utils.better_random('smallint'), 'mm')::length,
+		(SELECT id FROM hair_lengths ORDER BY random() LIMIT 1),
 		random() > 0.5,
 		random() > 0.5,
 		random() > 0.5
@@ -66,10 +66,10 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+  INSERT INTO hair (style_id, color_id, length_id, highlights, roots, nature) VALUES (
     NULL,
     samples.random_if_not_exists((SELECT color_id FROM hair_colors ORDER BY random() LIMIT 1), replacements, 'color_id'),
-		DEFAULT,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -185,10 +185,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO beards (color_id, length, style) VALUES (
+	INSERT INTO beards (color_id, length_id, style_id) VALUES (
 		(SELECT color_id FROM beard_colors ORDER BY random() LIMIT 1),
-		ROW(test_utils.better_random('smallint'), 'mm')::length,
-		md5(random()::text)
+		(SELECT id FROM beard_lengths ORDER BY random() LIMIT 1),
+		(SELECT id FROM beard_styles ORDER BY random() LIMIT 1)
 	)
 	RETURNING id
 	INTO v_id;
@@ -202,9 +202,9 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO beards (color_id, length, style) VALUES (
+  INSERT INTO beards (color_id, length_id, style_id) VALUES (
     NULL,
-		DEFAULT,
+	NULL,
     NULL
   )
   RETURNING id
@@ -219,10 +219,8 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
+	INSERT INTO bodies (build_id, breast_size) VALUES (
 		samples.random_if_not_exists((SELECT id FROM body_builds ORDER BY random() LIMIT 1), replacements, 'build_id'),
-		ROW(test_utils.better_random('smallint'), 'kg')::mass,
-		ROW(test_utils.better_random('smallint'), 'mm')::length,
 		NULL
 	)
 	RETURNING id
@@ -237,10 +235,8 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
+  INSERT INTO bodies (build_id, breast_size) VALUES (
     samples.random_if_not_exists(NULL, replacements, 'build_id')::integer,
-    DEFAULT,
-		DEFAULT,
     NULL
   )
   RETURNING id
@@ -334,48 +330,15 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION samples.hand_hair(replacements jsonb = '{}') RETURNS INTEGER
-LANGUAGE plpgsql
-AS $$
-DECLARE
-	v_id integer;
-BEGIN
-	INSERT INTO hand_hair (color_id, amount) VALUES (
-		(SELECT color_id FROM hand_hair_colors ORDER BY random() LIMIT 1),
-		test_utils.better_random(0, 10)
-	)
-	RETURNING id
-	INTO v_id;
-	RETURN v_id;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION samples.nullable_hand_hair(replacements jsonb = '{}') RETURNS INTEGER
-LANGUAGE plpgsql
-AS $$
-DECLARE
-  v_id integer;
-BEGIN
-  INSERT INTO hand_hair (color_id, amount) VALUES (
-    NULL,
-    NULL
-  )
-  RETURNING id
-  INTO v_id;
-  RETURN v_id;
-END;
-$$;
-
 CREATE OR REPLACE FUNCTION samples.nail(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO nails (color_id, length, care) VALUES (
+	INSERT INTO nails (color_id, length_id) VALUES (
 		(SELECT color_id FROM nail_colors ORDER BY random() LIMIT 1),
-		ROW(test_utils.better_random('smallint'), 'mm')::length,
-		test_utils.better_random(0, 10)
+		(SELECT id FROM nail_lengths ORDER BY random() LIMIT 1)
 	)
 	RETURNING id
 	INTO v_id;
@@ -389,9 +352,8 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO nails (color_id, length, care) VALUES (
+  INSERT INTO nails (color_id, length_id) VALUES (
     NULL,
-    DEFAULT,
     NULL
   )
   RETURNING id
@@ -406,12 +368,10 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+	INSERT INTO hands (nail_id, care, visible_veins) VALUES (
 		(SELECT nail FROM samples.nail()),
 		test_utils.better_random(0, 10),
-		test_utils.better_random(0, 10),
-		test_utils.better_random(0, 10),
-		(SELECT hand_hair FROM samples.hand_hair())
+		FALSE
 	)
 	RETURNING id
 	INTO v_id;
@@ -425,10 +385,8 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+  INSERT INTO hands (nail_id, care, visible_veins) VALUES (
     (SELECT nullable_nail FROM samples.nullable_nail()),
-    NULL,
-    NULL,
     NULL,
     NULL
   )

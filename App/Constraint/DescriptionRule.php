@@ -27,41 +27,7 @@ final class DescriptionRule implements Validation\Rule {
 			throw new \UnexpectedValueException('Women do not have beards');
 		elseif ($this->manWithBreast($subject['general']['sex'], $subject['body']['breast_size']))
 			throw new \UnexpectedValueException('Breast is valid only for women');
-		return array_replace_recursive(
-			[
-				'body' => [
-					'height' => (new Validation\FriendlyRule(
-						new ValueWithUnitRule(),
-						'Body height is missing value or unit.'
-					))->apply($subject['body']['height']),
-					'weight' => (new Validation\FriendlyRule(
-						new ValueWithUnitRule(),
-						'Body weight is missing value or unit.'
-					))->apply($subject['body']['weight']),
-				],
-				'hair' => [
-					'length' => (new Validation\FriendlyRule(
-						new ValueWithUnitRule(),
-						'Hair length is missing value or unit.'
-					))->apply($subject['hair']['length']),
-				],
-				'beard' => [
-					'length' => (new Validation\FriendlyRule(
-						new ValueWithUnitRule(),
-						'Beard length is missing value or unit.'
-					))->apply($subject['beard']['length']),
-				],
-				'hands' => [
-					'nails' => [
-						'length' => (new Validation\FriendlyRule(
-							new ValueWithUnitRule(),
-							'Nails length is missing value or unit.'
-						))->apply($subject['hands']['nails']['length']),
-					],
-				],
-			],
-			$subject
-		);
+		return $subject;
 	}
 
 	private function womanWithBeard(string $sex, array $beard): bool {

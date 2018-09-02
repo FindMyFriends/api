@@ -18,11 +18,9 @@ final class DemandRuleTest extends Tester\TestCase {
 	private const BASE = [
 		'body' => [
 			'breast_size' => null,
-			'height' => ['value' => 10, 'unit' => 'mm'],
-			'weight' => ['value' => 100, 'unit' => 'kg'],
 		],
 		'hair' => [
-			'length' => ['value' => 10, 'unit' => 'mm'],
+			'length_id' => 1,
 		],
 		'general' => [
 			'sex' => 'man',
@@ -34,17 +32,11 @@ final class DemandRuleTest extends Tester\TestCase {
 		'beard' => [
 			'color_id' => null,
 			'care' => 10,
-			'length' => [
-				'value' => null,
-				'unit' => null,
-			],
+			'length_id' => 2,
 		],
 		'hands' => [
 			'nails' => [
-				'length' => [
-					'value' => null,
-					'unit' => null,
-				],
+				'length_id' => 3,
 			],
 		],
 	];

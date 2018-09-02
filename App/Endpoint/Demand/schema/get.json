@@ -26,44 +26,6 @@
                         "null"
                     ]
                 },
-                "weight": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "value": {
-                            "type": [
-                                "number",
-                                "null"
-                            ]
-                        },
-                        "unit": {
-                            "$ref": "#/definitions/mass_unit"
-                        }
-                    },
-                    "type": "object",
-                    "required": [
-                        "value",
-                        "unit"
-                    ]
-                },
-                "height": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "value": {
-                            "type": [
-                                "number",
-                                "null"
-                            ]
-                        },
-                        "unit": {
-                            "$ref": "#/definitions/length_unit"
-                        }
-                    },
-                    "type": "object",
-                    "required": [
-                        "value",
-                        "unit"
-                    ]
-                },
                 "breast_size": {
                     "type": [
                         "string",
@@ -79,9 +41,7 @@
                 }
             },
             "required": [
-                "build_id",
-                "weight",
-                "height"
+                "build_id"
             ],
             "type": "object"
         },
@@ -100,23 +60,10 @@
                         "null"
                     ]
                 },
-                "length": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "value": {
-                            "type": [
-                                "number",
-                                "null"
-                            ]
-                        },
-                        "unit": {
-                            "$ref": "#/definitions/length_unit"
-                        }
-                    },
-                    "type": "object",
-                    "required": [
-                        "value",
-                        "unit"
+                "length_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ]
                 },
                 "nature": {
@@ -140,7 +87,7 @@
             },
             "required": [
                 "roots",
-                "length",
+                "length_id",
                 "highlights",
                 "color_id",
                 "nature",
@@ -157,29 +104,15 @@
                         "null"
                     ]
                 },
-                "length": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "value": {
-                            "type": [
-                                "number",
-                                "null"
-                            ]
-                        },
-                        "unit": {
-                            "$ref": "#/definitions/length_unit"
-                        }
-                    },
-                    "type": "object",
-                    "required": [
-                        "value",
-                        "unit"
+                "length_id": {
+                    "type": [
+                        "integer",
+                        "null"
                     ]
                 },
-                "style": {
-                    "additionalProperties": false,
+                "style_id": {
                     "type": [
-                        "string",
+                        "integer",
                         "null"
                     ]
                 }
@@ -187,8 +120,7 @@
             "type": "object",
             "required": [
                 "color_id",
-                "length",
-                "style"
+                "length_id"
             ]
         },
         "eye": {
@@ -329,74 +261,33 @@
                                 "null"
                             ]
                         },
-                        "length": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "value": {
-                                    "type": [
-                                        "number",
-                                        "null"
-                                    ]
-                                },
-                                "unit": {
-                                    "$ref": "#/definitions/length_unit"
-                                }
-                            },
-                            "type": "object",
-                            "required": [
-                                "value",
-                                "unit"
+                        "length_id": {
+                            "type": [
+                                "integer",
+                                "null"
                             ]
-                        },
-                        "care": {
-                            "$ref": "#/definitions/rating"
                         }
                     },
                     "required": [
                         "color_id",
-                        "length",
-                        "care"
+                        "length_id"
                     ],
                     "type": "object"
                 },
                 "care": {
                     "$ref": "#/definitions/rating"
                 },
-                "vein_visibility": {
-                    "$ref": "#/definitions/rating"
-                },
-                "joint_visibility": {
-                    "$ref": "#/definitions/rating"
-                },
-                "hair": {
-                    "additionalProperties": false,
-                    "properties": {
-                        "color_id": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ]
-                        },
-                        "amount": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "color_id",
-                        "amount"
-                    ],
-                    "type": "object"
+                "visible_veins": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 }
             },
             "required": [
                 "nails",
                 "care",
-                "vein_visibility",
-                "joint_visibility",
-                "hair"
+                "visible_veins"
             ],
             "type": "object"
         }
@@ -443,27 +334,6 @@
                 "color_id"
             ],
             "type": "object"
-        },
-        "length_unit": {
-            "type": [
-                "null",
-                "string"
-            ],
-            "enum": [
-                null,
-                "mm",
-                "cm"
-            ]
-        },
-        "mass_unit": {
-            "type": [
-                "null",
-                "string"
-            ],
-            "enum": [
-                null,
-                "kg"
-            ]
         },
         "age": {
             "type": [

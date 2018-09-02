@@ -152,7 +152,6 @@ INSERT INTO colors (name, hex) VALUES
 INSERT INTO hair_colors (color_id) VALUES (8), (10), (12);
 INSERT INTO eye_colors (color_id) VALUES (8), (10), (12);
 INSERT INTO nail_colors (color_id) VALUES (8), (10), (12), (145);
-INSERT INTO hand_hair_colors (color_id) VALUES (8), (12);
 INSERT INTO eyebrow_colors (color_id) VALUES (8), (12);
 INSERT INTO beard_colors (color_id) VALUES (8), (12);
 

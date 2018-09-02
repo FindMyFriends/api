@@ -9,10 +9,7 @@
 	"hair": {
 		"style_id": 1,
 		"color_id": 8,
-		"length": {
-			"value": 20,
-			"unit": "mm"
-		},
+		"length_id": 1,
 		"highlights": false,
 		"roots": true,
 		"nature": false
@@ -23,11 +20,8 @@
 	},
 	"beard": {
 		"color_id": 8,
-		"length": {
-			"value": 2,
-			"unit": "mm"
-		},
-		"style": "none"
+		"length_id": 1,
+		"style_id": 2
 	},
 	"eyebrow": {
 		"color_id": 8,
@@ -50,31 +44,14 @@
 	},
 	"body": {
 		"build_id": 1,
-		"weight": {
-			"value": 60,
-			"unit": "kg"
-		},
-		"height": {
-			"value": 181,
-			"unit": "cm"
-		},
 		"breast_size": null
 	},
 	"hands": {
 		"nails": {
 			"color_id": null,
-			"length": {
-				"value": 5,
-				"unit": "mm"
-			},
-			"care": null
+			"length_id": 1
 		},
 		"care": 10,
-		"vein_visibility": 5,
-		"joint_visibility": 1,
-		"hair": {
-			"color_id": 8,
-			"amount": 5
-		}
+		"visible_veins": true
 	}
 }

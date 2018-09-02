@@ -20,7 +20,47 @@ CREATE SCHEMA audit;
 
 SET search_path = public, pg_catalog, access, http, log, meta;
 
--- TYPES --
+-- schema audit
+CREATE DOMAIN audit.operation AS text CHECK (VALUE IN ('INSERT', 'UPDATE', 'DELETE'));
+
+CREATE TABLE audit.history (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "table" text NOT NULL,
+  operation audit.operation NOT NULL,
+  changed_at timestamp with time zone NOT NULL DEFAULT now(),
+  old jsonb,
+  new jsonb
+);
+
+CREATE OR REPLACE FUNCTION audit.trigger_table_audit() RETURNS trigger
+AS $$
+DECLARE
+  r record;
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    r = old;
+  ELSE
+    r = new;
+  END IF;
+
+  EXECUTE format(
+    'INSERT INTO audit.history ("table", operation, old, new) VALUES (%L, %L, %L, %L)',
+    TG_TABLE_NAME,
+    TG_OP,
+    CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
+    CASE WHEN TG_OP IN ('UPDATE') THEN row_to_json(new) ELSE NULL END
+  );
+
+  RETURN r;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+
+-- types
+
+-- enums
 CREATE TYPE timeline_sides_enum AS ENUM (
   'exactly',
   'sooner',
@@ -28,20 +68,8 @@ CREATE TYPE timeline_sides_enum AS ENUM (
   'sooner or later'
 );
 
-CREATE DOMAIN timeline_sides AS text
-  CHECK (VALUE = ANY(enum_range(NULL::timeline_sides_enum)::text[]));
-
 CREATE TYPE roles_enum AS ENUM (
   'member'
-);
-
-CREATE DOMAIN roles AS text
-  CHECK (VALUE = ANY(enum_range(NULL::roles_enum)::text[]));
-
-CREATE TYPE approximate_timestamptz AS (
-  moment timestamp with time zone,
-  timeline_side timeline_sides,
-  approximation interval
 );
 
 CREATE TYPE breast_sizes_enum AS ENUM (
@@ -51,39 +79,10 @@ CREATE TYPE breast_sizes_enum AS ENUM (
   'D'
 );
 
-CREATE DOMAIN breast_sizes AS text
-  CHECK (VALUE = ANY(enum_range(NULL::breast_sizes_enum)::text[]));
-
-
 CREATE TYPE sex_enum AS ENUM (
   'man',
   'woman'
 );
-
-CREATE DOMAIN sex AS text
-  CHECK (VALUE = ANY(enum_range(NULL::sex_enum)::text[]));
-
-
-CREATE TYPE length_units_enum AS ENUM (
-  'mm',
-  'cm'
-);
-
-CREATE DOMAIN length_units AS text
-  CHECK (VALUE = ANY(enum_range(NULL::length_units_enum)::text[]));
-
-CREATE TYPE length AS (
-  value numeric,
-  unit length_units
-);
-
-
-CREATE TYPE mass_units_enum AS ENUM (
-  'kg'
-);
-
-CREATE DOMAIN mass_units AS text
-  CHECK (VALUE = ANY(enum_range(NULL::mass_units_enum)::text[]));
 
 CREATE TYPE job_statuses AS ENUM (
   'pending',
@@ -92,10 +91,48 @@ CREATE TYPE job_statuses AS ENUM (
   'failed'
 );
 
+-- domain functions
+CREATE FUNCTION is_birth_year_in_range(int4range) RETURNS boolean
+AS $$
+BEGIN
+  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::integer);
+END
+$$
+LANGUAGE plpgsql
+STABLE;
 
-CREATE TYPE mass AS (
-  value numeric,
-  unit mass_units
+CREATE FUNCTION is_hex(text) RETURNS boolean
+AS $$
+BEGIN
+  RETURN $1 ~ '^#[a-f0-9]{6}';
+END
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
+
+CREATE FUNCTION is_rating(integer) RETURNS boolean
+AS $$
+BEGIN
+  RETURN int4range(0, 10, '[]') @> $1;
+END
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
+
+-- domains
+CREATE DOMAIN hex_color AS text CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
+CREATE DOMAIN real_birth_year AS int4range CHECK (is_birth_year_in_range(VALUE));
+CREATE DOMAIN rating AS smallint CHECK (is_rating((VALUE)::integer));
+CREATE DOMAIN timeline_sides AS text CHECK (VALUE = ANY(enum_range(NULL::timeline_sides_enum)::text[]));
+CREATE DOMAIN roles AS text CHECK (VALUE = ANY(enum_range(NULL::roles_enum)::text[]));
+CREATE DOMAIN breast_sizes AS text CHECK (VALUE = ANY(enum_range(NULL::breast_sizes_enum)::text[]));
+CREATE DOMAIN sex AS text CHECK (VALUE = ANY(enum_range(NULL::sex_enum)::text[]));
+
+-- compound types
+CREATE TYPE approximate_timestamptz AS (
+  moment timestamp with time zone,
+  timeline_side timeline_sides,
+  approximation interval
 );
 
 CREATE TYPE flat_description AS (
@@ -107,17 +144,15 @@ CREATE TYPE flat_description AS (
   general_lastname text,
   hair_style_id smallint,
   hair_color_id smallint,
-  hair_length length,
+  hair_length_id smallint,
   hair_highlights boolean,
   hair_roots boolean,
   hair_nature boolean,
   body_build_id smallint,
-  body_weight mass,
-  body_height length,
   body_breast_size breast_sizes,
   beard_color_id smallint,
-  beard_length length,
-  beard_style text,
+  beard_length_id smallint,
+  beard_style_id smallint,
   eyebrow_color_id smallint,
   eyebrow_care smallint,
   left_eye_color_id smallint,
@@ -128,22 +163,15 @@ CREATE TYPE flat_description AS (
   face_care smallint,
   face_shape_id smallint,
   hand_care smallint,
-  hand_vein_visibility smallint,
-  hand_joint_visibility smallint,
-  hand_hair_color_id smallint,
-  hand_hair_amount smallint,
+  hand_visible_veins boolean,
   nail_color_id smallint,
-  nail_length length,
-  nail_care smallint,
+  nail_length_id smallint,
   tooth_care smallint,
   tooth_braces boolean
 );
 
------
 
-
-
--- FUNCTIONS --
+-- functions
 CREATE FUNCTION similar_colors(integer) RETURNS smallint[]
 AS $$
 SELECT array_agg(colors.color_id)
@@ -197,36 +225,6 @@ $$
 LANGUAGE plpgsql
 IMMUTABLE;
 
-CREATE FUNCTION is_length_valid(length) RETURNS boolean
-AS $$
-BEGIN
-  IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
-    RETURN TRUE;
-  ELSIF $1.value IS NULL THEN
-    RAISE EXCEPTION 'Length with unit must contain value';
-  ELSIF $1.unit IS NULL THEN
-    RAISE EXCEPTION 'Length with value must contain unit';
-  END IF;
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
-CREATE FUNCTION is_mass_valid(mass) RETURNS boolean
-AS $$
-BEGIN
-  IF ($1.value IS NULL AND $1.unit IS NULL) OR ($1.value IS NOT NULL AND $1.unit IS NOT NULL) THEN
-    RETURN TRUE;
-  ELSIF $1.value IS NULL THEN
-    RAISE EXCEPTION 'Mass with unit must contain value';
-  ELSIF $1.unit IS NULL THEN
-    RAISE EXCEPTION 'Mass with value must contain unit';
-  END IF;
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
 CREATE FUNCTION age_to_year(age int4range, now timestamp WITH TIME ZONE) RETURNS int4range
 AS $$
 BEGIN
@@ -252,36 +250,6 @@ $$
 LANGUAGE plpgsql
 STABLE;
 
-CREATE FUNCTION is_birth_year_in_range(int4range) RETURNS boolean
-AS $$
-BEGIN
-  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::integer);
-END
-$$
-LANGUAGE plpgsql
-STABLE;
-
-
-CREATE FUNCTION is_hex(text) RETURNS boolean
-AS $$
-BEGIN
-  RETURN $1 ~ '^#[a-f0-9]{6}';
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
-
-CREATE FUNCTION is_rating(integer) RETURNS boolean
-AS $$
-BEGIN
-  RETURN int4range(0, 10, '[]') @> $1;
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
-
 CREATE FUNCTION approximated_rating(integer) RETURNS int4range
 AS $$
 BEGIN
@@ -292,48 +260,7 @@ LANGUAGE plpgsql
 IMMUTABLE
 STRICT;
 
-
-CREATE FUNCTION united_length(length) RETURNS length
-AS $$
-BEGIN
-  IF (($1).unit = 'mm' AND ($1).value % 10 = 0) THEN
-    RETURN ROW(($1).value / 10, 'cm'::length_units);
-  END IF;
-  RETURN $1;
-END
-$$
-LANGUAGE plpgsql
-IMMUTABLE;
-
-CREATE FUNCTION united_length_trigger() RETURNS trigger
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  new."length" = united_length(new."length");
-  RETURN new;
-END;
-$$;
-
-CREATE FUNCTION united_height_trigger() RETURNS trigger
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  new.height = united_length(new.height);
-  RETURN new;
-END;
-$$;
-
-CREATE FUNCTION united_weight_trigger() RETURNS trigger
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  new.weight = COALESCE(new.weight, ROW(NULL, NULL)::mass);
-  RETURN new;
-END;
-$$;
-
 CREATE FUNCTION year_to_age(year int4range, now timestamp with time zone) RETURNS int4range
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   RETURN int4range(
@@ -341,10 +268,11 @@ BEGIN
     (EXTRACT('year' from now) - lower(year))::integer
   );
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION year_to_age(year int4range, now tstzrange) RETURNS int4range
-LANGUAGE plpgsql IMMUTABLE
 AS $$
 BEGIN
   RETURN int4range(
@@ -352,10 +280,11 @@ BEGIN
     (SELECT extract('year' from lower(now)) - lower(year))::integer
   );
 END
-$$;
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
 
 CREATE FUNCTION deleted_description(v_description_id integer) RETURNS integer
-LANGUAGE plpgsql
 AS $$
 DECLARE
   description RECORD;
@@ -380,19 +309,18 @@ BEGIN
 
   DELETE FROM hands
   WHERE id = description.hand_id
-  RETURNING nail_id, hand_hair_id
+  RETURNING nail_id
   INTO hand;
 
-  DELETE FROM hand_hair WHERE id = hand.hand_hair_id;
   DELETE FROM nails WHERE id = hand.nail_id;
   DELETE FROM hair WHERE id = description.hair_id;
 
   RETURN v_description_id;
 END;
-$$;
+$$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION inserted_description(description flat_description) RETURNS integer
-LANGUAGE plpgsql
 AS $$
 DECLARE
   v_beard_id integer;
@@ -401,7 +329,6 @@ DECLARE
   v_left_eye_id integer;
   v_right_eye_id integer;
   v_hand_nail_id integer;
-  v_hand_hair_id integer;
   v_face_id integer;
   v_body_id integer;
   v_hand_id integer;
@@ -418,20 +345,20 @@ BEGIN
   )
   RETURNING id
   INTO v_general_id;
-  INSERT INTO hair (style_id, color_id, length, highlights, roots, nature) VALUES (
+  INSERT INTO hair (style_id, color_id, length_id, highlights, roots, nature) VALUES (
     description.hair_style_id,
     description.hair_color_id,
-    description.hair_length,
+    description.hair_length_id,
     description.hair_highlights,
     description.hair_roots,
     description.hair_nature
   )
   RETURNING id
   INTO v_hair_id;
-  INSERT INTO beards (color_id, length, style) VALUES (
+  INSERT INTO beards (color_id, length_id, style_id) VALUES (
     description.beard_color_id,
-    description.beard_length,
-    description.beard_style
+    description.beard_length_id,
+    description.beard_style_id
   )
   RETURNING id
   INTO v_beard_id;
@@ -459,19 +386,12 @@ BEGIN
   )
   RETURNING id
   INTO v_right_eye_id;
-  INSERT INTO nails (color_id, length, care) VALUES (
+  INSERT INTO nails (color_id, length_id) VALUES (
     description.nail_color_id,
-    description.nail_length,
-    description.nail_care
+    description.nail_length_id
   )
   RETURNING id
   INTO v_hand_nail_id;
-  INSERT INTO hand_hair (color_id, amount) VALUES (
-    description.hand_hair_color_id,
-    description.hand_hair_amount
-  )
-  RETURNING id
-  INTO v_hand_hair_id;
   INSERT INTO faces (freckles, care, shape_id) VALUES (
     description.face_freckles,
     description.face_care,
@@ -479,20 +399,16 @@ BEGIN
   )
   RETURNING id
   INTO v_face_id;
-  INSERT INTO bodies (build_id, weight, height, breast_size) VALUES (
+  INSERT INTO bodies (build_id, breast_size) VALUES (
     description.body_build_id,
-    description.body_weight,
-    description.body_height,
     description.body_breast_size
   )
   RETURNING id
   INTO v_body_id;
-  INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+  INSERT INTO hands (nail_id, care, visible_veins) VALUES (
     v_hand_nail_id,
     description.hand_care,
-    description.hand_vein_visibility,
-    description.hand_joint_visibility,
-    v_hand_hair_id
+    description.hand_visible_veins
   )
   RETURNING id
   INTO v_hand_id;
@@ -509,10 +425,10 @@ BEGIN
     v_right_eye_id
   ) RETURNING id INTO v_description_id;
   RETURN v_description_id;
-END $$;
+END $$
+LANGUAGE plpgsql;
 
 CREATE FUNCTION updated_description(description flat_description) RETURNS integer
-LANGUAGE plpgsql
 AS $$
 DECLARE
   v_beard_id integer;
@@ -521,7 +437,6 @@ DECLARE
   v_left_eye_id integer;
   v_right_eye_id integer;
   v_hand_nail_id integer;
-  v_hand_hair_id integer;
   parts RECORD;
 BEGIN
   SELECT *
@@ -539,16 +454,16 @@ BEGIN
   UPDATE hair
   SET style_id = description.hair_style_id,
     color_id = description.hair_color_id,
-    length = description.hair_length,
+    length_id = description.hair_length_id,
     highlights = description.hair_highlights,
     roots = description.hair_roots,
     nature = description.hair_nature
   WHERE id = parts.hair_id;
 
-  INSERT INTO beards (color_id, length, style) VALUES (
+  INSERT INTO beards (color_id, length_id, style_id) VALUES (
     description.beard_color_id,
-    description.beard_length,
-    description.beard_style
+    description.beard_length_id,
+    description.beard_style_id
   )
   RETURNING id
   INTO v_beard_id;
@@ -589,32 +504,20 @@ BEGIN
 
   UPDATE bodies
   SET build_id = description.body_build_id,
-    weight = description.body_weight,
-    height = description.body_height,
     breast_size = description.body_breast_size
   WHERE id = parts.body_id;
 
-  INSERT INTO nails (color_id, length, care) VALUES (
+  INSERT INTO nails (color_id, length_id) VALUES (
     description.nail_color_id,
-    description.nail_length,
-    description.nail_care
+    description.nail_length_id
   )
   RETURNING id
   INTO v_hand_nail_id;
 
-  INSERT INTO hand_hair (color_id, amount) VALUES (
-    description.hand_hair_color_id,
-    description.hand_hair_amount
-  )
-  RETURNING id
-  INTO v_hand_hair_id;
-
   UPDATE hands
   SET nail_id = v_hand_nail_id,
     care = description.hand_care,
-    vein_visibility = description.hand_vein_visibility,
-    joint_visibility = description.hand_joint_visibility,
-    hand_hair_id = v_hand_hair_id
+    visible_veins = description.hand_visible_veins
   WHERE id = parts.hand_id;
 
   UPDATE descriptions
@@ -626,65 +529,9 @@ BEGIN
   WHERE id = description.id;
 
   RETURN parts.id;
-END $$;
------
-
--- DOMAINS --
-CREATE DOMAIN hex_color AS text
-  CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
-
-CREATE DOMAIN real_birth_year AS int4range
-  CHECK (is_birth_year_in_range(VALUE));
-
-CREATE DOMAIN rating AS smallint
-  CHECK (is_rating((VALUE)::integer));
-
-CREATE DOMAIN valid_length AS length
-  CHECK (is_length_valid((VALUE)::length));
-
-CREATE DOMAIN valid_mass AS mass
-  CHECK (is_mass_valid((VALUE)::mass));
------
-
--- TABLES --
------ AUDIT -----
-CREATE DOMAIN audit.operation AS text
-  CHECK (VALUE IN ('INSERT', 'UPDATE', 'DELETE'));
-
-CREATE TABLE audit.history (
-  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "table" text NOT NULL,
-  operation audit.operation NOT NULL,
-  changed_at timestamp with time zone NOT NULL DEFAULT now(),
-  old jsonb,
-  new jsonb
-);
-
-CREATE OR REPLACE FUNCTION audit.trigger_table_audit() RETURNS trigger
-AS $$
-DECLARE
-  r record;
-BEGIN
-  IF (TG_OP = 'DELETE') THEN
-    r = old;
-  ELSE
-    r = new;
-  END IF;
-
-  EXECUTE format(
-    'INSERT INTO audit.history ("table", operation, old, new) VALUES (%L, %L, %L, %L)',
-    TG_TABLE_NAME,
-    TG_OP,
-    CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
-    CASE WHEN TG_OP IN ('UPDATE') THEN row_to_json(new) ELSE NULL END
-  );
-
-  RETURN r;
-END;
-$$
+END $$
 LANGUAGE plpgsql;
 -----
-
 
 CREATE FUNCTION check_existing_object_column_trigger() RETURNS trigger
 AS $$
@@ -704,6 +551,8 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- schema public
+-- tables
 CREATE TABLE meta.prioritized_columns (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   object oid NOT NULL,
@@ -731,9 +580,8 @@ CREATE VIEW meta.columns AS
 
 CREATE TRIGGER prioritized_columns_row_biu_trigger BEFORE INSERT OR UPDATE ON meta.prioritized_columns FOR EACH ROW EXECUTE PROCEDURE check_existing_object_column_trigger();
 CREATE TRIGGER prioritized_application_columns_row_biu_trigger BEFORE INSERT OR UPDATE ON meta.prioritized_application_columns FOR EACH ROW EXECUTE PROCEDURE check_existing_object_column_trigger();
------
 
--- TABLES --
+
 CREATE TABLE face_shapes (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
@@ -745,7 +593,6 @@ CREATE TABLE colors (
   hex hex_color NOT NULL
 );
 
-
 CREATE TABLE similar_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL,
@@ -755,18 +602,15 @@ CREATE TABLE similar_colors (
   CONSTRAINT similar_colors_colors_similar_color_id_fk FOREIGN KEY (similar_color_id) REFERENCES colors(id)
 );
 
-
 CREATE TABLE body_builds (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
 
-
 CREATE TABLE ethnic_groups (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
-
 
 CREATE TABLE general (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -779,7 +623,6 @@ CREATE TABLE general (
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-
 CREATE TABLE beard_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint NOT NULL UNIQUE,
@@ -787,30 +630,36 @@ CREATE TABLE beard_colors (
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE TABLE beard_lengths (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL UNIQUE
+);
+
+CREATE TABLE beard_styles (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL UNIQUE
+);
 
 CREATE TABLE beards (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
-  style text,
+  length_id smallint,
+  style_id smallint,
   CONSTRAINT beards_beard_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES beard_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT beards_beard_length_ids_color_id_fk FOREIGN KEY (length_id) REFERENCES beard_lengths(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT beards_beard_style_ids_color_id_fk FOREIGN KEY (style_id) REFERENCES beard_styles(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-CREATE TRIGGER beards_row_abiu_trigger BEFORE INSERT OR UPDATE ON beards FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
-
 
 CREATE TABLE bodies (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   build_id smallint,
-  weight valid_mass NOT NULL DEFAULT ROW(NULL, NULL),
-  height valid_length NOT NULL DEFAULT ROW(NULL, NULL),
   breast_size breast_sizes,
   CONSTRAINT bodies_body_builds_id_fk FOREIGN KEY (build_id) REFERENCES body_builds(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-CREATE TRIGGER bodies_row_abiu_height_trigger BEFORE INSERT OR UPDATE ON bodies FOR EACH ROW EXECUTE PROCEDURE united_height_trigger();
-CREATE TRIGGER bodies_row_abiu_weight_trigger BEFORE INSERT OR UPDATE ON bodies FOR EACH ROW EXECUTE PROCEDURE united_weight_trigger();
-
 
 CREATE TABLE eyebrows (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -824,7 +673,6 @@ CREATE TABLE eye_colors (
   CONSTRAINT eye_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
-
 
 CREATE TABLE eyes (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -843,7 +691,6 @@ $$
 LANGUAGE plpgsql
 IMMUTABLE;
 
-
 CREATE TABLE faces (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   freckles boolean,
@@ -853,12 +700,10 @@ CREATE TABLE faces (
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-
 CREATE TABLE hair_styles (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name text NOT NULL
 );
-
 
 CREATE TABLE hair_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -867,39 +712,26 @@ CREATE TABLE hair_colors (
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE TABLE hair_lengths (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL UNIQUE
+);
 
 CREATE TABLE hair (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   style_id smallint,
   color_id smallint,
-  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
+  length_id smallint,
   highlights boolean,
   roots boolean,
   nature boolean,
   CONSTRAINT hair_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hair_colors(color_id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT hair_hair_styles_id_fk FOREIGN KEY (style_id) REFERENCES hair_styles(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT hair_hair_length_ids_id_fk FOREIGN KEY (length_id) REFERENCES hair_lengths(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-CREATE TRIGGER hair_row_abiu_trigger BEFORE INSERT OR UPDATE ON hair FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
-
-
-CREATE TABLE hand_hair_colors (
-  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint NOT NULL UNIQUE,
-  CONSTRAINT hand_hair_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
-    ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-
-CREATE TABLE hand_hair (
-  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  color_id smallint,
-  amount rating,
-  CONSTRAINT hand_hair_hand_hair_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES hand_hair_colors(color_id)
-    ON DELETE RESTRICT ON UPDATE RESTRICT
-);
-
 
 CREATE TABLE nail_colors (
   id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -908,38 +740,35 @@ CREATE TABLE nail_colors (
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE TABLE nail_lengths (
+  id smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL UNIQUE
+);
 
 CREATE TABLE nails (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   color_id smallint,
-  length valid_length NOT NULL DEFAULT ROW(NULL, NULL),
-  care rating,
+  length_id smallint,
   CONSTRAINT nails_nail_colors_color_id_fk FOREIGN KEY (color_id) REFERENCES nail_colors(color_id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT nails_nail_lengths_color_id_fk FOREIGN KEY (length_id) REFERENCES nail_lengths(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-CREATE TRIGGER nails_row_abiu_trigger BEFORE INSERT OR UPDATE ON nails FOR EACH ROW EXECUTE PROCEDURE united_length_trigger();
-
 
 CREATE TABLE hands (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   nail_id integer,
   care rating,
-  vein_visibility rating,
-  joint_visibility rating,
-  hand_hair_id integer,
-  CONSTRAINT hands_hand_hair_id_fk FOREIGN KEY (hand_hair_id) REFERENCES hand_hair(id)
-    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  visible_veins boolean,
   CONSTRAINT hands_nails_id_fk FOREIGN KEY (nail_id) REFERENCES nails(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-
 
 CREATE TABLE teeth (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   care rating,
   braces boolean
 );
-
 
 CREATE TABLE descriptions (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -959,9 +788,9 @@ CREATE TABLE descriptions (
     ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT descriptions_eyebrows_id_fk FOREIGN KEY (eyebrow_id) REFERENCES eyebrows(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT descriptions_eyes_left_id_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id)
+  CONSTRAINT descriptions_eyes_left_id_fk FOREIGN KEY (left_eye_id) REFERENCES eyes(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT descriptions_eyes_right_id_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id)
+  CONSTRAINT descriptions_eyes_right_id_fk FOREIGN KEY (right_eye_id) REFERENCES eyes(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT descriptions_faces_id_fk FOREIGN KEY (face_id) REFERENCES faces(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -974,7 +803,6 @@ CREATE TABLE descriptions (
   CONSTRAINT descriptions_teeth_id_fk FOREIGN KEY (tooth_id) REFERENCES teeth(id)
     ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-
 
 CREATE TABLE seekers (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1060,14 +888,11 @@ BEGIN
   body AS (INSERT INTO bodies DEFAULT VALUES RETURNING id),
   face AS (INSERT INTO faces DEFAULT VALUES RETURNING id),
   nail AS (INSERT INTO nails DEFAULT VALUES RETURNING id),
-  hand_hair AS (INSERT INTO hand_hair DEFAULT VALUES RETURNING id),
   hand AS (
-    INSERT INTO hands (nail_id, care, vein_visibility, joint_visibility, hand_hair_id) VALUES (
+    INSERT INTO hands (nail_id, care, visible_veins) VALUES (
       (SELECT id FROM nail),
       DEFAULT,
-      DEFAULT,
-      DEFAULT,
-      (SELECT id FROM hand_hair)
+      DEFAULT
     )
     RETURNING id
   ),
@@ -1095,7 +920,7 @@ BEGIN
   INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (
     in_seeker_id,
     (SELECT id FROM description),
-    NOW()
+    now()
   )
   RETURNING id
   INTO v_evolution_id;
@@ -1363,7 +1188,7 @@ CREATE INDEX soulmate_requests_id_index ON soulmate_requests USING btree (self_i
 
 CREATE FUNCTION soulmate_request_refreshable_in(timestamptz) RETURNS integer
 AS $$
-SELECT greatest(EXTRACT(EPOCH FROM $1) - EXTRACT(EPOCH FROM NOW() - INTERVAL '20 MINUTES'), 0)::integer;
+SELECT greatest(EXTRACT(EPOCH FROM $1) - EXTRACT(EPOCH FROM now() - INTERVAL '20 MINUTES'), 0)::integer;
 $$
 LANGUAGE SQL
 IMMUTABLE;
@@ -1463,7 +1288,6 @@ CREATE VIEW complete_descriptions AS
       ROW(beard.*)::beards AS beard,
       ROW(ethnic_group.*)::ethnic_groups AS ethnic_group,
       ROW(hand.*)::hands AS hand,
-      ROW(hand_hair.*)::hand_hair AS hand_hair,
       ROW(nail.*)::nails AS nail,
       ROW(tooth.*)::teeth AS tooth,
       ROW(eyebrow.*)::eyebrows AS eyebrow,
@@ -1481,7 +1305,6 @@ CREATE VIEW complete_descriptions AS
     LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
     LEFT JOIN hair_styles hair_style ON hair_style.id = hair.style_id
     LEFT JOIN hands hand ON hand.id = description.hand_id
-    LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
     LEFT JOIN nails nail ON nail.id = hand.nail_id
     LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
     LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
@@ -1492,12 +1315,10 @@ CREATE VIEW complete_descriptions AS
 CREATE VIEW flat_descriptions AS
   SELECT
     (complete_descriptions.beard).color_id AS beard_color_id,
-    (complete_descriptions.beard).length AS beard_length,
-    (complete_descriptions.beard).style AS beard_style,
+    (complete_descriptions.beard).length_id AS beard_length_id,
+    (complete_descriptions.beard).style_id AS beard_style_id,
     (complete_descriptions.body).breast_size AS body_breast_size,
     (complete_descriptions.body).build_id AS body_build_id,
-    (complete_descriptions.body).height AS body_height,
-    (complete_descriptions.body).weight AS body_weight,
     (complete_descriptions.eyebrow).care AS eyebrow_care,
     (complete_descriptions.eyebrow).color_id AS eyebrow_color_id,
     (complete_descriptions.face).care AS face_care,
@@ -1510,20 +1331,16 @@ CREATE VIEW flat_descriptions AS
     (complete_descriptions.general).sex AS general_sex,
     (complete_descriptions.hair).color_id AS hair_color_id,
     (complete_descriptions.hair).highlights AS hair_highlights,
-    (complete_descriptions.hair).length AS hair_length,
+    (complete_descriptions.hair).length_id AS hair_length_id,
     (complete_descriptions.hair).nature AS hair_nature,
     (complete_descriptions.hair).roots AS hair_roots,
     (complete_descriptions.hair).style_id AS hair_style_id,
     (complete_descriptions.hand).care AS hands_care,
-    (complete_descriptions.hand).joint_visibility AS hands_joint_visibility,
-    (complete_descriptions.hand).vein_visibility AS hands_vein_visibility,
-    (complete_descriptions.hand_hair).amount AS hands_hair_amount,
-    (complete_descriptions.hand_hair).color_id AS hands_hair_color_id,
+    (complete_descriptions.hand).visible_veins AS hands_visible_veins,
     (complete_descriptions.left_eye).color_id AS left_eye_color_id,
     (complete_descriptions.left_eye).lenses AS left_eye_lenses,
-    (complete_descriptions.nail).care AS hands_nails_care,
     (complete_descriptions.nail).color_id AS hands_nails_color_id,
-    (complete_descriptions.nail).length AS hands_nails_length,
+    (complete_descriptions.nail).length_id AS hands_nails_length_id,
     (complete_descriptions.right_eye).color_id AS right_eye_color_id,
     (complete_descriptions.right_eye).lenses AS right_eye_lenses,
     (complete_descriptions.tooth).braces AS tooth_braces,
@@ -1533,8 +1350,6 @@ CREATE VIEW flat_descriptions AS
 
 CREATE TYPE elasticsearch_body AS (
   build_id smallint,
-  weight smallint, -- TODO: int4range based on build and genre
-  height smallint, -- TODO: int4range based on build and genre
   breast_size int4range
 );
 
@@ -1542,7 +1357,7 @@ CREATE TYPE elasticsearch_hair AS (
   style_id smallint,
   color_id smallint,
   similar_colors_id smallint[],
-  "length" smallint, -- TODO: int4range based on genre
+  "length_id" smallint,
   highlights boolean,
   roots boolean,
   nature boolean
@@ -1557,28 +1372,19 @@ CREATE TYPE elasticsearch_face AS (
 CREATE TYPE elasticsearch_nail AS (
   color_id smallint,
   similar_colors_id smallint[],
-  "length" smallint, -- TODO: int4range based on genre
-  care int4range
-);
-
-CREATE TYPE elasticsearch_hand_hair AS (
-  color_id smallint,
-  similar_colors_id smallint[],
-  amount int4range
+  "length_id" smallint
 );
 
 CREATE TYPE elasticsearch_hand AS (
   nail elasticsearch_nail,
   care int4range,
-  vein_visibility int4range,
-  joint_visibility int4range,
-  hair elasticsearch_hand_hair
+  visible_veins boolean
 );
 
 CREATE TYPE elasticsearch_beard AS (
   color_id smallint,
   similar_colors_id smallint[],
-  "length" smallint -- TODO: int4range based on genre
+  "length_id" smallint -- TODO: int4range based on genre
 );
 
 CREATE TYPE elasticsearch_eyebrow AS (
@@ -1605,15 +1411,13 @@ CREATE VIEW elasticsearch_demands AS
       ROW((complete_descriptions.general).*)::general AS general,
       ROW(
         (complete_descriptions.body).build_id,
-        (complete_descriptions.body).weight.value,
-        (united_length((complete_descriptions.body).height)).value,
         approximated_breast_size((complete_descriptions.body).breast_size)
       )::elasticsearch_body AS body,
       ROW(
         (complete_descriptions.hair).style_id,
         (complete_descriptions.hair).color_id,
         similar_colors((complete_descriptions.hair).color_id),
-        (united_length((complete_descriptions.hair).length)).value,
+        (complete_descriptions.hair).length_id,
         (complete_descriptions.hair).highlights,
         (complete_descriptions.hair).roots,
         (complete_descriptions.hair).nature
@@ -1627,22 +1431,15 @@ CREATE VIEW elasticsearch_demands AS
         ROW(
           (complete_descriptions.nail).color_id,
           similar_colors((complete_descriptions.nail).color_id),
-          (united_length((complete_descriptions.nail).length)).value,
-          approximated_rating((complete_descriptions.nail).care)
+          (complete_descriptions.nail).length_id
         )::elasticsearch_nail,
         approximated_rating((complete_descriptions.hand).care),
-        approximated_rating((complete_descriptions.hand).vein_visibility),
-        approximated_rating((complete_descriptions.hand).joint_visibility),
-        ROW(
-          (complete_descriptions.hand_hair).color_id,
-          similar_colors((complete_descriptions.hand_hair).color_id),
-          approximated_rating((complete_descriptions.hand_hair).amount)
-        )::elasticsearch_hand_hair
+        (complete_descriptions.hand).visible_veins
       )::elasticsearch_hand AS hand,
       ROW(
         (complete_descriptions.beard).color_id,
         similar_colors((complete_descriptions.beard).color_id),
-        (united_length((complete_descriptions.beard).length)).value
+        (complete_descriptions.beard).length_id
       )::elasticsearch_beard AS beard,
       ROW(
         (complete_descriptions.eyebrow).color_id,
@@ -1675,12 +1472,10 @@ CREATE VIEW collective_demands AS
     demands.note,
     demands.seeker_id,
     flat_descriptions.beard_color_id,
-    flat_descriptions.beard_length,
-    flat_descriptions.beard_style,
+    flat_descriptions.beard_length_id,
+    flat_descriptions.beard_style_id,
     flat_descriptions.body_breast_size,
     flat_descriptions.body_build_id,
-    flat_descriptions.body_height,
-    flat_descriptions.body_weight,
     flat_descriptions.eyebrow_care,
     flat_descriptions.eyebrow_color_id,
     flat_descriptions.face_care,
@@ -1693,18 +1488,14 @@ CREATE VIEW collective_demands AS
     flat_descriptions.general_sex,
     flat_descriptions.hair_color_id,
     flat_descriptions.hair_highlights,
-    flat_descriptions.hair_length,
+    flat_descriptions.hair_length_id,
     flat_descriptions.hair_nature,
     flat_descriptions.hair_roots,
     flat_descriptions.hair_style_id,
     flat_descriptions.hands_care,
-    flat_descriptions.hands_hair_amount,
-    flat_descriptions.hands_hair_color_id,
-    flat_descriptions.hands_joint_visibility,
-    flat_descriptions.hands_nails_care,
     flat_descriptions.hands_nails_color_id,
-    flat_descriptions.hands_nails_length,
-    flat_descriptions.hands_vein_visibility,
+    flat_descriptions.hands_nails_length_id,
+    flat_descriptions.hands_visible_veins,
     flat_descriptions.left_eye_color_id,
     flat_descriptions.left_eye_lenses,
     flat_descriptions.right_eye_color_id,
@@ -1730,17 +1521,15 @@ BEGIN
       new.general_lastname,
       new.hair_style_id,
       new.hair_color_id,
-      new.hair_length,
+      new.hair_length_id,
       new.hair_highlights,
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_weight,
-      new.body_height,
       new.body_breast_size,
       new.beard_color_id,
-      new.beard_length,
-      new.beard_style,
+      new.beard_length_id,
+      new.beard_style_id,
       new.eyebrow_color_id,
       new.eyebrow_care,
       new.left_eye_color_id,
@@ -1751,13 +1540,9 @@ BEGIN
       new.face_care,
       new.face_shape_id,
       new.hands_care,
-      new.hands_vein_visibility,
-      new.hands_joint_visibility,
-      new.hands_hair_color_id,
-      new.hands_hair_amount,
+      new.hands_visible_veins,
       new.hands_nails_color_id,
-      new.hands_nails_length,
-      new.hands_nails_care,
+      new.hands_nails_length_id,
       new.tooth_care,
       new.tooth_braces
     )::flat_description
@@ -1766,7 +1551,7 @@ BEGIN
   INSERT INTO demands (seeker_id, description_id, created_at, note) VALUES (
     new.seeker_id,
     v_description_id,
-    NOW(),
+    now(),
     new.note
   )
   RETURNING id
@@ -1802,17 +1587,15 @@ BEGIN
       new.general_lastname,
       new.hair_style_id,
       new.hair_color_id,
-      new.hair_length,
+      new.hair_length_id,
       new.hair_highlights,
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_weight,
-      new.body_height,
       new.body_breast_size,
       new.beard_color_id,
-      new.beard_length,
-      new.beard_style,
+      new.beard_length_id,
+      new.beard_style_id,
       new.eyebrow_color_id,
       new.eyebrow_care,
       new.left_eye_color_id,
@@ -1823,13 +1606,9 @@ BEGIN
       new.face_care,
       new.face_shape_id,
       new.hands_care,
-      new.hands_vein_visibility,
-      new.hands_joint_visibility,
-      new.hands_hair_color_id,
-      new.hands_hair_amount,
+      new.hands_visible_veins,
       new.hands_nails_color_id,
-      new.hands_nails_length,
-      new.hands_nails_care,
+      new.hands_nails_length_id,
       new.tooth_care,
       new.tooth_braces
     )::flat_description
@@ -1850,12 +1629,10 @@ CREATE VIEW collective_evolutions AS
     evolutions.id,
     evolutions.seeker_id,
     flat_descriptions.beard_color_id,
-    flat_descriptions.beard_length,
-    flat_descriptions.beard_style,
+    flat_descriptions.beard_length_id,
+    flat_descriptions.beard_style_id,
     flat_descriptions.body_breast_size,
     flat_descriptions.body_build_id,
-    flat_descriptions.body_height,
-    flat_descriptions.body_weight,
     flat_descriptions.eyebrow_care,
     flat_descriptions.eyebrow_color_id,
     flat_descriptions.face_care,
@@ -1868,18 +1645,14 @@ CREATE VIEW collective_evolutions AS
     flat_descriptions.general_sex,
     flat_descriptions.hair_color_id,
     flat_descriptions.hair_highlights,
-    flat_descriptions.hair_length,
+    flat_descriptions.hair_length_id,
     flat_descriptions.hair_nature,
     flat_descriptions.hair_roots,
     flat_descriptions.hair_style_id,
     flat_descriptions.hands_care,
-    flat_descriptions.hands_hair_amount,
-    flat_descriptions.hands_hair_color_id,
-    flat_descriptions.hands_joint_visibility,
-    flat_descriptions.hands_nails_care,
     flat_descriptions.hands_nails_color_id,
-    flat_descriptions.hands_nails_length,
-    flat_descriptions.hands_vein_visibility,
+    flat_descriptions.hands_nails_length_id,
+    flat_descriptions.hands_visible_veins,
     flat_descriptions.left_eye_color_id,
     flat_descriptions.left_eye_lenses,
     flat_descriptions.right_eye_color_id,
@@ -1898,12 +1671,10 @@ AS $BODY$
 DECLARE
   v_columns CONSTANT text[] DEFAULT ARRAY[
      'beard_color_id',
-     'beard_length',
-     'beard_style',
+     'beard_length_id',
+     'beard_style_id',
      'body_breast_size',
      'body_build_id',
-     'body_height',
-     'body_weight',
      'eyebrow_care',
      'eyebrow_color_id',
      'face_care',
@@ -1916,18 +1687,14 @@ DECLARE
      'general_sex',
      'hair_color_id',
      'hair_highlights',
-     'hair_length',
+     'hair_length_id',
      'hair_nature',
      'hair_roots',
      'hair_style_id',
      'hands_care',
-     'hands_hair_amount',
-     'hands_hair_color_id',
-     'hands_joint_visibility',
-     'hands_nails_care',
      'hands_nails_color_id',
-     'hands_nails_length',
-     'hands_vein_visibility',
+     'hands_nails_length_id',
+     'hands_visible_veins',
      'left_eye_color_id',
      'left_eye_lenses',
      'right_eye_color_id',
@@ -2049,17 +1816,15 @@ BEGIN
       new.general_lastname,
       new.hair_style_id,
       new.hair_color_id,
-      new.hair_length,
+      new.hair_length_id,
       new.hair_highlights,
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_weight,
-      new.body_height,
       new.body_breast_size,
       new.beard_color_id,
-      new.beard_length,
-      new.beard_style,
+      new.beard_length_id,
+      new.beard_style_id,
       new.eyebrow_color_id,
       new.eyebrow_care,
       new.left_eye_color_id,
@@ -2070,13 +1835,9 @@ BEGIN
       new.face_care,
       new.face_shape_id,
       new.hands_care,
-      new.hands_vein_visibility,
-      new.hands_joint_visibility,
-      new.hands_hair_color_id,
-      new.hands_hair_amount,
+      new.hands_visible_veins,
       new.hands_nails_color_id,
-      new.hands_nails_length,
-      new.hands_nails_care,
+      new.hands_nails_length_id,
       new.tooth_care,
       new.tooth_braces
     )::flat_description
@@ -2114,17 +1875,15 @@ BEGIN
       new.general_lastname,
       new.hair_style_id,
       new.hair_color_id,
-      new.hair_length,
+      new.hair_length_id,
       new.hair_highlights,
       new.hair_roots,
       new.hair_nature,
       new.body_build_id,
-      new.body_weight,
-      new.body_height,
       new.body_breast_size,
       new.beard_color_id,
-      new.beard_length,
-      new.beard_style,
+      new.beard_length_id,
+      new.beard_style_id,
       new.eyebrow_color_id,
       new.eyebrow_care,
       new.left_eye_color_id,
@@ -2135,13 +1894,9 @@ BEGIN
       new.face_care,
       new.face_shape_id,
       new.hands_care,
-      new.hands_vein_visibility,
-      new.hands_joint_visibility,
-      new.hands_hair_color_id,
-      new.hands_hair_amount,
+      new.hands_visible_veins,
       new.hands_nails_color_id,
-      new.hands_nails_length,
-      new.hands_nails_care,
+      new.hands_nails_length_id,
       new.tooth_care,
       new.tooth_braces
     )
@@ -2169,7 +1924,6 @@ CREATE VIEW description_parts AS
     description.eyebrow_id,
     description.left_eye_id,
     description.right_eye_id,
-    hand.hand_hair_id,
     description.hand_id,
     hand.nail_id,
     description.tooth_id
@@ -2183,7 +1937,6 @@ CREATE VIEW description_parts AS
     LEFT JOIN general ON general.id = description.general_id
     LEFT JOIN ethnic_groups ethnic_group ON ethnic_group.id = general.ethnic_group_id
     LEFT JOIN hands hand ON hand.id = description.hand_id
-    LEFT JOIN hand_hair ON hand_hair.id = hand.hand_hair_id
     LEFT JOIN nails nail ON nail.id = hand.nail_id
     LEFT JOIN teeth tooth ON tooth.id = description.tooth_id
     LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
@@ -2212,7 +1965,7 @@ CREATE TABLE access.forgotten_passwords (
   expire_at timestamp with time zone NOT NULL,
   CONSTRAINT forgotten_passwords_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (LENGTH(reminder) = 141),
+  CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (length(reminder) = 141),
   CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
   CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
 );
@@ -2226,7 +1979,7 @@ CREATE TABLE access.verification_codes (
   used_at timestamp with time zone,
   CONSTRAINT verification_codes_seeker_id_fkey FOREIGN KEY (seeker_id) REFERENCES seekers(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT verification_codes_code_exact_length CHECK (LENGTH(code) = 91)
+  CONSTRAINT verification_codes_code_exact_length CHECK (length(code) = 91)
 );
 CREATE INDEX verification_codes_seeker_id ON verification_codes USING btree (seeker_id);
 

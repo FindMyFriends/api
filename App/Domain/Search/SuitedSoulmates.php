@@ -48,7 +48,7 @@ final class SuitedSoulmates implements Soulmates {
 					'(hair).style_id',
 					'(hair).color_id AS hair_color_id',
 					'(hair).similar_colors_id AS hair_similar_colors_id',
-					'(hair).length AS hair_length',
+					'(hair).length_id AS hair_length_id',
 					'(hair).highlights AS hair_highlights',
 					'(hair).roots AS hair_roots',
 					'(hair).nature AS hair_nature',
@@ -56,13 +56,11 @@ final class SuitedSoulmates implements Soulmates {
 					'(face).care AS face_care',
 					'(face).shape_id AS face_shape_id',
 					'(hand).nail AS hand_nail',
-					'(hand).hair AS hand_hair',
 					'(hand).care AS hand_care',
-					'(hand).vein_visibility AS hand_vein_visibility',
-					'(hand).joint_visibility AS hand_joint_visibility',
+					'(hand).visible_veins AS hand_visible_veins',
 					'(beard).color_id AS beard_color_id',
 					'(beard).similar_colors_id AS beard_similar_colors_id',
-					'(beard).length AS beard_length',
+					'(beard).length_id AS beard_length_id',
 					'(eyebrow).color_id AS eyebrow_color_id',
 					'(eyebrow).similar_colors_id AS eyebrow_similar_colors_id',
 					'(tooth).care AS tooth_care',
@@ -155,7 +153,7 @@ final class SuitedSoulmates implements Soulmates {
 				$should[] = $demand['hair_color_id'] !== null
 					? $this->withSimilarColor('hair.color_id', $demand['hair_color_id'], $demand['hair_similar_colors_id'])
 					: [];
-				$should[] = $demand['hair_length'] !== null ? ['term' => ['hair.length' => $demand['hair_length']]] : [];
+				$should[] = $demand['hair_length_id'] !== null ? ['term' => ['hair.length_id' => $demand['hair_length_id']]] : [];
 				$should[] = $demand['hair_highlights'] !== null ? ['term' => ['hair.highlights' => $demand['hair_highlights']]] : [];
 				$should[] = $demand['hair_roots'] !== null ? ['term' => ['hair.roots' => $demand['hair_roots']]] : [];
 				$should[] = $demand['hair_nature'] !== null ? ['term' => ['hair.nature' => $demand['hair_nature']]] : [];
@@ -166,12 +164,8 @@ final class SuitedSoulmates implements Soulmates {
 					? $this->withSimilarColor('hand.nail.color_id', $demand['hand_nail']['color_id'], $demand['hand_nail']['similar_colors_id'])
 					: [];
 				//              $should[] = $demand['hand_nail']['care'] !== null ? $this->withRange('hand.nail.care', $demand['hand_nail']['care']) : [];
-				$should[] = $demand['hand_hair']['color_id'] !== null
-					? $this->withSimilarColor('hand.hair.color_id', $demand['hand_hair']['color_id'], $demand['hand_hair']['similar_colors_id'])
-					: [];
 				$should[] = $demand['hand_care'] !== null ? $this->withRange('hand.care', $demand['hand_care']) : [];
-				$should[] = $demand['hand_vein_visibility'] !== null ? $this->withRange('hand.vein_visibility', $demand['hand_vein_visibility']) : [];
-				$should[] = $demand['hand_joint_visibility'] !== null ? $this->withRange('hand.joint_visibility', $demand['hand_joint_visibility']) : [];
+				$should[] = $demand['hand_visible_veins'] ?? [];
 				$should[] = $demand['beard_color_id'] !== null
 					? $this->withSimilarColor('beard.color_id', $demand['beard_color_id'], $demand['beard_similar_colors_id'])
 					: [];

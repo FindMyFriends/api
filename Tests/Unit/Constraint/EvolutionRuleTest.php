@@ -20,26 +20,18 @@ final class EvolutionRuleTest extends Tester\TestCase {
 			[
 				'body' => [
 					'breast_size' => null,
-					'height' => ['value' => 10, 'unit' => 'mm'],
-					'weight' => ['value' => 100, 'unit' => 'kg'],
 				],
 				'hair' => [
-					'length' => ['value' => 10, 'unit' => 'mm'],
+					'length_id' => 1,
 				],
 				'beard' => [
 					'color_id' => null,
 					'care' => 10,
-					'length' => [
-						'value' => null,
-						'unit' => null,
-					],
+					'length_id' => 2,
 				],
 				'hands' => [
 					'nails' => [
-						'length' => [
-							'value' => null,
-							'unit' => null,
-						],
+						'length_id' => 3,
 					],
 				],
 				'general' => ['sex' => 'man'],
@@ -49,26 +41,18 @@ final class EvolutionRuleTest extends Tester\TestCase {
 				[
 					'body' => [
 						'breast_size' => null,
-						'height' => ['value' => 10, 'unit' => 'mm'],
-						'weight' => ['value' => 100, 'unit' => 'kg'],
 					],
 					'hair' => [
-						'length' => ['value' => 10, 'unit' => 'mm'],
+						'length_id' => 1,
 					],
 					'beard' => [
 						'color_id' => null,
 						'care' => 10,
-						'length' => [
-							'value' => null,
-							'unit' => null,
-						],
+						'length_id' => 2,
 					],
 					'hands' => [
 						'nails' => [
-							'length' => [
-								'value' => null,
-								'unit' => null,
-							],
+							'length_id' => 3,
 						],
 					],
 					'general' => ['sex' => 'man'],

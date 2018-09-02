@@ -18,27 +18,10 @@ final class DescriptionRuleTest extends Tester\TestCase {
 	private const BASE = [
 		'body' => [
 			'breast_size' => null,
-			'height' => ['value' => 10, 'unit' => 'mm'],
-			'weight' => ['value' => 100, 'unit' => 'kg'],
-		],
-		'hair' => [
-			'length' => ['value' => 10, 'unit' => 'mm'],
 		],
 		'general' => ['sex' => 'woman'],
 		'beard' => [
 			'color_id' => null,
-			'length' => [
-				'value' => null,
-				'unit' => null,
-			],
-		],
-		'hands' => [
-			'nails' => [
-				'length' => [
-					'value' => null,
-					'unit' => null,
-				],
-			],
 		],
 	];
 
@@ -64,12 +47,8 @@ final class DescriptionRuleTest extends Tester\TestCase {
 					[
 						'general' => ['sex' => 'woman'],
 						'beard' => [
-							'style' => 'cool',
+							'style_id' => 1,
 							'color_id' => null,
-							'length' => [
-								'value' => 2,
-								'unit' => 'mm',
-							],
 						],
 					]
 				)
@@ -101,7 +80,6 @@ final class DescriptionRuleTest extends Tester\TestCase {
 				'general' => ['sex' => 'woman'],
 				'beard' => [
 					'color_id' => null,
-					'care' => null,
 				],
 			]
 		);
@@ -117,29 +95,6 @@ final class DescriptionRuleTest extends Tester\TestCase {
 			]
 		);
 		Assert::equal($expectation, (new Constraint\DescriptionRule())->apply($expectation));
-	}
-
-	/**
-	 * @dataProvider valuesWithoutUnits
-	 */
-	public function testThrowingOnValuesWithoutUnits(array $part) {
-		$ex = Assert::exception(
-			static function() use ($part) {
-				(new Constraint\DescriptionRule())->apply(array_replace_recursive(self::BASE, $part));
-			},
-			\UnexpectedValueException::class
-		);
-		Assert::contains(' is missing value or unit.', $ex->getMessage());
-	}
-
-	protected function valuesWithoutUnits(): array {
-		return [
-			[['body' => ['height' => ['value' => null, 'unit' => 'mm']]]],
-			[['body' => ['weight' => ['value' => null, 'unit' => 'mm']]]],
-			[['hair' => ['length' => ['value' => null, 'unit' => 'mm']]]],
-			[['beard' => ['length' => ['value' => null, 'unit' => 'mm']], 'general' => ['sex' => 'man']]],
-			[['hands' => ['nails' => ['length' => ['value' => null, 'unit' => 'mm']]]]],
-		];
 	}
 }
 (new DescriptionRuleTest())->run();
