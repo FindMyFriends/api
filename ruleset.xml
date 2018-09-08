@@ -32,7 +32,6 @@
 		<exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.PartialUse"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.RequireYodaComparison.RequiredYodaComparison"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
-		<exclude name="SlevomatCodingStandard.Namespaces.UnusedUses.MismatchingCaseSensitivity"/>
 		<exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment.OneLinePropertyComment"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator.DisallowedShortTernaryOperator"/>
 		<exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
@@ -101,6 +100,14 @@
 
 	<rule ref="Squiz.Commenting.FunctionComment.InvalidTypeHint">
 		<exclude-pattern>App/Http/ETag.php</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.UnusedUses.MismatchingCaseSensitivity">
+		<exclude-pattern>Tests/Unit</exclude-pattern>
+		<exclude-pattern>Tests/Integration</exclude-pattern>
+		<exclude-pattern>Tests/Postgres</exclude-pattern>
+		<exclude-pattern>Tests/Functional</exclude-pattern>
+		<exclude-pattern>Tests/Elastic</exclude-pattern>
 	</rule>
 
 </ruleset>
