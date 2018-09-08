@@ -1,5 +1,7 @@
 # API - Find My Friends
-[![Build Status](https://travis-ci.org/FindMyFriends/api.svg?branch=master)](https://travis-ci.org/FindMyFriends/api) [![codecov](https://codecov.io/gh/FindMyFriends/api/branch/master/graph/badge.svg)](https://codecov.io/gh/FindMyFriends/api)
+[![Build Status](https://travis-ci.org/FindMyFriends/api.svg?branch=master)](https://travis-ci.org/FindMyFriends/api)
+[![codecov](https://codecov.io/gh/FindMyFriends/api/branch/master/graph/badge.svg)](https://codecov.io/gh/FindMyFriends/api)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 ## Motivation
 The app serves for finding people based on physical similarity. It means you can search person you have met but you do not have opportunity to ask for a name.
