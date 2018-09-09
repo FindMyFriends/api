@@ -337,6 +337,12 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
+			'seekers [OPTIONS]' => function(): Application\View {
+				return new Endpoint\Preflight(
+					new Endpoint\Seekers\Options($this->database, $this->redis),
+					new Application\PlainRequest()
+				);
+			},
 			'seekers [POST]' => function(): Application\View {
 				return new Endpoint\Seekers\Post(
 					new Application\PlainRequest(),
