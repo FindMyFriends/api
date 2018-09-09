@@ -19,8 +19,8 @@ final class Structure {
 		unset($properties['age']);
 		$properties['birth_year'] = [
 			'type' => 'integer',
-			'min' => 1850,
-			'max' => (int) (new \DateTimeImmutable())->format('Y'),
+			'minimum' => 1850,
+			'maximum' => (int) (new \DateTimeImmutable())->format('Y'),
 		];
 		unset($properties['firstname']['type'][array_search('null', $properties['firstname']['type'], true)]);
 		unset($properties['lastname']['type'][array_search('null', $properties['lastname']['type'], true)]);
