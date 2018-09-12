@@ -9,26 +9,29 @@ check: validate-composer.lock check-changed-conf check-test-extensions lint phpc
 ci: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint generate-schemas move-schemas
 
-lint:
+help:               ## help
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+lint:               ## lint
 	vendor/bin/parallel-lint -e php,phpt App Tests www
 
-phpcpd:
+phpcpd:             ## phpcpd
 	vendor/bin/phpcpd App --exclude Endpoint/ --exclude Sql/ --exclude Task/
 
-phpstan:
+phpstan:            ## phpstan
 	vendor/bin/phpstan analyse -l max -c phpstan.neon App Tests/Misc Tests/TestCase
 
-phpcs:
+phpcs:              ## phpcs
 	vendor/bin/phpcs $(PHPCS_ARGS)
 
-phpcbf:
+phpcbf:             ## phpcbf
 	vendor/bin/phpcbf $(PHPCS_ARGS)
 
 check-test-extensions:
 	@echo "Checking PHP test extensions..."
 	@if $(CHECK_TEST_EXTENSIONS) ; then exit 1 ; else echo "Test filenames are OK" ; fi
 
-tests:
+tests:              ## tests
 	vendor/bin/tester $(TESTER_ARGS) Tests/
 
 count-postgres-tests:
@@ -47,25 +50,25 @@ echo-failed-tests:
 validate-composer.lock:
 	composer validate --no-check-all --strict
 
-generate-schemas:
+generate-schemas:   ## generate JSON schemas
 	php App/Scheduling/index.php GenerateJsonSchema
 
-generate-routes:
+generate-routes:    ## generate nginx routes
 	php App/Scheduling/index.php GenerateNginxRoutes
 
-generate-nginx-conf:
+generate-nginx-conf:## generate nginx configs
 	php App/Scheduling/index.php GenerateNginxConfiguration
 
-check-changed-conf:
+check-changed-conf: ## check changed configs
 	php App/Scheduling/index.php CheckChangedConfiguration
 
-cron:
+cron:               ## run cron tasks
 	php App/Scheduling/index.php Cron
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
-move-schemas:
+move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/activation
 	mkdir -p www/schema/demand
 	mkdir -p www/schema/demand/soulmate
