@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Schema\Token;
+namespace FindMyFriends\Schema\RefreshToken;
 
 final class Structure {
 	public function post(): array {
@@ -9,10 +9,9 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => [
-				'email' => ['type' => 'string'],
-				'password' => ['type' => 'string'],
+				'token' => ['type' => 'string'],
 			],
-			'required' => ['email', 'password'],
+			'required' => ['token'],
 			'type' => 'object',
 		];
 	}

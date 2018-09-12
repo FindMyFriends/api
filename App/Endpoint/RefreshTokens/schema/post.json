@@ -2,16 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false,
     "properties": {
-        "email": {
-            "type": "string"
-        },
-        "password": {
+        "token": {
             "type": "string"
         }
     },
     "required": [
-        "email",
-        "password"
+        "token"
     ],
     "type": "object"
 }

@@ -74,6 +74,7 @@ move-schemas:
 	mkdir -p www/schema/description
 	mkdir -p www/schema/evolution
 	mkdir -p www/schema/evolution/spot
+	mkdir -p www/schema/refresh_token
 	mkdir -p www/schema/seeker
 	mkdir -p www/schema/soulmate
 	mkdir -p www/schema/spot
@@ -96,11 +97,11 @@ move-schemas:
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/get.json www/schema/evolution/get.json
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/put.json www/schema/evolution/put.json
 	ln -sfn $(PWD)/App/Endpoint/Evolutions/schema/post.json www/schema/evolution/post.json
+	ln -sfn $(PWD)/App/Endpoint/RefreshTokens/schema/post.json www/schema/refresh_token/post.json
 	ln -sfn $(PWD)/App/Endpoint/Seeker/schema/get.json www/schema/seeker/get.json
 	ln -sfn $(PWD)/App/Endpoint/Seekers/schema/post.json www/schema/seeker/post.json
 	ln -sfn $(PWD)/App/Endpoint/Soulmate/schema/patch.json www/schema/soulmate/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/patch.json www/schema/spot/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/put.json www/schema/spot/put.json
-	ln -sfn $(PWD)/App/Endpoint/Token/schema/get.json www/schema/token/get.json
 	ln -sfn $(PWD)/App/Endpoint/Tokens/schema/post.json www/schema/token/post.json
 

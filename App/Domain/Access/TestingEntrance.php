@@ -7,7 +7,7 @@ namespace FindMyFriends\Domain\Access;
  * Entrance used for testing purposes
  */
 final class TestingEntrance implements Entrance {
-	public function enter(array $headers): Seeker {
+	public function enter(array $credentials): Seeker {
 		session_start();
 		$_SESSION['id'] = '1';
 		$sessionId = session_id();

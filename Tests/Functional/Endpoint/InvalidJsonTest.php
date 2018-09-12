@@ -70,6 +70,7 @@ final class InvalidJsonTest extends Tester\TestCase {
 			[sprintf('evolutions/%s', $config['HASHIDS']['evolution']->encode(1)), 'PUT', self::AUTHORIZED],
 			['seekers', 'POST', self::AUTHORIZED],
 			['tokens', 'POST', self::AUTHORIZED],
+			['refresh_tokens', 'POST', self::AUTHORIZED],
 			[sprintf('soulmates/%s', $config['HASHIDS']['soulmate']->encode(1)), 'PATCH', self::AUTHORIZED],
 			[sprintf('evolutions/%s/spots', $config['HASHIDS']['evolution']->encode(1)), 'POST', self::AUTHORIZED],
 			[sprintf('demands/%s/spots', $config['HASHIDS']['demand']->encode(1)), 'POST', self::AUTHORIZED],
