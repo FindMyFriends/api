@@ -378,11 +378,8 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'refresh_tokens [POST]' => function(): Application\View {
-				return new Endpoint\RefreshTokens\Post(
-					new Application\PlainRequest(),
-					$this->database
-				);
+			'refresh_tokens [POST]' => static function(): Application\View {
+				return new Endpoint\RefreshTokens\Post(new Application\PlainRequest());
 			},
 		];
 	}

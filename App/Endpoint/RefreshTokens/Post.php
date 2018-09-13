@@ -10,7 +10,6 @@ use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Internal;
 use Klapuch\Output;
-use Klapuch\Storage;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -18,15 +17,8 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
-
-	public function __construct(
-		Application\Request $request,
-		Storage\MetaPDO $database
-	) {
+	public function __construct(Application\Request $request) {
 		$this->request = $request;
-		$this->database = $database;
 	}
 
 	/**
@@ -34,7 +26,7 @@ final class Post implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$seeker = (new Access\HarnessedEntrance(
-			new Access\RefreshingEntrance($this->database),
+			new Access\RefreshingEntrance(),
 			new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 		))->enter(
 			(new Constraint\StructuredJson(

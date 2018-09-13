@@ -11,21 +11,18 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;
-use FindMyFriends\TestCase;
 use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
 final class RefreshingEntranceTest extends Tester\TestCase {
-	use TestCase\TemplateDatabase;
-
 	public function testCreatingDifferentTokens() {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
 		session_write_close();
-		(new Access\RefreshingEntrance($this->database))->enter(['token' => $id]);
+		(new Access\RefreshingEntrance())->enter(['token' => $id]);
 		Assert::notSame($id, session_id());
 	}
 
@@ -34,9 +31,9 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		$_SESSION['id'] = '1';
 		$id = session_id();
 		session_write_close();
-		$seeker = (new Access\RefreshingEntrance($this->database))->enter(['token' => $id]);
+		$seeker = (new Access\RefreshingEntrance())->enter(['token' => $id]);
 		Assert::same('1', $_SESSION['id']);
-		Assert::equal(new Access\RegisteredSeeker('1', $this->database), $seeker);
+		Assert::equal(new Access\ConstantSeeker(session_id(), []), $seeker);
 	}
 
 	public function testRemovingPrevious() {
@@ -44,7 +41,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		$_SESSION['id'] = '1';
 		$id = session_id();
 		session_write_close();
-		(new Access\RefreshingEntrance($this->database))->enter(['token' => $id]);
+		(new Access\RefreshingEntrance())->enter(['token' => $id]);
 		session_write_close();
 		session_id($id);
 		session_start();
@@ -55,7 +52,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 	 * @throws \UnexpectedValueException Provided token is not valid.
 	 */
 	public function testThrowingOnUnknownId() {
-		(new Access\RefreshingEntrance($this->database))->enter(['token' => 'foo']);
+		(new Access\RefreshingEntrance())->enter(['token' => 'foo']);
 	}
 }
 
