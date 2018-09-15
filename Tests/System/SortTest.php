@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint;
+namespace FindMyFriends\System;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint\Demand;
@@ -19,7 +19,7 @@ use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 final class SortTest extends Tester\TestCase {
 	/**
@@ -39,7 +39,9 @@ final class SortTest extends Tester\TestCase {
 			iterator_count(
 				new \CallbackFilterIterator(
 					new \RecursiveIteratorIterator(
-						new \RecursiveDirectoryIterator(__DIR__ . '/../../../App/Endpoint')
+						new \RecursiveDirectoryIterator(
+							__DIR__ . '/../../App/Endpoint'
+						)
 					),
 					static function (\SplFileInfo $file): bool {
 						return strpos(file_get_contents($file->getPathname()), 'new Dataset\RestSort(') !== false;

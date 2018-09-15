@@ -33,7 +33,10 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		session_write_close();
 		$seeker = (new Access\RefreshingEntrance())->enter(['token' => $id]);
 		Assert::same('1', $_SESSION['id']);
-		Assert::equal(new Access\ConstantSeeker(session_id(), []), $seeker);
+		Assert::equal(
+			new Access\SessionSeeker(new Access\ConstantSeeker(session_id(), [])),
+			$seeker
+		);
 	}
 
 	public function testRemovingPrevious() {

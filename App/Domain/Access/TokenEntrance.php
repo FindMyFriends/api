@@ -25,7 +25,7 @@ final class TokenEntrance implements Entrance {
 			session_start();
 		session_regenerate_id(true);
 		$_SESSION[self::IDENTIFIER] = $seeker->id();
-		return new ConstantSeeker(session_id(), $seeker->properties());
+		return new SessionSeeker($seeker);
 	}
 
 	/**

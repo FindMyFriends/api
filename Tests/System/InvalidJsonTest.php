@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint;
+namespace FindMyFriends\System;
 
 use FindMyFriends\Configuration;
 use FindMyFriends\Domain\Access;
@@ -16,7 +16,7 @@ use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 final class InvalidJsonTest extends Tester\TestCase {
 	private const AUTHORIZED = true;

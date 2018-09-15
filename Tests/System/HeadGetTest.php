@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint;
+namespace FindMyFriends\System;
 
 use FindMyFriends\Routing;
 use Klapuch\Http;
@@ -14,7 +14,7 @@ use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 final class HeadGetTest extends Tester\TestCase {
 	/**

@@ -6,7 +6,7 @@ declare(strict_types = 1);
  * @phpVersion > 7.2
  */
 
-namespace FindMyFriends\Functional\Endpoint;
+namespace FindMyFriends\System;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Routing;
@@ -15,7 +15,7 @@ use Klapuch\Uri\FakeUri;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 final class PreflightTest extends Tester\TestCase {
 	/**

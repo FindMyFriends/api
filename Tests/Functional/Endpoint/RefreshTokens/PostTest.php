@@ -32,8 +32,7 @@ final class PostTest extends Tester\TestCase {
 		$response = (new Endpoint\RefreshTokens\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(json_encode(['token' => $token]))
-			),
-			$this->database
+			)
 		))->response([]);
 		$access = json_decode($response->body()->serialization(), true);
 		Assert::true(isset($access['token']));
@@ -42,23 +41,21 @@ final class PostTest extends Tester\TestCase {
 	}
 
 	public function test400OnBadInput() {
-		Assert::exception(function () {
+		Assert::exception(static function () {
 			(new Endpoint\RefreshTokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['foo' => 'bar']))
-				),
-				$this->database
+				)
 			))->response([]);
 		}, \UnexpectedValueException::class, 'The property token is required');
 	}
 
 	public function test403OnUnknownToken() {
-		Assert::exception(function () {
+		Assert::exception(static function () {
 			(new Endpoint\RefreshTokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['token' => 'abc']))
-				),
-				$this->database
+				)
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Provided token is not valid.', HTTP_FORBIDDEN);
 	}

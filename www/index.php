@@ -105,7 +105,8 @@ echo (new class(
 				)
 			))->render();
 		} catch (\Throwable $e) {
-			$this->logs->put($e, new Log\CurrentEnvironment());
+			// TODO: Add logging
+			// $this->logs->put($e, new Log\CurrentEnvironment());
 			if ($e instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
 					new FindMyFriends\Response\JsonError($e)

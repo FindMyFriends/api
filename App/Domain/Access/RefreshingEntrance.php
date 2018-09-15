@@ -19,7 +19,7 @@ final class RefreshingEntrance implements Entrance {
 			throw new \UnexpectedValueException('Provided token is not valid.');
 		}
 		session_regenerate_id(true);
-		return new ConstantSeeker(session_id(), []);
+		return new SessionSeeker(new ConstantSeeker(session_id(), []));
 	}
 
 	public function exit(): Seeker {
