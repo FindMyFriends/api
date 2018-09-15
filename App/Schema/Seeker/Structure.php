@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\Seeker;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 
 final class Structure {
-	/** @var \PDO */
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	public function __construct(\PDO $database) {
+	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 
@@ -19,8 +20,8 @@ final class Structure {
 		unset($properties['age']);
 		$properties['birth_year'] = [
 			'type' => 'integer',
-			'minimum' => 1850,
-			'maximum' => (int) (new \DateTimeImmutable())->format('Y'),
+			'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_min()'))->field(),
+			'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_max()'))->field(),
 		];
 		unset($properties['firstname']['type'][array_search('null', $properties['firstname']['type'], true)]);
 		unset($properties['lastname']['type'][array_search('null', $properties['lastname']['type'], true)]);

@@ -7,13 +7,14 @@ use FindMyFriends\Scheduling;
 use FindMyFriends\Schema;
 use Klapuch\Http;
 use Klapuch\Internal;
+use Klapuch\Storage;
 use Klapuch\Uri;
 
 final class GenerateJsonSchema implements Scheduling\Job {
-	/** @var \PDO */
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	public function __construct(\PDO $database) {
+	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 

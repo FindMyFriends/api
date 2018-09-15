@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\Description;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 
 final class Structure {
-	/** @var \PDO */
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	public function __construct(\PDO $database) {
+	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 
@@ -19,8 +20,8 @@ final class Structure {
 			'definitions' => [
 				'rating' => [
 					'type' => ['integer', 'null'],
-					'minimum' => 0,
-					'maximum' => 10,
+					'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.rating_min()'))->field(),
+					'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.rating_max()'))->field(),
 				],
 				'eye' => [
 					'additionalProperties' => false,
@@ -33,8 +34,8 @@ final class Structure {
 				],
 				'age' => [
 					'type' => ['integer'],
-					'minimum' => 15,
-					'maximum' => 130,
+					'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.age_min()'))->field(),
+					'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.age_max()'))->field(),
 				],
 			],
 			'additionalProperties' => false,

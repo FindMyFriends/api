@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\Demand;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 
 final class Structure {
-	/** @var \PDO */
+	/** @var \Klapuch\Storage\MetaPDO */
 	private $database;
 
-	public function __construct(\PDO $database) {
+	public function __construct(Storage\MetaPDO $database) {
 		$this->database = $database;
 	}
 

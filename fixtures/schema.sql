@@ -17,8 +17,18 @@ CREATE SCHEMA http;
 CREATE SCHEMA log;
 CREATE SCHEMA meta;
 CREATE SCHEMA audit;
+CREATE SCHEMA constant;
 
 SET search_path = public, pg_catalog, access, http, log, meta;
+
+-- schema constant
+CREATE FUNCTION constant.age_min() RETURNS integer AS $$SELECT 15;$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.age_max() RETURNS integer AS $$SELECT 130;$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.rating_min() RETURNS integer AS $$SELECT 0;$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.rating_max() RETURNS integer AS $$SELECT 10;$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.birth_year_min() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_max();$$ LANGUAGE sql STABLE;
+CREATE FUNCTION constant.birth_year_max() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_min();$$ LANGUAGE sql STABLE;
+
 
 -- schema audit
 CREATE DOMAIN audit.operation AS text CHECK (VALUE IN ('INSERT', 'UPDATE', 'DELETE'));
@@ -95,7 +105,7 @@ CREATE TYPE job_statuses AS ENUM (
 CREATE FUNCTION is_birth_year_in_range(int4range) RETURNS boolean
 AS $$
 BEGIN
-  RETURN $1 <@ int4range(1850, date_part('year', CURRENT_DATE)::integer);
+  RETURN $1 <@ int4range(constant.birth_year_min(), constant.birth_year_max());
 END
 $$
 LANGUAGE plpgsql
@@ -113,7 +123,7 @@ IMMUTABLE;
 CREATE FUNCTION is_rating(integer) RETURNS boolean
 AS $$
 BEGIN
-  RETURN int4range(0, 10, '[]') @> $1;
+  RETURN int4range(constant.rating_min(), constant.rating_max(), '[]') @> $1;
 END
 $$
 LANGUAGE plpgsql
@@ -253,7 +263,7 @@ STABLE;
 CREATE FUNCTION approximated_rating(integer) RETURNS int4range
 AS $$
 BEGIN
-  RETURN int4range(abs($1 - 2), least($1 + 2, 10), '[]');
+  RETURN int4range(abs($1 - 2), least($1 + 2, constant.rating_max()), '[]');
 END
 $$
 LANGUAGE plpgsql
