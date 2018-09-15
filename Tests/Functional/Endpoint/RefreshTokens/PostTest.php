@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 
 /**
- * @phpIni session.save_handler=files
- * @phpIni session.save_path=
  * @testCase
  * @phpVersion > 7.2
  */

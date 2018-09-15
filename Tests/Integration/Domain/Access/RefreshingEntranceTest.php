@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 
 /**
- * @phpIni session.save_handler=files
- * @phpIni session.save_path=
  * @testCase
  * @phpVersion > 7.2
  */
@@ -48,7 +46,8 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		session_write_close();
 		session_id($id);
 		session_start();
-		Assert::same([], $_SESSION);
+		$_SESSION['id'] = 'foo';
+		Assert::same(['id' => 'foo'], $_SESSION);
 	}
 
 	/**
