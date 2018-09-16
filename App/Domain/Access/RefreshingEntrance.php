@@ -17,7 +17,8 @@ final class RefreshingEntrance implements Entrance {
 		if ($id === '') {
 			throw new \UnexpectedValueException('Provided token is not valid.');
 		}
-		session_start();
+		if (session_status() === PHP_SESSION_NONE)
+			session_start();
 		session_regenerate_id(true);
 		return new SessionSeeker(new ConstantSeeker(session_id(), []));
 	}

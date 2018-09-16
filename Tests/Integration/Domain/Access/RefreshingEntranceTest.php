@@ -17,7 +17,6 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
-		session_write_close();
 		(new Access\RefreshingEntrance())->enter(['token' => $id]);
 		Assert::notSame($id, session_id());
 	}
@@ -25,9 +24,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 	public function testCopyingData() {
 		session_start();
 		$_SESSION['id'] = '1';
-		$id = session_id();
-		session_write_close();
-		$seeker = (new Access\RefreshingEntrance())->enter(['token' => $id]);
+		$seeker = (new Access\RefreshingEntrance())->enter(['token' => session_id()]);
 		Assert::same('1', $_SESSION['id']);
 		Assert::equal(
 			new Access\SessionSeeker(new Access\ConstantSeeker(session_id(), [])),
@@ -39,13 +36,20 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
-		session_write_close();
 		(new Access\RefreshingEntrance())->enter(['token' => $id]);
 		session_write_close();
 		session_id($id);
 		session_start();
 		$_SESSION['id'] = 'foo';
 		Assert::same(['id' => 'foo'], $_SESSION);
+	}
+
+	public function testStartingSessionOnce() {
+		Assert::noError(static function () {
+			session_start();
+			$_SESSION['id'] = '1';
+			(new Access\RefreshingEntrance())->enter(['token' => session_id()]);
+		});
 	}
 
 	/**
