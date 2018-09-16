@@ -13,13 +13,14 @@ final class RefreshingEntrance implements Entrance {
 	 * @return \FindMyFriends\Domain\Access\Seeker
 	 */
 	public function enter(array $credentials): Seeker {
-		$id = session_id($credentials['token']);
-		if ($id === '') {
+		session_write_close();
+		session_id($credentials['token']);
+		session_start();
+		session_regenerate_id(true);
+		if (!isset($_SESSION[self::IDENTIFIER])) {
+			session_destroy();
 			throw new \UnexpectedValueException('Provided token is not valid.');
 		}
-		if (session_status() === PHP_SESSION_NONE)
-			session_start();
-		session_regenerate_id(true);
 		return new SessionSeeker(new ConstantSeeker(session_id(), []));
 	}
 
