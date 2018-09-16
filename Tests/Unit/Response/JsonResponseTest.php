@@ -12,7 +12,6 @@ require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class JsonResponseTest extends Tester\TestCase {
 	public function testAddingJsonHeader() {

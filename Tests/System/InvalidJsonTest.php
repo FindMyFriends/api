@@ -15,7 +15,6 @@ require __DIR__ . '/../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class InvalidJsonTest extends Tester\TestCase {
 	private const AUTHORIZED = true;

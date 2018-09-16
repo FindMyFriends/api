@@ -14,7 +14,6 @@ require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class PublicSpotTest extends Tester\TestCase {
 	public function testFormatting() {

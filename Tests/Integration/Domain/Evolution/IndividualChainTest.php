@@ -17,7 +17,6 @@ require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class IndividualChainTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;

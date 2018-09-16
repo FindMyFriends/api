@@ -12,7 +12,6 @@ require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class CreatedResourceUrlTest extends Tester\TestCase {
 	public function testPlaceholderReplacedByArrayKeyValue() {

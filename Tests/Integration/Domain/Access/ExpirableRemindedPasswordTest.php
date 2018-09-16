@@ -14,7 +14,6 @@ require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;

@@ -12,7 +12,6 @@ require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class FilesystemLogsTest extends Tester\TestCase {
 	private const LOGS = __DIR__ . '/../../temp/logs';

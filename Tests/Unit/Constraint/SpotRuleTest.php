@@ -11,7 +11,6 @@ require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class SpotRuleTest extends Tester\TestCase {
 	private const BASE = [

@@ -18,7 +18,6 @@ require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class VerifiedEntranceTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;

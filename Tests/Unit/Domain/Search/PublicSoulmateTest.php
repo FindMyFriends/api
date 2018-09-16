@@ -13,7 +13,6 @@ require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
- * @phpVersion > 7.2
  */
 final class PublicSoulmateTest extends Tester\TestCase {
 	public function testFormatting() {
