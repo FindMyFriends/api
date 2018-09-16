@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Domain\Search;
 
 use FindMyFriends\Domain\Search;
@@ -16,6 +11,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class PublicSoulmateTest extends Tester\TestCase {
 	public function testFormatting() {
 		Assert::equal(

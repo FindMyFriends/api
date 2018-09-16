@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Integration\Domain\Evolution;
 
 use FindMyFriends\Domain\Evolution;
@@ -17,6 +12,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class ExistingChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 

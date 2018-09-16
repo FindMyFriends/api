@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
@@ -14,6 +9,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class DateTimeRuleTest extends Tester\TestCase {
 	public function testPassingWithIso8601() {
 		Assert::true((new Constraint\DateTimeRule())->satisfied('2017-09-17T13:58:10+00:00'));

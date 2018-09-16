@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Routing;
 
 use FindMyFriends\Routing;
@@ -15,6 +10,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class NginxMatchedRoutesTest extends Tester\TestCase {
 	public function testMatchingByServer() {
 		$_SERVER['ROUTE_NAME'] = 'demands/{id}';

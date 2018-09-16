@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
@@ -14,6 +9,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class IntervalDiffRuleTest extends Tester\TestCase {
 	public function testAllowingInRange() {
 		Assert::true((new Constraint\IntervalDiffRule('PT20H'))->satisfied('PT10H'));

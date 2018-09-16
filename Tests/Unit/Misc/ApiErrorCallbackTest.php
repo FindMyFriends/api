@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Misc;
 
 use FindMyFriends\Misc;
@@ -14,6 +9,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class ApiErrorCallbackTest extends Tester\TestCase {
 	public function testTransformingStatusCodeOnThrowing() {
 		$ex = Assert::exception(static function() {

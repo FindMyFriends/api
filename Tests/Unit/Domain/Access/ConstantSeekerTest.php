@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Domain\Access;
 
 use FindMyFriends\Domain\Access;
@@ -14,6 +9,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class ConstantSeekerTest extends Tester\TestCase {
 	public function testPropertiesWithoutSensitiveData() {
 		$seeker = new Access\ConstantSeeker(

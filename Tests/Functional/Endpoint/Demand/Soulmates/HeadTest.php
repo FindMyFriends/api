@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Functional\Endpoint\Demand\Soulmates;
 
 use FindMyFriends\Endpoint;
@@ -17,6 +12,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class HeadTest extends Tester\TestCase {
 	use TestCase\Page;
 

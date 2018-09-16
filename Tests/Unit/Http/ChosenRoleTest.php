@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Domain\Access;
@@ -15,6 +10,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class ChosenRoleTest extends Tester\TestCase {
 	public function testAllowedAccessForSingleMatch() {
 		Assert::true((new Http\ChosenRole(new Access\FakeSeeker(null, ['role' => 'member']), ['member']))->allowed());

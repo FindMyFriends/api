@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Integration\Domain\Evolution;
 
 use FindMyFriends\Domain\Evolution;
@@ -15,6 +10,10 @@ use Tester;
 
 require __DIR__ . '/../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class StoredSpotTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 

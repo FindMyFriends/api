@@ -1,11 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * @testCase
- * @phpVersion > 7.2
- */
-
 namespace FindMyFriends\Functional\Endpoint\Evolution\Spots;
 
 use FindMyFriends\Domain\Access;
@@ -19,6 +14,10 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
 
+/**
+ * @testCase
+ * @phpVersion > 7.2
+ */
 final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
