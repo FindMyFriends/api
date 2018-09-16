@@ -1,11 +1,11 @@
 [2010-01-01 01:01] RuntimeException("foo", 0)
-/var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php:30
+/var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php:28
 
 TRACE:
 #0 [internal function]: FindMyFriends\Integration\Log\FilesystemLogsTest->testFormat()
 #1 /var/www/FindMyFriends/vendor/nette/tester/src/Framework/TestCase.php(143): call_user_func_array(Array, Array)
 #2 /var/www/FindMyFriends/vendor/nette/tester/src/Framework/TestCase.php(50): Tester\TestCase->runTest(Object(ReflectionMethod))
-#3 /var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php(40): Tester\TestCase->run()
+#3 /var/www/FindMyFriends/Tests/Integration/Log/FilesystemLogsTest.php(38): Tester\TestCase->run()
 #4 {main}
 
 PREVIOUS:
