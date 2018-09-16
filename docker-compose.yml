@@ -41,19 +41,19 @@ services:
         - fmf
 
     redis:
-      image: redis:alpine
+      image: redis:5.0-rc
       container_name: find-my-friends-redis
       networks:
         - fmf
 
     redis-identity:
-      image: redis:alpine
+      image: redis:5.0-rc
       container_name: find-my-friends-redis-identity
       networks:
         - fmf
 
     redis-test:
-      image: redis:alpine
+      image: redis:5.0-rc
       container_name: find-my-friends-redis-test
       networks:
         - fmf
