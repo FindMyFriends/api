@@ -35,16 +35,13 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testRemovingPrevious() {
+	public function testKeepingPrevious() {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
 		(new Access\RefreshingEntrance())->enter(['token' => $id]);
 		session_write_close();
-		session_id($id);
-		session_start();
-		$_SESSION['id'] = 'foo';
-		Assert::same(['id' => 'foo'], $_SESSION);
+		Assert::count(2, $this->redis->keys('*'));
 	}
 
 	public function testStartingSessionOnce() {
@@ -76,7 +73,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 			(new Access\RefreshingEntrance())->enter(['token' => 'foo']);
 		}, \UnexpectedValueException::class, 'Provided token is not valid.');
 		session_write_close();
-		Assert::count(1, $this->redis->keys('*'));
+		Assert::count(2, $this->redis->keys('*'));
 	}
 }
 
