@@ -35,12 +35,13 @@ final class RateLimitedEntrance implements Access\Entrance {
 	 */
 	public function enter(array $credentials): Seeker {
 		$seeker = $this->origin->enter($credentials);
-		if ($this->redis->exists($this->key($seeker)) === 0) {
+		['role' => $role] = $seeker->properties();
+		if ($role === 'guest')
+			return $seeker;
+		if ($this->redis->exists($this->key($seeker)) === 0)
 			$this->redis->setex($this->key($seeker), self::TIME_LIMIT, 0);
-		}
-		if ($this->redis->incr($this->key($seeker)) >= self::CALLS_LIMIT) {
+		if ($this->redis->incr($this->key($seeker)) >= self::CALLS_LIMIT)
 			throw new \UnexpectedValueException('You have overstepped rate limit');
-		}
 		return $seeker;
 	}
 

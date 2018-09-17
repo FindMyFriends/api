@@ -24,14 +24,14 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		$id = '1';
 		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 200);
 		(new RateLimitedEntrance(
-			new Access\FakeEntrance(new Access\FakeSeeker($id)),
+			new Access\FakeEntrance(new Access\FakeSeeker($id, ['role' => 'member'])),
 			$this->redis
 		))->enter([]);
 	}
 
 	public function testPassingOnMultipleCalls() {
 		$entrance = new RateLimitedEntrance(
-			new Access\FakeEntrance(new Access\FakeSeeker('1')),
+			new Access\FakeEntrance(new Access\FakeSeeker('1', ['role' => 'member'])),
 			$this->redis
 		);
 		Assert::noError(static function () use ($entrance) {
@@ -44,7 +44,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		$id = '1';
 		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 10);
 		$entrance = new RateLimitedEntrance(
-			new Access\FakeEntrance(new Access\FakeSeeker('1')),
+			new Access\FakeEntrance(new Access\FakeSeeker($id, ['role' => 'member'])),
 			$this->redis
 		);
 		$entrance->enter([]);
@@ -58,7 +58,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		Assert::falsey($this->redis->exists(sprintf('seeker_rate_limit:%s', $id)));
 		Assert::notSame(-1, $this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)));
 		(new RateLimitedEntrance(
-			new Access\FakeEntrance(new Access\FakeSeeker($id)),
+			new Access\FakeEntrance(new Access\FakeSeeker($id, ['role' => 'member'])),
 			$this->redis
 		))->enter([]);
 		Assert::notSame(-1, $this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)));
@@ -68,11 +68,23 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		[$id, $time] = ['1', 3];
 		$this->redis->setex(sprintf('seeker_rate_limit:%s', $id), $time, 10);
 		$entrance = new RateLimitedEntrance(
-			new Access\FakeEntrance(new Access\FakeSeeker($id)),
+			new Access\FakeEntrance(new Access\FakeSeeker($id, ['role' => 'member'])),
 			$this->redis
 		);
 		$entrance->enter([]);
 		Assert::true($this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)) <= $time);
+	}
+
+	public function testDisabledIncrementForGuest() {
+		$id = '1';
+		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 0);
+		$entrance = new RateLimitedEntrance(
+			new Access\FakeEntrance(new Access\FakeSeeker($id, ['role' => 'guest'])),
+			$this->redis
+		);
+		$entrance->enter([]);
+		$entrance->enter([]);
+		Assert::same('0', $this->redis->get(sprintf('seeker_rate_limit:%s', $id)));
 	}
 }
 
