@@ -26,6 +26,14 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION test_utils.random_array_pick(text[])
+  RETURNS text AS
+$$
+BEGIN
+   RETURN $1[floor((random() * array_length($1, 1) + 1))::integer];
+END
+$$ LANGUAGE plpgsql VOLATILE;
+
 CREATE OR REPLACE FUNCTION test_utils.json_to_hstore(json JSONB) RETURNS HSTORE
 LANGUAGE SQL
 AS $$

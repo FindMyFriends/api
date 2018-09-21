@@ -28,10 +28,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'table'
 				))->values(),
 				'sex' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('sex_enum', $this->database),
+					new Schema\PostgresConstant('sex', $this->database),
 					$this->redis,
 					'sex',
-					'enum'
+					'constant'
 				))->values(),
 			],
 		];

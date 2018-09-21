@@ -9,6 +9,7 @@ final class CachedEnum implements Enum {
 	private const NAMESPACE = 'postgres:type:meta:enums:';
 	private const TTL = [
 		'enum' => [],
+		'constant' => [],
 		'table' => ['ex', 3600],
 	];
 

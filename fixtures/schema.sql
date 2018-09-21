@@ -28,6 +28,10 @@ CREATE FUNCTION constant.rating_min() RETURNS integer AS $$SELECT 0;$$ LANGUAGE 
 CREATE FUNCTION constant.rating_max() RETURNS integer AS $$SELECT 10;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.birth_year_min() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_max();$$ LANGUAGE sql STABLE;
 CREATE FUNCTION constant.birth_year_max() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_min();$$ LANGUAGE sql STABLE;
+CREATE FUNCTION constant.timeline_sides() RETURNS text[] AS $$SELECT ARRAY['exactly', 'sooner', 'later', 'sooner or later'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.breast_sizes() RETURNS text[] AS $$SELECT ARRAY['A', 'B', 'C', 'D'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.sex() RETURNS text[] AS $$SELECT ARRAY['man', 'woman'];$$ LANGUAGE sql IMMUTABLE;
 
 
 -- schema audit
@@ -71,29 +75,6 @@ LANGUAGE plpgsql;
 -- types
 
 -- enums
-CREATE TYPE timeline_sides_enum AS ENUM (
-  'exactly',
-  'sooner',
-  'later',
-  'sooner or later'
-);
-
-CREATE TYPE roles_enum AS ENUM (
-  'member'
-);
-
-CREATE TYPE breast_sizes_enum AS ENUM (
-  'A',
-  'B',
-  'C',
-  'D'
-);
-
-CREATE TYPE sex_enum AS ENUM (
-  'man',
-  'woman'
-);
-
 CREATE TYPE job_statuses AS ENUM (
   'pending',
   'processing',
@@ -133,10 +114,10 @@ IMMUTABLE;
 CREATE DOMAIN hex_color AS text CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
 CREATE DOMAIN real_birth_year AS int4range CHECK (is_birth_year_in_range(VALUE));
 CREATE DOMAIN rating AS smallint CHECK (is_rating((VALUE)::integer));
-CREATE DOMAIN timeline_sides AS text CHECK (VALUE = ANY(enum_range(NULL::timeline_sides_enum)::text[]));
-CREATE DOMAIN roles AS text CHECK (VALUE = ANY(enum_range(NULL::roles_enum)::text[]));
-CREATE DOMAIN breast_sizes AS text CHECK (VALUE = ANY(enum_range(NULL::breast_sizes_enum)::text[]));
-CREATE DOMAIN sex AS text CHECK (VALUE = ANY(enum_range(NULL::sex_enum)::text[]));
+CREATE DOMAIN timeline_sides AS text CHECK (VALUE = ANY(constant.timeline_sides()));
+CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
+CREATE DOMAIN breast_sizes AS text CHECK (VALUE = ANY(constant.breast_sizes()));
+CREATE DOMAIN sex AS text CHECK (VALUE = ANY(constant.sex()));
 
 -- compound types
 CREATE TYPE approximate_timestamptz AS (
@@ -202,7 +183,7 @@ STRICT;
 CREATE FUNCTION is_approximate_timestamptz_valid(approximate_timestamptz) RETURNS boolean
 AS $$
 BEGIN
-  IF $1.timeline_side = 'exactly'::timeline_sides AND $1.approximation IS NOT NULL THEN
+  IF $1.timeline_side = 'exactly' AND $1.approximation IS NOT NULL THEN
     RAISE EXCEPTION '"Exactly" timeline_side can not have approximation';
   END IF;
   RETURN TRUE;

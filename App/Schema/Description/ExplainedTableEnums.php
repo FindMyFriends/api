@@ -38,10 +38,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'table'
 				))->values(),
 				'breast_size' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('breast_sizes_enum', $this->database),
+					new Schema\PostgresConstant('breast_sizes', $this->database),
 					$this->redis,
 					'breast_sizes',
-					'enum'
+					'constant'
 				))->values(),
 			],
 			'hair' => [
@@ -124,10 +124,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 					'table'
 				))->values(),
 				'sex' => (new Schema\CachedEnum(
-					new Schema\PostgresEnum('sex_enum', $this->database),
+					new Schema\PostgresConstant('sex', $this->database),
 					$this->redis,
 					'sex',
-					'enum'
+					'constant'
 				))->values(),
 			],
 		];

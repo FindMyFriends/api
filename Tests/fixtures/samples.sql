@@ -254,7 +254,7 @@ BEGIN
 	INSERT INTO seekers (email, password, role) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
-    samples.random_if_not_exists(test_utils.random_enum('roles_enum'), replacements, 'role')::roles
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles
 	)
 	RETURNING id
 	INTO v_id;
@@ -403,7 +403,7 @@ DECLARE
 	v_id integer;
 BEGIN
 	INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
-		samples.random_if_not_exists(test_utils.random_enum('sex_enum'), replacements, 'sex')::sex,
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.sex()), replacements, 'sex')::sex,
     samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
 		samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
 		samples.random_if_not_exists(md5(random()::text), replacements, 'firstname'),
@@ -422,7 +422,7 @@ DECLARE
   v_id integer;
 BEGIN
   INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
-    samples.random_if_not_exists(test_utils.random_enum('sex_enum'), replacements, 'sex')::sex,
+    samples.random_if_not_exists(test_utils.random_array_pick(constant.sex()), replacements, 'sex')::sex,
     samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
     samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
     samples.random_if_not_exists(NULL, replacements, 'firstname'),

@@ -46,7 +46,7 @@ final class Structure {
 						'build_id' => ['type' => ['integer', 'null']],
 						'breast_size' => [
 							'type' => ['string', 'null'],
-							'enum' => array_merge([null], (new Schema\PostgresEnum('breast_sizes_enum', $this->database))->values()),
+							'enum' => array_merge([null], (new Schema\PostgresConstant('breast_sizes', $this->database))->values()),
 						],
 					],
 					'required' => ['build_id'],
@@ -132,7 +132,7 @@ final class Structure {
 						'firstname' => ['type' => ['string', 'null']],
 						'sex' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresEnum('sex_enum', $this->database))->values(),
+							'enum' => (new Schema\PostgresConstant('sex', $this->database))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
 						'ethnic_group_id' => ['type' => 'integer'],

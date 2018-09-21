@@ -23,10 +23,10 @@ final class ExplainedTableEnums implements Schema\Enum {
 			'spot' => [
 				'met_at' => [
 					'timeline_side' => (new Schema\CachedEnum(
-						new Schema\PostgresEnum('timeline_sides_enum', $this->database),
+						new Schema\PostgresConstant('timeline_sides', $this->database),
 						$this->redis,
 						'timeline_sides',
-						'enum'
+						'constant'
 					))->values(),
 				],
 			],

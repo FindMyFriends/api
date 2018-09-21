@@ -13,15 +13,15 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostgresEnumTest extends Tester\TestCase {
+final class PostgresConstantTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testValuesFromEnum() {
 		Assert::same(
-			['pending', 'processing', 'succeed', 'failed'],
-			(new Schema\PostgresEnum('job_statuses', $this->database))->values()
+			['man', 'woman'],
+			(new Schema\PostgresConstant('sex', $this->database))->values()
 		);
 	}
 }
 
-(new PostgresEnumTest())->run();
+(new PostgresConstantTest())->run();
