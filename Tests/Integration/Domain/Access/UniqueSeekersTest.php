@@ -45,7 +45,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		Assert::same('secret', $seekers[0]['password']);
 		Assert::same('member', $seekers[0]['role']);
 		Assert::same(1, $seekers[0]['id']);
-		Assert::same('[1996,1997)', $general[0]['birth_year']);
+		Assert::same(1996, $general[0]['birth_year']);
 	}
 
 	public function testJoiningMultipleDifferentEmails() {

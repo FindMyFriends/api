@@ -16,6 +16,10 @@ final class Structure {
 
 	public function get(): array {
 		$description = (new Schema\Description\Structure($this->database))->get();
+		$description['properties']['general']['properties']['age'] = [
+			'additionalProperties' => false,
+			'$ref' => '#/definitions/age',
+		];
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -32,6 +36,10 @@ final class Structure {
 	public function put(): array {
 		$schema = $this->get();
 		$description = (new Schema\Description\Structure($this->database))->put();
+		$description['properties']['general']['properties']['age'] = [
+			'additionalProperties' => false,
+			'$ref' => '#/definitions/age',
+		];
 		$schema['properties'] = $description['properties'] + $schema['properties'];
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];

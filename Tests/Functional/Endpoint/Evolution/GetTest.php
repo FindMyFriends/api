@@ -23,7 +23,7 @@ final class GetTest extends Tester\TestCase {
 	public function testSuccessfulResponse() {
 		(new Misc\SampleEvolution($this->database))->try();
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1996]]))->try();
 		$response = (new Endpoint\Evolution\Get(
 			new Hashids(),
 			new Uri\FakeUri('/', 'evolutions/1', []),

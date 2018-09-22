@@ -20,8 +20,8 @@ final class Structure {
 		unset($properties['age']);
 		$properties['birth_year'] = [
 			'type' => 'integer',
-			'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_min()'))->field(),
-			'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_max()'))->field(),
+			'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_range_min()'))->field(),
+			'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_range_max()'))->field(),
 		];
 		unset($properties['firstname']['type'][array_search('null', $properties['firstname']['type'], true)]);
 		unset($properties['lastname']['type'][array_search('null', $properties['lastname']['type'], true)]);

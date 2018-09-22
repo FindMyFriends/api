@@ -39,14 +39,14 @@ final class UniqueSeekers implements Seekers {
 			))->row();
 			(new Storage\TypedQuery(
 				$this->database,
-				"SELECT created_base_evolution(
+				'SELECT created_base_evolution(
 					:seeker,
 					:sex,
 					:ethnic_group_id,
-					int4range(:birth_year, :birth_year, '[]'),
+					:birth_year,
 					:firstname,
 					:lastname
-				)",
+				)',
 				['seeker' => $seeker['id']] + $credentials['general']
 			))->execute();
 			return new ConstantSeeker((string) $seeker['id'], $seeker);

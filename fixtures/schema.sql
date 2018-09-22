@@ -26,8 +26,8 @@ CREATE FUNCTION constant.age_min() RETURNS integer AS $$SELECT 15;$$ LANGUAGE sq
 CREATE FUNCTION constant.age_max() RETURNS integer AS $$SELECT 130;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.rating_min() RETURNS integer AS $$SELECT 0;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.rating_max() RETURNS integer AS $$SELECT 10;$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.birth_year_min() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_max();$$ LANGUAGE sql STABLE;
-CREATE FUNCTION constant.birth_year_max() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_min();$$ LANGUAGE sql STABLE;
+CREATE FUNCTION constant.birth_year_range_min() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_max();$$ LANGUAGE sql STABLE;
+CREATE FUNCTION constant.birth_year_range_max() RETURNS integer AS $$SELECT date_part('year', CURRENT_DATE)::integer - constant.age_min();$$ LANGUAGE sql STABLE;
 CREATE FUNCTION constant.timeline_sides() RETURNS text[] AS $$SELECT ARRAY['exactly', 'sooner', 'later', 'sooner or later'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.breast_sizes() RETURNS text[] AS $$SELECT ARRAY['A', 'B', 'C', 'D'];$$ LANGUAGE sql IMMUTABLE;
@@ -86,7 +86,16 @@ CREATE TYPE job_statuses AS ENUM (
 CREATE FUNCTION is_birth_year_in_range(int4range) RETURNS boolean
 AS $$
 BEGIN
-  RETURN $1 <@ int4range(constant.birth_year_min(), constant.birth_year_max());
+  RETURN $1 <@ int4range(constant.birth_year_range_min(), constant.birth_year_range_max());
+END
+$$
+LANGUAGE plpgsql
+STABLE;
+
+CREATE FUNCTION is_birth_year_in_range(smallint) RETURNS boolean
+AS $$
+BEGIN
+  RETURN $1::integer <@ int4range(constant.birth_year_range_min(), constant.birth_year_range_max());
 END
 $$
 LANGUAGE plpgsql
@@ -112,7 +121,8 @@ IMMUTABLE;
 
 -- domains
 CREATE DOMAIN hex_color AS text CHECK ((is_hex(VALUE) AND (lower(VALUE) = VALUE)));
-CREATE DOMAIN real_birth_year AS int4range CHECK (is_birth_year_in_range(VALUE));
+CREATE DOMAIN real_birth_year_range AS int4range CHECK (is_birth_year_in_range(VALUE));
+CREATE DOMAIN real_birth_year AS smallint CHECK (is_birth_year_in_range(VALUE));
 CREATE DOMAIN rating AS smallint CHECK (is_rating((VALUE)::integer));
 CREATE DOMAIN timeline_sides AS text CHECK (VALUE = ANY(constant.timeline_sides()));
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
@@ -130,7 +140,8 @@ CREATE TYPE flat_description AS (
   id integer,
   general_sex sex,
   general_ethnic_group_id smallint,
-  general_birth_year int4range,
+  general_birth_year_range int4range,
+  general_birth_year smallint,
   general_firstname text,
   general_lastname text,
   hair_style_id smallint,
@@ -241,6 +252,15 @@ $$
 LANGUAGE plpgsql
 STABLE;
 
+CREATE FUNCTION age_to_year(age smallint, now timestamp WITH TIME ZONE) RETURNS smallint
+AS $$
+BEGIN
+  RETURN (EXTRACT('year' FROM now) - age)::smallint;
+END
+$$
+LANGUAGE plpgsql
+STABLE;
+
 CREATE FUNCTION approximated_rating(integer) RETURNS int4range
 AS $$
 BEGIN
@@ -270,6 +290,15 @@ BEGIN
     (SELECT extract('year' from lower(now)) - upper(year))::integer,
     (SELECT extract('year' from lower(now)) - lower(year))::integer
   );
+END
+$$
+LANGUAGE plpgsql
+IMMUTABLE;
+
+CREATE FUNCTION year_to_age(year smallint, now timestamp with time zone) RETURNS smallint
+AS $$
+BEGIN
+  RETURN (EXTRACT('year' from now) - year)::smallint;
 END
 $$
 LANGUAGE plpgsql
@@ -327,9 +356,10 @@ DECLARE
   v_hair_id integer;
   v_description_id integer;
 BEGIN
-  INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+  INSERT INTO general (sex, ethnic_group_id, birth_year_range, birth_year, firstname, lastname) VALUES (
     description.general_sex,
     description.general_ethnic_group_id,
+    description.general_birth_year_range,
     description.general_birth_year,
     description.general_firstname,
     description.general_lastname
@@ -439,6 +469,7 @@ BEGIN
   SET sex = description.general_sex,
     ethnic_group_id = description.general_ethnic_group_id,
     birth_year = description.general_birth_year,
+    birth_year_range = description.general_birth_year_range,
     firstname = description.general_firstname,
     lastname = description.general_lastname
   WHERE id = parts.general_id;
@@ -607,11 +638,13 @@ CREATE TABLE general (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   sex sex NOT NULL,
   ethnic_group_id smallint NOT NULL,
-  birth_year real_birth_year NOT NULL,
+  birth_year_range real_birth_year_range,
+  birth_year real_birth_year,
   firstname text,
   lastname text,
   CONSTRAINT general_ethnic_groups_id_fk FOREIGN KEY (ethnic_group_id) REFERENCES ethnic_groups(id)
-    ON DELETE RESTRICT ON UPDATE RESTRICT
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT general_birth_years_check CHECK ((birth_year IS NOT NULL AND birth_year_range IS NULL) OR (birth_year_range IS NOT NULL AND birth_year IS NULL))
 );
 
 CREATE TABLE beard_colors (
@@ -1315,6 +1348,7 @@ CREATE VIEW flat_descriptions AS
     (complete_descriptions.face).care AS face_care,
     (complete_descriptions.face).freckles AS face_freckles,
     (complete_descriptions.face).shape_id AS face_shape_id,
+    (complete_descriptions.general).birth_year_range AS general_birth_year_range,
     (complete_descriptions.general).birth_year AS general_birth_year,
     (complete_descriptions.general).ethnic_group_id AS general_ethnic_group_id,
     (complete_descriptions.general).firstname AS general_firstname,
@@ -1472,7 +1506,7 @@ CREATE VIEW collective_demands AS
     flat_descriptions.face_care,
     flat_descriptions.face_freckles,
     flat_descriptions.face_shape_id,
-    flat_descriptions.general_birth_year,
+    flat_descriptions.general_birth_year_range,
     flat_descriptions.general_ethnic_group_id,
     flat_descriptions.general_firstname,
     flat_descriptions.general_lastname,
@@ -1493,7 +1527,7 @@ CREATE VIEW collective_demands AS
     flat_descriptions.right_eye_lenses,
     flat_descriptions.tooth_braces,
     flat_descriptions.tooth_care,
-    year_to_age(flat_descriptions.general_birth_year, demands.created_at) AS general_age
+    year_to_age(flat_descriptions.general_birth_year_range, demands.created_at) AS general_age
   FROM demands
     JOIN flat_descriptions ON flat_descriptions.id = demands.description_id;
 
@@ -1508,6 +1542,7 @@ BEGIN
       new.general_sex,
       new.general_ethnic_group_id,
       age_to_year(new.general_age, COALESCE(new.created_at, now())),
+      NULL,
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -1574,6 +1609,7 @@ BEGIN
       new.general_sex,
       new.general_ethnic_group_id,
       age_to_year(new.general_age, COALESCE(new.created_at, now())),
+      NULL,
       new.general_firstname,
       new.general_lastname,
       new.hair_style_id,
@@ -1760,23 +1796,22 @@ AS $$
 WITH new_birth_year AS (
   SELECT birth_year
   FROM general
-    JOIN descriptions ON descriptions.general_id = general.id
+  JOIN descriptions ON descriptions.general_id = general.id
   WHERE descriptions.id = in_description_id
 ), related_descriptions AS (
+  SELECT descriptions.id
+  FROM descriptions
+  JOIN evolutions ON evolutions.description_id = descriptions.id
+  WHERE evolutions.seeker_id = in_seeker_id
+), related_generals AS (
   SELECT general.id
   FROM general
-    JOIN descriptions ON descriptions.general_id = general.id
-  WHERE descriptions.id = (SELECT description_id FROM base_evolution(in_seeker_id))
+  JOIN descriptions ON descriptions.general_id = general.id
+  WHERE descriptions.id IN (SELECT id FROM related_descriptions)
 )
 UPDATE general
-SET birth_year = (
-  SELECT birth_year
-  FROM new_birth_year
-)
-WHERE id IN (
-  SELECT id
-  FROM related_descriptions
-);
+SET birth_year = (SELECT birth_year FROM new_birth_year)
+WHERE id IN (SELECT id FROM related_generals);
 $$
 LANGUAGE SQL
 VOLATILE;
@@ -1789,11 +1824,11 @@ DECLARE
 BEGIN
   SELECT birth_year
   FROM general
-    JOIN descriptions ON descriptions.general_id = general.id
+  JOIN descriptions ON descriptions.general_id = general.id
   WHERE descriptions.id = (SELECT description_id FROM base_evolution(new.seeker_id))
   INTO v_birth_year;
 
-  IF (v_birth_year IS NULL) THEN
+  IF NOT FOUND THEN
     RAISE EXCEPTION USING MESSAGE = format('Base evolution for seeker %L was not created.', new.seeker_id);
   END IF;
 
@@ -1802,6 +1837,7 @@ BEGIN
       NULL,
       new.general_sex,
       new.general_ethnic_group_id,
+      NULL,
       v_birth_year,
       new.general_firstname,
       new.general_lastname,
@@ -1861,6 +1897,7 @@ BEGIN
       v_description_id,
       new.general_sex,
       new.general_ethnic_group_id,
+      NULL,
       age_to_year(new.general_age, now()),
       new.general_firstname,
       new.general_lastname,

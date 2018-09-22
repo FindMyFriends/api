@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Domain\Interaction;
+namespace FindMyFriends\Domain\Evolution;
 
 use FindMyFriends\Domain;
 use Klapuch\Output;
@@ -48,10 +48,7 @@ final class CompleteDescription implements Output\Format {
 			$format,
 			$description
 		))->adjusted('general', static function (array $general) use ($description): array {
-			$general['age'] = [
-				'from' => $description['general_age'][0],
-				'to' => $description['general_age'][1],
-			];
+			$general['age'] = $description['general_age'];
 			return $general;
 		});
 	}

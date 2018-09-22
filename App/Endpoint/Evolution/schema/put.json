@@ -188,19 +188,7 @@
             "properties": {
                 "age": {
                     "additionalProperties": false,
-                    "properties": {
-                        "from": {
-                            "$ref": "#/definitions/age"
-                        },
-                        "to": {
-                            "$ref": "#/definitions/age"
-                        }
-                    },
-                    "required": [
-                        "from",
-                        "to"
-                    ],
-                    "type": "object"
+                    "$ref": "#/definitions/age"
                 },
                 "firstname": {
                     "type": [

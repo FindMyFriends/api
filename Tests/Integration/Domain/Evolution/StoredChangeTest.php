@@ -35,7 +35,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'lastname' => null,
 					'sex' => 'man',
 					'ethnic_group_id' => 1,
-					'age' => ['from' => 16, 'to' => 20],
+					'age' => 20,
 				],
 				'hair' => [
 					'style_id' => 1,
@@ -135,7 +135,7 @@ final class StoredChangeTest extends Tester\TestCase {
 					'nature' => null,
 				],
 				'general' => [
-					'age' => ['from' => 16, 'to' => 20],
+					'age' => 20,
 					'firstname' => null,
 					'lastname' => null,
 					'sex' => 'man',
@@ -156,13 +156,13 @@ final class StoredChangeTest extends Tester\TestCase {
 			['evolved_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
 		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database, ['general' => ['birth_year' => '[1990,1993)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['general' => ['birth_year' => 1990]]))->try();
 		$evolution = new Evolution\StoredChange(1, $this->database);
 		$evolution->affect(
 			[
 				'evolved_at' => '2017-09-16 00:00:00+00',
 				'general' => [
-					'age' => ['from' => 16, 'to' => 20],
+					'age' => 20,
 					'firstname' => null,
 					'lastname' => null,
 					'sex' => 'man',
@@ -219,9 +219,9 @@ final class StoredChangeTest extends Tester\TestCase {
 		);
 		Assert::same(
 			[
-				['birth_year' => '[1990,1993)'],
-				['birth_year' => '[1998,2002)'],
-				['birth_year' => '[1998,2002)'],
+				['birth_year' => 1990],
+				['birth_year' => 1998],
+				['birth_year' => 1998],
 			],
 			(new Storage\NativeQuery(
 				$this->database,

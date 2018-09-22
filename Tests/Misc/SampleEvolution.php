@@ -29,7 +29,7 @@ final class SampleEvolution implements Sample {
 					(new SampleDescription(
 						$this->database,
 						[
-							'general_id' => current((new SamplePostgresData($this->database, 'general', $this->evolution['general'] ?? []))->try()),
+							'general_id' => current((new SamplePostgresData($this->database, 'general', ($this->evolution['general'] ?? []) + ['birth_year' => rand(1991, 1999)]))->try()),
 							'body_id' => current((new SamplePostgresData($this->database, 'body', $this->evolution['body'] ?? []))->try()),
 							'face_id' => current((new SamplePostgresData($this->database, 'face', $this->evolution['face'] ?? []))->try()),
 							'hand_id' => current((new SamplePostgresData($this->database, 'hand', $this->evolution['hand'] ?? []))->try()),

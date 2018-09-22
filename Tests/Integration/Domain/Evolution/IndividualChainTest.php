@@ -25,8 +25,8 @@ final class IndividualChainTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		$changeId = (new Evolution\IndividualChain(
@@ -92,7 +92,7 @@ final class IndividualChainTest extends Tester\TestCase {
 			]
 		);
 		Assert::same(
-			'[15,16)',
+			16,
 			(new Storage\NativeQuery(
 				$this->database,
 				'SELECT general_age FROM collective_evolutions WHERE id = ?',
@@ -125,8 +125,8 @@ final class IndividualChainTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		Assert::same(
@@ -142,8 +142,8 @@ final class IndividualChainTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'man', 'birth_year' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'woman', 'birth_year' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'man', 'birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'woman', 'birth_year_range' => '[1999,2000)']]))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		(new Misc\SampleEvolution($this->database))->try();
 		$chain = (new Evolution\IndividualChain(

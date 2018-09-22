@@ -2,6 +2,7 @@
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf
 
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
+PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-exclude=CompleteDescription.php
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini
 CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ Tests/System/ -name '*.php' | grep -v '\Test.php$$'
 
@@ -16,7 +17,7 @@ lint:               ## lint
 	vendor/bin/parallel-lint -e php,phpt App Tests www
 
 phpcpd:             ## phpcpd
-	vendor/bin/phpcpd App --exclude Endpoint/ --exclude Sql/ --exclude Task/
+	vendor/bin/phpcpd $(PHPCPD_ARGS)
 
 phpstan:            ## phpstan
 	vendor/bin/phpstan analyse -l max -c phpstan.neon App Tests/Misc Tests/TestCase

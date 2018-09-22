@@ -5,7 +5,7 @@ DECLARE
   v_evolution_id evolutions.id%type;
 BEGIN
   SELECT samples.seeker() INTO v_seeker_id;
-  SELECT created_base_evolution(v_seeker_id, 'man'::sex, 1::smallint, '[1996,1996]'::real_birth_year, 'Dom'::text, 'Self'::text) INTO v_evolution_id;
+  SELECT created_base_evolution(v_seeker_id, 'man'::sex, 1::smallint, 1996::real_birth_year, 'Dom'::text, 'Self'::text) INTO v_evolution_id;
   PERFORM assert.same(
     '',
     (
@@ -29,7 +29,7 @@ BEGIN
   SELECT samples.seeker() INTO v_seeker_id;
   PERFORM samples.evolution(json_build_object('seeker_id', v_seeker_id)::jsonb);
   PERFORM assert.throws(
-    format('SELECT created_base_evolution(%L, %L, %L, %L, %L, %L)', v_seeker_id, 'man', 1, '[1996,1996]', 'Dom', 'Self'),
+    format('SELECT created_base_evolution(%L, %L, %L, %L, %L, %L)', v_seeker_id, 'man', 1, 1996, 'Dom', 'Self'),
     ROW(format('Base evolution for seeker %L is already created.', v_seeker_id), 'P0001')::error
   );
 END
@@ -43,7 +43,7 @@ DECLARE
   v_evolution_id evolutions.id%type;
 BEGIN
   SELECT samples.seeker() INTO v_seeker_id;
-  SELECT created_base_evolution(v_seeker_id, 'man'::sex, 1::smallint, '[1996,1996]'::real_birth_year, 'Dom'::text, 'Self'::text) INTO v_evolution_id;
+  SELECT created_base_evolution(v_seeker_id, 'man'::sex, 1::smallint, 1996::real_birth_year, 'Dom'::text, 'Self'::text) INTO v_evolution_id;
   PERFORM assert.true((SELECT v_seeker_id = seeker_id FROM evolutions WHERE id = v_evolution_id));
 END
 $$

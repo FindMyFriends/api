@@ -401,11 +401,29 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
 	v_id integer;
+	v_birth_year general.birth_year%type;
+	v_birth_year_range general.birth_year_range%type;
+	v_decision boolean;
 BEGIN
-	INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+	IF replacements->>'birth_year_range' IS NULL AND replacements->>'birth_year' IS NULL THEN
+		IF test_utils.random_boolean() = TRUE THEN
+			v_birth_year_range = samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year_range')::int4range;
+		ELSE
+			v_birth_year = samples.random_if_not_exists(1991, replacements, 'birth_year')::smallint;
+		END IF;
+	ELSIF replacements->>'birth_year_range' IS NOT NULL THEN
+		v_birth_year_range = samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year_range')::int4range;
+	ELSIF replacements->>'birth_year' IS NOT NULL THEN
+		v_birth_year = samples.random_if_not_exists(1991, replacements, 'birth_year')::smallint;
+	ELSE
+		RAISE EXCEPTION 'wrong state';
+	END IF;
+
+	INSERT INTO general (sex, ethnic_group_id, birth_year_range, birth_year, firstname, lastname) VALUES (
 		samples.random_if_not_exists(test_utils.random_array_pick(constant.sex()), replacements, 'sex')::sex,
-    samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
-		samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
+		samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
+		v_birth_year_range,
+		v_birth_year,
 		samples.random_if_not_exists(md5(random()::text), replacements, 'firstname'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'lastname')
 	)
@@ -421,10 +439,10 @@ AS $$
 DECLARE
   v_id integer;
 BEGIN
-  INSERT INTO general (sex, ethnic_group_id, birth_year, firstname, lastname) VALUES (
+  INSERT INTO general (sex, ethnic_group_id, birth_year_range, firstname, lastname) VALUES (
     samples.random_if_not_exists(test_utils.random_array_pick(constant.sex()), replacements, 'sex')::sex,
     samples.random_if_not_exists((SELECT id FROM ethnic_groups ORDER BY random() LIMIT 1), replacements, 'ethnic_group_id')::integer,
-    samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year')::int4range,
+    samples.random_if_not_exists('[1996,1998)', replacements, 'birth_year_range')::int4range,
     samples.random_if_not_exists(NULL, replacements, 'firstname'),
     samples.random_if_not_exists(NULL, replacements, 'lastname')
   )

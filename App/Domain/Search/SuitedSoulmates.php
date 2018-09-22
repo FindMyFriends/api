@@ -42,7 +42,7 @@ final class SuitedSoulmates implements Soulmates {
 					'(general).ethnic_group_id',
 					'(general).firstname',
 					'(general).lastname',
-					'(general).birth_year',
+					'(general).birth_year_range',
 					'(body).build_id',
 					'(body).breast_size',
 					'(hair).style_id',
@@ -144,7 +144,7 @@ final class SuitedSoulmates implements Soulmates {
 			private function should(array $demand): array {
 				$should = [
 					['term' => ['general.ethnic_group_id' => $demand['ethnic_group_id']]],
-					$this->withRange('general.birth_year', $demand['birth_year']),
+					$this->withRange('general.birth_year_range', $demand['birth_year_range']),
 				];
 				$should[] = $demand['firstname'] !== null ? ['match' => ['general.firstname' => ['query' => $demand['firstname'], 'boost' => 2.0]]] : [];
 				$should[] = $demand['lastname'] !== null ? ['match' => ['general.lastname' => ['query' => $demand['lastname'], 'boost' => 3.0]]] : [];

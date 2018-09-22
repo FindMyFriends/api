@@ -22,8 +22,8 @@ final class GetTest extends Tester\TestCase {
 
 	public function testSuccessfulResponse() {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 1999)']]))->try();
+		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 2000)']]))->try();
 		(new Misc\SampleDemand($this->database))->try();
 		$response = (new Endpoint\Demands\Get(
 			new Hashids(),

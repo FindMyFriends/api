@@ -3,7 +3,7 @@
   "properties": {
     "general": {
       "properties": {
-        "birth_year": {
+        "birth_year_range": {
           "type": "integer"
         },
         "firstname": {
@@ -11,7 +11,7 @@
         }
       },
       "required": [
-        "birth_year"
+        "birth_year_range"
       ],
       "type": "object"
     }

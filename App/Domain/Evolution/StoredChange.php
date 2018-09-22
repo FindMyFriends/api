@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace FindMyFriends\Domain\Evolution;
 
 use FindMyFriends;
-use FindMyFriends\Domain\Interaction;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -41,7 +40,7 @@ final class StoredChange implements Change {
 				->from(['collective_evolutions'])
 				->where('id = ?', [$this->id])
 		))->row();
-		return (new Interaction\CompleteDescription($format, $evolution))
+		return (new CompleteDescription($format, $evolution))
 			->with('id', $evolution['id'])
 			->with('evolved_at', $evolution['evolved_at'])
 			->with('seeker_id', $evolution['seeker_id']);
