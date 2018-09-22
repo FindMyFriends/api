@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Unit\Domain;
+namespace FindMyFriends\Unit\Domain\Interaction;
 
 use FindMyFriends\Domain\Interaction;
 use FindMyFriends\TestCase;
@@ -9,7 +9,7 @@ use Klapuch\Dataset;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase

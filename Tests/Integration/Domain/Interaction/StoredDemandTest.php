@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Integration\Domain;
+namespace FindMyFriends\Integration\Domain\Interaction;
 
 use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
@@ -11,7 +11,7 @@ use Klapuch\Storage;
 use Tester;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
