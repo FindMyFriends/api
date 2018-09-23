@@ -8,6 +8,7 @@ use FindMyFriends\Elasticsearch\LazyElasticsearch;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Http;
 use FindMyFriends\Misc;
+use FindMyFriends\Request\CachedRequest;
 use FindMyFriends\View;
 use Klapuch\Application;
 use Klapuch\Encryption;
@@ -61,33 +62,34 @@ final class ApplicationRoutes implements Routing\Routes {
 	}
 
 	public function matches(): array {
+		$request = new CachedRequest(new Application\PlainRequest());
 		$seeker = (new Access\HarnessedEntrance(
 			new Access\RateLimitedEntrance(
 				new Access\ApiEntrance($this->database),
 				$this->redis
 			),
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
-		))->enter((new Application\PlainRequest())->headers());
+		))->enter($request->headers());
 		return [
-			'activations [POST]' => function() use ($seeker): Application\View {
+			'activations [POST]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Activations\Post(
-						new Application\PlainRequest(),
+						$request,
 						$this->database
 					),
 					new Http\ChosenRole($seeker, ['guest'])
 				);
 			},
-			'descriptions [OPTIONS]' => function(): Application\View {
+			'descriptions [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
 					new Endpoint\Descriptions\Options($this->database, $this->redis),
-					new Application\PlainRequest()
+					$request
 				);
 			},
-			'demands [OPTIONS]' => function(): Application\View {
+			'demands [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
 					new Endpoint\Demands\Options($this->database, $this->redis),
-					new Application\PlainRequest()
+					$request
 				);
 			},
 			'demands [GET]' => function() use ($seeker): Application\View {
@@ -131,11 +133,11 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'demands [POST]' => function() use ($seeker): Application\View {
+			'demands [POST]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demands\Post(
 						$this->hashids['demand'],
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$this->rabbitMq,
@@ -144,10 +146,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'demands/{id} [PUT]' => function() use ($seeker): Application\View {
+			'demands/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Put(
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$seeker
@@ -155,10 +157,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'demands/{id} [PATCH]' => function() use ($seeker): Application\View {
+			'demands/{id} [PATCH]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Patch(
-						new Application\PlainRequest(),
+						$request,
 						$this->database,
 						$seeker
 					),
@@ -185,10 +187,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'demands/{id}/spots [POST]' => function() use ($seeker): Application\View {
+			'demands/{id}/spots [POST]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Spots\Post(
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$seeker
@@ -205,7 +207,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'evolutions [OPTIONS]' => function() use ($seeker): Application\View {
+			'evolutions [OPTIONS]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Preflight(
 					new View\AuthenticatedView(
 						new Endpoint\Evolutions\Options(
@@ -215,14 +217,14 @@ final class ApplicationRoutes implements Routing\Routes {
 						),
 						new Http\ChosenRole($seeker, ['member'])
 					),
-					new Application\PlainRequest()
+					$request
 				);
 			},
-			'evolutions [POST]' => function() use ($seeker): Application\View {
+			'evolutions [POST]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Evolutions\Post(
 						$this->hashids['evolution'],
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$this->elasticsearch->create(),
@@ -264,10 +266,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'evolutions/{id}/spots [POST]' => function() use ($seeker): Application\View {
+			'evolutions/{id}/spots [POST]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Evolution\Spots\Post(
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$seeker
@@ -294,10 +296,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'evolutions/{id} [PUT]' => function() use ($seeker): Application\View {
+			'evolutions/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Evolution\Put(
-						new Application\PlainRequest(),
+						$request,
 						$this->uri,
 						$this->database,
 						$this->elasticsearch->create(),
@@ -306,10 +308,10 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'soulmates/{id} [PATCH]' => function() use ($seeker): Application\View {
+			'soulmates/{id} [PATCH]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Soulmate\Patch(
-						new Application\PlainRequest(),
+						$request,
 						$this->database,
 						$seeker
 					),
@@ -337,37 +339,37 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'seekers [OPTIONS]' => function(): Application\View {
+			'seekers [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
 					new Endpoint\Seekers\Options($this->database, $this->redis),
-					new Application\PlainRequest()
+					$request
 				);
 			},
-			'seekers [POST]' => function(): Application\View {
+			'seekers [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Seekers\Post(
-					new Application\PlainRequest(),
+					$request,
 					$this->database,
 					$this->rabbitMq,
 					$this->cipher
 				);
 			},
-			'spots/{id} [PUT]' => function() use ($seeker): Application\View {
+			'spots/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Put(
-					new Application\PlainRequest(),
+					$request,
 					$this->database,
 					$seeker
 				);
 			},
-			'spots/{id} [PATCH]' => function() use ($seeker): Application\View {
+			'spots/{id} [PATCH]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Patch(
-					new Application\PlainRequest(),
+					$request,
 					$this->database,
 					$seeker
 				);
 			},
-			'tokens [POST]' => function(): Application\View {
+			'tokens [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Tokens\Post(
-					new Application\PlainRequest(),
+					$request,
 					$this->database,
 					$this->cipher
 				);
@@ -378,8 +380,8 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'refresh_tokens [POST]' => static function(): Application\View {
-				return new Endpoint\RefreshTokens\Post(new Application\PlainRequest());
+			'refresh_tokens [POST]' => static function() use ($request): Application\View {
+				return new Endpoint\RefreshTokens\Post($request);
 			},
 		];
 	}
