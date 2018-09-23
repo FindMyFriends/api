@@ -60,7 +60,8 @@
     },
     "files": [
       "App/Http/statuses.php",
-      "App/functions.php"
+      "App/functions.php",
+      "App/loaders/error_handlers.php"
     ]
   },
   "autoload-dev": {
