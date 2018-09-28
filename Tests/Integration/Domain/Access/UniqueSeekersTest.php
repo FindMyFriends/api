@@ -32,6 +32,11 @@ final class UniqueSeekersTest extends Tester\TestCase {
 				'firstname' => 'Dominik',
 				'lastname' => 'Klapuch',
 			],
+			'contact' => [
+				'facebook' => 'klapuchdominik',
+				'instagram' => null,
+				'phone_number' => null,
+			],
 		]);
 		Assert::same('1', $seeker->id());
 		Assert::same(['email' => 'foo@bar.cz', 'role' => 'member'], $seeker->properties());
@@ -63,6 +68,11 @@ final class UniqueSeekersTest extends Tester\TestCase {
 				'firstname' => 'Dominik',
 				'lastname' => 'Klapuch',
 			],
+			'contact' => [
+				'facebook' => 'klapuchdominik',
+				'instagram' => null,
+				'phone_number' => null,
+			],
 		]);
 		$seekers->join([
 			'email' => 'bar@foo.cz',
@@ -73,6 +83,11 @@ final class UniqueSeekersTest extends Tester\TestCase {
 				'ethnic_group_id' => 2,
 				'firstname' => 'Dominik',
 				'lastname' => 'Klapuch',
+			],
+			'contact' => [
+				'facebook' => 'klapuchdominik2',
+				'instagram' => null,
+				'phone_number' => null,
 			],
 		]);
 		$rows = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
@@ -98,42 +113,43 @@ final class UniqueSeekersTest extends Tester\TestCase {
 					'firstname' => 'Dominik',
 					'lastname' => 'Klapuch',
 				],
-			]);
-		};
-		$register();
-		Assert::exception(
-			$register,
-			\UnexpectedValueException::class,
-			'Email "foo@bar.cz" already exists'
-		);
-	}
-
-	public function testThrowingOnDuplicatedCaseInsensitiveEmail() {
-		$email = 'foo@bar.cz';
-		$register = function(string $email) {
-			(new Access\UniqueSeekers(
-				$this->database,
-				new Encryption\FakeCipher()
-			))->join([
-				'email' => $email,
-				'password' => 'password',
-				'general' => [
-					'birth_year' => 1996,
-					'sex' => 'man',
-					'ethnic_group_id' => 2,
-					'firstname' => 'Dominik',
-					'lastname' => 'Klapuch',
+				'contact' => [
+					'facebook' => 'klapuchdominik',
+					'instagram' => null,
+					'phone_number' => null,
 				],
 			]);
 		};
-		$register($email);
-		Assert::exception(
-			static function() use ($register, $email) {
-				$register(strtoupper($email));
-			},
-			\UnexpectedValueException::class,
-			'Email "FOO@BAR.CZ" already exists'
-		);
+		$register();
+		Assert::exception($register, \UnexpectedValueException::class, 'Email foo@bar.cz already exists');
+	}
+
+	public function testThrowingOnDuplicatedContact() {
+		$register = function(string $email) {
+			return function () use ($email) {
+				(new Access\UniqueSeekers(
+					$this->database,
+					new Encryption\FakeCipher()
+				))->join([
+					'email' => $email,
+					'password' => 'password',
+					'general' => [
+						'birth_year' => 1996,
+						'sex' => 'man',
+						'ethnic_group_id' => 2,
+						'firstname' => 'Dominik',
+						'lastname' => 'Klapuch',
+					],
+					'contact' => [
+						'facebook' => 'klapuchdominik',
+						'instagram' => null,
+						'phone_number' => null,
+					],
+				]);
+			};
+		};
+		$register('foo@bar.cz')();
+		Assert::exception($register('foo@baz.cz'), \UnexpectedValueException::class, 'Facebook klapuchdominik already exists');
 	}
 }
 

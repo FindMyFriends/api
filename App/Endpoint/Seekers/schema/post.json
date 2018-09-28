@@ -45,12 +45,42 @@
                 "birth_year"
             ],
             "type": "object"
+        },
+        "contact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "facebook",
+                "instagram",
+                "phone_number"
+            ],
+            "properties": {
+                "facebook": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "instagram": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "phone_number": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
         }
     },
     "required": [
         "email",
         "password",
-        "general"
+        "general",
+        "contact"
     ],
     "type": "object"
 }

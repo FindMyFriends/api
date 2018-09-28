@@ -12,6 +12,7 @@ use Klapuch\Encryption;
 use Klapuch\Internal;
 use Klapuch\Output;
 use Klapuch\Storage;
+use Klapuch\Validation;
 use PhpAmqpLib;
 
 final class Post implements Application\View {
@@ -45,8 +46,9 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$information = (new Constraint\StructuredJson(
-			new \SplFileInfo(self::SCHEMA)
+		$information = (new Validation\ChainedRule(
+			new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+			new Constraint\SeekerRule()
 		))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values());
 		(new Access\HarnessedSeekers(
 			new Access\UniqueSeekers(

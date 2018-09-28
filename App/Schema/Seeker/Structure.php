@@ -35,8 +35,19 @@ final class Structure {
 			'properties' => [
 				'email' => ['type' => 'string'],
 				'password' => ['type' => 'string'],
-			] + ['general' => $description['properties']['general']],
-			'required' => ['email', 'password', 'general'],
+			] + ['general' => $description['properties']['general']] + [
+				'contact' => [
+					'type' => 'object',
+					'additionalProperties' => false,
+					'required' => ['facebook', 'instagram', 'phone_number'],
+					'properties' => [
+						'facebook' => ['type' => ['string', 'null']],
+						'instagram' => ['type' => ['string', 'null']],
+						'phone_number' => ['type' => ['string', 'null']],
+					],
+				],
+			],
+			'required' => ['email', 'password', 'general', 'contact'],
 			'type' => 'object',
 		];
 	}

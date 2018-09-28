@@ -24,19 +24,26 @@ final class UniqueSeekers implements Seekers {
 	/**
 	 * @param array $credentials
 	 * @return \FindMyFriends\Domain\Access\Seeker
-	 * @throws \UnexpectedValueException
 	 */
 	public function join(array $credentials): Seeker {
-		if ($this->exists($credentials['email']))
-			throw new \UnexpectedValueException(sprintf('Email "%s" already exists', $credentials['email']));
 		return (new Storage\Transaction($this->database))->start(function () use ($credentials): Seeker {
-			$seeker = (new Storage\TypedQuery(
-				$this->database,
-				'INSERT INTO seekers (email, password) VALUES
-				(?, ?)
-				RETURNING *',
-				[$credentials['email'], $this->cipher->encryption($credentials['password'])]
+			$seeker = (new Storage\ApplicationQuery(
+				new Storage\TypedQuery(
+					$this->database,
+					'INSERT INTO seekers (email, password) VALUES
+					(?, ?)
+					RETURNING *',
+					[$credentials['email'], $this->cipher->encryption($credentials['password'])]
+				)
 			))->row();
+			(new Storage\ApplicationQuery(
+				new Storage\TypedQuery(
+					$this->database,
+					'INSERT INTO seeker_contacts (seeker_id, facebook, instagram, phone_number) VALUES
+					(:seeker, :facebook, :instagram, :phone_number)',
+					['seeker' => $seeker['id']] + $credentials['contact']
+				)
+			))->execute();
 			(new Storage\TypedQuery(
 				$this->database,
 				'SELECT created_base_evolution(
@@ -51,13 +58,5 @@ final class UniqueSeekers implements Seekers {
 			))->execute();
 			return new ConstantSeeker((string) $seeker['id'], $seeker);
 		});
-	}
-
-	private function exists(string $email): bool {
-		return (bool) (new Storage\TypedQuery(
-			$this->database,
-			'SELECT 1 FROM seekers WHERE email = ?',
-			[$email]
-		))->field();
 	}
 }

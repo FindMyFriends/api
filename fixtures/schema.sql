@@ -830,10 +830,12 @@ CREATE TABLE descriptions (
 
 CREATE TABLE seekers (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  email citext NOT NULL UNIQUE,
+  email citext NOT NULL,
   password text NOT NULL,
   role roles NOT NULL DEFAULT 'member'::roles
 );
+
+CREATE INDEX seekers_facebook_index ON seekers USING btree (email);
 
 CREATE FUNCTION seekers_trigger_row_ai() RETURNS trigger
 AS $$
@@ -847,7 +849,54 @@ END;
 $$
 LANGUAGE plpgsql;
 
+CREATE FUNCTION seekers_trigger_row_biu() RETURNS trigger
+AS $$
+BEGIN
+  IF EXISTS(SELECT 1 FROM seekers WHERE email = new.email AND id IS DISTINCT FROM CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE new.id END) THEN
+    RAISE EXCEPTION USING MESSAGE = format('Email %s already exists', new.email);
+  END IF;
+
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER seekers_row_ai_trigger AFTER INSERT ON seekers FOR EACH ROW EXECUTE PROCEDURE seekers_trigger_row_ai();
+CREATE TRIGGER seekers_row_biu_trigger BEFORE INSERT OR UPDATE ON seekers FOR EACH ROW EXECUTE PROCEDURE seekers_trigger_row_biu();
+
+
+CREATE TABLE seeker_contacts (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL,
+  facebook citext,
+  instagram citext,
+  phone_number citext,
+  CONSTRAINT seeker_contacts_seeker_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT seeker_contacts_one_of_check CHECK (COALESCE(facebook, instagram, phone_number) IS NOT NULL)
+);
+CREATE INDEX seeker_contacts_facebook_index ON seeker_contacts USING btree (facebook);
+CREATE INDEX seeker_contacts_instagram_index ON seeker_contacts USING btree (instagram);
+CREATE INDEX seeker_contacts_phone_number_index ON seeker_contacts USING btree (phone_number);
+
+CREATE FUNCTION seeker_contacts_trigger_row_biu() RETURNS trigger
+AS $$
+BEGIN
+  IF EXISTS(SELECT 1 FROM seeker_contacts WHERE facebook = new.facebook) THEN
+    RAISE EXCEPTION USING MESSAGE = format('Facebook %s already exists', new.facebook);
+  ELSIF EXISTS(SELECT 1 FROM seeker_contacts WHERE instagram = new.instagram) THEN
+    RAISE EXCEPTION USING MESSAGE = format('Instagram %s already exists', new.instagram);
+  ELSIF EXISTS(SELECT 1 FROM seeker_contacts WHERE phone_number = new.phone_number) THEN
+    RAISE EXCEPTION USING MESSAGE = format('Phone number %s already exists', new.phone_number);
+  END IF;
+
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER seeker_contacts_row_biu_trigger BEFORE INSERT OR UPDATE ON seeker_contacts FOR EACH ROW EXECUTE PROCEDURE seeker_contacts_trigger_row_biu();
+
 
 CREATE TABLE spots (
   id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
