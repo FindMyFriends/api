@@ -19,8 +19,14 @@ final class TestApplicationRoutes implements Routing\Routes {
 	public function matches(): array {
 		return (new ApplicationRoutes(
 			new Uri\FakeUri(),
-			new class extends Storage\MetaPDO {
-				public function __construct() {
+			new class implements Storage\Connection {
+				public function prepare(string $statement): \PDOStatement {
+				}
+
+				public function exec(string $statement): void {
+				}
+
+				public function schema(): Storage\Schema {
 				}
 			},
 			new Misc\FakeRedis(),

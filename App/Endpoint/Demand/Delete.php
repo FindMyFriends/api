@@ -11,14 +11,14 @@ use Klapuch\Application;
 use Klapuch\Storage;
 
 final class Delete implements Application\View {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
-	public function __construct(Storage\MetaPDO $database, Access\Seeker $seeker) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Access\Seeker $seeker) {
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -31,7 +31,7 @@ final class Delete implements Application\View {
 				new Interaction\ExistingDemand(
 					new Interaction\FakeDemand(),
 					$parameters['id'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			),
@@ -40,11 +40,11 @@ final class Delete implements Application\View {
 					new Interaction\FakeDemand(),
 					$parameters['id'],
 					$this->seeker,
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Interaction\StoredDemand($parameters['id'], $this->database)
+			new Interaction\StoredDemand($parameters['id'], $this->connection)
 		))->retract();
 		return new Response\EmptyResponse();
 	}

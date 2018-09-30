@@ -25,8 +25,8 @@ $configuration = (new Configuration\ApplicationConfiguration())->read();
 		),
 		new FindMyFriends\Log\ElasticsearchLogs(new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts']))
 	),
-	new Storage\MetaPDO(
-		new Storage\SideCachedPDO(
+	new Storage\CachedConnection(
+		new Storage\PDOConnection(
 			new Storage\SafePDO(
 				$configuration['DATABASE']['dsn'],
 				$configuration['DATABASE']['user'],

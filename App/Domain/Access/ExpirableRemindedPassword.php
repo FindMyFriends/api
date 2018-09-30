@@ -13,19 +13,19 @@ final class ExpirableRemindedPassword implements Password {
 	/** @var string */
 	private $reminder;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Password */
 	private $origin;
 
 	public function __construct(
 		string $reminder,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Password $origin
 	) {
 		$this->reminder = $reminder;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->origin = $origin;
 	}
 
@@ -41,7 +41,7 @@ final class ExpirableRemindedPassword implements Password {
 
 	private function expired(string $reminder): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?
@@ -57,7 +57,7 @@ final class ExpirableRemindedPassword implements Password {
 
 	private function expiration(string $reminder): string {
 		return (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			"SELECT EXTRACT(MINUTE FROM expire_at - NOW()) || ' minutes'
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?",

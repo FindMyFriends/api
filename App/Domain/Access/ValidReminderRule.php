@@ -7,11 +7,11 @@ use Klapuch\Storage;
 use Klapuch\Validation;
 
 final class ValidReminderRule implements Validation\Rule {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	/**
@@ -29,7 +29,7 @@ final class ValidReminderRule implements Validation\Rule {
 	 */
 	public function satisfied($subject): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?

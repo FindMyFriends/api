@@ -9,11 +9,11 @@ use Klapuch\Storage;
  * Works just with secure forgotten passwords
  */
 final class SecureForgottenPasswords implements ForgottenPasswords {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	/**
@@ -25,7 +25,7 @@ final class SecureForgottenPasswords implements ForgottenPasswords {
 		if (!$this->exists($email))
 			throw new \UnexpectedValueException('The email does not exist');
 		$reminder = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			"INSERT INTO forgotten_passwords (seeker_id, reminder, reminded_at, expire_at) VALUES
 			(?, ?, NOW(), NOW() + INTERVAL '31 MINUTE')
 			RETURNING reminder",
@@ -33,7 +33,7 @@ final class SecureForgottenPasswords implements ForgottenPasswords {
 		))->field();
 		return new ExpirableRemindedPassword(
 			$reminder,
-			$this->database,
+			$this->connection,
 			new FakePassword()
 		);
 	}
@@ -49,7 +49,7 @@ final class SecureForgottenPasswords implements ForgottenPasswords {
 	 */
 	private function id(string $email): int {
 		return (int) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT id
 			FROM seekers
 			WHERE email IS NOT DISTINCT FROM ?',

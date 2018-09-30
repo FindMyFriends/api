@@ -11,17 +11,17 @@ final class RefreshMaterializedView implements Scheduling\Job {
 		'prioritized_evolution_fields',
 	];
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function fulfill(): void {
 		foreach (self::VIEWS as $view) {
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				sprintf('REFRESH MATERIALIZED VIEW CONCURRENTLY %s', $view)
 			))->execute();
 		}

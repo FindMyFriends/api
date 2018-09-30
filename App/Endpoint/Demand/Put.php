@@ -25,8 +25,8 @@ final class Put implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
@@ -34,12 +34,12 @@ final class Put implements Application\View {
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -52,7 +52,7 @@ final class Put implements Application\View {
 				new Interaction\ExistingDemand(
 					new Interaction\FakeDemand(),
 					$parameters['id'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			),
@@ -61,11 +61,11 @@ final class Put implements Application\View {
 					new Interaction\FakeDemand(),
 					$parameters['id'],
 					$this->seeker,
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Interaction\StoredDemand($parameters['id'], $this->database)
+			new Interaction\StoredDemand($parameters['id'], $this->connection)
 		))->reconsider(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
@@ -75,7 +75,7 @@ final class Put implements Application\View {
 					(new Request\FriendlyRequest(
 						new Request\ConcurrentlyControlledRequest(
 							$this->request,
-							new Http\PostgresETag($this->database, $this->url)
+							new Http\PostgresETag($this->connection, $this->url)
 						),
 						'You already reconsidered demand with newer data.'
 					))->body()->serialization()

@@ -14,17 +14,17 @@ class DemandSpots implements Place\Spots {
 	/** @var int */
 	private $demand;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $demand, Storage\MetaPDO $database) {
+	public function __construct(int $demand, Storage\Connection $connection) {
 		$this->demand = $demand;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function track(array $spot): void {
 		(new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO collective_demand_spots (demand_id, coordinates, met_at) VALUES
 			(:demand_id, POINT(:latitude, :longitude), ROW(:moment, :timeline_side, :approximation))',
 			['demand_id' => $this->demand] + $spot['coordinates'] + $spot['met_at']
@@ -33,7 +33,7 @@ class DemandSpots implements Place\Spots {
 
 	public function history(): \Iterator {
 		$spots = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new CollectiveDemandSpots\Select())
 				->from(['collective_demand_spots'])
 				->where('demand_id = ?', [$this->demand])
@@ -41,7 +41,7 @@ class DemandSpots implements Place\Spots {
 		foreach ($spots as $spot) {
 			yield new StoredSpot(
 				$spot['id'],
-				new Storage\MemoryPDO($this->database, $spot)
+				new Storage\MemoryConnection($this->connection, $spot)
 			);
 		}
 	}

@@ -17,8 +17,8 @@ final class OwnedDemand implements Demand {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
@@ -27,11 +27,11 @@ final class OwnedDemand implements Demand {
 		Demand $origin,
 		int $id,
 		Access\Seeker $owner,
-		\PDO $database
+		Storage\Connection $connection
 	) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->owner = $owner;
 	}
 
@@ -67,7 +67,7 @@ final class OwnedDemand implements Demand {
 
 	private function owned(int $id): bool {
 		return (bool) (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT is_demand_owned(?::integer, ?::integer)',
 			[$id, $this->owner->id()]
 		))->field();

@@ -21,15 +21,15 @@ final class PatchTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Patch(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/patch.json')
 				)
 			),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
@@ -41,7 +41,7 @@ final class PatchTest extends Tester\TestCase {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Patch(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property note is required');
@@ -55,15 +55,15 @@ final class PatchTest extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/patch.json')
 					)
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Demand does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		Assert::exception(function () use ($seeker, $id) {
 			(new Endpoint\Demand\Patch(
 				new Application\FakeRequest(
@@ -71,7 +71,7 @@ final class PatchTest extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/demand/patch.json')
 					)
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);
 		}, \UnexpectedValueException::class, 'This is not your demand', HTTP_FORBIDDEN);
@@ -81,7 +81,7 @@ final class PatchTest extends Tester\TestCase {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Patch(
 				new Application\FakeRequest(new Output\FakeFormat('{}')),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property note is required');

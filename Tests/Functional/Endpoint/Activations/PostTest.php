@@ -21,12 +21,12 @@ final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		$response = (new Endpoint\Activations\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(json_encode(['code' => $code]))
 			),
-			$this->database
+			$this->connection
 		))->response([]);
 		Assert::null(json_decode($response->body()->serialization()));
 		Assert::same(HTTP_CREATED, $response->status());
@@ -38,15 +38,15 @@ final class PostTest extends Tester\TestCase {
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['code' => '123']))
 				),
-				$this->database
+				$this->connection
 			))->response([]);
 		}, \UnexpectedValueException::class, 'The verification code does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test410OnUsed() {
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		$code = (new TypedQuery(
-			$this->database,
+			$this->connection,
 			'UPDATE verification_codes SET used_at = NOW() RETURNING code'
 		))->field();
 		Assert::exception(function () use ($code) {
@@ -54,7 +54,7 @@ final class PostTest extends Tester\TestCase {
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['code' => $code]))
 				),
-				$this->database
+				$this->connection
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Verification code was already used', HTTP_GONE);
 	}

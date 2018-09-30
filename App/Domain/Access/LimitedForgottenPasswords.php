@@ -15,12 +15,12 @@ final class LimitedForgottenPasswords implements ForgottenPasswords {
 	/** @var \FindMyFriends\Domain\Access\ForgottenPasswords */
 	private $origin;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(ForgottenPasswords $origin, Storage\MetaPDO $database) {
+	public function __construct(ForgottenPasswords $origin, Storage\Connection $connection) {
 		$this->origin = $origin;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function remind(string $email): Password {
@@ -38,7 +38,7 @@ final class LimitedForgottenPasswords implements ForgottenPasswords {
 
 	private function overstepped(string $email): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			"SELECT 1
 			FROM forgotten_passwords
 			WHERE seeker_id = (

@@ -7,8 +7,8 @@ use Klapuch\Storage;
 use Tester\Assert;
 
 final class TableCount implements Assertion {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var string */
 	private $table;
@@ -16,8 +16,8 @@ final class TableCount implements Assertion {
 	/** @var int */
 	private $count;
 
-	public function __construct(\PDO $database, string $table, int $count) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, string $table, int $count) {
+		$this->connection = $connection;
 		$this->table = $table;
 		$this->count = $count;
 	}
@@ -26,7 +26,7 @@ final class TableCount implements Assertion {
 		Assert::same(
 			$this->count,
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				sprintf('SELECT COUNT(*) FROM %s', $this->table)
 			))->field(),
 			sprintf('%s TABLE', strtoupper($this->table))

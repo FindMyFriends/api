@@ -18,7 +18,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testInvalidAsUnknownReminder() {
-		$rule = new Access\ValidReminderRule($this->database);
+		$rule = new Access\ValidReminderRule($this->connection);
 		Assert::exception(static function() use ($rule) {
 			$rule->apply('123');
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
@@ -27,8 +27,8 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 
 	public function testInvalidAsUsedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
-		$rule = new Access\ValidReminderRule($this->database);
+		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
+		$rule = new Access\ValidReminderRule($this->connection);
 		Assert::exception(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
@@ -36,14 +36,14 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 	}
 
 	public function testInvalidAsExpiredReminder() {
-		$this->database->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
+		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'forgotten_password',
 			['used_at' => date('Y-m-d'), 'reminder' => $reminder, 'reminded_at' => '2004-01-01', 'expire_at' => '2005-01-01']
 		))->try();
-		$rule = new Access\ValidReminderRule($this->database);
+		$rule = new Access\ValidReminderRule($this->connection);
 		Assert::exception(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		}, \UnexpectedValueException::class, 'Reminder is no longer valid.');
@@ -53,7 +53,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 	public function testPassingWithValidReminder() {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'forgotten_password',
 			[
 				'used_at' => null,
@@ -61,7 +61,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 				'expire_at' => (new \DateTimeImmutable())->format('Y-m-d H:i'),
 			]
 		))->try();
-		$rule = new Access\ValidReminderRule($this->database);
+		$rule = new Access\ValidReminderRule($this->connection);
 		Assert::noError(static function() use ($rule, $reminder) {
 			$rule->apply($reminder);
 		});

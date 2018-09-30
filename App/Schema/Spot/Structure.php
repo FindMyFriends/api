@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\Spot;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 
 final class Structure {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
@@ -35,7 +36,7 @@ final class Structure {
 						'moment' => ['type' => 'string', 'format' => 'date-time'],
 						'timeline_side' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresConstant('timeline_sides', $this->database))->values(),
+							'enum' => (new Schema\PostgresConstant('timeline_sides', $this->connection))->values(),
 						],
 						'approximation' => ['type' => ['string', 'null']],
 					],

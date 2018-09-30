@@ -16,13 +16,13 @@ final class ExistingChange implements Change {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Change $origin, int $id, \PDO $database) {
+	public function __construct(Change $origin, int $id, Storage\Connection $connection) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class ExistingChange implements Change {
 
 	private function exists(int $id): bool {
 		return (bool) (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1 FROM evolutions WHERE id = ?',
 			[$id]
 		))->field();

@@ -15,17 +15,17 @@ final class StoredSoulmate implements Soulmate {
 	/** @var int */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		$soulmate = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new SuitedSoulmates\Select())
 				->from(['suited_soulmates'])
 				->where('id = ?', [$this->id])
@@ -35,7 +35,7 @@ final class StoredSoulmate implements Soulmate {
 
 	public function clarify(array $clarification): void {
 		(new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('soulmates')))
 				->set($clarification)
 				->where('id = :id', ['id' => $this->id])

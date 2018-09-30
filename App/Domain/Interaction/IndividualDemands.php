@@ -16,17 +16,17 @@ final class IndividualDemands implements Demands {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Access\Seeker $seeker, Storage\MetaPDO $database) {
+	public function __construct(Access\Seeker $seeker, Storage\Connection $connection) {
 		$this->seeker = $seeker;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function all(Dataset\Selection $selection): \Iterator {
 		$demands = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\IndividualDemands\Select())
 					->from(['collective_demands'])
@@ -37,14 +37,14 @@ final class IndividualDemands implements Demands {
 		foreach ($demands as $demand) {
 			yield new StoredDemand(
 				$demand['id'],
-				new Storage\MemoryPDO($this->database, $demand)
+				new Storage\MemoryConnection($this->connection, $demand)
 			);
 		}
 	}
 
 	public function ask(array $description): int {
 		return (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\IndividualDemands\InsertInto('collective_demands'))->returning(['id'])->sql(),
 			(new Sql\FlatParameters(
 				new Sql\UniqueParameters(['seeker' => $this->seeker->id()] + $description)
@@ -54,7 +54,7 @@ final class IndividualDemands implements Demands {
 
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['demands'])

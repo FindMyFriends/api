@@ -19,22 +19,22 @@ final class SuitedSoulmates implements Soulmates {
 	/** @var \FindMyFriends\Elasticsearch\RelationshipEvolutions */
 	private $elasticsearch;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	public function __construct(
 		int $demand,
 		Elasticsearch\Client $elasticsearch,
-		Storage\MetaPDO $database
+		Storage\Connection $connection
 	) {
 		$this->demand = $demand;
 		$this->elasticsearch = new FindMyFriends\Elasticsearch\RelationshipEvolutions($elasticsearch);
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function seek(): void {
 		$demand = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new Sql\AnsiSelect(
 				[
 					'id',
@@ -85,7 +85,7 @@ final class SuitedSoulmates implements Soulmates {
 		$demands = array_fill(0, count($evolutions), $this->demand);
 		$scores = array_column($response['hits']['hits'], '_score');
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			(new Sql\PgMultiInsertInto(
 				'soulmates',
 				[
@@ -100,7 +100,7 @@ final class SuitedSoulmates implements Soulmates {
 
 	public function matches(Dataset\Selection $selection): \Iterator {
 		$matches = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
 					->from(['suited_soulmates'])
@@ -111,14 +111,14 @@ final class SuitedSoulmates implements Soulmates {
 		foreach ($matches as $match) {
 			yield new StoredSoulmate(
 				$match['id'],
-				new Storage\MemoryPDO($this->database, $match)
+				new Storage\MemoryConnection($this->connection, $match)
 			);
 		}
 	}
 
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['suited_soulmates'])
@@ -129,16 +129,16 @@ final class SuitedSoulmates implements Soulmates {
 	}
 
 	private function query(array $demand): array {
-		$bool = (new class($demand, $this->database) {
+		$bool = (new class($demand, $this->connection) {
 			/** @var mixed[] */
 			private $demand;
 
-			/** @var \PDO */
-			private $database;
+			/** @var \Klapuch\Storage\Connection */
+			private $connection;
 
-			public function __construct(array $demand, \PDO $database) {
+			public function __construct(array $demand, Storage\Connection $connection) {
 				$this->demand = $demand;
-				$this->database = $database;
+				$this->connection = $connection;
 			}
 
 			private function should(array $demand): array {
@@ -226,7 +226,7 @@ final class SuitedSoulmates implements Soulmates {
 					[
 						'term' => [
 							'seeker_id' => (new Storage\NativeQuery(
-								$this->database,
+								$this->connection,
 								'SELECT seeker_id FROM demands WHERE id = ?',
 								[$demand['id']]
 							))->field(),

@@ -17,7 +17,7 @@ final class ColorEnumTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testCustomFormatColors() {
-		$colors = (new Schema\ColorEnum('hair_colors', $this->database))->values();
+		$colors = (new Schema\ColorEnum('hair_colors', $this->connection))->values();
 		Assert::same(current($colors)['id'], key($colors));
 		Assert::true(isset(current($colors)['id']));
 		Assert::true(isset(current($colors)['name']));

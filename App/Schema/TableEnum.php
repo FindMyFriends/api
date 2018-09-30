@@ -9,17 +9,17 @@ final class TableEnum implements Enum {
 	/** @var string */
 	private $table;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $table, \PDO $database) {
+	public function __construct(string $table, Storage\Connection $connection) {
 		$this->table = $table;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function values(): array {
 		$enum = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			sprintf('SELECT id, name FROM %s ORDER BY id', $this->table)
 		))->rows();
 		return array_combine(array_column($enum, 'id'), $enum);

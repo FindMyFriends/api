@@ -10,14 +10,14 @@ use Klapuch\Storage;
  * Secure entrance for entering seekers to the system
  */
 final class SecureEntrance implements Entrance {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
-	public function __construct(Storage\MetaPDO $database, Encryption\Cipher $cipher) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Encryption\Cipher $cipher) {
+		$this->connection = $connection;
 		$this->cipher = $cipher;
 	}
 
@@ -29,7 +29,7 @@ final class SecureEntrance implements Entrance {
 	public function enter(array $credentials): Seeker {
 		['email' => $plainEmail, 'password' => $plainPassword] = array_map('strval', $credentials);
 		$seeker = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT *
 			FROM seekers  
 			WHERE email IS NOT DISTINCT FROM ?',
@@ -50,7 +50,7 @@ final class SecureEntrance implements Entrance {
 
 	private function rehash(string $password, int $id): void {
 		(new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'UPDATE seekers
 			SET password = ?
 			WHERE id IS NOT DISTINCT FROM ?',

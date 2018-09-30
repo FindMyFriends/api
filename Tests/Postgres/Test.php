@@ -5,6 +5,7 @@ namespace FindMyFriends\Postgres;
 
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
+use Klapuch\Storage;
 use Tester;
 use Tester\Assert;
 
@@ -17,18 +18,18 @@ final class Test extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testPostgres() {
-		(new class(new \SplFileInfo(__DIR__), $this->database) implements Misc\Assertion {
+		(new class(new \SplFileInfo(__DIR__), $this->connection) implements Misc\Assertion {
 			private const PATTERN = '~\.sql$~i';
 
 			/** @var \SplFileInfo */
 			private $source;
 
-			/** @var \PDO */
-			private $database;
+			/** @var \Klapuch\Storage\Connection */
+			private $connection;
 
-			public function __construct(\SplFileInfo $source, \PDO $database) {
+			public function __construct(\SplFileInfo $source, Storage\Connection $connection) {
 				$this->source = $source;
-				$this->database = $database;
+				$this->connection = $connection;
 			}
 
 			public function assert(): void {
@@ -40,13 +41,13 @@ final class Test extends Tester\TestCase {
 
 			private function test(\SplFileInfo $file): void {
 				foreach ($this->functions($file) as $function) {
-					$this->database->beginTransaction();
+					$this->connection->exec('START TRANSACTION');
 					try {
-						$this->database->exec(sprintf('SELECT %s()', $function));
+						$this->connection->exec(sprintf('SELECT %s()', $function));
 					} catch (\PDOException $e) {
 						Assert::fail((new \FindMyFriends\Postgres\PlestException($e, $file))->getMessage());
 					} finally {
-						$this->database->rollBack();
+						$this->connection->exec('ROLLBACK TRANSACTION');
 					}
 				}
 				Assert::true(true);
@@ -63,7 +64,7 @@ final class Test extends Tester\TestCase {
 
 			private function import(\SplFileInfo $file): void {
 				try {
-					$this->database->exec(file_get_contents($file->getPathname()));
+					$this->connection->exec(file_get_contents($file->getPathname()));
 				} catch (\PDOException $e) {
 					Assert::fail((new \FindMyFriends\Postgres\PlestException($e, $file))->getMessage());
 				}

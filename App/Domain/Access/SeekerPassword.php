@@ -14,25 +14,25 @@ final class SeekerPassword implements Password {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(
 		Seeker $seeker,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Encryption\Cipher $cipher
 	) {
 		$this->seeker = $seeker;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->cipher = $cipher;
 	}
 
 	public function change(string $password): void {
 		(new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'UPDATE seekers
 			SET password = ?
 			WHERE id = ?',

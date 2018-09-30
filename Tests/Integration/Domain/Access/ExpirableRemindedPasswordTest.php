@@ -22,10 +22,10 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 	 * @throws \UnexpectedValueException The reminder expired
 	 */
 	public function testThrowingOnOldReminder() {
-		$this->database->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
+		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'forgotten_password',
 			[
 				'reminder' => $reminder,
@@ -36,7 +36,7 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 		))->try();
 		(new Access\ExpirableRemindedPassword(
 			$reminder,
-			$this->database,
+			$this->connection,
 			new Access\FakePassword()
 		))->change('123456789');
 	}
@@ -44,14 +44,14 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 	public function testChangingPasswordWithFreshReminder() {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'forgotten_password',
 			['reminder' => $reminder, 'used' => false, 'expire_at' => (new \DateTimeImmutable('+10 minutes'))->format('Y-m-d H:i:s')]
 		))->try();
 		Assert::noError(function() use ($reminder) {
 			(new Access\ExpirableRemindedPassword(
 				$reminder,
-				$this->database,
+				$this->connection,
 				new Access\FakePassword()
 			))->change('123456789');
 		});
@@ -59,9 +59,9 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 
 	public function testPrintingWithExpirationTime() {
 		$reminder = str_repeat('x', 141);
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'forgotten_password',
 			['seeker_id' => $seeker, 'reminder' => $reminder, 'expire_at' => (new \DateTimeImmutable('+31 minutes'))->format('Y-m-d H:i:s')]
 		))->try();
@@ -69,7 +69,7 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 			sprintf('|reminder|%s||expiration|30 minutes|', $reminder),
 			(new Access\ExpirableRemindedPassword(
 				$reminder,
-				$this->database,
+				$this->connection,
 				new Access\FakePassword(new Output\FakeFormat('|abc||def|'))
 			))->print(new Output\FakeFormat(''))->serialization()
 		);

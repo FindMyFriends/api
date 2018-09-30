@@ -23,7 +23,7 @@ final class ExistingChangeTest extends Tester\TestCase {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Evolution change does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -31,7 +31,7 @@ final class ExistingChangeTest extends Tester\TestCase {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			))->affect([]);
 		}, \UnexpectedValueException::class, 'Evolution change does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -39,19 +39,19 @@ final class ExistingChangeTest extends Tester\TestCase {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			))->revert();
 		}, \UnexpectedValueException::class, 'Evolution change does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithExisting() {
-		(new Misc\SampleEvolution($this->database))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
 		Assert::noError(function() {
 			$evolution = new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			);
 			$evolution->print(new Output\FakeFormat());
 		});
@@ -59,7 +59,7 @@ final class ExistingChangeTest extends Tester\TestCase {
 			$evolution = new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			);
 			$evolution->affect([]);
 		});
@@ -67,7 +67,7 @@ final class ExistingChangeTest extends Tester\TestCase {
 			$evolution = new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
 				1,
-				$this->database
+				$this->connection
 			);
 			$evolution->revert();
 		});

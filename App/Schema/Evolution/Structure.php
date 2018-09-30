@@ -7,15 +7,15 @@ use FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class Structure {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
-		$description = (new Schema\Description\Structure($this->database))->get();
+		$description = (new Schema\Description\Structure($this->connection))->get();
 		$description['properties']['general']['properties']['age'] = [
 			'additionalProperties' => false,
 			'$ref' => '#/definitions/age',
@@ -35,7 +35,7 @@ final class Structure {
 
 	public function put(): array {
 		$schema = $this->get();
-		$description = (new Schema\Description\Structure($this->database))->put();
+		$description = (new Schema\Description\Structure($this->connection))->put();
 		$description['properties']['general']['properties']['age'] = [
 			'additionalProperties' => false,
 			'$ref' => '#/definitions/age',

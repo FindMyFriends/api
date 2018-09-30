@@ -7,21 +7,21 @@ use FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class Structure {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
-		$description = (new Schema\Description\Structure($this->database))->get();
+		$description = (new Schema\Description\Structure($this->connection))->get();
 		$properties = &$description['properties']['general']['properties'];
 		unset($properties['age']);
 		$properties['birth_year'] = [
 			'type' => 'integer',
-			'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_range_min()'))->field(),
-			'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.birth_year_range_max()'))->field(),
+			'minimum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.birth_year_range_min()'))->field(),
+			'maximum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.birth_year_range_max()'))->field(),
 		];
 		unset($properties['firstname']['type'][array_search('null', $properties['firstname']['type'], true)]);
 		unset($properties['lastname']['type'][array_search('null', $properties['lastname']['type'], true)]);

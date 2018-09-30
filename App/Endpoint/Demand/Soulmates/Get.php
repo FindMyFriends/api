@@ -23,8 +23,8 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
@@ -32,12 +32,12 @@ final class Get implements Application\View {
 	public function __construct(
 		array $hashids,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Elasticsearch\Client $elasticsearch
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->elasticsearch = $elasticsearch;
 	}
 
@@ -49,7 +49,7 @@ final class Get implements Application\View {
 			new Search\SuitedSoulmates(
 				$parameters['demand_id'],
 				$this->elasticsearch,
-				$this->database
+				$this->connection
 			),
 			$this->hashids
 		);

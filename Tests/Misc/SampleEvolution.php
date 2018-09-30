@@ -10,35 +10,35 @@ final class SampleEvolution implements Sample {
 	/** @var mixed[] */
 	private $evolution;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database, array $evolution = []) {
+	public function __construct(Storage\Connection $connection, array $evolution = []) {
 		$this->evolution = $evolution;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function try(): array {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO evolutions (seeker_id, description_id, evolved_at) VALUES (?, ?, ?)
 			RETURNING id',
 			[
-				$this->evolution['seeker_id'] ?? current((new Misc\SamplePostgresData($this->database, 'seeker'))->try()),
+				$this->evolution['seeker_id'] ?? current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try()),
 				current(
 					(new SampleDescription(
-						$this->database,
+						$this->connection,
 						[
-							'general_id' => current((new SamplePostgresData($this->database, 'general', ($this->evolution['general'] ?? []) + ['birth_year' => rand(1991, 1999)]))->try()),
-							'body_id' => current((new SamplePostgresData($this->database, 'body', $this->evolution['body'] ?? []))->try()),
-							'face_id' => current((new SamplePostgresData($this->database, 'face', $this->evolution['face'] ?? []))->try()),
-							'hand_id' => current((new SamplePostgresData($this->database, 'hand', $this->evolution['hand'] ?? []))->try()),
-							'hair_id' => current((new SamplePostgresData($this->database, 'hair', $this->evolution['hand'] ?? []))->try()),
-							'beard_id' => current((new SamplePostgresData($this->database, 'beard', $this->evolution['beard'] ?? []))->try()),
-							'eyebrow_id' => current((new SamplePostgresData($this->database, 'eyebrow', $this->evolution['eyebrow'] ?? []))->try()),
-							'tooth_id' => current((new SamplePostgresData($this->database, 'tooth', $this->evolution['tooth'] ?? []))->try()),
-							'left_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->evolution['left_eye'] ?? []))->try()),
-							'right_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->evolution['right_eye'] ?? []))->try()),
+							'general_id' => current((new SamplePostgresData($this->connection, 'general', ($this->evolution['general'] ?? []) + ['birth_year' => rand(1991, 1999)]))->try()),
+							'body_id' => current((new SamplePostgresData($this->connection, 'body', $this->evolution['body'] ?? []))->try()),
+							'face_id' => current((new SamplePostgresData($this->connection, 'face', $this->evolution['face'] ?? []))->try()),
+							'hand_id' => current((new SamplePostgresData($this->connection, 'hand', $this->evolution['hand'] ?? []))->try()),
+							'hair_id' => current((new SamplePostgresData($this->connection, 'hair', $this->evolution['hand'] ?? []))->try()),
+							'beard_id' => current((new SamplePostgresData($this->connection, 'beard', $this->evolution['beard'] ?? []))->try()),
+							'eyebrow_id' => current((new SamplePostgresData($this->connection, 'eyebrow', $this->evolution['eyebrow'] ?? []))->try()),
+							'tooth_id' => current((new SamplePostgresData($this->connection, 'tooth', $this->evolution['tooth'] ?? []))->try()),
+							'left_eye_id' => current((new SamplePostgresData($this->connection, 'eye', $this->evolution['left_eye'] ?? []))->try()),
+							'right_eye_id' => current((new SamplePostgresData($this->connection, 'eye', $this->evolution['right_eye'] ?? []))->try()),
 						]
 					))->try()
 				),

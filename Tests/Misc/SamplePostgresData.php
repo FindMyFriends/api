@@ -6,8 +6,8 @@ namespace FindMyFriends\Misc;
 use Klapuch\Storage;
 
 final class SamplePostgresData implements Sample {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var string */
 	private $sample;
@@ -15,15 +15,15 @@ final class SamplePostgresData implements Sample {
 	/** @var mixed[] */
 	private $data;
 
-	public function __construct(\PDO $database, string $sample, array $data = []) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, string $sample, array $data = []) {
+		$this->connection = $connection;
 		$this->sample = $sample;
 		$this->data = $data;
 	}
 
 	public function try(): array {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			sprintf('SELECT samples.%s(?) AS id', $this->sample),
 			[json_encode($this->data, JSON_FORCE_OBJECT)]
 		))->row();

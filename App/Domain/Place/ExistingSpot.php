@@ -16,13 +16,13 @@ final class ExistingSpot implements Spot {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Spot $origin, int $id, \PDO $database) {
+	public function __construct(Spot $origin, int $id, Storage\Connection $connection) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class ExistingSpot implements Spot {
 
 	private function exists(int $id): bool {
 		return (bool) (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1 FROM spots WHERE id = ?',
 			[$id]
 		))->field();

@@ -28,8 +28,8 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Hashids\HashidsInterface */
 	private $hashids;
@@ -40,12 +40,12 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -53,7 +53,7 @@ final class Get implements Application\View {
 		$demands = new Interaction\PublicDemands(
 			new Interaction\IndividualDemands(
 				$this->seeker,
-				$this->database
+				$this->connection
 			),
 			$this->hashids
 		);

@@ -19,12 +19,12 @@ final class SecureForgottenPasswordsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRemindingWithFutureExpiration() {
-		(new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		(new Access\SecureForgottenPasswords(
-			$this->database
+			$this->connection
 		))->remind('foo@bar.cz');
 		$row = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT * FROM forgotten_passwords'
 		))->row();
 		Assert::same(1, $row['seeker_id']);
@@ -36,22 +36,23 @@ final class SecureForgottenPasswordsTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnUnknownEmail() {
 		(new Access\SecureForgottenPasswords(
-			$this->database
+			$this->connection
 		))->remind('zzz@zzz.cz');
 	}
 
 	public function testPassingWithCaseInsensitiveEmail() {
-		(new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		Assert::noError(function() {
 			(new Access\SecureForgottenPasswords(
-				$this->database
+				$this->connection
 			))->remind('FOO@bar.cz');
 		});
-		$this->database->exec('TRUNCATE forgotten_passwords; TRUNCATE seekers CASCADE');
-		(new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'bar@FOO.cz']))->try();
+		$this->connection->exec('TRUNCATE forgotten_passwords');
+		$this->connection->exec('TRUNCATE seekers CASCADE');
+		(new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'bar@FOO.cz']))->try();
 		Assert::noError(function() {
 			(new Access\SecureForgottenPasswords(
-				$this->database
+				$this->connection
 			))->remind('bar@foo.cz');
 		});
 	}

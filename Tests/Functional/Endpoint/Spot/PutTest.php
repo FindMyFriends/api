@@ -21,17 +21,17 @@ final class PutTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['spot_id' => $spot, 'demand_id' => $demand]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['spot_id' => $spot, 'demand_id' => $demand]))->try();
 		$response = (new Endpoint\Spot\Put(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/spot/put.json')
 				)
 			),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $spot]);
 		$demand = json_decode($response->body()->serialization(), true);
@@ -43,7 +43,7 @@ final class PutTest extends Tester\TestCase {
 		Assert::exception(function () {
 			(new Endpoint\Spot\Put(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property coordinates is required');
@@ -57,15 +57,15 @@ final class PutTest extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/spot/put.json')
 					)
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Spot does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
 		Assert::exception(function () use ($seeker, $id) {
 			(new Endpoint\Spot\Put(
 				new Application\FakeRequest(
@@ -73,7 +73,7 @@ final class PutTest extends Tester\TestCase {
 						file_get_contents(__DIR__ . '/../../../fixtures/samples/spot/put.json')
 					)
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.', HTTP_FORBIDDEN);
@@ -83,7 +83,7 @@ final class PutTest extends Tester\TestCase {
 		Assert::exception(function () {
 			(new Endpoint\Spot\Put(
 				new Application\FakeRequest(new Output\FakeFormat('{}')),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property coordinates is required');

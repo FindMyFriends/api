@@ -12,17 +12,17 @@ final class StoredDemand implements Demand {
 	/** @var int */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function print(Output\Format $format): Output\Format {
 		$demand = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\IndividualDemands\Select())
 				->from(['collective_demands'])
 				->where('id = ?')
@@ -38,7 +38,7 @@ final class StoredDemand implements Demand {
 
 	public function retract(): void {
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'DELETE FROM demands WHERE id = ?',
 			[$this->id]
 		))->execute();
@@ -46,7 +46,7 @@ final class StoredDemand implements Demand {
 
 	public function reconsider(array $description): void {
 		(new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\IndividualDemands\Set(
 				new Sql\AnsiUpdate('collective_demands'),
 				$description

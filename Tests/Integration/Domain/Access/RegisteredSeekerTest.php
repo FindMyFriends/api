@@ -18,8 +18,8 @@ final class RegisteredSeekerTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testInfoAboutRegisteredSeeker() {
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz', 'role' => 'member']))->try();
-		$seeker = new Access\RegisteredSeeker((string) $id, $this->database);
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz', 'role' => 'member']))->try();
+		$seeker = new Access\RegisteredSeeker((string) $id, $this->connection);
 		Assert::same((string) $id, $seeker->id());
 		Assert::same(
 			['email' => 'foo@bar.cz', 'role' => 'member'],
@@ -28,7 +28,7 @@ final class RegisteredSeekerTest extends Tester\TestCase {
 	}
 
 	public function testThrowingOnNotRegisteredSeeker() {
-		$seeker = new Access\RegisteredSeeker('1', $this->database);
+		$seeker = new Access\RegisteredSeeker('1', $this->connection);
 		Assert::exception(static function() use ($seeker) {
 			$seeker->id();
 		}, \UnexpectedValueException::class, 'The seeker has not been registered yet');

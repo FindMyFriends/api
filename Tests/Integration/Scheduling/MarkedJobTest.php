@@ -18,9 +18,9 @@ final class MarkedJobTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testSubsequentId() {
-		(new Scheduling\MarkedJob(new Scheduling\FakeJob(null, 'FakeJob'), $this->database))->fulfill();
+		(new Scheduling\MarkedJob(new Scheduling\FakeJob(null, 'FakeJob'), $this->connection))->fulfill();
 		$rows = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT *
 			FROM log.cron_jobs
 			ORDER BY marked_at ASC'
@@ -41,14 +41,14 @@ final class MarkedJobTest extends Tester\TestCase {
 					new Scheduling\FakeJob(static function () {
 						throw new \DomainException('Oops');
 					}, 'FakeJob'),
-					$this->database
+					$this->connection
 				))->fulfill();
 			},
 			\DomainException::class,
 			'Oops'
 		);
 		$rows = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT *
 			FROM log.cron_jobs
 			ORDER BY marked_at ASC'

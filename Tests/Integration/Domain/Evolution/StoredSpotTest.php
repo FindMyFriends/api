@@ -17,18 +17,18 @@ final class StoredSpotTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testForgettingBySpot() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change, 'spot_id' => $spot]))->try();
-		(new Misc\TableCount($this->database, 'evolution_spots', 1))->assert();
-		(new Misc\TableCount($this->database, 'spots', 2))->assert();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $change] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change, 'spot_id' => $spot]))->try();
+		(new Misc\TableCount($this->connection, 'evolution_spots', 1))->assert();
+		(new Misc\TableCount($this->connection, 'spots', 2))->assert();
 		(new Evolution\StoredSpot(
 			$spot,
-			$this->database
+			$this->connection
 		))->forget();
-		(new Misc\TableCount($this->database, 'evolution_spots', 0))->assert();
-		(new Misc\TableCount($this->database, 'spots', 2))->assert();
+		(new Misc\TableCount($this->connection, 'evolution_spots', 0))->assert();
+		(new Misc\TableCount($this->connection, 'spots', 2))->assert();
 	}
 }
 

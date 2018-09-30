@@ -16,17 +16,17 @@ final class ExistingVerificationCode implements VerificationCode {
 	/** @var string */
 	private $code;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	public function __construct(
 		VerificationCode $origin,
 		string $code,
-		Storage\MetaPDO $database
+		Storage\Connection $connection
 	) {
 		$this->origin = $origin;
 		$this->code = $code;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -40,7 +40,7 @@ final class ExistingVerificationCode implements VerificationCode {
 
 	private function exists(string $code): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM verification_codes
 			WHERE code IS NOT DISTINCT FROM ?',

@@ -9,17 +9,17 @@ final class SampleDescription implements Sample {
 	/** @var mixed[] */
 	private $description;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database, array $description = []) {
+	public function __construct(Storage\Connection $connection, array $description = []) {
 		$this->description = $description;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function try(): array {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO descriptions (general_id, body_id, face_id, hand_id, hair_id, beard_id, eyebrow_id, tooth_id, left_eye_id, right_eye_id) VALUES 
 			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			RETURNING id',

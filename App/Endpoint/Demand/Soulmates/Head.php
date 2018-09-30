@@ -17,19 +17,19 @@ final class Head implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
 	public function __construct(
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Elasticsearch\Client $elasticsearch
 	) {
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->elasticsearch = $elasticsearch;
 	}
 
@@ -37,7 +37,7 @@ final class Head implements Application\View {
 		$count = (new Search\SuitedSoulmates(
 			$parameters['demand_id'],
 			$this->elasticsearch,
-			$this->database
+			$this->connection
 		))->count(new Dataset\EmptySelection());
 		return new Response\PaginatedResponse(
 			new Response\PlainResponse(

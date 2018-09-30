@@ -18,15 +18,15 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	public function __construct(
 		Application\Request $request,
-		Storage\MetaPDO $database
+		Storage\Connection $connection
 	) {
 		$this->request = $request;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -41,14 +41,14 @@ final class Post implements Application\View {
 				new Access\ExistingVerificationCode(
 					new Access\FakeVerificationCode(),
 					$verification['code'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			),
 			new Access\HarnessedVerificationCode(
 				new Access\ThrowawayVerificationCode(
 					$verification['code'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_GONE)
 			)

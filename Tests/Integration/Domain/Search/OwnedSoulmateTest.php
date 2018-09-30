@@ -24,7 +24,7 @@ final class OwnedSoulmateTest extends Tester\TestCase {
 				new Search\FakeSoulmate(),
 				1,
 				new Access\FakeSeeker('1'),
-				$this->database
+				$this->connection
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -33,7 +33,7 @@ final class OwnedSoulmateTest extends Tester\TestCase {
 				new Search\FakeSoulmate(),
 				1,
 				new Access\FakeSeeker('1'),
-				$this->database
+				$this->connection
 			))->clarify([]);
 		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());

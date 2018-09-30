@@ -19,10 +19,10 @@ final class DemandSpotsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testTrackingForDemandChange() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Interaction\DemandSpots(
 			$demand,
-			$this->database
+			$this->connection
 		))->track(
 			[
 				'coordinates' => [
@@ -36,18 +36,18 @@ final class DemandSpotsTest extends Tester\TestCase {
 				],
 			]
 		);
-		(new Misc\TableCount($this->database, 'spots', 1))->assert();
-		(new Misc\TableCount($this->database, 'demand_spots', 1))->assert();
+		(new Misc\TableCount($this->connection, 'spots', 1))->assert();
+		(new Misc\TableCount($this->connection, 'demand_spots', 1))->assert();
 	}
 
 	public function testDemandsForChange() {
-		['id' => $demand1] = (new Misc\SampleDemand($this->database))->try();
-		['id' => $demand2] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand2]))->try();
+		['id' => $demand1] = (new Misc\SampleDemand($this->connection))->try();
+		['id' => $demand2] = (new Misc\SampleDemand($this->connection))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand1]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand2]))->try();
 		$spots = (new Interaction\DemandSpots(
 			$demand1,
-			$this->database
+			$this->connection
 		))->history();
 		$spot = $spots->current();
 		Assert::contains(sprintf('"demand_id": %d', $demand1), $spot->print(new Output\Json())->serialization());

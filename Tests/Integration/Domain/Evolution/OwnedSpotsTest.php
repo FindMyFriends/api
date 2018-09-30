@@ -25,7 +25,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
-				$this->database
+				$this->connection
 			))->track([]);
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::exception(function () {
@@ -33,21 +33,21 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
-				$this->database
+				$this->connection
 			))->history();
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 	}
 
 	public function testPassingOnOwned() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $change] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
+		['id' => $change] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change]))->try();
 		Assert::noError(function () use ($change, $seeker) {
 			(new Evolution\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,
-				$this->database
+				$this->connection
 			))->track(
 				[
 					'coordinates' => [
@@ -66,7 +66,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$change,
-				$this->database
+				$this->connection
 			))->history();
 		});
 	}

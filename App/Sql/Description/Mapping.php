@@ -47,8 +47,8 @@ final class Mapping implements Sql\Mapping {
 		$this->mapping = new Sql\KeyValueMapping(self::MAP);
 	}
 
-	public function application(array $database): array {
-		return $this->mapping->application($database);
+	public function application(array $connection): array {
+		return $this->mapping->application($connection);
 	}
 
 	public function database(array $application): array {

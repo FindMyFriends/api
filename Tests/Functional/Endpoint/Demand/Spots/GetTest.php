@@ -21,19 +21,19 @@ final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand]))->try();
 		$response = (new Endpoint\Demand\Spots\Get(
 			new Hashids('a'),
 			new Hashids('b'),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $demand]);
 		$spots = json_decode($response->body()->serialization());
 		Assert::count(1, $spots);
 		$spotId = (new TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT spot_id FROM demand_spots WHERE id = ?',
 			[$spot]
 		))->field();
@@ -50,7 +50,7 @@ final class GetTest extends Tester\TestCase {
 			(new Endpoint\Demand\Spots\Get(
 				new Hashids('a'),
 				new Hashids('b'),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Demand does not belong to you.', HTTP_FORBIDDEN);

@@ -19,8 +19,8 @@ final class Get implements Application\View {
 	/** @var \Hashids\HashidsInterface */
 	private $demandHashids;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
@@ -28,12 +28,12 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $spotHashids,
 		HashidsInterface $demandHashids,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->spotHashids = $spotHashids;
 		$this->demandHashids = $demandHashids;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -53,11 +53,11 @@ final class Get implements Application\View {
 									new Interaction\OwnedSpots(
 										new Interaction\DemandSpots(
 											$parameters['id'],
-											$this->database
+											$this->connection
 										),
 										$this->seeker,
 										$parameters['id'],
-										$this->database
+										$this->connection
 									),
 									new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 								),

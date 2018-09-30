@@ -7,8 +7,8 @@ use FindMyFriends\Misc;
 use Klapuch\Configuration;
 
 trait TemplateDatabase {
-	/** @var \Klapuch\Storage\MetaPDO */
-	protected $database;
+	/** @var \Klapuch\Storage\Connection */
+	protected $connection;
 
 	/** @var \FindMyFriends\Misc\Databases */
 	private $databases;
@@ -19,12 +19,12 @@ trait TemplateDatabase {
 			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
 		))->read();
 		$this->databases = new Misc\RandomDatabases($credentials['DATABASE']);
-		$this->database = $this->databases->create();
+		$this->connection = $this->databases->create();
 	}
 
 	protected function tearDown(): void {
 		parent::tearDown();
-		$this->database = null;
+		$this->connection = null;
 		$this->databases->drop();
 	}
 }

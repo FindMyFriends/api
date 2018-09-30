@@ -4,26 +4,27 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\Evolution;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 use Predis;
 
 final class ExplainedTableEnums implements Schema\Enum {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Predis\ClientInterface */
 	private $redis;
 
-	public function __construct(\PDO $database, Predis\ClientInterface $redis) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Predis\ClientInterface $redis) {
+		$this->connection = $connection;
 		$this->redis = $redis;
 	}
 
 	public function values(): array {
 		return (new Schema\Description\ExplainedTableEnums(
-			$this->database,
+			$this->connection,
 			$this->redis
 		))->values() + (new Schema\Spot\ExplainedTableEnums(
-			$this->database,
+			$this->connection,
 			$this->redis
 		))->values();
 	}

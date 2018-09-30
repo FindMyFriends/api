@@ -21,8 +21,8 @@ final class IndividualDemandsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testAskingForFirstDemand() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		$id = (new Interaction\IndividualDemands(new Access\FakeSeeker((string) $seeker), $this->database))->ask(
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		$id = (new Interaction\IndividualDemands(new Access\FakeSeeker((string) $seeker), $this->connection))->ask(
 			[
 				'note' => null,
 				'general' => [
@@ -87,7 +87,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		);
 		Assert::same(1, $id);
 		(new Misc\TableCounts(
-			$this->database,
+			$this->connection,
 			[
 				'seekers' => 1,
 				'descriptions' => 1,
@@ -108,15 +108,15 @@ final class IndividualDemandsTest extends Tester\TestCase {
 	}
 
 	public function testAllForSpecifiedSeeker() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $seeker2] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$demands = (new Interaction\IndividualDemands(
 			new Access\FakeSeeker((string) $seeker),
-			$this->database
+			$this->connection
 		))->all(new Dataset\FakeSelection([]));
 		$demand = $demands->current();
 		Assert::contains(sprintf('"seeker_id": %d', $seeker), $demand->print(new Output\Json())->serialization());
@@ -128,17 +128,17 @@ final class IndividualDemandsTest extends Tester\TestCase {
 	}
 
 	public function testCounting() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $seeker2] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker2]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $seeker2] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker2]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::same(
 			2,
 			(new Interaction\IndividualDemands(
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			))->count(new Dataset\FakeSelection([]))
 		);
 	}

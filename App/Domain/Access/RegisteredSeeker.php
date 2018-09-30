@@ -12,12 +12,12 @@ final class RegisteredSeeker implements Seeker {
 	/** @var string */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $id, Storage\MetaPDO $database) {
+	public function __construct(string $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -26,7 +26,7 @@ final class RegisteredSeeker implements Seeker {
 	 */
 	public function properties(): array {
 		$seeker = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT *
 			FROM seekers
 			WHERE id IS NOT DISTINCT FROM ?',
@@ -49,7 +49,7 @@ final class RegisteredSeeker implements Seeker {
 
 	private function registered(string $id): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM seekers
 			WHERE id IS NOT DISTINCT FROM ?',

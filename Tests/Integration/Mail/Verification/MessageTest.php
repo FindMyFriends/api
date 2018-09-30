@@ -18,15 +18,15 @@ final class MessageTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testValidContent() {
-		(new Misc\SampleSeeker($this->database, ['email' => 'me@email.cz']))->try();
+		(new Misc\SampleSeeker($this->connection, ['email' => 'me@email.cz']))->try();
 		Assert::noError(function () {
 			(new Verification\Message(
 				'me@email.cz',
-				$this->database
+				$this->connection
 			))->content();
 			(new Verification\Message(
 				'me@email.cz',
-				$this->database
+				$this->connection
 			))->headers();
 		});
 	}

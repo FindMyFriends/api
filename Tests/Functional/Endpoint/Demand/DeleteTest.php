@@ -19,11 +19,11 @@ final class DeleteTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleDemand($this->database))->try();
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->connection))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Delete(
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
@@ -34,18 +34,18 @@ final class DeleteTest extends Tester\TestCase {
 	public function test404OnNotExisting() {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Delete(
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Demand does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		Assert::exception(function () use ($seeker, $id) {
 			(new Endpoint\Demand\Delete(
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);
 		}, \UnexpectedValueException::class, 'This is not your demand', HTTP_FORBIDDEN);

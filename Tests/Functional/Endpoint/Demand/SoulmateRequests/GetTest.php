@@ -19,12 +19,12 @@ final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
+		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
 		$requests = json_decode(
 			(new Endpoint\Demand\SoulmateRequests\Get(
 				new Uri\FakeUri('/', 'demands/1/soulmate_request', []),
-				$this->database
+				$this->connection
 			))->response(['demand_id' => $demand, 'page' => 1, 'per_page' => 10, 'sort' => ''])->body()->serialization()
 		);
 		Assert::count(1, $requests);

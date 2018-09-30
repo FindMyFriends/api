@@ -19,19 +19,19 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
 	public function __construct(
 		Application\Request $request,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Encryption\Cipher $cipher
 	) {
 		$this->request = $request;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->cipher = $cipher;
 	}
 
@@ -42,9 +42,9 @@ final class Post implements Application\View {
 		$seeker = (new Access\HarnessedEntrance(
 			new Access\TokenEntrance(
 				new Access\VerifiedEntrance(
-					$this->database,
+					$this->connection,
 					new Access\SecureEntrance(
-						$this->database,
+						$this->connection,
 						$this->cipher
 					)
 				)

@@ -9,17 +9,17 @@ final class ColorEnum implements Enum {
 	/** @var string */
 	private $set;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $set, \PDO $database) {
+	public function __construct(string $set, Storage\Connection $connection) {
 		$this->set = $set;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function values(): array {
 		$colors = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			sprintf(
 				'SELECT color_id AS id, name, hex
 				FROM %1$s

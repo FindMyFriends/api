@@ -20,13 +20,13 @@ final class OwnedDemandTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnForeign() {
-		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		$ex = Assert::exception(function() use ($id) {
 			(new Interaction\OwnedDemand(
 				new Interaction\FakeDemand(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'This is not your demand');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -35,7 +35,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 				new Interaction\FakeDemand(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->retract();
 		}, \UnexpectedValueException::class, 'This is not your demand');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -44,21 +44,21 @@ final class OwnedDemandTest extends Tester\TestCase {
 				new Interaction\FakeDemand(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->reconsider([]);
 		}, \UnexpectedValueException::class, 'This is not your demand');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithOwned() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($id, $seeker) {
 			$demand = new Interaction\OwnedDemand(
 				new Interaction\FakeDemand(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			);
 			$demand->print(new Output\FakeFormat());
 			$demand->retract();

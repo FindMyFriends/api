@@ -15,8 +15,8 @@ use Predis;
 
 $configuration = (new Configuration\ApplicationConfiguration())->read();
 
-$database = new Storage\MetaPDO(
-	new Storage\SideCachedPDO(
+$connection = new Storage\CachedConnection(
+	new Storage\PDOConnection(
 		new Storage\SafePDO(
 			$configuration['DATABASE']['dsn'],
 			$configuration['DATABASE']['user'],
@@ -31,10 +31,10 @@ $elasticsearch = new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts'])
 (new LoggedJob(
 	new SelectedJob(
 		$argv[1],
-		new MarkedJob(new Task\Cron($database), $database),
-		new MarkedJob(new Task\RefreshMaterializedView($database), $database),
-		new MarkedJob(new Task\GenerateJsonSchema($database), $database),
-		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch->create()), $database),
+		new MarkedJob(new Task\Cron($connection), $connection),
+		new MarkedJob(new Task\RefreshMaterializedView($connection), $connection),
+		new MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
+		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch->create()), $connection),
 		new FindMyFriends\Scheduling\Task\CheckChangedConfiguration(
 			new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
 			new SerialJobs(
@@ -52,13 +52,13 @@ $elasticsearch = new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts'])
 				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
 			),
-			$database
+			$connection
 		),
 		new MarkedJob(
 			new FindMyFriends\Scheduling\Task\GenerateNginxConfiguration(
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
 			),
-			$database
+			$connection
 		)
 	),
 	new Log\ChainedLogs(

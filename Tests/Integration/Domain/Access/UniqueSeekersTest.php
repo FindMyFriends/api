@@ -20,7 +20,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 
 	public function testCreatedSeekerWithBaseEvolution() {
 		$seeker = (new Access\UniqueSeekers(
-			$this->database,
+			$this->connection,
 			new Encryption\FakeCipher()
 		))->join([
 			'email' => 'foo@bar.cz',
@@ -40,9 +40,9 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		]);
 		Assert::same('1', $seeker->id());
 		Assert::same(['email' => 'foo@bar.cz', 'role' => 'member'], $seeker->properties());
-		$seekers = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
-		$evolutions = (new Storage\NativeQuery($this->database, 'SELECT * FROM evolutions'))->rows();
-		$general = (new Storage\NativeQuery($this->database, 'SELECT * FROM general'))->rows();
+		$seekers = (new Storage\NativeQuery($this->connection, 'SELECT * FROM seekers'))->rows();
+		$evolutions = (new Storage\NativeQuery($this->connection, 'SELECT * FROM evolutions'))->rows();
+		$general = (new Storage\NativeQuery($this->connection, 'SELECT * FROM general'))->rows();
 		Assert::count(1, $seekers);
 		Assert::count(1, $evolutions);
 		Assert::count(1, $general);
@@ -55,7 +55,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 
 	public function testJoiningMultipleDifferentEmails() {
 		$seekers = new Access\UniqueSeekers(
-			$this->database,
+			$this->connection,
 			new Encryption\FakeCipher()
 		);
 		$seekers->join([
@@ -90,8 +90,8 @@ final class UniqueSeekersTest extends Tester\TestCase {
 				'phone_number' => null,
 			],
 		]);
-		$rows = (new Storage\NativeQuery($this->database, 'SELECT * FROM seekers'))->rows();
-		$evolutions = (new Storage\NativeQuery($this->database, 'SELECT * FROM evolutions'))->rows();
+		$rows = (new Storage\NativeQuery($this->connection, 'SELECT * FROM seekers'))->rows();
+		$evolutions = (new Storage\NativeQuery($this->connection, 'SELECT * FROM evolutions'))->rows();
 		Assert::count(2, $rows);
 		Assert::count(2, $evolutions);
 		Assert::same(1, $rows[0]['id']);
@@ -101,7 +101,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 	public function testThrowingOnDuplicatedEmail() {
 		$register = function() {
 			(new Access\UniqueSeekers(
-				$this->database,
+				$this->connection,
 				new Encryption\FakeCipher()
 			))->join([
 				'email' => 'foo@bar.cz',
@@ -128,7 +128,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		$register = function(string $email) {
 			return function () use ($email) {
 				(new Access\UniqueSeekers(
-					$this->database,
+					$this->connection,
 					new Encryption\FakeCipher()
 				))->join([
 					'email' => $email,

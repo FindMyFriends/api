@@ -12,13 +12,13 @@ final class RepeatedJob implements Job {
 	/** @var string */
 	private $interval;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Job $origin, string $interval, Storage\MetaPDO $database) {
+	public function __construct(Job $origin, string $interval, Storage\Connection $connection) {
 		$this->origin = $origin;
 		$this->interval = $interval;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function fulfill(): void {
@@ -28,7 +28,7 @@ final class RepeatedJob implements Job {
 
 	private function ready(string $interval): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			"SELECT NOT EXISTS (
 				SELECT 1
 				FROM log.cron_jobs

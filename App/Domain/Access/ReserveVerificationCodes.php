@@ -10,11 +10,11 @@ use Klapuch\Storage;
  * With the "lost" is meant that the code was not received or occurred other issue
  */
 final class ReserveVerificationCodes implements VerificationCodes {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	/**
@@ -24,7 +24,7 @@ final class ReserveVerificationCodes implements VerificationCodes {
 	 */
 	public function generate(string $email): VerificationCode {
 		$code = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT code
 			FROM verification_codes
 			WHERE seeker_id = (
@@ -36,7 +36,7 @@ final class ReserveVerificationCodes implements VerificationCodes {
 			[$email]
 		))->field();
 		if (strlen((string) $code) !== 0)
-			return new ThrowawayVerificationCode($code, $this->database);
+			return new ThrowawayVerificationCode($code, $this->connection);
 		throw new \UnexpectedValueException('For the given email, there is no valid verification code');
 	}
 }

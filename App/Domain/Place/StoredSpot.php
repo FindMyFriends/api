@@ -9,18 +9,18 @@ use Klapuch\Sql\AnsiUpdate;
 use Klapuch\Storage;
 
 /**
- * Spot stored in database
+ * Spot stored in connection
  */
 final class StoredSpot implements Spot {
 	/** @var int */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function forget(): void {
@@ -33,7 +33,7 @@ final class StoredSpot implements Spot {
 
 	public function move(array $movement): void {
 		(new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new Sql\Spot\Set(new AnsiUpdate('spots'), $movement))
 				->where('id = :id', ['id' => $this->id])
 		))->execute();

@@ -19,10 +19,10 @@ final class ChangeSpotsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testTrackingForEvolutionChange() {
-		['id' => $change] = (new Misc\SampleEvolution($this->database))->try();
+		['id' => $change] = (new Misc\SampleEvolution($this->connection))->try();
 		(new Evolution\ChangeSpots(
 			$change,
-			$this->database
+			$this->connection
 		))->track(
 			[
 				'coordinates' => [
@@ -36,18 +36,18 @@ final class ChangeSpotsTest extends Tester\TestCase {
 				],
 			]
 		);
-		(new Misc\TableCount($this->database, 'spots', 1))->assert();
-		(new Misc\TableCount($this->database, 'evolution_spots', 1))->assert();
+		(new Misc\TableCount($this->connection, 'spots', 1))->assert();
+		(new Misc\TableCount($this->connection, 'evolution_spots', 1))->assert();
 	}
 
 	public function testEvolutionsForChange() {
-		['id' => $change1] = (new Misc\SampleEvolution($this->database))->try();
-		['id' => $change2] = (new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'evolution_spot', ['evolution_id' => $change2]))->try();
+		['id' => $change1] = (new Misc\SampleEvolution($this->connection))->try();
+		['id' => $change2] = (new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change1]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change2]))->try();
 		$spots = (new Evolution\ChangeSpots(
 			$change1,
-			$this->database
+			$this->connection
 		))->history();
 		$spot = $spots->current();
 		Assert::contains(sprintf('"evolution_id": %d', $change1), $spot->print(new Output\Json())->serialization());

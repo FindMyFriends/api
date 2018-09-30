@@ -19,24 +19,24 @@ final class HeadTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testEmptyResponse() {
-		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
-		['id' => $demand1] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand1]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand1]))->try();
+		$seeker = (string) current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try());
+		['id' => $demand1] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand1]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand1]))->try();
 		$response = (new Endpoint\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'soulmates', []),
-			$this->database,
+			$this->connection,
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand1]);
 		Assert::null(json_decode($response->body()->serialization()));
 	}
 
 	public function testNeededHeaders() {
-		$seeker = (string) current((new Misc\SamplePostgresData($this->database, 'seeker'))->try());
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		$seeker = (string) current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try());
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$headers = (new Endpoint\Demand\Soulmates\Head(
 			new Uri\FakeUri('/', 'soulmates', []),
-			$this->database,
+			$this->connection,
 			$this->elasticsearch
 		))->response(['page' => 1, 'per_page' => 10, 'demand_id' => $demand])->headers();
 		Assert::count(3, $headers);

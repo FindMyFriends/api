@@ -9,12 +9,12 @@ final class MarkedJob implements Job {
 	/** @var \FindMyFriends\Scheduling\Job */
 	private $origin;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Job $origin, Storage\MetaPDO $database) {
+	public function __construct(Job $origin, Storage\Connection $connection) {
 		$this->origin = $origin;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function fulfill(): void {
@@ -30,7 +30,7 @@ final class MarkedJob implements Job {
 
 	private function mark(string $status, ?int $self = null): int {
 		return (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO log.cron_jobs(status, name, self_id) VALUES (?, ?, ?)
 			RETURNING COALESCE(self_id, id)',
 			[$status, $this->name(), $self]

@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace FindMyFriends\Schema\SoulmateRequest;
 
 use FindMyFriends\Schema;
+use Klapuch\Storage;
 
 final class Structure {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
@@ -25,7 +26,7 @@ final class Structure {
 				'refreshable_in' => ['type' => ['integer'], 'minimum' => 0],
 				'status' => [
 					'type' => ['string'],
-					'enum' => (new Schema\PostgresEnum('job_statuses', $this->database))->values(),
+					'enum' => (new Schema\PostgresEnum('job_statuses', $this->connection))->values(),
 				],
 			],
 			'required' => [

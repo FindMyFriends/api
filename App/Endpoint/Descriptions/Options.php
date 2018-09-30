@@ -7,17 +7,18 @@ use FindMyFriends\Response;
 use FindMyFriends\Schema;
 use Klapuch\Application;
 use Klapuch\Output;
+use Klapuch\Storage;
 use Predis;
 
 final class Options implements Application\View {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Predis\ClientInterface */
 	private $redis;
 
-	public function __construct(\PDO $database, Predis\ClientInterface $redis) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Predis\ClientInterface $redis) {
+		$this->connection = $connection;
 		$this->redis = $redis;
 	}
 
@@ -26,7 +27,7 @@ final class Options implements Application\View {
 			new Response\PlainResponse(
 				new Output\Json(
 					(new Schema\Description\ExplainedTableEnums(
-						$this->database,
+						$this->connection,
 						$this->redis
 					))->values()
 				)

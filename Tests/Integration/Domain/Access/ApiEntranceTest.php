@@ -46,9 +46,9 @@ final class ApiEntranceTest extends Tester\TestCase {
 			true
 		);
 		Assert::equal(
-			new Access\RegisteredSeeker('123', $this->database),
+			new Access\RegisteredSeeker('123', $this->connection),
 			(new Access\ApiEntrance(
-				$this->database
+				$this->connection
 			))->enter(['authorization' => sprintf('Bearer 0c3da2dd2900adb00f8f231e4484c1b5')])
 		);
 	}
@@ -83,9 +83,9 @@ final class ApiEntranceTest extends Tester\TestCase {
 			true
 		);
 		Assert::equal(
-			new Access\RegisteredSeeker('123', $this->database),
+			new Access\RegisteredSeeker('123', $this->connection),
 			(new Access\ApiEntrance(
-				$this->database
+				$this->connection
 			))->enter(['Authorization' => sprintf('Bearer 0c3da2dd2900adb00f8f231e4484c1b5')])
 		);
 	}
@@ -93,28 +93,28 @@ final class ApiEntranceTest extends Tester\TestCase {
 	public function testNoAuthorizationHeaderLeadingToBeGuest() {
 		Assert::equal(
 			new Access\Guest(),
-			(new Access\ApiEntrance($this->database))->enter([])
+			(new Access\ApiEntrance($this->connection))->enter([])
 		);
 	}
 
 	public function testMissingBearerPartLeadingToBeGuest() {
 		Assert::equal(
 			new Access\Guest(),
-			(new Access\ApiEntrance($this->database))->enter(['authorization' => 'abc'])
+			(new Access\ApiEntrance($this->connection))->enter(['authorization' => 'abc'])
 		);
 	}
 
 	public function testUnknownTokenLeadingToBeGuest() {
 		Assert::equal(
 			new Access\Guest(),
-			(new Access\ApiEntrance($this->database))->enter(['authorization' => 'Bearer abcdef'])
+			(new Access\ApiEntrance($this->connection))->enter(['authorization' => 'Bearer abcdef'])
 		);
 	}
 
 	public function testExitBecomingGuest() {
 		Assert::equal(
 			new Access\Guest(),
-			(new Access\ApiEntrance($this->database))->exit()
+			(new Access\ApiEntrance($this->connection))->exit()
 		);
 	}
 }

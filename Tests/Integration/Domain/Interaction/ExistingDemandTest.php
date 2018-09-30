@@ -23,7 +23,7 @@ final class ExistingDemandTest extends Tester\TestCase {
 			(new Interaction\ExistingDemand(
 				new Interaction\FakeDemand(),
 				1,
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Demand does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -31,7 +31,7 @@ final class ExistingDemandTest extends Tester\TestCase {
 			(new Interaction\ExistingDemand(
 				new Interaction\FakeDemand(),
 				1,
-				$this->database
+				$this->connection
 			))->retract();
 		}, \UnexpectedValueException::class, 'Demand does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -39,16 +39,16 @@ final class ExistingDemandTest extends Tester\TestCase {
 			(new Interaction\ExistingDemand(
 				new Interaction\FakeDemand(),
 				1,
-				$this->database
+				$this->connection
 			))->reconsider([]);
 		}, \UnexpectedValueException::class, 'Demand does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithExisting() {
-		(new Misc\SampleDemand($this->database))->try();
+		(new Misc\SampleDemand($this->connection))->try();
 		Assert::noError(function() {
-			$demand = new Interaction\ExistingDemand(new Interaction\FakeDemand(), 1, $this->database);
+			$demand = new Interaction\ExistingDemand(new Interaction\FakeDemand(), 1, $this->connection);
 			$demand->print(new Output\FakeFormat());
 			$demand->retract();
 			$demand->reconsider([]);

@@ -24,17 +24,17 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 	use TestCase\Search;
 
 	public function testPersistingMatches() {
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => 2]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 2]))->try();
 		(new Interaction\IndividualDemands(
 			new Access\FakeSeeker('1'),
-			$this->database
+			$this->connection
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		$evolution = function(): void {
 			(new Evolution\IndividualChain(
 				new Access\FakeSeeker('2'),
-				$this->database
+				$this->connection
 			))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		};
 		$evolution();
@@ -46,30 +46,30 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['sex' => 'man']]]);
-		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->database))->seek();
+		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
+		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
 				['demand_id' => $id, 'evolution_id' => 3, 'version' => 1],
 			],
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'SELECT demand_id, evolution_id, version FROM soulmates ORDER BY evolution_id'
 			))->rows()
 		);
 	}
 
 	public function testIgnoringOwnEvolutions() {
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => 1]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 1]))->try();
 		(new Interaction\IndividualDemands(
 			new Access\FakeSeeker('1'),
-			$this->database
+			$this->connection
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		(new Evolution\IndividualChain(
 			new Access\FakeSeeker('1'),
-			$this->database
+			$this->connection
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		$this->elasticsearch->index(
 			[
@@ -79,22 +79,22 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 				'body' => ['id' => 2, 'general' => ['sex' => 'man'], 'seeker_id' => 1],
 			]
 		);
-		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->database))->seek();
-		Assert::same([], (new Storage\NativeQuery($this->database, 'SELECT * FROM soulmates'))->rows());
+		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
+		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
+		Assert::same([], (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates'))->rows());
 	}
 
 	public function testMultiMatchCausingIncrementingVersion() {
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => 2]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 2]))->try();
 		(new Interaction\IndividualDemands(
 			new Access\FakeSeeker('1'),
-			$this->database
+			$this->connection
 		))->ask(json_decode(file_get_contents(__DIR__ . '/samples/demand.json'), true));
 		(new Evolution\IndividualChain(
 			new Access\FakeSeeker('2'),
-			$this->database
+			$this->connection
 		))->extend(json_decode(file_get_contents(__DIR__ . '/samples/evolution.json'), true));
 		static $params = [
 			'refresh' => true,
@@ -102,19 +102,19 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 			'type' => 'evolutions',
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
-		$id = (new Storage\NativeQuery($this->database, 'SELECT id FROM demands'))->field();
-		$soulmates = new Search\SuitedSoulmates($id, $this->elasticsearch, $this->database);
+		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
+		$soulmates = new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection);
 		$soulmates->seek();
 		$soulmates->seek();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			"INSERT INTO soulmate_requests (demand_id, status)
 			SELECT id, 'pending' FROM demands"
 		))->execute();
 		Assert::same(
 			[['demand_id' => $id, 'evolution_id' => 2, 'version' => 2]],
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'SELECT demand_id, evolution_id, version FROM soulmates'
 			))->rows()
 		);
@@ -122,43 +122,43 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 	}
 
 	public function testFromParticularDemand() {
-		['id' => $seekerId] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try();
-		['id' => $otherDemand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seekerId]))->try();
+		['id' => $seekerId] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
+		['id' => $otherDemand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmates (demand_id, evolution_id, score)
 			 VALUES (?, ?, 20)',
-			[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
+			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
 			(?, ?, 30)',
-			[$demand, (new Misc\SampleEvolution($this->database))->try()['id']]
+			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
 			(?, ?, 5)
 			RETURNING demand_id',
-			[$otherDemand, (new Misc\SampleEvolution($this->database))->try()['id']]
+			[$otherDemand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
 		$selfId = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmate_requests (demand_id, status) VALUES
 			(?, ?)
 			RETURNING id',
 			[$demand, 'pending']
 		))->field();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmate_requests (demand_id, status, self_id) VALUES
 			(?, ?, ?)',
 			[$demand, 'processing', $selfId]
 		))->field();
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO soulmate_requests (demand_id, status) VALUES
 			(?, ?)',
 			[$otherDemand, 'pending']
@@ -166,7 +166,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		$soulmates = new Search\SuitedSoulmates(
 			$demand,
 			$this->elasticsearch,
-			$this->database
+			$this->connection
 		);
 		$matches = $soulmates->matches(new Dataset\EmptySelection());
 		Assert::same(2, $soulmates->count(new Dataset\EmptySelection()));

@@ -12,8 +12,8 @@ use Klapuch\Storage;
 use Predis;
 
 final class Options implements Application\View {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Predis\ClientInterface */
 	private $redis;
@@ -22,11 +22,11 @@ final class Options implements Application\View {
 	private $seeker;
 
 	public function __construct(
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Predis\ClientInterface $redis,
 		Access\Seeker $seeker
 	) {
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->redis = $redis;
 		$this->seeker = $seeker;
 	}
@@ -36,11 +36,11 @@ final class Options implements Application\View {
 			new Response\PlainResponse(
 				new Output\Json([
 					'options' => (new Schema\Evolution\ExplainedTableEnums(
-						$this->database,
+						$this->connection,
 						$this->redis
 					))->values(),
 					'columns' => (new Schema\Evolution\PrioritizedColumns(
-						$this->database,
+						$this->connection,
 						$this->seeker
 					))->values(),
 				])

@@ -17,8 +17,8 @@ final class OwnedSoulmate implements Soulmate {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
@@ -27,11 +27,11 @@ final class OwnedSoulmate implements Soulmate {
 		Soulmate $origin,
 		int $id,
 		Access\Seeker $owner,
-		\PDO $database
+		Storage\Connection $connection
 	) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->owner = $owner;
 	}
 
@@ -58,7 +58,7 @@ final class OwnedSoulmate implements Soulmate {
 
 	private function owned(int $id): bool {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT is_soulmate_permitted(:soulmate, :seeker)',
 			['soulmate' => $id, 'seeker' => $this->owner->id()]
 		))->field();

@@ -25,8 +25,8 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
@@ -34,12 +34,12 @@ final class Post implements Application\View {
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -55,11 +55,11 @@ final class Post implements Application\View {
 					new Place\FakeSpots(),
 					$this->seeker,
 					$parameters['id'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Interaction\DemandSpots($parameters['id'], $this->database)
+			new Interaction\DemandSpots($parameters['id'], $this->connection)
 		))->track(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

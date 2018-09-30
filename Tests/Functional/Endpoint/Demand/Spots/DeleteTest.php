@@ -19,12 +19,12 @@ final class DeleteTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand, 'spot_id' => $spot]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand, 'spot_id' => $spot]))->try();
 		$response = (new Endpoint\Demand\Spots\Delete(
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $spot]);
 		Assert::same('', $response->body()->serialization());
@@ -34,7 +34,7 @@ final class DeleteTest extends Tester\TestCase {
 	public function test403ForNotOwned() {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Spots\Delete(
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.', HTTP_FORBIDDEN);

@@ -20,13 +20,13 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testSubsequentId() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		$requests = new Search\SubsequentRequests($demand, $this->database);
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
+		$requests = new Search\SubsequentRequests($demand, $this->connection);
 		$pending = $requests->refresh('pending');
 		$success = $requests->refresh('succeed', $pending);
 		Assert::same($pending, $success);
 		$rows = (new TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT demand_id, self_id FROM soulmate_requests'
 		))->rows();
 		Assert::count(2, $rows);
@@ -41,18 +41,18 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 	}
 
 	public function testAllFromDemand() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		['id' => $soulmateRequestId] = (new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand, 'self_id' => $soulmateRequestId]))->try();
-		$request = new Search\SubsequentRequests($demand, $this->database);
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
+		(new Misc\SampleDemand($this->connection))->try();
+		['id' => $soulmateRequestId] = (new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand, 'self_id' => $soulmateRequestId]))->try();
+		$request = new Search\SubsequentRequests($demand, $this->connection);
 		Assert::same(2, $request->count(new Dataset\EmptySelection()));
 		Assert::same(2, iterator_count($request->all(new Dataset\EmptySelection())));
 	}
 
 	public function testThrowingOnRequestInProgress() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		$request = new Search\SubsequentRequests($demand, $this->database);
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
+		$request = new Search\SubsequentRequests($demand, $this->connection);
 		$request->refresh('processing');
 		Assert::exception(static function () use ($request) {
 			$request->refresh('processing');

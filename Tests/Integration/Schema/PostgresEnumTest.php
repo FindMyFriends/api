@@ -19,7 +19,7 @@ final class PostgresEnumTest extends Tester\TestCase {
 	public function testValuesFromEnum() {
 		Assert::same(
 			['pending', 'processing', 'succeed', 'failed'],
-			(new Schema\PostgresEnum('job_statuses', $this->database))->values()
+			(new Schema\PostgresEnum('job_statuses', $this->connection))->values()
 		);
 	}
 }

@@ -23,7 +23,7 @@ final class ExistingSpotTest extends Tester\TestCase {
 			(new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				1,
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Spot does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -31,7 +31,7 @@ final class ExistingSpotTest extends Tester\TestCase {
 			(new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				1,
-				$this->database
+				$this->connection
 			))->move([]);
 		}, \UnexpectedValueException::class, 'Spot does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -39,19 +39,19 @@ final class ExistingSpotTest extends Tester\TestCase {
 			(new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				1,
-				$this->database
+				$this->connection
 			))->forget();
 		}, \UnexpectedValueException::class, 'Spot does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithExisting() {
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'spot'))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
 		Assert::noError(function() use ($id) {
 			$spot = new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				$id,
-				$this->database
+				$this->connection
 			);
 			$spot->print(new Output\FakeFormat());
 		});
@@ -59,7 +59,7 @@ final class ExistingSpotTest extends Tester\TestCase {
 			$spot = new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				$id,
-				$this->database
+				$this->connection
 			);
 			$spot->move([]);
 		});
@@ -67,7 +67,7 @@ final class ExistingSpotTest extends Tester\TestCase {
 			$spot = new Place\ExistingSpot(
 				new Place\FakeSpot(),
 				$id,
-				$this->database
+				$this->connection
 			);
 			$spot->forget();
 		});

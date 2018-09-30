@@ -18,11 +18,11 @@ final class ReserveVerificationCodesTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRegenerating() {
-		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz']))->try();
+		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz']))->try();
 		Assert::equal(
-			new Access\ThrowawayVerificationCode($code, $this->database),
+			new Access\ThrowawayVerificationCode($code, $this->connection),
 			(new Access\ReserveVerificationCodes(
-				$this->database
+				$this->connection
 			))->generate('foo@bar.cz')
 		);
 	}
@@ -31,9 +31,9 @@ final class ReserveVerificationCodesTest extends Tester\TestCase {
 	 * @throws \UnexpectedValueException For the given email, there is no valid verification code
 	 */
 	public function testThrowingOnRegeneratingForOnceUsedCode() {
-		(new Misc\SampleSeeker($this->database, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
+		(new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		(new Access\ReserveVerificationCodes(
-			$this->database
+			$this->connection
 		))->generate('foo@bar.cz');
 	}
 }

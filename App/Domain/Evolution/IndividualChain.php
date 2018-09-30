@@ -16,17 +16,17 @@ final class IndividualChain implements Chain {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Access\Seeker $seeker, Storage\MetaPDO $database) {
+	public function __construct(Access\Seeker $seeker, Storage\Connection $connection) {
 		$this->seeker = $seeker;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function extend(array $progress): int {
 		return (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\CollectiveEvolutions\InsertInto('collective_evolutions'))->returning(['id'])->sql(),
 			(new Sql\FlatParameters(
 				new Sql\UniqueParameters(['seeker' => $this->seeker->id()] + $progress)
@@ -36,7 +36,7 @@ final class IndividualChain implements Chain {
 
 	public function changes(Dataset\Selection $selection): \Iterator {
 		$evolutions = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\CollectiveEvolutions\Select())
 					->from(['collective_evolutions'])
@@ -47,14 +47,14 @@ final class IndividualChain implements Chain {
 		foreach ($evolutions as $change) {
 			yield new StoredChange(
 				$change['id'],
-				new Storage\MemoryPDO($this->database, $change)
+				new Storage\MemoryConnection($this->connection, $change)
 			);
 		}
 	}
 
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['evolutions'])

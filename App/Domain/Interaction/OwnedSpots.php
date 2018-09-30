@@ -17,8 +17,8 @@ final class OwnedSpots implements Place\Spots {
 	/** @var int */
 	private $demand;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Place\Spots */
 	private $origin;
@@ -27,12 +27,12 @@ final class OwnedSpots implements Place\Spots {
 		Place\Spots $origin,
 		Access\Seeker $owner,
 		int $demand,
-		Storage\MetaPDO $database
+		Storage\Connection $connection
 	) {
 		$this->origin = $origin;
 		$this->owner = $owner;
 		$this->demand = $demand;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class OwnedSpots implements Place\Spots {
 
 	private function owned(int $change, Access\Seeker $owner): bool {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT is_demand_owned(:demand, :seeker)',
 			['demand' => $change, 'seeker' => $owner->id()]
 		))->field();

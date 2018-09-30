@@ -25,8 +25,8 @@ final class ApplicationRoutes implements Routing\Routes {
 	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Predis\ClientInterface */
 	private $redis;
@@ -45,7 +45,7 @@ final class ApplicationRoutes implements Routing\Routes {
 
 	public function __construct(
 		Uri\Uri $uri,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Predis\ClientInterface $redis,
 		LazyElasticsearch $elasticsearch,
 		PhpAmqpLib\Connection\AMQPLazyConnection $rabbitMq,
@@ -53,7 +53,7 @@ final class ApplicationRoutes implements Routing\Routes {
 		array $hashids
 	) {
 		$this->uri = $uri;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->redis = $redis;
 		$this->elasticsearch = $elasticsearch;
 		$this->rabbitMq = $rabbitMq;
@@ -65,7 +65,7 @@ final class ApplicationRoutes implements Routing\Routes {
 		$request = new CachedRequest(new Application\PlainRequest());
 		$seeker = (new Access\HarnessedEntrance(
 			new Access\RateLimitedEntrance(
-				new Access\ApiEntrance($this->database),
+				new Access\ApiEntrance($this->connection),
 				$this->redis
 			),
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
@@ -75,20 +75,20 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Activations\Post(
 						$request,
-						$this->database
+						$this->connection
 					),
 					new Http\ChosenRole($seeker, ['guest'])
 				);
 			},
 			'descriptions [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
-					new Endpoint\Descriptions\Options($this->database, $this->redis),
+					new Endpoint\Descriptions\Options($this->connection, $this->redis),
 					$request
 				);
 			},
 			'demands [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
-					new Endpoint\Demands\Options($this->database, $this->redis),
+					new Endpoint\Demands\Options($this->connection, $this->redis),
 					$request
 				);
 			},
@@ -97,7 +97,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demands\Get(
 						$this->hashids['demand'],
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -108,7 +108,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demand\Get(
 						$this->hashids['demand'],
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -118,7 +118,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\SoulmateRequests\Get(
 						$this->uri,
-						$this->database
+						$this->connection
 					),
 					new Http\ChosenRole($seeker, ['member'])
 				);
@@ -127,7 +127,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\SoulmateRequests\Post(
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->rabbitMq
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -139,7 +139,7 @@ final class ApplicationRoutes implements Routing\Routes {
 						$this->hashids['demand'],
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->rabbitMq,
 						$seeker
 					),
@@ -151,7 +151,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demand\Put(
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -161,7 +161,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Patch(
 						$request,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -170,7 +170,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'demands/{id} [DELETE]' => function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Delete(
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -181,7 +181,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demand\Spots\Get(
 						$this->hashids['spot'],
 						$this->hashids['demand'],
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -192,7 +192,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demand\Spots\Post(
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -201,7 +201,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'demands/{demand_id}/spots/{id} [DELETE]' => function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Spots\Delete(
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -211,7 +211,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new Endpoint\Preflight(
 					new View\AuthenticatedView(
 						new Endpoint\Evolutions\Options(
-							$this->database,
+							$this->connection,
 							$this->redis,
 							$seeker
 						),
@@ -226,7 +226,7 @@ final class ApplicationRoutes implements Routing\Routes {
 						$this->hashids['evolution'],
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->elasticsearch->create(),
 						$seeker
 					),
@@ -238,7 +238,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Evolutions\Get(
 						$this->hashids['evolution'],
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -249,7 +249,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Evolution\Get(
 						$this->hashids['evolution'],
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -260,7 +260,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Evolution\Spots\Get(
 						$this->hashids['spot'],
 						$this->hashids['evolution'],
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -271,7 +271,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Evolution\Spots\Post(
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -280,7 +280,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'evolutions/{evolution_id}/spots/{id} [DELETE]' => function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Evolution\Spots\Delete(
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -289,7 +289,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'evolutions/{id} [DELETE]' => function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Evolution\Delete(
-						$this->database,
+						$this->connection,
 						$this->elasticsearch->create(),
 						$seeker
 					),
@@ -301,7 +301,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Evolution\Put(
 						$request,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->elasticsearch->create(),
 						$seeker
 					),
@@ -312,7 +312,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Soulmate\Patch(
 						$request,
-						$this->database,
+						$this->connection,
 						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -323,7 +323,7 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Demand\Soulmates\Get(
 						$this->hashids,
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->elasticsearch->create()
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -333,7 +333,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new View\AuthenticatedView(
 					new Endpoint\Demand\Soulmates\Head(
 						$this->uri,
-						$this->database,
+						$this->connection,
 						$this->elasticsearch->create()
 					),
 					new Http\ChosenRole($seeker, ['member'])
@@ -341,14 +341,14 @@ final class ApplicationRoutes implements Routing\Routes {
 			},
 			'seekers [OPTIONS]' => function() use ($request): Application\View {
 				return new Endpoint\Preflight(
-					new Endpoint\Seekers\Options($this->database, $this->redis),
+					new Endpoint\Seekers\Options($this->connection, $this->redis),
 					$request
 				);
 			},
 			'seekers [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Seekers\Post(
 					$request,
-					$this->database,
+					$this->connection,
 					$this->rabbitMq,
 					$this->cipher
 				);
@@ -356,21 +356,21 @@ final class ApplicationRoutes implements Routing\Routes {
 			'spots/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Put(
 					$request,
-					$this->database,
+					$this->connection,
 					$seeker
 				);
 			},
 			'spots/{id} [PATCH]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Patch(
 					$request,
-					$this->database,
+					$this->connection,
 					$seeker
 				);
 			},
 			'tokens [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Tokens\Post(
 					$request,
-					$this->database,
+					$this->connection,
 					$this->cipher
 				);
 			},

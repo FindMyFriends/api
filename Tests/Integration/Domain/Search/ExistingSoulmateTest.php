@@ -22,7 +22,7 @@ final class ExistingSoulmateTest extends Tester\TestCase {
 			(new Search\ExistingSoulmate(
 				new Search\FakeSoulmate(),
 				1,
-				$this->database
+				$this->connection
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'Soulmate does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -30,7 +30,7 @@ final class ExistingSoulmateTest extends Tester\TestCase {
 			(new Search\ExistingSoulmate(
 				new Search\FakeSoulmate(),
 				1,
-				$this->database
+				$this->connection
 			))->clarify([]);
 		}, \UnexpectedValueException::class, 'Soulmate does not exist');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());

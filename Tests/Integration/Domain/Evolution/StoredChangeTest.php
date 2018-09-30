@@ -20,13 +20,13 @@ final class StoredChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testAffectingWholeForSpecificId() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution(
-			$this->database,
+			$this->connection,
 			['evolved_at' => new \DateTime('2018-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		$evolution = new Evolution\StoredChange(1, $this->database);
+		(new Misc\SampleEvolution($this->connection))->try();
+		$evolution = new Evolution\StoredChange(1, $this->connection);
 		$evolution->affect(
 			[
 				'evolved_at' => '2018-09-16 00:00:00+00',
@@ -150,14 +150,14 @@ final class StoredChangeTest extends Tester\TestCase {
 	}
 
 	public function testAffectingAllRelatedBirthYears() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution(
-			$this->database,
+			$this->connection,
 			['evolved_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database, ['general' => ['birth_year' => 1990]]))->try();
-		$evolution = new Evolution\StoredChange(1, $this->database);
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection, ['general' => ['birth_year' => 1990]]))->try();
+		$evolution = new Evolution\StoredChange(1, $this->connection);
 		$evolution->affect(
 			[
 				'evolved_at' => '2017-09-16 00:00:00+00',
@@ -224,28 +224,28 @@ final class StoredChangeTest extends Tester\TestCase {
 				['birth_year' => 1998],
 			],
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'SELECT birth_year FROM general'
 			))->rows()
 		);
 	}
 
 	public function testReverting() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Evolution\StoredChange($id, $this->database))->revert();
-		(new Misc\TableCount($this->database, 'evolutions', 1))->assert();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Evolution\StoredChange($id, $this->connection))->revert();
+		(new Misc\TableCount($this->connection, 'evolutions', 1))->assert();
 	}
 
 	/**
 	 * @throws \UnexpectedValueException Base evolution can not be reverted
 	 */
 	public function testThrowingOnRevertingBase() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Evolution\StoredChange($id, $this->database))->revert();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Evolution\StoredChange($id, $this->connection))->revert();
 	}
 }
 

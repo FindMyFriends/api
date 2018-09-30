@@ -9,18 +9,18 @@ final class PostgresEnum implements Enum {
 	/** @var string */
 	private $name;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $name, \PDO $database) {
+	public function __construct(string $name, Storage\Connection $connection) {
 		$this->name = $name;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function values(): array {
 		return array_column(
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				sprintf('SELECT unnest(enum_range(NULL::%s)) AS values ORDER BY 1', $this->name)
 			))->rows(),
 			'values'

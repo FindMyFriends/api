@@ -21,12 +21,12 @@ final class Message implements Mail\Message {
 	/**
 	 * @throws \UnexpectedValueException
 	 */
-	public function __construct(string $receiver, Storage\MetaPDO $database) {
+	public function __construct(string $receiver, Storage\Connection $connection) {
 		$this->origin = new Mail\HtmlMessage(
 			(new Output\XsltTemplate(
 				self::CONTENT,
 				(new Output\ValidXml(
-					(new Access\ReserveVerificationCodes($database))
+					(new Access\ReserveVerificationCodes($connection))
 						->generate($receiver)
 						->print(new Output\Xml([], 'verification')),
 					self::SCHEMA

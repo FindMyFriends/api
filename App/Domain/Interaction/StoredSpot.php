@@ -15,17 +15,17 @@ final class StoredSpot implements Place\Spot {
 	/** @var int */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function forget(): void {
 		(new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'DELETE FROM demand_spots WHERE id = ?',
 			[$this->id]
 		))->execute();
@@ -33,7 +33,7 @@ final class StoredSpot implements Place\Spot {
 
 	public function print(Output\Format $format): Output\Format {
 		$spot = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new CollectiveDemandSpots\Select())
 				->from(['collective_demand_spots'])
 				->where('id = ?', [$this->id])

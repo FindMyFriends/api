@@ -10,14 +10,14 @@ use Klapuch\Storage;
  * Collection of unique seekers
  */
 final class UniqueSeekers implements Seekers {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Klapuch\Encryption\Cipher */
 	private $cipher;
 
-	public function __construct(Storage\MetaPDO $database, Encryption\Cipher $cipher) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Encryption\Cipher $cipher) {
+		$this->connection = $connection;
 		$this->cipher = $cipher;
 	}
 
@@ -26,10 +26,10 @@ final class UniqueSeekers implements Seekers {
 	 * @return \FindMyFriends\Domain\Access\Seeker
 	 */
 	public function join(array $credentials): Seeker {
-		return (new Storage\Transaction($this->database))->start(function () use ($credentials): Seeker {
+		return (new Storage\Transaction($this->connection))->start(function () use ($credentials): Seeker {
 			$seeker = (new Storage\ApplicationQuery(
 				new Storage\TypedQuery(
-					$this->database,
+					$this->connection,
 					'INSERT INTO seekers (email, password) VALUES
 					(?, ?)
 					RETURNING *',
@@ -38,14 +38,14 @@ final class UniqueSeekers implements Seekers {
 			))->row();
 			(new Storage\ApplicationQuery(
 				new Storage\TypedQuery(
-					$this->database,
+					$this->connection,
 					'INSERT INTO seeker_contacts (seeker_id, facebook, instagram, phone_number) VALUES
 					(:seeker, :facebook, :instagram, :phone_number)',
 					['seeker' => $seeker['id']] + $credentials['contact']
 				)
 			))->execute();
 			(new Storage\TypedQuery(
-				$this->database,
+				$this->connection,
 				'SELECT created_base_evolution(
 					:seeker,
 					:sex,

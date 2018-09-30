@@ -19,7 +19,7 @@ final class PostgresConstantTest extends Tester\TestCase {
 	public function testValuesFromEnum() {
 		Assert::same(
 			['man', 'woman'],
-			(new Schema\PostgresConstant('sex', $this->database))->values()
+			(new Schema\PostgresConstant('sex', $this->connection))->values()
 		);
 	}
 }

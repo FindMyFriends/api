@@ -20,13 +20,13 @@ final class OwnedChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnForeign() {
-		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection))->try();
 		$ex = Assert::exception(function() use ($id) {
 			(new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -35,7 +35,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->affect([]);
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
@@ -44,21 +44,21 @@ final class OwnedChangeTest extends Tester\TestCase {
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
-				$this->database
+				$this->connection
 			))->revert();
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingWithOwned() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($seeker, $id) {
 			$evolution = new Evolution\OwnedChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			);
 			$evolution->print(new Output\FakeFormat());
 		});
@@ -67,7 +67,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			);
 			$evolution->affect([]);
 		});
@@ -76,7 +76,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			);
 			$evolution->revert();
 		});

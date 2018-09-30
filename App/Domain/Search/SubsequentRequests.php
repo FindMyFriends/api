@@ -15,18 +15,18 @@ final class SubsequentRequests implements Requests {
 	/** @var int */
 	private $demand;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $demand, Storage\MetaPDO $database) {
+	public function __construct(int $demand, Storage\Connection $connection) {
 		$this->demand = $demand;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function refresh(string $status, ?int $self = null): int {
 		return (new Storage\ApplicationQuery(
 			new Storage\TypedQuery(
-				$this->database,
+				$this->connection,
 				'INSERT INTO soulmate_requests (demand_id, status, self_id)
 				VALUES (?, ?, ?)
 				RETURNING COALESCE(self_id, id)',
@@ -37,7 +37,7 @@ final class SubsequentRequests implements Requests {
 
 	public function all(Dataset\Selection $selection): \Iterator {
 		$requests = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect([
 					'id',
@@ -70,7 +70,7 @@ final class SubsequentRequests implements Requests {
 
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['COUNT(*)']))
 					->from(['soulmate_requests'])

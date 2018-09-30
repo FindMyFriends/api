@@ -18,27 +18,27 @@ final class RefreshablePublisherTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnNotReadyRefresh() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
-		(new Misc\SamplePostgresData($this->database, 'soulmate_request', ['demand_id' => $demand]))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
+		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
 		Assert::exception(function () use ($demand) {
 			(new Search\RefreshablePublisher(
 				new Search\FakePublisher(),
-				$this->database
+				$this->connection
 			))->publish($demand);
 		}, \UnexpectedValueException::class, 'Demand is not refreshable for soulmate yet');
 	}
 
 	public function testPassingOnReadyRefresh() {
-		['id' => $demand] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData(
-			$this->database,
+			$this->connection,
 			'soulmate_request',
 			['demand_id' => $demand, 'searched_at' => '2015-01-01', 'status' => 'succeed']
 		))->try();
 		Assert::noError(function () use ($demand) {
 			(new Search\RefreshablePublisher(
 				new Search\FakePublisher(),
-				$this->database
+				$this->connection
 			))->publish($demand);
 		});
 	}

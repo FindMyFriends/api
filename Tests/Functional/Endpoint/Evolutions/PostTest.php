@@ -23,8 +23,8 @@ final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Evolutions\Post(
 			new Hashids(),
 			new Application\FakeRequest(
@@ -33,7 +33,7 @@ final class PostTest extends Tester\TestCase {
 				)
 			),
 			new FakeUri('https://localhost', 'evolutions', []),
-			$this->database,
+			$this->connection,
 			$this->elasticsearch,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
 		))->response([]);
@@ -49,7 +49,7 @@ final class PostTest extends Tester\TestCase {
 				new Hashids(),
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'evolutions', []),
-				$this->database,
+				$this->connection,
 				$this->elasticsearch,
 				new Access\FakeSeeker('1', ['role' => 'member'])
 			))->response([]);

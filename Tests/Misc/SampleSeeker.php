@@ -10,19 +10,19 @@ final class SampleSeeker implements Sample {
 	/** @var mixed[] */
 	private $samples;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database, array $samples = []) {
+	public function __construct(Storage\Connection $connection, array $samples = []) {
 		$this->samples = $samples;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function try(): array {
-		['id' => $seeker] = (new SamplePostgresData($this->database, 'seeker', $this->samples))->try();
+		['id' => $seeker] = (new SamplePostgresData($this->connection, 'seeker', $this->samples))->try();
 		if (isset($this->samples['verification_code'])) {
 			(new Storage\BuiltQuery(
-				$this->database,
+				$this->connection,
 				(new AnsiUpdate('verification_codes'))
 					->set($this->samples['verification_code'])
 					->where('seeker_id = ?', [$seeker])
@@ -32,7 +32,7 @@ final class SampleSeeker implements Sample {
 		return [
 			'id' => $seeker,
 			'verification_code' => (new Storage\TypedQuery(
-				$this->database,
+				$this->connection,
 				'SELECT * FROM verification_codes WHERE seeker_id = ?',
 				[$seeker]
 			))->row(),

@@ -18,7 +18,7 @@ final class RandomDatabases implements Databases {
 		$this->name = 'test_' . bin2hex(random_bytes(20));
 	}
 
-	public function create(): \PDO {
+	public function create(): Storage\Connection {
 		$this->database('postgres')->exec(
 			sprintf(
 				'CREATE DATABASE %s WITH TEMPLATE %s',
@@ -35,12 +35,14 @@ final class RandomDatabases implements Databases {
 		);
 	}
 
-	private function database(string $name): Storage\MetaPDO {
-		return new Storage\MetaPDO(
-			new Storage\SafePDO(
-				sprintf($this->credentials['dsn'], $name),
-				$this->credentials['user'],
-				$this->credentials['password']
+	private function database(string $name): Storage\Connection {
+		return new Storage\CachedConnection(
+			new Storage\PDOConnection(
+				new Storage\SafePDO(
+					sprintf($this->credentials['dsn'], $name),
+					$this->credentials['user'],
+					$this->credentials['password']
+				)
 			),
 			new class implements Predis\ClientInterface {
 				/** @var mixed|null */

@@ -15,17 +15,17 @@ final class StoredChange implements Change {
 	/** @var int */
 	private $id;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(int $id, Storage\MetaPDO $database) {
+	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function affect(array $changes): void {
 		(new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\CollectiveEvolutions\Set(
 				new Sql\AnsiUpdate('collective_evolutions'),
 				$changes
@@ -35,7 +35,7 @@ final class StoredChange implements Change {
 
 	public function print(Output\Format $format): Output\Format {
 		$evolution = (new Storage\BuiltQuery(
-			$this->database,
+			$this->connection,
 			(new FindMyFriends\Sql\CollectiveEvolutions\Select())
 				->from(['collective_evolutions'])
 				->where('id = ?', [$this->id])
@@ -49,7 +49,7 @@ final class StoredChange implements Change {
 	public function revert(): void {
 		(new Storage\ApplicationQuery(
 			new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'DELETE FROM evolutions WHERE id = ?',
 				[$this->id]
 			)

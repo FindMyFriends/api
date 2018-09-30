@@ -20,22 +20,22 @@ final class PrioritizedColumnsTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testPriorityBySeeker() {
-		['id' => $me] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $foreign] = (new Misc\SampleSeeker($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $me, 'firstname' => 'Dominik']))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $me, 'firstname' => 'FooBar']))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $foreign]))->try();
-		(new Storage\NativeQuery($this->database, 'REFRESH MATERIALIZED VIEW prioritized_evolution_fields'))->execute();
-		$columns = (new Schema\Evolution\PrioritizedColumns($this->database, new Access\FakeSeeker((string) $me)))->values();
+		['id' => $me] = (new Misc\SampleSeeker($this->connection))->try();
+		['id' => $foreign] = (new Misc\SampleSeeker($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'Dominik']))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'FooBar']))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $foreign]))->try();
+		(new Storage\NativeQuery($this->connection, 'REFRESH MATERIALIZED VIEW prioritized_evolution_fields'))->execute();
+		$columns = (new Schema\Evolution\PrioritizedColumns($this->connection, new Access\FakeSeeker((string) $me)))->values();
 		Assert::count(3, $columns);
 		Assert::same(3, current($columns));
 	}
 
 	public function testAddingAnyColumnsForSeekerWithoutRefresh() {
-		['id' => $me] = (new Misc\SampleSeeker($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
-		$columns = (new Schema\Evolution\PrioritizedColumns($this->database, new Access\FakeSeeker((string) $me)))->values();
+		['id' => $me] = (new Misc\SampleSeeker($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
+		$columns = (new Schema\Evolution\PrioritizedColumns($this->connection, new Access\FakeSeeker((string) $me)))->values();
 		Assert::count(3, $columns);
 		Assert::same(1, $columns['general.sex']);
 		Assert::same(2, $columns['general.firstname']);

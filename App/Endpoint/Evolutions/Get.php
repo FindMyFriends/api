@@ -30,8 +30,8 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
@@ -39,12 +39,12 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -52,7 +52,7 @@ final class Get implements Application\View {
 		$evolution = new Evolution\PublicChain(
 			new Evolution\IndividualChain(
 				$this->seeker,
-				$this->database
+				$this->connection
 			),
 			$this->hashids
 		);

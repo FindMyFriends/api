@@ -20,14 +20,14 @@ final class SeekerPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testChangingWithHashing() {
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'seeker', ['password' => 'pass']))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
 		(new Access\SeekerPassword(
 			new Access\FakeSeeker((string) $id),
-			$this->database,
+			$this->connection,
 			new Encryption\FakeCipher()
 		))->change('willBeEncrypted');
 		$seeker = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT * FROM seekers WHERE id = ?',
 			[$id]
 		))->row();
@@ -35,15 +35,15 @@ final class SeekerPasswordTest extends Tester\TestCase {
 	}
 
 	public function testChangingWithoutAffectingOthers() {
-		(new Misc\SamplePostgresData($this->database, 'seeker', ['password' => 'pass']))->try();
-		(new Misc\SamplePostgresData($this->database, 'seeker', ['password' => 'pass']))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
+		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
 		(new Access\SeekerPassword(
 			new Access\FakeSeeker('1'),
-			$this->database,
+			$this->connection,
 			new Encryption\FakeCipher()
 		))->change('willBeEncrypted');
 		$seekers = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT * FROM seekers'
 		))->rows();
 		Assert::count(2, $seekers);

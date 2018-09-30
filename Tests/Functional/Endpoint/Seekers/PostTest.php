@@ -26,7 +26,7 @@ final class PostTest extends Tester\TestCase {
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/seeker/post.json')
 				)
 			),
-			$this->database,
+			$this->connection,
 			$this->rabbitMq,
 			new Encryption\FakeCipher()
 		))->response([]);
@@ -39,7 +39,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::exception(function() {
 			(new Endpoint\Seekers\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
-				$this->database,
+				$this->connection,
 				$this->rabbitMq,
 				new Encryption\FakeCipher()
 			))->response([]);
@@ -53,7 +53,7 @@ final class PostTest extends Tester\TestCase {
 					file_get_contents(__DIR__ . '/../../../fixtures/samples/seeker/post.json')
 				)
 			),
-			$this->database,
+			$this->connection,
 			$this->rabbitMq,
 			new Encryption\FakeCipher()
 		);

@@ -25,7 +25,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
-				$this->database
+				$this->connection
 			))->track([]);
 		}, \UnexpectedValueException::class, 'Demand does not belong to you.');
 		Assert::exception(function () {
@@ -33,21 +33,21 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker('1'),
 				1,
-				$this->database
+				$this->connection
 			))->history();
 		}, \UnexpectedValueException::class, 'Demand does not belong to you.');
 	}
 
 	public function testPassingOnOwned() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand]))->try();
 		Assert::noError(function () use ($demand, $seeker) {
 			(new Interaction\OwnedSpots(
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$demand,
-				$this->database
+				$this->connection
 			))->track(
 				[
 					'coordinates' => [
@@ -66,7 +66,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 				new Place\FakeSpots(),
 				new Access\FakeSeeker((string) $seeker),
 				$demand,
-				$this->database
+				$this->connection
 			))->history();
 		});
 	}

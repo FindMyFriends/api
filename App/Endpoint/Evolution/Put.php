@@ -26,8 +26,8 @@ final class Put implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
@@ -38,13 +38,13 @@ final class Put implements Application\View {
 	public function __construct(
 		Application\Request $request,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Elasticsearch\Client $elasticsearch,
 		Access\Seeker $seeker
 	) {
 		$this->request = $request;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->elasticsearch = $elasticsearch;
 		$this->seeker = $seeker;
 	}
@@ -60,7 +60,7 @@ final class Put implements Application\View {
 					new Evolution\ExistingChange(
 						new Evolution\FakeChange(),
 						$parameters['id'],
-						$this->database
+						$this->connection
 					),
 					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 				),
@@ -69,11 +69,11 @@ final class Put implements Application\View {
 						new Evolution\FakeChange(),
 						$parameters['id'],
 						$this->seeker,
-						$this->database
+						$this->connection
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 				),
-				new Evolution\StoredChange($parameters['id'], $this->database)
+				new Evolution\StoredChange($parameters['id'], $this->connection)
 			),
 			$this->elasticsearch
 		))->affect(
@@ -85,7 +85,7 @@ final class Put implements Application\View {
 					(new Request\FriendlyRequest(
 						new Request\ConcurrentlyControlledRequest(
 							$this->request,
-							new Http\PostgresETag($this->database, $this->url)
+							new Http\PostgresETag($this->connection, $this->url)
 						),
 						'You already affected evolution change with newer data.'
 					))->body()->serialization()

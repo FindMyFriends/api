@@ -15,20 +15,20 @@ final class PrioritizedColumns implements Schema\Columns {
 		'general_lastname' => 3,
 	];
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
-	public function __construct(Storage\MetaPDO $database, Access\Seeker $seeker) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Access\Seeker $seeker) {
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
 	public function values(): array {
 		$columns = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT columns
 			FROM prioritized_evolution_fields
 			WHERE seeker_id = ?',

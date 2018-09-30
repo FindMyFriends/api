@@ -19,19 +19,19 @@ final class Patch implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
 
 	public function __construct(
 		Application\Request $request,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->request = $request;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -44,7 +44,7 @@ final class Patch implements Application\View {
 				new Place\ExistingSpot(
 					new Place\FakeSpot(),
 					$parameters['id'],
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 			),
@@ -53,11 +53,11 @@ final class Patch implements Application\View {
 					new Place\FakeSpot(),
 					$parameters['id'],
 					$this->seeker,
-					$this->database
+					$this->connection
 				),
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
-			new Place\StoredSpot($parameters['id'], $this->database)
+			new Place\StoredSpot($parameters['id'], $this->connection)
 		))->move(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),

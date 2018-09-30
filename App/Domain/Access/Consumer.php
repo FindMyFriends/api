@@ -11,16 +11,16 @@ use Klapuch\Storage;
 use PhpAmqpLib;
 
 final class Consumer extends Task\Consumer {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	public function __construct(
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
 		Log\Logs $logs,
-		Storage\MetaPDO $database
+		Storage\Connection $connection
 	) {
 		parent::__construct($rabbitMq, $logs);
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -34,7 +34,7 @@ final class Consumer extends Task\Consumer {
 		))->send(
 			$body['email'],
 			'Welcome and verification email',
-			new Verification\Message($body['email'], $this->database)
+			new Verification\Message($body['email'], $this->connection)
 		);
 	}
 

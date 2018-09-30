@@ -39,8 +39,8 @@ echo (new class(
 		new FindMyFriends\Routing\NginxMatchedRoutes(
 			new FindMyFriends\Routing\ApplicationRoutes(
 				$uri,
-				new Storage\MetaPDO(
-					new Storage\SideCachedPDO(
+				new Storage\CachedConnection(
+					new Storage\PDOConnection(
 						new Storage\SafePDO(
 							$configuration['DATABASE']['dsn'],
 							$configuration['DATABASE']['user'],
@@ -106,7 +106,7 @@ echo (new class(
 			))->render();
 		} catch (\Throwable $e) {
 			// TODO: Add logging
-			// $this->logs->put($e, new Log\CurrentEnvironment());
+			//          $this->logs->put($e, new Log\CurrentEnvironment());
 			if ($e instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
 					new FindMyFriends\Response\JsonError($e)

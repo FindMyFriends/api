@@ -12,8 +12,8 @@ use Klapuch\Application;
 use Klapuch\Storage;
 
 final class Delete implements Application\View {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
@@ -22,11 +22,11 @@ final class Delete implements Application\View {
 	private $seeker;
 
 	public function __construct(
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Elasticsearch\Client $elasticsearch,
 		Access\Seeker $seeker
 	) {
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->elasticsearch = $elasticsearch;
 		$this->seeker = $seeker;
 	}
@@ -42,7 +42,7 @@ final class Delete implements Application\View {
 					new Evolution\ExistingChange(
 						new Evolution\FakeChange(),
 						$parameters['id'],
-						$this->database
+						$this->connection
 					),
 					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 				),
@@ -51,11 +51,11 @@ final class Delete implements Application\View {
 						new Evolution\FakeChange(),
 						$parameters['id'],
 						$this->seeker,
-						$this->database
+						$this->connection
 					),
 					new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 				),
-				new Evolution\StoredChange($parameters['id'], $this->database)
+				new Evolution\StoredChange($parameters['id'], $this->connection)
 			),
 			$this->elasticsearch
 		))->revert();

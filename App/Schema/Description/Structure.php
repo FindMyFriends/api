@@ -7,11 +7,11 @@ use FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class Structure {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
@@ -20,8 +20,8 @@ final class Structure {
 			'definitions' => [
 				'rating' => [
 					'type' => ['integer', 'null'],
-					'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.rating_min()'))->field(),
-					'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.rating_max()'))->field(),
+					'minimum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.rating_min()'))->field(),
+					'maximum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.rating_max()'))->field(),
 				],
 				'eye' => [
 					'additionalProperties' => false,
@@ -34,8 +34,8 @@ final class Structure {
 				],
 				'age' => [
 					'type' => ['integer'],
-					'minimum' => (new Storage\TypedQuery($this->database, 'SELECT constant.age_min()'))->field(),
-					'maximum' => (new Storage\TypedQuery($this->database, 'SELECT constant.age_max()'))->field(),
+					'minimum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.age_min()'))->field(),
+					'maximum' => (new Storage\TypedQuery($this->connection, 'SELECT constant.age_max()'))->field(),
 				],
 			],
 			'additionalProperties' => false,
@@ -46,7 +46,7 @@ final class Structure {
 						'build_id' => ['type' => ['integer', 'null']],
 						'breast_size' => [
 							'type' => ['string', 'null'],
-							'enum' => array_merge([null], (new Schema\PostgresConstant('breast_sizes', $this->database))->values()),
+							'enum' => array_merge([null], (new Schema\PostgresConstant('breast_sizes', $this->connection))->values()),
 						],
 					],
 					'required' => ['build_id'],
@@ -132,7 +132,7 @@ final class Structure {
 						'firstname' => ['type' => ['string', 'null']],
 						'sex' => [
 							'type' => 'string',
-							'enum' => (new Schema\PostgresConstant('sex', $this->database))->values(),
+							'enum' => (new Schema\PostgresConstant('sex', $this->connection))->values(),
 						],
 						'lastname' => ['type' => ['string', 'null']],
 						'ethnic_group_id' => ['type' => 'integer'],

@@ -10,36 +10,36 @@ final class SampleDemand implements Sample {
 	/** @var mixed[] */
 	private $demand;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(\PDO $database, array $demand = []) {
+	public function __construct(Storage\Connection $connection, array $demand = []) {
 		$this->demand = $demand;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function try(): array {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO demands (seeker_id, description_id, created_at) VALUES
 			(?, ?, ?)
 			RETURNING id',
 			[
-				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new Misc\SamplePostgresData($this->database, 'seeker'))->try()),
+				$this->demand['seeker'] ?? $this->demand['seeker_id'] ?? current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try()),
 				current(
 					(new SampleDescription(
-						$this->database,
+						$this->connection,
 						[
-							'general_id' => current((new SamplePostgresData($this->database, 'general', ($this->demand['general'] ?? []) + ['birth_year_range' => '[1996,1999]']))->try()),
-							'body_id' => current((new SamplePostgresData($this->database, 'body', $this->demand['body'] ?? []))->try()),
-							'face_id' => current((new SamplePostgresData($this->database, 'face', $this->demand['face'] ?? []))->try()),
-							'hand_id' => current((new SamplePostgresData($this->database, 'hand', $this->demand['hand'] ?? []))->try()),
-							'hair_id' => current((new SamplePostgresData($this->database, 'hair', $this->demand['hair'] ?? []))->try()),
-							'beard_id' => current((new SamplePostgresData($this->database, 'beard', $this->demand['beard'] ?? []))->try()),
-							'eyebrow_id' => current((new SamplePostgresData($this->database, 'eyebrow', $this->demand['eyebrow'] ?? []))->try()),
-							'tooth_id' => current((new SamplePostgresData($this->database, 'tooth', $this->demand['tooth'] ?? []))->try()),
-							'left_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->demand['left_eye'] ?? []))->try()),
-							'right_eye_id' => current((new SamplePostgresData($this->database, 'eye', $this->demand['right_eye'] ?? []))->try()),
+							'general_id' => current((new SamplePostgresData($this->connection, 'general', ($this->demand['general'] ?? []) + ['birth_year_range' => '[1996,1999]']))->try()),
+							'body_id' => current((new SamplePostgresData($this->connection, 'body', $this->demand['body'] ?? []))->try()),
+							'face_id' => current((new SamplePostgresData($this->connection, 'face', $this->demand['face'] ?? []))->try()),
+							'hand_id' => current((new SamplePostgresData($this->connection, 'hand', $this->demand['hand'] ?? []))->try()),
+							'hair_id' => current((new SamplePostgresData($this->connection, 'hair', $this->demand['hair'] ?? []))->try()),
+							'beard_id' => current((new SamplePostgresData($this->connection, 'beard', $this->demand['beard'] ?? []))->try()),
+							'eyebrow_id' => current((new SamplePostgresData($this->connection, 'eyebrow', $this->demand['eyebrow'] ?? []))->try()),
+							'tooth_id' => current((new SamplePostgresData($this->connection, 'tooth', $this->demand['tooth'] ?? []))->try()),
+							'left_eye_id' => current((new SamplePostgresData($this->connection, 'eye', $this->demand['left_eye'] ?? []))->try()),
+							'right_eye_id' => current((new SamplePostgresData($this->connection, 'eye', $this->demand['right_eye'] ?? []))->try()),
 						]
 					))->try()
 				),

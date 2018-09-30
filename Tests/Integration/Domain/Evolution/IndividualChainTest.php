@@ -22,16 +22,16 @@ final class IndividualChainTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testCopyingBirthYearFromAncestor() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1999]]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
 		$changeId = (new Evolution\IndividualChain(
 			new Access\FakeSeeker((string) $seeker),
-			$this->database
+			$this->connection
 		))->extend(
 			[
 				'evolved_at' => '2015-01-01',
@@ -94,14 +94,14 @@ final class IndividualChainTest extends Tester\TestCase {
 		Assert::same(
 			16,
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'SELECT general_age FROM collective_evolutions WHERE id = ?',
 				[$changeId]
 			))->field()
 		);
 		Assert::same(7, $changeId);
 		(new Misc\TableCounts(
-			$this->database,
+			$this->connection,
 			[
 				'evolutions' => 7,
 				'descriptions' => 7,
@@ -122,33 +122,33 @@ final class IndividualChainTest extends Tester\TestCase {
 	}
 
 	public function testCountingBySeeker() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
 		Assert::same(
 			2,
 			(new Evolution\IndividualChain(
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			))->count(new Dataset\EmptySelection())
 		);
 	}
 
 	public function testChainBySeeker() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'man', 'birth_year_range' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['sex' => 'woman', 'birth_year_range' => '[1999,2000)']]))->try();
-		(new Misc\SampleEvolution($this->database))->try();
-		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['sex' => 'man', 'birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['sex' => 'woman', 'birth_year_range' => '[1999,2000)']]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
 		$chain = (new Evolution\IndividualChain(
 			new Access\FakeSeeker((string) $seeker),
-			$this->database
+			$this->connection
 		))->changes(new Dataset\EmptySelection());
 		Assert::contains('"sex": "man"', $chain->current()->print(new Output\Json())->serialization());
 		$chain->next();

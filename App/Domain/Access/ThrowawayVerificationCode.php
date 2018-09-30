@@ -13,12 +13,12 @@ final class ThrowawayVerificationCode implements VerificationCode {
 	/** @var string */
 	private $code;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $code, Storage\MetaPDO $database) {
+	public function __construct(string $code, Storage\Connection $connection) {
 		$this->code = $code;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -28,7 +28,7 @@ final class ThrowawayVerificationCode implements VerificationCode {
 		if ($this->used())
 			throw new \UnexpectedValueException('Verification code was already used');
 		(new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'UPDATE verification_codes
 			SET used_at = NOW()
 			WHERE code IS NOT DISTINCT FROM ?',
@@ -38,7 +38,7 @@ final class ThrowawayVerificationCode implements VerificationCode {
 
 	private function used(): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM verification_codes
 			WHERE code IS NOT DISTINCT FROM ?

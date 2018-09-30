@@ -9,16 +9,16 @@ use Klapuch\Storage;
  * Entrance to API with valid token
  */
 final class ApiEntrance implements Entrance {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function enter(array $headers): Seeker {
 		if ($this->authorized(array_change_key_case($headers, CASE_LOWER)))
-			return new RegisteredSeeker($_SESSION[self::IDENTIFIER], $this->database);
+			return new RegisteredSeeker($_SESSION[self::IDENTIFIER], $this->connection);
 		return new Guest();
 	}
 

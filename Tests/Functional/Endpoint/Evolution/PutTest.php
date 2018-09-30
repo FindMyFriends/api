@@ -22,9 +22,9 @@ final class PutTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolution($this->database))->try();
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		$this->elasticsearch->index(['index' => 'relationships', 'type' => 'evolutions', 'id' => $id, 'body' => []]);
 		$response = (new Endpoint\Evolution\Put(
 			new Application\FakeRequest(
@@ -33,7 +33,7 @@ final class PutTest extends Tester\TestCase {
 				)
 			),
 			new Uri\FakeUri('/', 'evolutions/1', []),
-			$this->database,
+			$this->connection,
 			$this->elasticsearch,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
@@ -47,7 +47,7 @@ final class PutTest extends Tester\TestCase {
 			(new Endpoint\Evolution\Put(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'evolutions/1', []),
-				$this->database,
+				$this->connection,
 				$this->elasticsearch,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
@@ -63,7 +63,7 @@ final class PutTest extends Tester\TestCase {
 					)
 				),
 				new Uri\FakeUri('/', 'evolutions/1', []),
-				$this->database,
+				$this->connection,
 				$this->elasticsearch,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
@@ -71,8 +71,8 @@ final class PutTest extends Tester\TestCase {
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleEvolution($this->connection))->try();
 		Assert::exception(function () use ($seeker, $id) {
 			(new Endpoint\Evolution\Put(
 				new Application\FakeRequest(
@@ -81,7 +81,7 @@ final class PutTest extends Tester\TestCase {
 					)
 				),
 				new Uri\FakeUri('/', 'evolutions/1', []),
-				$this->database,
+				$this->connection,
 				$this->elasticsearch,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);

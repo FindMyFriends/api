@@ -22,8 +22,8 @@ final class PutTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Put(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
@@ -31,7 +31,7 @@ final class PutTest extends Tester\TestCase {
 				)
 			),
 			new Uri\FakeUri('/', 'demands/1', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$demand = json_decode($response->body()->serialization(), true);
@@ -44,7 +44,7 @@ final class PutTest extends Tester\TestCase {
 			(new Endpoint\Demand\Put(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'demands/1', []),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property note is required');
@@ -59,15 +59,15 @@ final class PutTest extends Tester\TestCase {
 					)
 				),
 				new Uri\FakeUri('/', 'demands/1', []),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker()
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Demand does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $id] = (new Misc\SampleDemand($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		Assert::exception(function() use ($id, $seeker) {
 			(new Endpoint\Demand\Put(
 				new Application\FakeRequest(
@@ -76,7 +76,7 @@ final class PutTest extends Tester\TestCase {
 					)
 				),
 				new Uri\FakeUri('/', '/demands/1', []),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker((string) $seeker)
 			))->response(['id' => $id]);
 		}, \UnexpectedValueException::class, 'This is not your demand', HTTP_FORBIDDEN);

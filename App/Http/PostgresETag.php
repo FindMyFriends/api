@@ -7,23 +7,23 @@ use Klapuch\Storage;
 use Klapuch\Uri;
 
 /**
- * ETag stored in postgres database
+ * ETag stored in postgres connection
  */
 final class PostgresETag implements ETag {
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
-	public function __construct(\PDO $database, Uri\Uri $uri) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Uri\Uri $uri) {
+		$this->connection = $connection;
 		$this->uri = $uri;
 	}
 
 	public function exists(): bool {
 		return (bool) (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1 FROM etags WHERE entity = LOWER(?)',
 			[$this->uri->path()]
 		))->field();
@@ -31,7 +31,7 @@ final class PostgresETag implements ETag {
 
 	public function get(): string {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT tag FROM etags WHERE entity = LOWER(?)',
 			[$this->uri->path()]
 		))->field();
@@ -39,13 +39,13 @@ final class PostgresETag implements ETag {
 
 	public function set(object $entity): ETag {
 		(new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO etags (entity, tag, created_at) VALUES (?, ?, NOW())
 			ON CONFLICT (LOWER(entity)) DO UPDATE
 			SET tag = EXCLUDED.tag, created_at = EXCLUDED.created_at',
 			[$this->uri->path(), $this->tag($entity)]
 		))->execute();
-		return new self($this->database, $this->uri);
+		return new self($this->connection, $this->uri);
 	}
 
 	private function tag(object $entity): string {

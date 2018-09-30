@@ -13,18 +13,18 @@ final class Consumer extends Task\Consumer {
 	/** @var \Elasticsearch\Client */
 	private $elasticsearch;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	public function __construct(
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
 		Log\Logs $logs,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Elasticsearch\Client $elasticsearch
 	) {
 		parent::__construct($rabbitMq, $logs);
 		$this->elasticsearch = $elasticsearch;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/** @internal */
@@ -32,10 +32,10 @@ final class Consumer extends Task\Consumer {
 		(new RequestedSoulmates(
 			(new SubsequentRequests(
 				$body['id'],
-				$this->database
+				$this->connection
 			))->refresh('pending'),
-			new SubsequentRequests($body['id'], $this->database),
-			new SuitedSoulmates($body['id'], $this->elasticsearch, $this->database)
+			new SubsequentRequests($body['id'], $this->connection),
+			new SuitedSoulmates($body['id'], $this->elasticsearch, $this->connection)
 		))->seek();
 	}
 

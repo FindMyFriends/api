@@ -19,12 +19,12 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Uri\Uri $url, Storage\MetaPDO $database) {
+	public function __construct(Uri\Uri $url, Storage\Connection $connection) {
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -34,7 +34,7 @@ final class Get implements Application\View {
 		$requests = new Search\PublicRequests(
 			new Search\SubsequentRequests(
 				$parameters['demand_id'],
-				$this->database
+				$this->connection
 			)
 		);
 		return new Response\PartialResponse(

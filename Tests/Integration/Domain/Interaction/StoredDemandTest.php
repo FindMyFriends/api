@@ -20,27 +20,27 @@ final class StoredDemandTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testRemovingSingleDemand() {
-		(new Misc\SampleDemand($this->database))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		(new Interaction\StoredDemand(1, $this->database))->retract();
-		(new Misc\TableCount($this->database, 'demands', 1))->assert();
+		(new Misc\SampleDemand($this->connection))->try();
+		(new Misc\SampleDemand($this->connection))->try();
+		(new Interaction\StoredDemand(1, $this->connection))->retract();
+		(new Misc\TableCount($this->connection, 'demands', 1))->assert();
 		Assert::same(
 			2,
 			(new Storage\NativeQuery(
-				$this->database,
+				$this->connection,
 				'SELECT id FROM demands'
 			))->field()
 		);
 	}
 
 	public function testReconsideringAsWholeForSpecificId() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand(
-			$this->database,
+			$this->connection,
 			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		$demand = new Interaction\StoredDemand(1, $this->database);
+		(new Misc\SampleDemand($this->connection))->try();
+		$demand = new Interaction\StoredDemand(1, $this->connection);
 		$demand->reconsider(
 			[
 				'note' => null,
@@ -168,13 +168,13 @@ final class StoredDemandTest extends Tester\TestCase {
 	}
 
 	public function testReconsideringOnlyPart() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand(
-			$this->database,
+			$this->connection,
 			['created_at' => new \DateTime('2017-09-16 00:00:00+00'), 'seeker_id' => $seeker]
 		))->try();
-		(new Misc\SampleDemand($this->database))->try();
-		$demand = new Interaction\StoredDemand(1, $this->database);
+		(new Misc\SampleDemand($this->connection))->try();
+		$demand = new Interaction\StoredDemand(1, $this->connection);
 		$demand->reconsider(['note' => 'new note']);
 		['note' => $note] = json_decode($demand->print(new Output\Json())->serialization(), true);
 		Assert::same('new note', $note);

@@ -29,8 +29,8 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \PhpAmqpLib\Connection\AbstractConnection */
 	private $rabbitMq;
@@ -42,14 +42,14 @@ final class Post implements Application\View {
 		HashidsInterface $hashids,
 		Application\Request $request,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->request = $request;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->rabbitMq = $rabbitMq;
 		$this->seeker = $seeker;
 	}
@@ -65,7 +65,7 @@ final class Post implements Application\View {
 					(new Interaction\QueuedDemands(
 						new Interaction\IndividualDemands(
 							$this->seeker,
-							$this->database
+							$this->connection
 						),
 						new Search\AmqpPublisher($this->rabbitMq)
 					))->ask(
@@ -85,7 +85,7 @@ final class Post implements Application\View {
 		);
 		return new Response\ConcurrentlyCreatedResponse(
 			new Response\CreatedResponse(new Response\EmptyResponse(), $url),
-			new Http\PostgresETag($this->database, $url)
+			new Http\PostgresETag($this->connection, $url)
 		);
 	}
 }

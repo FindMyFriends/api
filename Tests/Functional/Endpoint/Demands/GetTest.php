@@ -21,14 +21,14 @@ final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 1999)']]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 2000)']]))->try();
-		(new Misc\SampleDemand($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 1999)']]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 2000)']]))->try();
+		(new Misc\SampleDemand($this->connection))->try();
 		$response = (new Endpoint\Demands\Get(
 			new Hashids(),
 			new Uri\FakeUri('/', 'demands', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['page' => 1, 'per_page' => 10, 'sort' => '']);
 		$demands = json_decode($response->body()->serialization());
@@ -40,14 +40,14 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function testIncludedCountHeader() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleDemand($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleDemand($this->connection))->try();
 		$headers = (new Endpoint\Demands\Get(
 			new Hashids(),
 			new Uri\FakeUri('/', 'demands', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['page' => 1, 'per_page' => 10, 'sort' => ''])->headers();
 		Assert::same(2, $headers['X-Total-Count']);

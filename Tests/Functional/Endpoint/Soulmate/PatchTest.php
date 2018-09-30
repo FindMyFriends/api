@@ -21,14 +21,14 @@ final class PatchTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand]))->try();
 		$response = (new Endpoint\Soulmate\Patch(
 			new Application\FakeRequest(
 				new Output\FakeFormat(json_encode(['is_correct' => false]))
 			),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['id' => $id]);
 		$soulmate = json_decode($response->body()->serialization(), true);
@@ -42,7 +42,7 @@ final class PatchTest extends Tester\TestCase {
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['foo' => false]))
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property is_correct is required');
@@ -54,22 +54,22 @@ final class PatchTest extends Tester\TestCase {
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['is_correct' => false]))
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('666')
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'Soulmate does not exist', HTTP_NOT_FOUND);
 	}
 
 	public function test403OnForeign() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'soulmate', ['demand_id' => $demand]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand]))->try();
 		Assert::exception(function() use ($id) {
 			(new Endpoint\Soulmate\Patch(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['is_correct' => false]))
 				),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('666')
 			))->response(['id' => $id]);
 		}, \UnexpectedValueException::class, 'This is not your soulmate', HTTP_FORBIDDEN);
@@ -79,7 +79,7 @@ final class PatchTest extends Tester\TestCase {
 		Assert::exception(function() {
 			(new Endpoint\Soulmate\Patch(
 				new Application\FakeRequest(new Output\FakeFormat('{}')),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('1')
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property is_correct is required');

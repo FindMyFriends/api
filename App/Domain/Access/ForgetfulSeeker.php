@@ -12,17 +12,17 @@ final class ForgetfulSeeker implements Seeker {
 	/** @var string */
 	private $reminder;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(string $reminder, Storage\MetaPDO $database) {
+	public function __construct(string $reminder, Storage\Connection $connection) {
 		$this->reminder = $reminder;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	public function properties(): array {
 		$seeker = (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT *
 			FROM seekers
 			WHERE id IS NOT DISTINCT FROM ?',
@@ -34,7 +34,7 @@ final class ForgetfulSeeker implements Seeker {
 	public function id(): string {
 		return strval(
 			(int) (new Storage\TypedQuery(
-				$this->database,
+				$this->connection,
 				'SELECT seeker_id
 				FROM forgotten_passwords
 				WHERE reminder IS NOT DISTINCT FROM ?',

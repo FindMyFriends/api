@@ -7,22 +7,22 @@ use FindMyFriends\Scheduling;
 use Klapuch\Storage;
 
 final class Cron implements Scheduling\Job {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function fulfill(): void {
 		(new Scheduling\SerialJobs(
 			new Scheduling\RepeatedJob(
 				new Scheduling\MarkedJob(
-					new RefreshMaterializedView($this->database),
-					$this->database
+					new RefreshMaterializedView($this->connection),
+					$this->connection
 				),
 				'PT10M',
-				$this->database
+				$this->connection
 			)
 		))->fulfill();
 	}

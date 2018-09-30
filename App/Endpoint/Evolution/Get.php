@@ -21,8 +21,8 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $seeker;
@@ -30,12 +30,12 @@ final class Get implements Application\View {
 	public function __construct(
 		HashidsInterface $hashids,
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->seeker = $seeker;
 	}
 
@@ -52,18 +52,18 @@ final class Get implements Application\View {
 								new Evolution\OwnedChange(
 									new Evolution\StoredChange(
 										$parameters['id'],
-										$this->database
+										$this->connection
 									),
 									$parameters['id'],
 									$this->seeker,
-									$this->database
+									$this->connection
 								),
 								new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 							),
 							$this->hashids
 						))->print(new Output\Json())
 					),
-					new Http\PostgresETag($this->database, $this->url)
+					new Http\PostgresETag($this->connection, $this->url)
 				)
 			),
 			$parameters

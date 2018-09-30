@@ -13,19 +13,19 @@ final class RemindedPassword implements Password {
 	/** @var string */
 	private $reminder;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Password */
 	private $origin;
 
 	public function __construct(
 		string $reminder,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		Password $origin
 	) {
 		$this->reminder = $reminder;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->origin = $origin;
 	}
 
@@ -36,11 +36,11 @@ final class RemindedPassword implements Password {
 	public function change(string $password): void {
 		if (!$this->exists($this->reminder))
 			throw new \UnexpectedValueException('The reminder does not exist');
-		(new Storage\Transaction($this->database))->start(
+		(new Storage\Transaction($this->connection))->start(
 			function() use ($password): void {
 				$this->origin->change($password);
 				(new Storage\TypedQuery(
-					$this->database,
+					$this->connection,
 					'UPDATE forgotten_passwords
 					SET used_at = now()
 					WHERE reminder IS NOT DISTINCT FROM ?',
@@ -52,7 +52,7 @@ final class RemindedPassword implements Password {
 
 	private function exists(string $reminder): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM forgotten_passwords
 			WHERE reminder IS NOT DISTINCT FROM ?

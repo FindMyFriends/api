@@ -25,7 +25,7 @@ final class OwnedSpotTest extends Tester\TestCase {
 				new Place\FakeSpot(),
 				1,
 				new Access\FakeSeeker('1'),
-				$this->database
+				$this->connection
 			))->move([]);
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.');
 		Assert::exception(function () {
@@ -33,7 +33,7 @@ final class OwnedSpotTest extends Tester\TestCase {
 				new Place\FakeSpot(),
 				1,
 				new Access\FakeSeeker('1'),
-				$this->database
+				$this->connection
 			))->forget();
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.');
 		Assert::exception(function () {
@@ -41,22 +41,22 @@ final class OwnedSpotTest extends Tester\TestCase {
 				new Place\FakeSpot(),
 				1,
 				new Access\FakeSeeker('1'),
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.');
 	}
 
 	public function testPassingOnOwned() {
-		['id' => $seeker] = (new Misc\SampleSeeker($this->database))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
-		['id' => $spot] = (new Misc\SamplePostgresData($this->database, 'spot', ['seeker_id' => $seeker]))->try();
-		(new Misc\SamplePostgresData($this->database, 'demand_spot', ['demand_id' => $demand, 'spot_id' => $spot]))->try();
+		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
+		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot', ['seeker_id' => $seeker]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand, 'spot_id' => $spot]))->try();
 		Assert::noError(function () use ($spot, $seeker) {
 			(new Place\OwnedSpot(
 				new Place\FakeSpot(),
 				$spot,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			))->move([]);
 		});
 		Assert::noError(function () use ($spot, $seeker) {
@@ -64,7 +64,7 @@ final class OwnedSpotTest extends Tester\TestCase {
 				new Place\FakeSpot(),
 				$spot,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			))->forget();
 		});
 		Assert::noError(function () use ($spot, $seeker) {
@@ -72,7 +72,7 @@ final class OwnedSpotTest extends Tester\TestCase {
 				new Place\FakeSpot(),
 				$spot,
 				new Access\FakeSeeker((string) $seeker),
-				$this->database
+				$this->connection
 			))->print(new Output\FakeFormat());
 		});
 	}

@@ -9,14 +9,14 @@ use Klapuch\Storage;
  * Verified entrance
  */
 final class VerifiedEntrance implements Entrance {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Entrance */
 	private $origin;
 
-	public function __construct(Storage\MetaPDO $database, Entrance $origin) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection, Entrance $origin) {
+		$this->connection = $connection;
 		$this->origin = $origin;
 	}
 
@@ -34,7 +34,7 @@ final class VerifiedEntrance implements Entrance {
 
 	private function verified(Seeker $seeker): bool {
 		return (bool) (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1
 			FROM verification_codes  
 			WHERE seeker_id = ?

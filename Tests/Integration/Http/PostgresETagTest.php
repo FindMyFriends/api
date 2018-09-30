@@ -19,13 +19,13 @@ final class PostgresETagTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testStoredAsHexFormat() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		Assert::match('"%h%"', $eTag->get());
 	}
 
 	public function testSameClassesWithSameTag() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		$first = $eTag->get();
 		$eTag->set(new \stdClass());
@@ -34,7 +34,7 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testUpdatingTag() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \SplQueue());
 		$first = $eTag->get();
 		$eTag->set(new \stdClass());
@@ -44,15 +44,15 @@ final class PostgresETagTest extends Tester\TestCase {
 
 	public function testUpdatingWithRecordedDatetime() {
 		$id = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'INSERT INTO etags (entity, tag, created_at) VALUES (?, ?, ?)
 			RETURNING id',
 			['/demands/1', '123', '2010-01-01']
 		))->field();
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \SplQueue());
 		$current = (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT date_part(\'year\', created_at) AS created_at, tag FROM etags WHERE id = ?',
 			[$id]
 		))->row();
@@ -61,7 +61,7 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testAllowingAnonymousClasses() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		Assert::noError(static function() use ($eTag) {
 			$eTag->set(new class () {
 
@@ -70,15 +70,15 @@ final class PostgresETagTest extends Tester\TestCase {
 	}
 
 	public function testCheckingExistence() {
-		$eTag = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
+		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		Assert::false($eTag->exists());
 		$eTag->set(new \stdClass());
 		Assert::true($eTag->exists());
 	}
 
 	public function testCaseInsensitiveEntities() {
-		$lower = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/demands/1'));
-		$upper = new Http\PostgresETag($this->database, new Uri\FakeUri(null, '/DEMANDS/1'));
+		$lower = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
+		$upper = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/DEMANDS/1'));
 		$lower->set(new \stdClass());
 		Assert::true($upper->exists());
 		Assert::same($lower->get(), $upper->get());

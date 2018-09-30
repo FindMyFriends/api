@@ -11,11 +11,11 @@ final class KeyValueMapping implements Mapping {
 		$this->map = $map;
 	}
 
-	public function application(array $database): array {
-		$keys = array_intersect_key($this->map, $database);
-		ksort($database);
+	public function application(array $connection): array {
+		$keys = array_intersect_key($this->map, $connection);
+		ksort($connection);
 		ksort($keys);
-		return array_combine($keys, $database);
+		return array_combine($keys, $connection);
 	}
 
 	public function database(array $application): array {

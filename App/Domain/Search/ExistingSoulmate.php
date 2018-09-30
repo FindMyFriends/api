@@ -16,13 +16,13 @@ final class ExistingSoulmate implements Soulmate {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Soulmate $origin, int $id, \PDO $database) {
+	public function __construct(Soulmate $origin, int $id, Storage\Connection $connection) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -48,7 +48,7 @@ final class ExistingSoulmate implements Soulmate {
 
 	private function exists(int $id): bool {
 		return (bool) (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT 1 FROM soulmates WHERE id = ?',
 			[$id]
 		))->field();

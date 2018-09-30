@@ -15,19 +15,19 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \PhpAmqpLib\Connection\AbstractConnection */
 	private $rabbitMq;
 
 	public function __construct(
 		Uri\Uri $url,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq
 	) {
 		$this->url = $url;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->rabbitMq = $rabbitMq;
 	}
 
@@ -35,7 +35,7 @@ final class Post implements Application\View {
 		(new Search\HarnessedPublisher(
 			new Search\RefreshablePublisher(
 				new Search\AmqpPublisher($this->rabbitMq),
-				$this->database
+				$this->connection
 			),
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
 		))->publish($parameters['demand_id']);

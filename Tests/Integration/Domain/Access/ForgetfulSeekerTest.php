@@ -19,9 +19,9 @@ final class ForgetfulSeekerTest extends Tester\TestCase {
 
 	public function testSeekerWithKnownReminder() {
 		$reminder = str_repeat('x', 141);
-		['id' => $id] = (new Misc\SamplePostgresData($this->database, 'seeker', ['email' => 'foo@bar.cz']))->try();
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['seeker_id' => $id, 'reminder' => $reminder]))->try();
-		$seeker = new Access\ForgetfulSeeker($reminder, $this->database);
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['seeker_id' => $id, 'reminder' => $reminder]))->try();
+		$seeker = new Access\ForgetfulSeeker($reminder, $this->connection);
 		Assert::same((string) $id, $seeker->id());
 		Assert::same(
 			['email' => 'foo@bar.cz', 'role' => 'member'],
@@ -30,7 +30,7 @@ final class ForgetfulSeekerTest extends Tester\TestCase {
 	}
 
 	public function testNoSeekerOnInvalidReminder() {
-		$seeker = new Access\ForgetfulSeeker('invalid:reminder', $this->database);
+		$seeker = new Access\ForgetfulSeeker('invalid:reminder', $this->connection);
 		Assert::same('0', $seeker->id());
 		Assert::same([], $seeker->properties());
 	}

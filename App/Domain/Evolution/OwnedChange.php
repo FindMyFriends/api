@@ -17,8 +17,8 @@ final class OwnedChange implements Change {
 	/** @var int */
 	private $id;
 
-	/** @var \PDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
@@ -27,11 +27,11 @@ final class OwnedChange implements Change {
 		Change $origin,
 		int $id,
 		Access\Seeker $owner,
-		\PDO $database
+		Storage\Connection $connection
 	) {
 		$this->origin = $origin;
 		$this->id = $id;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->owner = $owner;
 	}
 
@@ -67,7 +67,7 @@ final class OwnedChange implements Change {
 
 	private function owned(int $id, Access\Seeker $owner): bool {
 		return (new Storage\NativeQuery(
-			$this->database,
+			$this->connection,
 			'SELECT is_evolution_owned(:evolution, :seeker)',
 			['evolution' => $id, 'seeker' => $owner->id()]
 		))->field();

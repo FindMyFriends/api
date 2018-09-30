@@ -12,12 +12,12 @@ final class RefreshablePublisher implements Publisher {
 	/** @var \FindMyFriends\Domain\Search\Publisher */
 	private $origin;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Publisher $origin, Storage\MetaPDO $database) {
+	public function __construct(Publisher $origin, Storage\Connection $connection) {
 		$this->origin = $origin;
-		$this->database = $database;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -32,7 +32,7 @@ final class RefreshablePublisher implements Publisher {
 
 	private function refreshable(int $demand): bool {
 		return (new Storage\TypedQuery(
-			$this->database,
+			$this->connection,
 			'SELECT is_soulmate_request_refreshable(?::integer)',
 			[$demand]
 		))->field();

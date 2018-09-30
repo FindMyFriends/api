@@ -22,8 +22,8 @@ final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->database, ['seeker_id' => $seeker]))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Spots\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
@@ -31,7 +31,7 @@ final class PostTest extends Tester\TestCase {
 				)
 			),
 			new Uri\FakeUri('https://localhost', 'demands/k5/spots', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
 		))->response(['id' => $demand]);
 		$spot = json_decode($response->body()->serialization(), true);
@@ -45,7 +45,7 @@ final class PostTest extends Tester\TestCase {
 			(new Endpoint\Demand\Spots\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new Uri\FakeUri('/', 'demands', []),
-				$this->database,
+				$this->connection,
 				new Access\FakeSeeker('1', ['role' => 'member'])
 			))->response(['id' => 1]);
 		}, \UnexpectedValueException::class, 'The property coordinates is required');

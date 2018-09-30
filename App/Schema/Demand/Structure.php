@@ -7,15 +7,15 @@ use FindMyFriends\Schema;
 use Klapuch\Storage;
 
 final class Structure {
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
-	public function __construct(Storage\MetaPDO $database) {
-		$this->database = $database;
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
 	}
 
 	public function get(): array {
-		$description = (new Schema\Description\Structure($this->database))->get();
+		$description = (new Schema\Description\Structure($this->connection))->get();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -48,7 +48,7 @@ final class Structure {
 
 	public function put(): array {
 		$schema = $this->get();
-		$description = (new Schema\Description\Structure($this->database))->put();
+		$description = (new Schema\Description\Structure($this->connection))->put();
 		$schema['properties'] = $description['properties'] + $schema['properties'];
 		$schema['definitions'] = $description['definitions'] + $schema['definitions'];
 		$properties = &$schema['properties'];

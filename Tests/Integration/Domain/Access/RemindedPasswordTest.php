@@ -20,17 +20,17 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testChangingWithValidReminder() {
-		$this->database->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
+		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
 		$password = \Mockery::mock(Access\Password::class);
 		$password->shouldReceive('change')->once()->with('123456789');
 		(new Access\RemindedPassword(
 			$reminder,
-			$this->database,
+			$this->connection,
 			$password
 		))->change('123456789');
-		Assert::true((new Storage\NativeQuery($this->database, 'SELECT used_at IS NOT NULL FROM forgotten_passwords'))->field());
+		Assert::true((new Storage\NativeQuery($this->connection, 'SELECT used_at IS NOT NULL FROM forgotten_passwords'))->field());
 		\Mockery::close();
 	}
 
@@ -40,7 +40,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	public function testThrowingOnChangingWithUnknownReminder() {
 		(new Access\RemindedPassword(
 			'unknown:reminder',
-			$this->database,
+			$this->connection,
 			new Access\FakePassword()
 		))->change('123456789');
 	}
@@ -50,10 +50,10 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnChangingWithUsedReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
 			$reminder,
-			$this->database,
+			$this->connection,
 			new Access\FakePassword()
 		))->change('new password');
 	}
@@ -63,10 +63,10 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	 */
 	public function testThrowingOnUsingCaseInsensitiveReminder() {
 		$reminder = str_repeat('x', 141);
-		(new Misc\SamplePostgresData($this->database, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
+		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
 			strtoupper($reminder),
-			$this->database,
+			$this->connection,
 			new Access\FakePassword()
 		))->change('123456789');
 	}
@@ -76,7 +76,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 			'|reminder|123reminder123|',
 			(new Access\RemindedPassword(
 				'123reminder123',
-				$this->database,
+				$this->connection,
 				new Access\FakePassword()
 			))->print(new Output\FakeFormat(''))->serialization()
 		);

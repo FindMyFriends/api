@@ -21,8 +21,8 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Klapuch\Storage\MetaPDO */
-	private $database;
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \PhpAmqpLib\Connection\AbstractConnection */
 	private $rabbitMq;
@@ -32,12 +32,12 @@ final class Post implements Application\View {
 
 	public function __construct(
 		Application\Request $request,
-		Storage\MetaPDO $database,
+		Storage\Connection $connection,
 		PhpAmqpLib\Connection\AbstractConnection $rabbitMq,
 		Encryption\Cipher $cipher
 	) {
 		$this->request = $request;
-		$this->database = $database;
+		$this->connection = $connection;
 		$this->rabbitMq = $rabbitMq;
 		$this->cipher = $cipher;
 	}
@@ -52,7 +52,7 @@ final class Post implements Application\View {
 		))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values());
 		(new Access\HarnessedSeekers(
 			new Access\UniqueSeekers(
-				$this->database,
+				$this->connection,
 				$this->cipher
 			),
 			new Misc\ApiErrorCallback(HTTP_CONFLICT)

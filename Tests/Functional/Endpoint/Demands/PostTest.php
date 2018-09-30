@@ -23,7 +23,7 @@ final class PostTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		$response = (new Endpoint\Demands\Post(
 			new Hashids(),
 			new Application\FakeRequest(
@@ -32,7 +32,7 @@ final class PostTest extends Tester\TestCase {
 				)
 			),
 			new FakeUri('https://localhost', 'demands', []),
-			$this->database,
+			$this->connection,
 			$this->rabbitMq,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'guest'])
 		))->response([]);
@@ -48,7 +48,7 @@ final class PostTest extends Tester\TestCase {
 				new Hashids(),
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
 				new FakeUri('/', 'demands', []),
-				$this->database,
+				$this->connection,
 				$this->rabbitMq,
 				new Access\FakeSeeker('1', ['role' => 'guest'])
 			))->response([]);

@@ -22,14 +22,14 @@ final class GetTest extends Tester\TestCase {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse() {
-		(new Misc\SampleEvolution($this->database))->try();
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1996]]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1998]]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1996]]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year' => 1998]]))->try();
 		$response = (new Endpoint\Evolutions\Get(
 			new Hashids(),
 			new Uri\FakeUri('/', 'evolutions', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker, ['role' => 'member'])
 		))->response(['page' => 1, 'per_page' => 10, 'sort' => '']);
 		$demands = json_decode($response->body()->serialization());
@@ -41,29 +41,29 @@ final class GetTest extends Tester\TestCase {
 	}
 
 	public function testIncludedCountHeader() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		(new Misc\SampleEvolution($this->database))->try();
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		(new Misc\SampleEvolution($this->connection))->try();
 		$headers = (new Endpoint\Evolutions\Get(
 			new Hashids(),
 			new Uri\FakeUri('/', 'evolutions', []),
-			$this->database,
+			$this->connection,
 			new Access\FakeSeeker((string) $seeker)
 		))->response(['page' => 1, 'per_page' => 10, 'sort' => ''])->headers();
 		Assert::same(2, $headers['X-Total-Count']);
 	}
 
 	public function testMatchingSorts() {
-		['id' => $seeker] = (new Misc\SamplePostgresData($this->database, 'seeker'))->try();
-		(new Misc\SampleEvolution($this->database, ['seeker_id' => $seeker]))->try();
-		$this->database->exec('REFRESH MATERIALIZED VIEW prioritized_evolution_fields');
+		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
+		$this->connection->exec('REFRESH MATERIALIZED VIEW prioritized_evolution_fields');
 		Assert::same(
 			[],
 			array_diff(
 				array_keys(
 					(new Evolution\PrioritizedColumns(
-						$this->database,
+						$this->connection,
 						new Access\FakeSeeker((string) $seeker)
 					))->values()
 				),
