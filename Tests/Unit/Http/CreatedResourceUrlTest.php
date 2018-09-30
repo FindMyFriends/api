@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
+use FindMyFriends\TestCase;
 use Klapuch\Uri\FakeUri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,8 +13,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class CreatedResourceUrlTest extends Tester\TestCase {
-	public function testPlaceholderReplacedByArrayKeyValue() {
+final class CreatedResourceUrlTest extends TestCase\Runtime {
+	public function testPlaceholderReplacedByArrayKeyValue(): void {
 		Assert::same(
 			'demands/5',
 			(new Http\CreatedResourceUrl(
@@ -24,7 +24,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 		);
 	}
 
-	public function testStrippingLeadingSlash() {
+	public function testStrippingLeadingSlash(): void {
 		Assert::same(
 			'demands/5',
 			(new Http\CreatedResourceUrl(
@@ -34,7 +34,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 		);
 	}
 
-	public function testKeepingTrailingSlash() {
+	public function testKeepingTrailingSlash(): void {
 		Assert::same(
 			'demands/5/',
 			(new Http\CreatedResourceUrl(
@@ -44,7 +44,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 		);
 	}
 
-	public function testInjectingMultipleSameParametersWithSameValue() {
+	public function testInjectingMultipleSameParametersWithSameValue(): void {
 		Assert::same(
 			'demands/5/foo/5',
 			(new Http\CreatedResourceUrl(
@@ -54,7 +54,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 		);
 	}
 
-	public function testInjectingMultipleDifferentParameters() {
+	public function testInjectingMultipleDifferentParameters(): void {
 		Assert::same(
 			'demands/5/foo/bar',
 			(new Http\CreatedResourceUrl(
@@ -67,7 +67,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Placeholder "name" is unused
 	 */
-	public function testThrowingOnMissingPlaceholder() {
+	public function testThrowingOnMissingPlaceholder(): void {
 		(new Http\CreatedResourceUrl(
 			new FakeUri(null, 'demands/{id}/foo/{name}'),
 			['id' => 5]
@@ -77,14 +77,14 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Placeholders "id, name" are unused
 	 */
-	public function testThrowingOnMultipleMissedPlaceholders() {
+	public function testThrowingOnMultipleMissedPlaceholders(): void {
 		(new Http\CreatedResourceUrl(
 			new FakeUri(null, 'demands/{id}/foo/{name}'),
 			[]
 		))->path();
 	}
 
-	public function testPassingWithNotAllUsedParameters() {
+	public function testPassingWithNotAllUsedParameters(): void {
 		Assert::same(
 			'demands/5',
 			(new Http\CreatedResourceUrl(
@@ -94,7 +94,7 @@ final class CreatedResourceUrlTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMergedReferenceWithPath() {
+	public function testMergedReferenceWithPath(): void {
 		Assert::same(
 			'http://localhost/demands/5',
 			(new Http\CreatedResourceUrl(

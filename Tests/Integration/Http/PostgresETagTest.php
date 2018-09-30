@@ -7,7 +7,6 @@ use FindMyFriends\Http;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -15,16 +14,16 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostgresETagTest extends Tester\TestCase {
+final class PostgresETagTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testStoredAsHexFormat() {
+	public function testStoredAsHexFormat(): void {
 		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		Assert::match('"%h%"', $eTag->get());
 	}
 
-	public function testSameClassesWithSameTag() {
+	public function testSameClassesWithSameTag(): void {
 		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \stdClass());
 		$first = $eTag->get();
@@ -33,7 +32,7 @@ final class PostgresETagTest extends Tester\TestCase {
 		Assert::same($first, $second);
 	}
 
-	public function testUpdatingTag() {
+	public function testUpdatingTag(): void {
 		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$eTag->set(new \SplQueue());
 		$first = $eTag->get();
@@ -42,7 +41,7 @@ final class PostgresETagTest extends Tester\TestCase {
 		Assert::notSame($first, $second);
 	}
 
-	public function testUpdatingWithRecordedDatetime() {
+	public function testUpdatingWithRecordedDatetime(): void {
 		$id = (new Storage\NativeQuery(
 			$this->connection,
 			'INSERT INTO etags (entity, tag, created_at) VALUES (?, ?, ?)
@@ -60,7 +59,7 @@ final class PostgresETagTest extends Tester\TestCase {
 		Assert::notSame('123', $current['tag']);
 	}
 
-	public function testAllowingAnonymousClasses() {
+	public function testAllowingAnonymousClasses(): void {
 		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		Assert::noError(static function() use ($eTag) {
 			$eTag->set(new class () {
@@ -69,14 +68,14 @@ final class PostgresETagTest extends Tester\TestCase {
 		});
 	}
 
-	public function testCheckingExistence() {
+	public function testCheckingExistence(): void {
 		$eTag = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		Assert::false($eTag->exists());
 		$eTag->set(new \stdClass());
 		Assert::true($eTag->exists());
 	}
 
-	public function testCaseInsensitiveEntities() {
+	public function testCaseInsensitiveEntities(): void {
 		$lower = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/demands/1'));
 		$upper = new Http\PostgresETag($this->connection, new Uri\FakeUri(null, '/DEMANDS/1'));
 		$lower->set(new \stdClass());

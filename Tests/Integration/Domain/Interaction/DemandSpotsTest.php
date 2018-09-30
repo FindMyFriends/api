@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class DemandSpotsTest extends Tester\TestCase {
+final class DemandSpotsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testTrackingForDemandChange() {
+	public function testTrackingForDemandChange(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Interaction\DemandSpots(
 			$demand,
@@ -40,7 +39,7 @@ final class DemandSpotsTest extends Tester\TestCase {
 		(new Misc\TableCount($this->connection, 'demand_spots', 1))->assert();
 	}
 
-	public function testDemandsForChange() {
+	public function testDemandsForChange(): void {
 		['id' => $demand1] = (new Misc\SampleDemand($this->connection))->try();
 		['id' => $demand2] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand1]))->try();

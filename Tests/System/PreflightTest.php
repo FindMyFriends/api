@@ -5,9 +5,9 @@ namespace FindMyFriends\System;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Routing;
+use FindMyFriends\TestCase;
 use Klapuch\Http;
 use Klapuch\Uri\FakeUri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,14 +15,14 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class PreflightTest extends Tester\TestCase {
+final class PreflightTest extends TestCase\Runtime {
 	/**
 	 * @dataProvider preflightHeaders
 	 */
-	public function testPreflightRequestsByMatchingHeaders(array $requestHeaders) {
+	public function testPreflightRequestsByMatchingHeaders(array $requestHeaders): void {
 		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint, $requestHeaders);
-			Assert::same('', (string) $response->body());
+			Assert::same('', $response->body());
 			Assert::same(HTTP_NO_CONTENT, $response->code());
 			$headers = $response->headers();
 			Assert::same('0', $headers['Content-Length']);
@@ -33,12 +33,12 @@ final class PreflightTest extends Tester\TestCase {
 		}
 	}
 
-	public function testDomainOptions() {
+	public function testDomainOptions(): void {
 		$token = $this->token();
 		foreach ($this->endpoints() as $endpoint) {
 			$response = $this->response($endpoint, [sprintf('Authorization: Bearer %s', $token)]);
 			Assert::same(HTTP_OK, $response->code());
-			Assert::notSame([], json_decode((string) $response->body()));
+			Assert::notSame([], json_decode($response->body()));
 			$headers = $response->headers();
 			Assert::same('application/json; charset=utf8', $headers['Content-Type']);
 		}

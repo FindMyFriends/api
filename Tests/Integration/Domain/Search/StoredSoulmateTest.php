@@ -3,13 +3,11 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Integration\Domain\Search;
 
-use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -17,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class StoredSoulmateTest extends Tester\TestCase {
+final class StoredSoulmateTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testById() {
+	public function testById(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Storage\NativeQuery(
 			$this->connection,
@@ -54,8 +52,7 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		$soulmate = json_decode(
 			(new Search\StoredSoulmate(
 				2,
-				$this->connection,
-				new Access\FakeSeeker('1')
+				$this->connection
 			))->print(new Output\Json())->serialization(),
 			true
 		);
@@ -64,12 +61,11 @@ final class StoredSoulmateTest extends Tester\TestCase {
 		Assert::same($seeker, $soulmate['seeker_id']);
 	}
 
-	public function testClarification() {
+	public function testClarification(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['is_correct' => true]))->try();
 		(new Search\StoredSoulmate(
 			$id,
-			$this->connection,
-			new Access\FakeSeeker((string) mt_rand())
+			$this->connection
 		))->clarify(['is_correct' => false]);
 		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT is_correct FROM soulmates'))->field());
 	}

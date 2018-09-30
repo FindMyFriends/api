@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Routing;
 
 use FindMyFriends\Routing;
+use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Routing\FakeMask;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SuitedHashIdMaskTest extends Tester\TestCase {
-	public function testReplacingMatchToHashid() {
+final class SuitedHashIdMaskTest extends TestCase\Runtime {
+	public function testReplacingMatchToHashid(): void {
 		Assert::same(
 			['id' => 1],
 			(new Routing\SuitedHashIdMask(
@@ -32,7 +32,7 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Parameter "foo" is not valid
 	 */
-	public function testThrowingOnInvalidParameters() {
+	public function testThrowingOnInvalidParameters(): void {
 		(new Routing\SuitedHashIdMask(
 			['id' => 'hashid-demand'],
 			new FakeMask(['id' => 'foo']),
@@ -43,7 +43,7 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 		))->parameters();
 	}
 
-	public function testKeepingForNoMatch() {
+	public function testKeepingForNoMatch(): void {
 		Assert::same(
 			['id' => 'jR'],
 			(new Routing\SuitedHashIdMask(
@@ -57,7 +57,7 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 		);
 	}
 
-	public function testKeepingRestUntouched() {
+	public function testKeepingRestUntouched(): void {
 		Assert::same(
 			['id' => 1, 'evolution_id' => 2],
 			(new Routing\SuitedHashIdMask(
@@ -71,7 +71,7 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMultipleConversion() {
+	public function testMultipleConversion(): void {
 		Assert::same(
 			['id' => 1, 'evolution_id' => 2],
 			(new Routing\SuitedHashIdMask(
@@ -85,7 +85,7 @@ final class SuitedHashIdMaskTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPassingOnNothingToConvert() {
+	public function testPassingOnNothingToConvert(): void {
 		Assert::same(
 			['page' => 1],
 			(new Routing\SuitedHashIdMask(

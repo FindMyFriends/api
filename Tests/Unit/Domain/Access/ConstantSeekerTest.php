@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Domain\Access;
 
 use FindMyFriends\Domain\Access;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ConstantSeekerTest extends Tester\TestCase {
-	public function testPropertiesWithoutSensitiveData() {
+final class ConstantSeekerTest extends TestCase\Runtime {
+	public function testPropertiesWithoutSensitiveData(): void {
 		$seeker = new Access\ConstantSeeker(
 			'1',
 			['id' => 1, 'email' => '@', 'role' => ['master'], 'password' => 'secret']
@@ -21,7 +21,7 @@ final class ConstantSeekerTest extends Tester\TestCase {
 		Assert::same(['email' => '@', 'role' => ['master']], $seeker->properties());
 	}
 
-	public function testCaseInsensitivePropertiesWithoutSensitiveData() {
+	public function testCaseInsensitivePropertiesWithoutSensitiveData(): void {
 		$seeker = new Access\ConstantSeeker(
 			'1',
 			['Id' => 1, 'EmaiL' => '@', 'RolE' => ['master'], 'PaSSworD' => 'secret']
@@ -29,7 +29,7 @@ final class ConstantSeekerTest extends Tester\TestCase {
 		Assert::same(['EmaiL' => '@', 'RolE' => ['master']], $seeker->properties());
 	}
 
-	public function testAllSensitiveDataEndingWithEmptyProperties() {
+	public function testAllSensitiveDataEndingWithEmptyProperties(): void {
 		$seeker = new Access\ConstantSeeker(
 			'1',
 			['id' => 1, 'password' => 'secret']

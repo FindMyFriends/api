@@ -6,7 +6,6 @@ namespace FindMyFriends\Unit\Response;
 use FindMyFriends\Response;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class CachedResponseTest extends Tester\TestCase {
+final class CachedResponseTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testMultipleCallsWithSingleExecution() {
+	public function testMultipleCallsWithSingleExecution(): void {
 		$origin = $this->mock(Application\Response::class);
 		$origin->shouldReceive('body')->once();
 		$origin->shouldReceive('headers')->once();

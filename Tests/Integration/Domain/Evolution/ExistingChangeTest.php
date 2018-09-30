@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExistingChangeTest extends Tester\TestCase {
+final class ExistingChangeTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknown() {
+	public function testThrowingOnUnknown(): void {
 		$ex = Assert::exception(function() {
 			(new Evolution\ExistingChange(
 				new Evolution\FakeChange(),
@@ -45,7 +44,7 @@ final class ExistingChangeTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithExisting() {
+	public function testPassingWithExisting(): void {
 		(new Misc\SampleEvolution($this->connection))->try();
 		Assert::noError(function() {
 			$evolution = new Evolution\ExistingChange(

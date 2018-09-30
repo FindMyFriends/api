@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Storage\TypedQuery;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SubsequentRequestsTest extends Tester\TestCase {
+final class SubsequentRequestsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testSubsequentId() {
+	public function testSubsequentId(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		$requests = new Search\SubsequentRequests($demand, $this->connection);
 		$pending = $requests->refresh('pending');
@@ -40,7 +39,7 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAllFromDemand() {
+	public function testAllFromDemand(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SampleDemand($this->connection))->try();
 		['id' => $soulmateRequestId] = (new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
@@ -50,7 +49,7 @@ final class SubsequentRequestsTest extends Tester\TestCase {
 		Assert::same(2, iterator_count($request->all(new Dataset\EmptySelection())));
 	}
 
-	public function testThrowingOnRequestInProgress() {
+	public function testThrowingOnRequestInProgress(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		$request = new Search\SubsequentRequests($demand, $this->connection);
 		$request->refresh('processing');

@@ -7,7 +7,6 @@ use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class HeadTest extends Tester\TestCase {
+final class HeadTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testEmptyResponse() {
+	public function testEmptyResponse(): void {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try());
 		['id' => $demand1] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand1]))->try();
@@ -31,7 +30,7 @@ final class HeadTest extends Tester\TestCase {
 		Assert::null(json_decode($response->body()->serialization()));
 	}
 
-	public function testNeededHeaders() {
+	public function testNeededHeaders(): void {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try());
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$headers = (new Endpoint\Demand\Soulmates\Head(

@@ -6,9 +6,9 @@ namespace FindMyFriends\System;
 use FindMyFriends\Configuration;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Routing;
+use FindMyFriends\TestCase;
 use Klapuch\Http;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,19 +16,19 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class InvalidJsonTest extends Tester\TestCase {
+final class InvalidJsonTest extends TestCase\Runtime {
 	private const AUTHORIZED = true;
 
 	/**
 	 * @dataProvider endpoints
 	 */
-	public function testInvalidJsonInput(string $endpoint, string $method, bool $authorized) {
+	public function testInvalidJsonInput(string $endpoint, string $method, bool $authorized): void {
 		$response = $this->response($endpoint, $method, $authorized);
 		Assert::same(['message' => 'JSON is not valid'], json_decode($response->body(), true));
 		Assert::same(HTTP_BAD_REQUEST, $response->code());
 	}
 
-	public function testNumberOfNeededChecks() {
+	public function testNumberOfNeededChecks(): void {
 		static $ignores = [
 			'demands/{demand_id}/soulmate_requests [POST]',
 		];

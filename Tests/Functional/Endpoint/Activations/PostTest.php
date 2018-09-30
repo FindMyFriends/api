@@ -9,7 +9,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Storage\TypedQuery;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -17,10 +16,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		$response = (new Endpoint\Activations\Post(
 			new Application\FakeRequest(
@@ -32,7 +31,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same(HTTP_CREATED, $response->status());
 	}
 
-	public function test404OnUnknown() {
+	public function test404OnUnknown(): void {
 		Assert::exception(function () {
 			(new Endpoint\Activations\Post(
 				new Application\FakeRequest(
@@ -43,7 +42,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The verification code does not exist', HTTP_NOT_FOUND);
 	}
 
-	public function test410OnUsed() {
+	public function test410OnUsed(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		$code = (new TypedQuery(
 			$this->connection,

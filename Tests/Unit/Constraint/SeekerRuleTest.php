@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SeekerRuleTest extends Tester\TestCase {
-	public function testAtLeastOneNotNullContact() {
+final class SeekerRuleTest extends TestCase\Runtime {
+	public function testAtLeastOneNotNullContact(): void {
 		$subject = [
 			'contact' => [
 				'facebook' => 'klapuchdominik',
@@ -24,7 +24,7 @@ final class SeekerRuleTest extends Tester\TestCase {
 		Assert::same($subject, (new Constraint\SeekerRule())->apply($subject));
 	}
 
-	public function testThrowingOnAllNull() {
+	public function testThrowingOnAllNull(): void {
 		Assert::exception(static function () {
 			(new Constraint\SeekerRule())->apply([
 				'contact' => [

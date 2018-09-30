@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\System;
 
 use FindMyFriends\Routing;
+use FindMyFriends\TestCase;
 use Klapuch\Http;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -14,11 +14,11 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class HeadGetTest extends Tester\TestCase {
+final class HeadGetTest extends TestCase\Runtime {
 	/**
 	 * @dataProvider getHeadEndpoints
 	 */
-	public function testHeadAndGetMatchingInHeaders(string $endpoint) {
+	public function testHeadAndGetMatchingInHeaders(string $endpoint): void {
 		$headHeaders = $this->response($endpoint, 'HEAD');
 		$getHeaders = $this->response($endpoint, 'GET');
 		unset($headHeaders['Content-Type'], $getHeaders['Content-Type']);
@@ -28,7 +28,7 @@ final class HeadGetTest extends Tester\TestCase {
 		Assert::same($headHeaders, $getHeaders);
 	}
 
-	public function testNumberOfGetHeadForTest() {
+	public function testNumberOfGetHeadForTest(): void {
 		Assert::same(
 			count($this->getHeadEndpoints()),
 			count(

@@ -8,7 +8,6 @@ use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class OwnedDemandTest extends Tester\TestCase {
+final class OwnedDemandTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnForeign() {
+	public function testThrowingOnForeign(): void {
 		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		$ex = Assert::exception(function() use ($id) {
 			(new Interaction\OwnedDemand(
@@ -50,7 +49,7 @@ final class OwnedDemandTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithOwned() {
+	public function testPassingWithOwned(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($id, $seeker) {

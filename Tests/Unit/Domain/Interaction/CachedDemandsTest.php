@@ -6,7 +6,6 @@ namespace FindMyFriends\Unit\Domain\Interaction;
 use FindMyFriends\Domain\Interaction;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class CachedDemandsTest extends Tester\TestCase {
+final class CachedDemandsTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testMultipleCallsWithSingleExecution() {
+	public function testMultipleCallsWithSingleExecution(): void {
 		$origin = $this->mock(Interaction\Demands::class);
 		$origin->shouldReceive('count')->once();
 		$origin->shouldReceive('all')->once();

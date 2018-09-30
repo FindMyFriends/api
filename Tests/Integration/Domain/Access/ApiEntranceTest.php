@@ -5,7 +5,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -13,33 +12,55 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ApiEntranceTest extends Tester\TestCase {
+final class ApiEntranceTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testEnteringWithValidBearerToken() {
+	public function testEnteringWithValidBearerToken(): void {
 		session_set_save_handler(
 			new class implements \SessionHandlerInterface {
-				public function close() {
+				public function close(): bool {
 					return true;
 				}
 
-				public function destroy($id) {
+				/**
+				 * @param string $id
+				 * @return bool
+				 */
+				public function destroy($id): bool {
 					return true;
 				}
 
-				public function gc($maxLifeTime) {
+				/**
+				 * @param int $maxLifeTime
+				 * @return bool
+				 */
+				public function gc($maxLifeTime): bool {
 					return true;
 				}
 
-				public function open($path, $name) {
+				/**
+				 * @param string $path
+				 * @param string $name
+				 * @return bool
+				 */
+				public function open($path, $name): bool {
 					return true;
 				}
 
+				/**
+				 * @param string $id
+				 * @return string|bool
+				 */
 				public function read($id) {
 					return igbinary_serialize(['id' => '123']);
 				}
 
-				public function write($id, $data) {
+				/**
+				 * @param string $id
+				 * @param string $data
+				 * @return bool
+				 */
+				public function write($id, $data): bool {
 					return true;
 				}
 			},
@@ -53,30 +74,52 @@ final class ApiEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testCaseInsensitiveHeaders() {
+	public function testCaseInsensitiveHeaders(): void {
 		session_set_save_handler(
 			new class implements \SessionHandlerInterface {
-				public function close() {
+				public function close(): bool {
 					return true;
 				}
 
-				public function destroy($id) {
+				/**
+				 * @param string $id
+				 * @return bool
+				 */
+				public function destroy($id): bool {
 					return true;
 				}
 
-				public function gc($maxLifeTime) {
+				/**
+				 * @param int $maxLifeTime
+				 * @return bool
+				 */
+				public function gc($maxLifeTime): bool {
 					return true;
 				}
 
-				public function open($path, $name) {
+				/**
+				 * @param string $path
+				 * @param string $name
+				 * @return bool
+				 */
+				public function open($path, $name): bool {
 					return true;
 				}
 
+				/**
+				 * @param string $id
+				 * @return string|bool
+				 */
 				public function read($id) {
 					return igbinary_serialize(['id' => '123']);
 				}
 
-				public function write($id, $data) {
+				/**
+				 * @param string $id
+				 * @param string $data
+				 * @return bool
+				 */
+				public function write($id, $data): bool {
 					return true;
 				}
 			},
@@ -90,28 +133,28 @@ final class ApiEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testNoAuthorizationHeaderLeadingToBeGuest() {
+	public function testNoAuthorizationHeaderLeadingToBeGuest(): void {
 		Assert::equal(
 			new Access\Guest(),
 			(new Access\ApiEntrance($this->connection))->enter([])
 		);
 	}
 
-	public function testMissingBearerPartLeadingToBeGuest() {
+	public function testMissingBearerPartLeadingToBeGuest(): void {
 		Assert::equal(
 			new Access\Guest(),
 			(new Access\ApiEntrance($this->connection))->enter(['authorization' => 'abc'])
 		);
 	}
 
-	public function testUnknownTokenLeadingToBeGuest() {
+	public function testUnknownTokenLeadingToBeGuest(): void {
 		Assert::equal(
 			new Access\Guest(),
 			(new Access\ApiEntrance($this->connection))->enter(['authorization' => 'Bearer abcdef'])
 		);
 	}
 
-	public function testExitBecomingGuest() {
+	public function testExitBecomingGuest(): void {
 		Assert::equal(
 			new Access\Guest(),
 			(new Access\ApiEntrance($this->connection))->exit()

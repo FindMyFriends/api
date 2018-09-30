@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,13 +13,13 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class LimitedForgottenPasswordsTest extends Tester\TestCase {
+final class LimitedForgottenPasswordsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	/**
 	 * @throws \OverflowException You have reached limit 3 forgotten passwords in last 24 hours
 	 */
-	public function testThrowinOnOversteppedReminding() {
+	public function testThrowinOnOversteppedReminding(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@gmail.com']))->try();
 		foreach ([
 			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable('-1 hour'))->format('Y-m-d')],
@@ -35,7 +34,7 @@ final class LimitedForgottenPasswordsTest extends Tester\TestCase {
 		))->remind('foo@gmail.com');
 	}
 
-	public function testRemindingInAllowedTimeRange() {
+	public function testRemindingInAllowedTimeRange(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@gmail.com']))->try();
 		foreach ([
 			['seeker_id' => $seeker, 'used' => false, 'reminded_at' => (new \DateTimeImmutable('-25 hour'))->format('Y-m-d')],

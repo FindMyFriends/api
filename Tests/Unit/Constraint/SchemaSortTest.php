@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Tester;
 use Tester\Assert;
@@ -13,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SchemaSortTest extends Tester\TestCase {
-	public function testPassingOnAllSortsInSchema() {
+final class SchemaSortTest extends TestCase\Runtime {
+	public function testPassingOnAllSortsInSchema(): void {
 		Assert::same(
 			['sort' => ['status' => 'ASC', 'size' => 'DESC']],
 			(new Constraint\SchemaSort(
@@ -31,7 +32,7 @@ final class SchemaSortTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Following criteria are not allowed: "foo"
 	 */
-	public function testThrowingOnUnknownSortProperty() {
+	public function testThrowingOnUnknownSortProperty(): void {
 		(new Constraint\SchemaSort(
 			new class extends Dataset\Sort {
 				protected function sort(): array {
@@ -45,7 +46,7 @@ final class SchemaSortTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Following criteria are not allowed: "status"
 	 */
-	public function testThrowingOnForbiddenProperties() {
+	public function testThrowingOnForbiddenProperties(): void {
 		(new Constraint\SchemaSort(
 			new class extends Dataset\Sort {
 				protected function sort(): array {
@@ -57,7 +58,7 @@ final class SchemaSortTest extends Tester\TestCase {
 		))->criteria();
 	}
 
-	public function testPassingOnNestedObject() {
+	public function testPassingOnNestedObject(): void {
 		Assert::same(
 			['sort' => ['outer.inner.nested' => 'ASC']],
 			(new Constraint\SchemaSort(
@@ -72,7 +73,7 @@ final class SchemaSortTest extends Tester\TestCase {
 	}
 
 	private function testingSchema(): string {
-		return json_encode(
+		return (string) json_encode(
 			[
 				'$schema' => 'http://json-schema.org/draft-04/schema#',
 				'additionalProperties' => false,

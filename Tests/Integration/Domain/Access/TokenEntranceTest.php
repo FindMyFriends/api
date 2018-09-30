@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class TokenEntranceTest extends Tester\TestCase {
-	public function testRetrievedSeekerSessionIdOnEntering() {
+final class TokenEntranceTest extends TestCase\Runtime {
+	public function testRetrievedSeekerSessionIdOnEntering(): void {
 		Assert::match(
 			'~^[\w\d,-]{60}$~',
 			(new Access\TokenEntrance(
@@ -22,21 +22,21 @@ final class TokenEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testEnteringWithSetSession() {
+	public function testEnteringWithSetSession(): void {
 		(new Access\TokenEntrance(
 			new Access\FakeEntrance(new Access\FakeSeeker('1', []))
 		))->enter([]);
 		Assert::same('1', $_SESSION['id']);
 	}
 
-	public function testNewIdOnEachEntering() {
+	public function testNewIdOnEachEntering(): void {
 		$entrance = new Access\TokenEntrance(
 			new Access\FakeEntrance(new Access\FakeSeeker('1', []))
 		);
 		Assert::notSame($entrance->enter([])->id(), $entrance->enter([])->id());
 	}
 
-	public function testExitingWithDelegation() {
+	public function testExitingWithDelegation(): void {
 		$seeker = new Access\FakeSeeker('1');
 		Assert::same(
 			$seeker,
@@ -44,7 +44,7 @@ final class TokenEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testDeletingSessionOnExit() {
+	public function testDeletingSessionOnExit(): void {
 		session_start();
 		session_regenerate_id(true);
 		$_SESSION['id'] = '1';

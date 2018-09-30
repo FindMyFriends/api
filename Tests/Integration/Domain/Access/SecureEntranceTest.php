@@ -13,7 +13,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Encryption;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -21,10 +20,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SecureEntranceTest extends Tester\TestCase {
+final class SecureEntranceTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testSuccessfulAuthenticatingWithExactlySameCredentials() {
+	public function testSuccessfulAuthenticatingWithExactlySameCredentials(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		$seeker = (new Access\SecureEntrance(
 			$this->connection,
@@ -33,7 +32,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 		Assert::same('1', $seeker->id());
 	}
 
-	public function testExitingAndBecomingToGuest() {
+	public function testExitingAndBecomingToGuest(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		Assert::equal(
 			new Access\Guest(),
@@ -44,7 +43,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testSuccessfulAuthenticatingWithCaseInsensitiveEmail() {
+	public function testSuccessfulAuthenticatingWithCaseInsensitiveEmail(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		Assert::noError(function() {
 			(new Access\SecureEntrance(
@@ -54,7 +53,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 		});
 	}
 
-	public function testPassingWithStringObject() {
+	public function testPassingWithStringObject(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		Assert::noError(function() {
 			(new Access\SecureEntrance(
@@ -77,7 +76,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 		});
 	}
 
-	public function testAuthenticatingWithoutRehashing() {
+	public function testAuthenticatingWithoutRehashing(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		Assert::same(
 			'heslo',
@@ -105,7 +104,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Email "unknown@bar.cz" does not exist
 	 */
-	public function testThrowingOnAuthenticatingWithUnknownEmail() {
+	public function testThrowingOnAuthenticatingWithUnknownEmail(): void {
 		(new Access\SecureEntrance(
 			$this->connection,
 			new Encryption\FakeCipher()
@@ -115,7 +114,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Wrong password
 	 */
-	public function testThrowingOnAuthenticatingWithWrongPassword() {
+	public function testThrowingOnAuthenticatingWithWrongPassword(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		(new Access\SecureEntrance(
 			$this->connection,
@@ -123,7 +122,7 @@ final class SecureEntranceTest extends Tester\TestCase {
 		))->enter(['email' => 'foo@bar.cz', 'password' => '2heslo2']);
 	}
 
-	public function testAuthenticatingRehasingPassword() {
+	public function testAuthenticatingRehasingPassword(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'heslo', 'email' => 'foo@bar.cz']))->try();
 		Assert::same(
 			'heslo',

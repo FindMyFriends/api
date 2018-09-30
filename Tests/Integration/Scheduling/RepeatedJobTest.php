@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Scheduling;
 use FindMyFriends\Scheduling;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class RepeatedJobTest extends Tester\TestCase {
+final class RepeatedJobTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testFirstJobFulfillAlways() {
+	public function testFirstJobFulfillAlways(): void {
 		ob_start();
 		(new Scheduling\RepeatedJob(
 			new Scheduling\FakeJob(static function () {
@@ -29,7 +28,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		Assert::same('OK', ob_get_clean());
 	}
 
-	public function testIgnoringProcessingOnNotReady() {
+	public function testIgnoringProcessingOnNotReady(): void {
 		(new Storage\NativeQuery(
 			$this->connection,
 			'INSERT INTO log.cron_jobs(name, marked_at, status) VALUES (?, now(), ?)',
@@ -46,7 +45,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		Assert::same('', ob_get_clean());
 	}
 
-	public function testFulfillingForReadyOne() {
+	public function testFulfillingForReadyOne(): void {
 		(new Storage\NativeQuery(
 			$this->connection,
 			"INSERT INTO log.cron_jobs(name, marked_at, status) VALUES (?, now() - interval '12 MINUTE', ?)",
@@ -63,7 +62,7 @@ final class RepeatedJobTest extends Tester\TestCase {
 		Assert::same('OK', ob_get_clean());
 	}
 
-	public function testRunningByLastSuccess() {
+	public function testRunningByLastSuccess(): void {
 		(new Storage\NativeQuery(
 			$this->connection,
 			"INSERT INTO log.cron_jobs(name, marked_at, status) VALUES (?, now() - interval '12 MINUTE', ?)",

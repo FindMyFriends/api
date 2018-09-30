@@ -8,7 +8,6 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class VisibleSpotsTest extends Tester\TestCase {
+final class VisibleSpotsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnNotOwned() {
+	public function testThrowingOnNotOwned(): void {
 		Assert::exception(function () {
 			(new Evolution\VisibleSpots(
 				new Place\FakeSpots(),
@@ -38,7 +37,7 @@ final class VisibleSpotsTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 	}
 
-	public function testPassingOnOwned() {
+	public function testPassingOnOwned(): void {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change]))->try();

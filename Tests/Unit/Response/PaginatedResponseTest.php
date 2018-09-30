@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
+use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\UI;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -16,8 +16,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PaginatedResponseTest extends Tester\TestCase {
-	public function testPriorityToNewHeader() {
+final class PaginatedResponseTest extends TestCase\Runtime {
+	public function testPriorityToNewHeader(): void {
 		Assert::notSame(
 			['Link' => 'xxx'],
 			(new Response\PaginatedResponse(
@@ -29,7 +29,7 @@ final class PaginatedResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAddingOtherHeaders() {
+	public function testAddingOtherHeaders(): void {
 		Assert::contains(
 			'text/html',
 			(new Response\PaginatedResponse(
@@ -41,7 +41,7 @@ final class PaginatedResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPartialResponseForNotLastPage() {
+	public function testPartialResponseForNotLastPage(): void {
 		Assert::same(
 			HTTP_PARTIAL_CONTENT,
 			(new Response\PaginatedResponse(
@@ -64,7 +64,7 @@ final class PaginatedResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testDelegatedStatusCodeForLastPage() {
+	public function testDelegatedStatusCodeForLastPage(): void {
 		Assert::same(
 			HTTP_CREATED,
 			(new Response\PaginatedResponse(
@@ -87,7 +87,7 @@ final class PaginatedResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testDelegatedStatusCodeForOversteppingLastPage() {
+	public function testDelegatedStatusCodeForOversteppingLastPage(): void {
 		Assert::same(
 			HTTP_NO_CONTENT,
 			(new Response\PaginatedResponse(

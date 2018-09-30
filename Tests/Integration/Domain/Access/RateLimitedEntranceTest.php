@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Access\RateLimitedEntrance;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,13 +13,13 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RateLimitedEntranceTest extends Tester\TestCase {
+final class RateLimitedEntranceTest extends TestCase\Runtime {
 	use TestCase\Redis;
 
 	/**
 	 * @throws \UnexpectedValueException You have overstepped rate limit
 	 */
-	public function testThrowingOnOversteppedLimit() {
+	public function testThrowingOnOversteppedLimit(): void {
 		$id = '1';
 		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 200);
 		(new RateLimitedEntrance(
@@ -29,7 +28,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		))->enter([]);
 	}
 
-	public function testPassingOnMultipleCalls() {
+	public function testPassingOnMultipleCalls(): void {
 		$entrance = new RateLimitedEntrance(
 			new Access\FakeEntrance(new Access\FakeSeeker('1', ['role' => 'member'])),
 			$this->redis
@@ -40,7 +39,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		});
 	}
 
-	public function testIncrementingByCalls() {
+	public function testIncrementingByCalls(): void {
 		$id = '1';
 		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 10);
 		$entrance = new RateLimitedEntrance(
@@ -53,7 +52,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		Assert::same('12', $this->redis->get(sprintf('seeker_rate_limit:%s', $id)));
 	}
 
-	public function testEnabledExpiration() {
+	public function testEnabledExpiration(): void {
 		$id = '1';
 		Assert::falsey($this->redis->exists(sprintf('seeker_rate_limit:%s', $id)));
 		Assert::notSame(-1, $this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)));
@@ -64,7 +63,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		Assert::notSame(-1, $this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)));
 	}
 
-	public function testMultipleCallWithoutOverwritingTime() {
+	public function testMultipleCallWithoutOverwritingTime(): void {
 		[$id, $time] = ['1', 3];
 		$this->redis->setex(sprintf('seeker_rate_limit:%s', $id), $time, 10);
 		$entrance = new RateLimitedEntrance(
@@ -75,7 +74,7 @@ final class RateLimitedEntranceTest extends Tester\TestCase {
 		Assert::true($this->redis->ttl(sprintf('seeker_rate_limit:%s', $id)) <= $time);
 	}
 
-	public function testDisabledIncrementForGuest() {
+	public function testDisabledIncrementForGuest(): void {
 		$id = '1';
 		$this->redis->set(sprintf('seeker_rate_limit:%s', $id), 0);
 		$entrance = new RateLimitedEntrance(

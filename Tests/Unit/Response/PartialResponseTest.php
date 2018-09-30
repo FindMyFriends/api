@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
+use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output\Json;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PartialResponseTest extends Tester\TestCase {
-	public function testPartitioningByFieldParameter() {
+final class PartialResponseTest extends TestCase\Runtime {
+	public function testPartitioningByFieldParameter(): void {
 		Assert::same(
 			['id' => 10],
 			json_decode(
@@ -28,7 +28,7 @@ final class PartialResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testReturningAllForNoFieldParameter() {
+	public function testReturningAllForNoFieldParameter(): void {
 		Assert::same(
 			['id' => 10, 'name' => 'Dom'],
 			json_decode(

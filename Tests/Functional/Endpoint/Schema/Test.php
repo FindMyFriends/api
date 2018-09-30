@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Functional\Endpoint\Schema;
 
+use FindMyFriends\TestCase;
 use JsonSchema;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -12,11 +12,11 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class Test extends Tester\TestCase {
+final class Test extends TestCase\Runtime {
 	/**
 	 * @dataProvider expectations.ini
 	 */
-	public function testSchemas(string $schema, string $master, string $replacements, bool $valid) {
+	public function testSchemas(string $schema, string $master, string $replacements, bool $valid): void {
 		$json = json_decode(
 			json_encode(
 				array_replace_recursive(

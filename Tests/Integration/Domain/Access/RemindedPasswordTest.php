@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RemindedPasswordTest extends Tester\TestCase {
+final class RemindedPasswordTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testChangingWithValidReminder() {
+	public function testChangingWithValidReminder(): void {
 		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
@@ -37,7 +36,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException The reminder does not exist
 	 */
-	public function testThrowingOnChangingWithUnknownReminder() {
+	public function testThrowingOnChangingWithUnknownReminder(): void {
 		(new Access\RemindedPassword(
 			'unknown:reminder',
 			$this->connection,
@@ -48,7 +47,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException The reminder does not exist
 	 */
-	public function testThrowingOnChangingWithUsedReminder() {
+	public function testThrowingOnChangingWithUsedReminder(): void {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
@@ -61,7 +60,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException The reminder does not exist
 	 */
-	public function testThrowingOnUsingCaseInsensitiveReminder() {
+	public function testThrowingOnUsingCaseInsensitiveReminder(): void {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used' => null, 'reminder' => $reminder]))->try();
 		(new Access\RemindedPassword(
@@ -71,7 +70,7 @@ final class RemindedPasswordTest extends Tester\TestCase {
 		))->change('123456789');
 	}
 
-	public function testPrinting() {
+	public function testPrinting(): void {
 		Assert::same(
 			'|reminder|123reminder123|',
 			(new Access\RemindedPassword(

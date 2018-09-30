@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,7 +12,7 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class DemandRuleTest extends Tester\TestCase {
+final class DemandRuleTest extends TestCase\Runtime {
 	private const BASE = [
 		'body' => [
 			'breast_size' => null,
@@ -39,7 +39,7 @@ final class DemandRuleTest extends Tester\TestCase {
 		],
 	];
 
-	public function testApplicationWithAllReturnedValues() {
+	public function testApplicationWithAllReturnedValues(): void {
 		Assert::equal(self::BASE, (new Constraint\DemandRule())->apply(self::BASE));
 	}
 }

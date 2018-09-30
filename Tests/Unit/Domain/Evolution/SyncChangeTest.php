@@ -6,7 +6,6 @@ namespace FindMyFriends\Unit\Domain\Evolution;
 use Elasticsearch;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SyncChangeTest extends Tester\TestCase {
+final class SyncChangeTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testNoIndexingOnFail() {
+	public function testNoIndexingOnFail(): void {
 		$elasticsearch = $this->mock(Elasticsearch\Client::class);
 		$origin = $this->mock(Evolution\Change::class);
 		$origin->shouldReceive('revert')->once()->andThrow(\UnexpectedValueException::class, 'OK');
@@ -38,7 +37,7 @@ final class SyncChangeTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'OK');
 	}
 
-	public function testIndexingWithSuccess() {
+	public function testIndexingWithSuccess(): void {
 		$elasticsearch = $this->mock(Elasticsearch\Client::class);
 		$elasticsearch->shouldReceive('delete')->once()->andReturn([]);
 		$elasticsearch->shouldReceive('update')->once()->andReturn([]);

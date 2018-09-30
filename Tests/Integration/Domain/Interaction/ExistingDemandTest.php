@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExistingDemandTest extends Tester\TestCase {
+final class ExistingDemandTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknown() {
+	public function testThrowingOnUnknown(): void {
 		$ex = Assert::exception(function() {
 			(new Interaction\ExistingDemand(
 				new Interaction\FakeDemand(),
@@ -45,7 +44,7 @@ final class ExistingDemandTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithExisting() {
+	public function testPassingWithExisting(): void {
 		(new Misc\SampleDemand($this->connection))->try();
 		Assert::noError(function() {
 			$demand = new Interaction\ExistingDemand(new Interaction\FakeDemand(), 1, $this->connection);

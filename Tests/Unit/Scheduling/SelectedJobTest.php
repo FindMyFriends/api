@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Scheduling;
 
 use FindMyFriends\Scheduling;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,11 +12,11 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SelectedJobTest extends Tester\TestCase {
+final class SelectedJobTest extends TestCase\Runtime {
 	/**
 	 * @throws \UnexpectedValueException Job "regenerate" does not exist
 	 */
-	public function testThrowingOnUnknownName() {
+	public function testThrowingOnUnknownName(): void {
 		(new Scheduling\SelectedJob(
 			'regenerate',
 			new Scheduling\FakeJob(null, 'a'),
@@ -25,7 +25,7 @@ final class SelectedJobTest extends Tester\TestCase {
 		))->fulfill();
 	}
 
-	public function testFulfillingSelected() {
+	public function testFulfillingSelected(): void {
 		ob_start();
 		(new Scheduling\SelectedJob(
 			'regenerate',

@@ -1,0 +1,12 @@
+includes:
+	- vendor/phpstan/phpstan-mockery/extension.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+	ignoreErrors:
+		- '~^Negated boolean is always false\.$~' # false positive
+		- '~^Cannot call method getMessage\(\) on Throwable\|null\.$~' # ok
+		- '~^Cannot call method getCode\(\) on Throwable\|null\.$~' # ok
+		- '~.+Mockery\\MockInterface given\.$~' # do not want to bother
+		- '~^Property .+::\$connection \(Klapuch\\Storage\\Connection\) does not accept null\.$~' # because GC
+		- '~^Parameter #1 \$json of function json_decode expects string, string\|false given\.$~' # ok
+		- '~^Parameter #1 \$output of class Klapuch\\Output\\FakeFormat constructor expects string, string\|false given\.$~'# ok

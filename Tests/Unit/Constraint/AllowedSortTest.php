@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use FindMyFriends\TestCase;
 use Klapuch\Dataset;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,11 +13,11 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class AllowedSortTest extends Tester\TestCase {
+final class AllowedSortTest extends TestCase\Runtime {
 	/**
 	 * @throws \UnexpectedValueException Following sorts are not allowed: "status"
 	 */
-	public function testThrowingOnNotAllowedSort() {
+	public function testThrowingOnNotAllowedSort(): void {
 		(new Constraint\AllowedSort(
 			new class extends Dataset\Sort {
 				protected function sort(): array {
@@ -31,7 +31,7 @@ final class AllowedSortTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Following sorts are not allowed: "foo"
 	 */
-	public function testIgnoringCases() {
+	public function testIgnoringCases(): void {
 		(new Constraint\AllowedSort(
 			new class extends Dataset\Sort {
 				protected function sort(): array {
@@ -45,7 +45,7 @@ final class AllowedSortTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Following sorts are not allowed: "status, size"
 	 */
-	public function testThrowingOnNotAllowedMultipleSorts() {
+	public function testThrowingOnNotAllowedMultipleSorts(): void {
 		(new Constraint\AllowedSort(
 			new class extends Dataset\Sort {
 				protected function sort(): array {
@@ -56,7 +56,7 @@ final class AllowedSortTest extends Tester\TestCase {
 		))->criteria();
 	}
 
-	public function testPassingOnEverythingAllowed() {
+	public function testPassingOnEverythingAllowed(): void {
 		Assert::same(
 			['sort' => ['status' => 'ASC', 'size' => 'DESC']],
 			(new Constraint\AllowedSort(

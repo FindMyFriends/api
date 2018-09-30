@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class DeleteTest extends Tester\TestCase {
+final class DeleteTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
@@ -31,7 +30,7 @@ final class DeleteTest extends Tester\TestCase {
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 
-	public function test403ForNotOwned() {
+	public function test403ForNotOwned(): void {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Spots\Delete(
 				$this->connection,

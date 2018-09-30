@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Encryption;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SeekerPasswordTest extends Tester\TestCase {
+final class SeekerPasswordTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testChangingWithHashing() {
+	public function testChangingWithHashing(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
 		(new Access\SeekerPassword(
 			new Access\FakeSeeker((string) $id),
@@ -34,7 +33,7 @@ final class SeekerPasswordTest extends Tester\TestCase {
 		Assert::same('secret', $seeker['password']);
 	}
 
-	public function testChangingWithoutAffectingOthers() {
+	public function testChangingWithoutAffectingOthers(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['password' => 'pass']))->try();
 		(new Access\SeekerPassword(

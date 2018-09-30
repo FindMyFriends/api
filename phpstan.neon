@@ -1,34 +1,34 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-    - vendor/pepakriz/phpstan-exception-rules/extension.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/pepakriz/phpstan-exception-rules/extension.neon
 parameters:
-    exceptionRules:
-        checkedExceptions:
-            - UnexpectedValueException
-    ignoreErrors:
-        # phpstan-exception-rules
-        - ~PHPDoc tag @throws with type UnexpectedValueException is not compatible with parent~
-        - ~^Catching checked exception UnexpectedValueException as unchecked Throwable is not supported properly in this moment\.~
+	exceptionRules:
+		checkedExceptions:
+			- UnexpectedValueException
+	ignoreErrors:
+		# phpstan-exception-rules
+		- ~PHPDoc tag @throws with type UnexpectedValueException is not compatible with parent~
+		- ~^Catching checked exception UnexpectedValueException as unchecked Throwable is not supported properly in this moment\.~
 
-        # Fine to me
-        - '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable~'
+		# Fine to me
+		- '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable~'
 
-        # Not good to ignore
-        - '~Call to an undefined method object::print\(\)~'
-        - '~UnexpectedValueException is never thrown in the corresponding try block~'
+		# Not good to ignore
+		- '~Call to an undefined method object::print\(\)~'
+		- '~UnexpectedValueException is never thrown in the corresponding try block~'
 
-        # Wait for PHP 7.3 solution
-        - '~Parameter #1 \$json of function json_decode expects string, string\|false given~'
+		# Wait for PHP 7.3 solution
+		- '~Parameter #1 \$json of function json_decode expects string, string\|false given~'
 
-        # Fakes, intentional fails
-        - '~Method FindMyFriends\\Http\\FakeRole::allowed\(\) should return bool but returns bool\|null~'
-        - '~Method FindMyFriends\\Http\\FakeETag::exists\(\) should return bool but returns bool\|null~'
-        - '~Method FindMyFriends\\Http\\FakeETag::get\(\) should return string but returns string\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeVerificationCode::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::id\(\) should return string but returns string\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::properties\(\) should return array but returns array\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakePassword::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeForgottenPasswords::remind\(\) should return FindMyFriends\\Domain\\Access\\Password but returns FindMyFriends\\Domain\\Access\\Password\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::enter\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
-        - '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::exit\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
-        - '~Method FindMyFriends\\Scheduling\\FakeJob::name\(\) should return string but returns string\|null~'
+		# Fakes, intentional fails
+		- '~Method FindMyFriends\\Http\\FakeRole::allowed\(\) should return bool but returns bool\|null~'
+		- '~Method FindMyFriends\\Http\\FakeETag::exists\(\) should return bool but returns bool\|null~'
+		- '~Method FindMyFriends\\Http\\FakeETag::get\(\) should return string but returns string\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeVerificationCode::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::id\(\) should return string but returns string\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeSeeker::properties\(\) should return array but returns array\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakePassword::print\(\) should return Klapuch\\Output\\Format but returns Klapuch\\Output\\Format\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeForgottenPasswords::remind\(\) should return FindMyFriends\\Domain\\Access\\Password but returns FindMyFriends\\Domain\\Access\\Password\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::enter\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
+		- '~Method FindMyFriends\\Domain\\Access\\FakeEntrance::exit\(\) should return FindMyFriends\\Domain\\Access\\Seeker but returns FindMyFriends\\Domain\\Access\\Seeker\|null~'
+		- '~Method FindMyFriends\\Scheduling\\FakeJob::name\(\) should return string but returns string\|null~'

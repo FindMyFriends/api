@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		(new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		session_start();
 		$_SESSION['id'] = '1';
@@ -36,7 +35,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same(HTTP_CREATED, $response->status());
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(static function () {
 			(new Endpoint\RefreshTokens\Post(
 				new Application\FakeRequest(
@@ -46,7 +45,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The property token is required');
 	}
 
-	public function test403OnUnknownToken() {
+	public function test403OnUnknownToken(): void {
 		Assert::exception(static function () {
 			(new Endpoint\RefreshTokens\Post(
 				new Application\FakeRequest(

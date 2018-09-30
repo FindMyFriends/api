@@ -9,7 +9,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -17,10 +16,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		(new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		$response = (new Endpoint\Tokens\Post(
 			new Application\FakeRequest(
@@ -37,7 +36,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same(HTTP_CREATED, $response->status());
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
@@ -51,7 +50,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The property email is required');
 	}
 
-	public function test403OnUnknownEmail() {
+	public function test403OnUnknownEmail(): void {
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
@@ -65,7 +64,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Email "foo@baz.cz" does not exist', HTTP_FORBIDDEN);
 	}
 
-	public function test403OnWrongPassword() {
+	public function test403OnWrongPassword(): void {
 		(new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
@@ -80,7 +79,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Wrong password', HTTP_FORBIDDEN);
 	}
 
-	public function test403OnNotVerifiedCode() {
+	public function test403OnNotVerifiedCode(): void {
 		(new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz']))->try();
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(

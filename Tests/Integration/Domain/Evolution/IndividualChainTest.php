@@ -10,7 +10,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -18,10 +17,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class IndividualChainTest extends Tester\TestCase {
+final class IndividualChainTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testCopyingBirthYearFromAncestor() {
+	public function testCopyingBirthYearFromAncestor(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection))->try();
 		(new Misc\SampleEvolution($this->connection))->try();
@@ -121,7 +120,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function testCountingBySeeker() {
+	public function testCountingBySeeker(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection))->try();
 		(new Misc\SampleEvolution($this->connection))->try();
@@ -138,7 +137,7 @@ final class IndividualChainTest extends Tester\TestCase {
 		);
 	}
 
-	public function testChainBySeeker() {
+	public function testChainBySeeker(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection))->try();
 		(new Misc\SampleEvolution($this->connection))->try();

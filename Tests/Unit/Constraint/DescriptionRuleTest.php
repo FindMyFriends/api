@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,7 +12,7 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class DescriptionRuleTest extends Tester\TestCase {
+final class DescriptionRuleTest extends TestCase\Runtime {
 	private const BASE = [
 		'body' => [
 			'breast_size' => null,
@@ -23,7 +23,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		],
 	];
 
-	public function testThrowingOnWomanWithBeard() {
+	public function testThrowingOnWomanWithBeard(): void {
 		Assert::exception(static function() {
 			(new Constraint\DescriptionRule())->apply(
 				array_replace_recursive(
@@ -57,7 +57,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Breast is valid only for women
 	 */
-	public function testThrowingOnManWithBreast() {
+	public function testThrowingOnManWithBreast(): void {
 		(new Constraint\DescriptionRule())->apply(
 			array_replace_recursive(
 				self::BASE,
@@ -71,7 +71,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPassingOnWomanWithoutBeard() {
+	public function testPassingOnWomanWithoutBeard(): void {
 		$expectation = array_replace_recursive(
 			self::BASE,
 			[
@@ -84,7 +84,7 @@ final class DescriptionRuleTest extends Tester\TestCase {
 		Assert::equal($expectation, (new Constraint\DescriptionRule())->apply($expectation));
 	}
 
-	public function testPassingOnWomanWithBreast() {
+	public function testPassingOnWomanWithBreast(): void {
 		$expectation = array_replace_recursive(
 			self::BASE,
 			[

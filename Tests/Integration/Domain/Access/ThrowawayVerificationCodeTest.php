@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ThrowawayVerificationCodeTest extends Tester\TestCase {
+final class ThrowawayVerificationCodeTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testMakeCodeUsedAfterUsage() {
+	public function testMakeCodeUsedAfterUsage(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		(new Access\ThrowawayVerificationCode($code, $this->connection))->use();
 		Assert::true(
@@ -33,7 +32,7 @@ final class ThrowawayVerificationCodeTest extends Tester\TestCase {
 		);
 	}
 
-	public function testThrowingOnUsingAlreadyActivatedCode() {
+	public function testThrowingOnUsingAlreadyActivatedCode(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection, ['email' => 'foo@bar.cz', 'verification_code' => ['used_at' => 'NOW()']]))->try();
 		Assert::exception(function() use ($code) {
 			(new Access\ThrowawayVerificationCode(
@@ -49,7 +48,7 @@ final class ThrowawayVerificationCodeTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Verification code was already used');
 	}
 
-	public function testPrintingCode() {
+	public function testPrintingCode(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		Assert::same(
 			sprintf('|code|%s|', $code),

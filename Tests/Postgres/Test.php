@@ -6,7 +6,6 @@ namespace FindMyFriends\Postgres;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class Test extends Tester\TestCase {
+final class Test extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testPostgres() {
+	public function testPostgres(): void {
 		(new class(new \SplFileInfo(__DIR__), $this->connection) implements Misc\Assertion {
 			private const PATTERN = '~\.sql$~i';
 
@@ -56,7 +55,7 @@ final class Test extends Tester\TestCase {
 			private function functions(\SplFileInfo $file): array {
 				preg_match_all(
 					'~^CREATE FUNCTION (?P<functions>tests\.\w+)\(\)~mi',
-					file_get_contents($file->getPathname()),
+					(string) file_get_contents($file->getPathname()),
 					$matches
 				);
 				return $matches['functions'];
@@ -64,16 +63,12 @@ final class Test extends Tester\TestCase {
 
 			private function import(\SplFileInfo $file): void {
 				try {
-					$this->connection->exec(file_get_contents($file->getPathname()));
+					$this->connection->exec((string) file_get_contents($file->getPathname()));
 				} catch (\PDOException $e) {
 					Assert::fail((new \FindMyFriends\Postgres\PlestException($e, $file))->getMessage());
 				}
 			}
 
-			/**
-			 * @param \SplFileInfo $source
-			 * @return \SplFileInfo[]
-			 */
 			private function files(\SplFileInfo $source): \Iterator {
 				return new \RegexIterator(
 					new \RecursiveIteratorIterator(

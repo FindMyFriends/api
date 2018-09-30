@@ -11,7 +11,6 @@ use Hashids\Hashids;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri\FakeUri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -19,10 +18,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Evolutions\Post(
@@ -43,7 +42,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same('https://localhost/evolutions/k5', $response->headers()['Location']);
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(function () {
 			(new Endpoint\Evolutions\Post(
 				new Hashids(),

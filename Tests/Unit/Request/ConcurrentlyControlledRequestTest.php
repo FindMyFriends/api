@@ -8,7 +8,6 @@ use FindMyFriends\Request;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
+final class ConcurrentlyControlledRequestTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testCreatingFirstETag() {
+	public function testCreatingFirstETag(): void {
 		$eTag = $this->mock(Http\ETag::class);
 		$eTag->shouldReceive('exists')->andReturn(false)->once();
 		$eTag->shouldReceive('set')->once();
@@ -31,7 +30,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 		});
 	}
 
-	public function testThrowingOnSecondSameRequestsWithoutETag() {
+	public function testThrowingOnSecondSameRequestsWithoutETag(): void {
 		Assert::exception(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), []),
@@ -40,7 +39,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'ETag does not match your preferences', HTTP_PRECONDITION_FAILED);
 	}
 
-	public function testThrowingOnNotMatchingETag() {
+	public function testThrowingOnNotMatchingETag(): void {
 		Assert::exception(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), ['If-Match' => '"abc"']),
@@ -49,7 +48,7 @@ final class ConcurrentlyControlledRequestTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'ETag does not match your preferences', HTTP_PRECONDITION_FAILED);
 	}
 
-	public function testPassingOnNotMatchingETagForInvertedHeader() {
+	public function testPassingOnNotMatchingETagForInvertedHeader(): void {
 		Assert::noError(static function() {
 			(new Request\ConcurrentlyControlledRequest(
 				new Application\FakeRequest(new Output\FakeFormat(), ['If-None-Match' => '"abc"']),

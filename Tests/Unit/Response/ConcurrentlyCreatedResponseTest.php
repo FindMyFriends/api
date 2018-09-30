@@ -8,7 +8,6 @@ use FindMyFriends\Response;
 use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class ConcurrentlyCreatedResponseTest extends Tester\TestCase {
+final class ConcurrentlyCreatedResponseTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testStoredETag() {
+	public function testStoredETag(): void {
 		$eTag = $this->mock(Http\ETag::class);
 		$eTag->shouldReceive('set')->once();
 		Assert::same(

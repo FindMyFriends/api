@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,13 +14,13 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExpirableRemindedPasswordTest extends Tester\TestCase {
+final class ExpirableRemindedPasswordTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	/**
 	 * @throws \UnexpectedValueException The reminder expired
 	 */
-	public function testThrowingOnOldReminder() {
+	public function testThrowingOnOldReminder(): void {
 		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
@@ -41,7 +40,7 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 		))->change('123456789');
 	}
 
-	public function testChangingPasswordWithFreshReminder() {
+	public function testChangingPasswordWithFreshReminder(): void {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
 			$this->connection,
@@ -57,7 +56,7 @@ final class ExpirableRemindedPasswordTest extends Tester\TestCase {
 		});
 	}
 
-	public function testPrintingWithExpirationTime() {
+	public function testPrintingWithExpirationTime(): void {
 		$reminder = str_repeat('x', 141);
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		(new Misc\SamplePostgresData(

@@ -9,7 +9,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -17,10 +16,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class IndividualDemandsTest extends Tester\TestCase {
+final class IndividualDemandsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testAskingForFirstDemand() {
+	public function testAskingForFirstDemand(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		$id = (new Interaction\IndividualDemands(new Access\FakeSeeker((string) $seeker), $this->connection))->ask(
 			[
@@ -107,7 +106,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function testAllForSpecifiedSeeker() {
+	public function testAllForSpecifiedSeeker(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $seeker2] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
@@ -127,7 +126,7 @@ final class IndividualDemandsTest extends Tester\TestCase {
 		Assert::null($demands->current());
 	}
 
-	public function testCounting() {
+	public function testCounting(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $seeker2] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();

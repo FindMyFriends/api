@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Scheduling;
 use FindMyFriends\Scheduling;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class MarkedJobTest extends Tester\TestCase {
+final class MarkedJobTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testSubsequentId() {
+	public function testSubsequentId(): void {
 		(new Scheduling\MarkedJob(new Scheduling\FakeJob(null, 'FakeJob'), $this->connection))->fulfill();
 		$rows = (new Storage\TypedQuery(
 			$this->connection,
@@ -34,7 +33,7 @@ final class MarkedJobTest extends Tester\TestCase {
 		Assert::same($rows[0]['id'], $rows[1]['self_id']);
 	}
 
-	public function testMarkingExceptionAsFailed() {
+	public function testMarkingExceptionAsFailed(): void {
 		Assert::exception(
 			function() {
 				(new Scheduling\MarkedJob(

@@ -5,7 +5,6 @@ namespace FindMyFriends\Integration\Schema;
 
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class ColorEnumTest extends Tester\TestCase {
+final class ColorEnumTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testCustomFormatColors() {
+	public function testCustomFormatColors(): void {
 		$colors = (new Schema\ColorEnum('hair_colors', $this->connection))->values();
 		Assert::same(current($colors)['id'], key($colors));
 		Assert::true(isset(current($colors)['id']));

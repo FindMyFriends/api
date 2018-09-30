@@ -9,7 +9,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -17,10 +16,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class GetTest extends Tester\TestCase {
+final class GetTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 1999)']]))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker, 'general' => ['birth_year_range' => '(1996, 2000)']]))->try();
@@ -39,7 +38,7 @@ final class GetTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function testIncludedCountHeader() {
+	public function testIncludedCountHeader(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();

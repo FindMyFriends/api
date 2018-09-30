@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Routing;
 
 use FindMyFriends\Routing;
+use FindMyFriends\TestCase;
 use Klapuch\Routing\FakeRoutes;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,8 +13,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class NginxMatchedRoutesTest extends Tester\TestCase {
-	public function testMatchingByServer() {
+final class NginxMatchedRoutesTest extends TestCase\Runtime {
+	public function testMatchingByServer(): void {
 		$_SERVER['ROUTE_NAME'] = 'demands/{id}';
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		Assert::same(
@@ -25,7 +25,7 @@ final class NginxMatchedRoutesTest extends Tester\TestCase {
 		);
 	}
 
-	public function testNoMatchAsEmpty() {
+	public function testNoMatchAsEmpty(): void {
 		$_SERVER['ROUTE_NAME'] = 'XXXXXXXX';
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		Assert::same(

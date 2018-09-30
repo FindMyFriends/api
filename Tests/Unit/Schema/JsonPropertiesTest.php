@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Schema;
 
 use FindMyFriends\Schema;
+use FindMyFriends\TestCase;
 use Tester;
 use Tester\Assert;
 
@@ -12,8 +13,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class JsonPropertiesTest extends Tester\TestCase {
-	public function testGatheredPropertiesObjects() {
+final class JsonPropertiesTest extends TestCase\Runtime {
+	public function testGatheredPropertiesObjects(): void {
 		Assert::same(
 			[
 				'status' => [
@@ -43,7 +44,7 @@ final class JsonPropertiesTest extends Tester\TestCase {
 	}
 
 	private function testingSchema(): string {
-		return json_encode(
+		return (string) json_encode(
 			[
 				'$schema' => 'http://json-schema.org/draft-04/schema#',
 				'additionalProperties' => false,
@@ -76,7 +77,7 @@ final class JsonPropertiesTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Schema can not be loaded
 	 */
-	public function testThrowingOnUnknownFile() {
+	public function testThrowingOnUnknownFile(): void {
 		(new Schema\JsonProperties(new \SplFileInfo('foo')))->objects();
 	}
 }

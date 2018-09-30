@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ChangeSpotsTest extends Tester\TestCase {
+final class ChangeSpotsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testTrackingForEvolutionChange() {
+	public function testTrackingForEvolutionChange(): void {
 		['id' => $change] = (new Misc\SampleEvolution($this->connection))->try();
 		(new Evolution\ChangeSpots(
 			$change,
@@ -40,7 +39,7 @@ final class ChangeSpotsTest extends Tester\TestCase {
 		(new Misc\TableCount($this->connection, 'evolution_spots', 1))->assert();
 	}
 
-	public function testEvolutionsForChange() {
+	public function testEvolutionsForChange(): void {
 		['id' => $change1] = (new Misc\SampleEvolution($this->connection))->try();
 		['id' => $change2] = (new Misc\SampleEvolution($this->connection))->try();
 		(new Misc\SamplePostgresData($this->connection, 'evolution_spot', ['evolution_id' => $change1]))->try();

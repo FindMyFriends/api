@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PrioritizedColumnsTest extends Tester\TestCase {
+final class PrioritizedColumnsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testPriorityBySeeker() {
+	public function testPriorityBySeeker(): void {
 		['id' => $me] = (new Misc\SampleSeeker($this->connection))->try();
 		['id' => $foreign] = (new Misc\SampleSeeker($this->connection))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
@@ -32,7 +31,7 @@ final class PrioritizedColumnsTest extends Tester\TestCase {
 		Assert::same(3, current($columns));
 	}
 
-	public function testAddingAnyColumnsForSeekerWithoutRefresh() {
+	public function testAddingAnyColumnsForSeekerWithoutRefresh(): void {
 		['id' => $me] = (new Misc\SampleSeeker($this->connection))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $me, 'firstname' => 'Dom']))->try();
 		$columns = (new Schema\Evolution\PrioritizedColumns($this->connection, new Access\FakeSeeker((string) $me)))->values();

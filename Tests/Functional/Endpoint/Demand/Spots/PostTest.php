@@ -10,7 +10,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -18,10 +17,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Spots\Post(
@@ -40,7 +39,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same('https://localhost/demands/k5/spots', $response->headers()['Location']);
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(function () {
 			(new Endpoint\Demand\Spots\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),

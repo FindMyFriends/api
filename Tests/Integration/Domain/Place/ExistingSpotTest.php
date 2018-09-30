@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExistingSpotTest extends Tester\TestCase {
+final class ExistingSpotTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknown() {
+	public function testThrowingOnUnknown(): void {
 		$ex = Assert::exception(function() {
 			(new Place\ExistingSpot(
 				new Place\FakeSpot(),
@@ -45,7 +44,7 @@ final class ExistingSpotTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithExisting() {
+	public function testPassingWithExisting(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();
 		Assert::noError(function() use ($id) {
 			$spot = new Place\ExistingSpot(

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Misc;
 
 use FindMyFriends\Misc;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class ApiErrorCallbackTest extends Tester\TestCase {
-	public function testTransformingStatusCodeOnThrowing() {
+final class ApiErrorCallbackTest extends TestCase\Runtime {
+	public function testTransformingStatusCodeOnThrowing(): void {
 		$ex = Assert::exception(static function() {
 			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(static function() {
 				throw new \UnexpectedValueException('ABC', 100);
@@ -22,7 +22,7 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testRethrowingOnOtherExceptions() {
+	public function testRethrowingOnOtherExceptions(): void {
 		$ex = Assert::exception(static function() {
 			(new Misc\ApiErrorCallback(HTTP_FORBIDDEN))->invoke(static function() {
 				throw new \DomainException('ABC', 100);
@@ -31,7 +31,7 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 		Assert::null($ex->getPrevious());
 	}
 
-	public function testNoExceptionWithoutThrowing() {
+	public function testNoExceptionWithoutThrowing(): void {
 		Assert::noError(static function() {
 			(new Misc\ApiErrorCallback(
 				HTTP_FORBIDDEN
@@ -39,7 +39,7 @@ final class ApiErrorCallbackTest extends Tester\TestCase {
 		});
 	}
 
-	public function testReturningValue() {
+	public function testReturningValue(): void {
 		Assert::same(
 			3,
 			(new Misc\ApiErrorCallback(

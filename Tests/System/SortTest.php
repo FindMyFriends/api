@@ -8,10 +8,10 @@ use FindMyFriends\Endpoint\Demand;
 use FindMyFriends\Endpoint\Demands;
 use FindMyFriends\Endpoint\Evolutions;
 use FindMyFriends\Schema;
+use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Http;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -19,17 +19,17 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class SortTest extends Tester\TestCase {
+final class SortTest extends TestCase\Runtime {
 	/**
 	 * @dataProvider sorts
 	 */
-	public function testAllowedSorts(string $endpoint) {
+	public function testAllowedSorts(string $endpoint): void {
 		$response = $this->response($endpoint);
 		Assert::same('[]', $response->body());
 		Assert::same(HTTP_OK, $response->code());
 	}
 
-	public function testNumberOfSorts() {
+	public function testNumberOfSorts(): void {
 		if (!class_exists(Dataset\RestSort::class))
 			Assert::fail('Class RestSort is no longer exist and is not possible to check sort occurrence');
 		Assert::same(
@@ -42,7 +42,7 @@ final class SortTest extends Tester\TestCase {
 						)
 					),
 					static function (\SplFileInfo $file): bool {
-						return strpos(file_get_contents($file->getPathname()), 'new Dataset\RestSort(') !== false;
+						return strpos((string) file_get_contents($file->getPathname()), 'new Dataset\RestSort(') !== false;
 					}
 				)
 			)

@@ -5,7 +5,6 @@ namespace FindMyFriends\Unit\Domain\Search;
 
 use FindMyFriends\Domain\Search;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RequestedSoulmateTest extends Tester\TestCase {
+final class RequestedSoulmateTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testProcessingWithSuccess() {
+	public function testProcessingWithSuccess(): void {
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
@@ -32,7 +31,7 @@ final class RequestedSoulmateTest extends Tester\TestCase {
 		});
 	}
 
-	public function testRethrowingOnFail() {
+	public function testRethrowingOnFail(): void {
 		$self = 2;
 		$requests = $this->mock(Search\Requests::class);
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);

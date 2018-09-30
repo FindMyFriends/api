@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Search;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExistingSoulmateTest extends Tester\TestCase {
+final class ExistingSoulmateTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknown() {
+	public function testThrowingOnUnknown(): void {
 		$ex = Assert::exception(function () {
 			(new Search\ExistingSoulmate(
 				new Search\FakeSoulmate(),

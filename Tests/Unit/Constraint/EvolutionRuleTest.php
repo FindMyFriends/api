@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class EvolutionRuleTest extends Tester\TestCase {
-	public function testApplicationWithAllReturnedValues() {
+final class EvolutionRuleTest extends TestCase\Runtime {
+	public function testApplicationWithAllReturnedValues(): void {
 		Assert::equal(
 			[
 				'body' => [

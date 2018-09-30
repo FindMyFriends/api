@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Configuration;
 
 use FindMyFriends\Configuration;
+use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Configuration\FakeSource;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class CreatedHashidsTest extends Tester\TestCase {
-	public function testCreatingWithSaltAndLength() {
+final class CreatedHashidsTest extends TestCase\Runtime {
+	public function testCreatingWithSaltAndLength(): void {
 		Assert::equal(
 			[
 				'demand' => new Hashids('abc', 10),

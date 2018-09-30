@@ -5,7 +5,6 @@ namespace FindMyFriends\Integration\Schema;
 
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class TableEnumTest extends Tester\TestCase {
+final class TableEnumTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testKeyPairedValues() {
+	public function testKeyPairedValues(): void {
 		$this->connection->exec('TRUNCATE body_builds CASCADE');
 		$this->connection->exec('ALTER SEQUENCE body_builds_id_seq RESTART');
 		$this->connection->exec("INSERT INTO body_builds (name) VALUES ('muscular')");

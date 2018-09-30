@@ -7,7 +7,6 @@ use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class GetTest extends Tester\TestCase {
+final class GetTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
 		$requests = json_decode(

@@ -7,7 +7,6 @@ use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Uri\FakeUri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function test429OnNotInRefreshInterval() {
+	public function test429OnNotInRefreshInterval(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
 		Assert::exception(function() use ($demand) {
@@ -30,7 +29,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Demand is not refreshable for soulmate yet', HTTP_TOO_MANY_REQUESTS);
 	}
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		$response = (new Endpoint\Demand\SoulmateRequests\Post(
 			new FakeUri('/', 'demands/1/soulmate_requests', []),

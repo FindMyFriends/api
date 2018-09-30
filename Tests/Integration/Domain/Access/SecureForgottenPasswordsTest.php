@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SecureForgottenPasswordsTest extends Tester\TestCase {
+final class SecureForgottenPasswordsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testRemindingWithFutureExpiration() {
+	public function testRemindingWithFutureExpiration(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		(new Access\SecureForgottenPasswords(
 			$this->connection
@@ -34,13 +33,13 @@ final class SecureForgottenPasswordsTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException The email does not exist
 	 */
-	public function testThrowingOnUnknownEmail() {
+	public function testThrowingOnUnknownEmail(): void {
 		(new Access\SecureForgottenPasswords(
 			$this->connection
 		))->remind('zzz@zzz.cz');
 	}
 
-	public function testPassingWithCaseInsensitiveEmail() {
+	public function testPassingWithCaseInsensitiveEmail(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
 		Assert::noError(function() {
 			(new Access\SecureForgottenPasswords(

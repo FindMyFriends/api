@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
+use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -15,8 +15,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class CreatedResponseTest extends Tester\TestCase {
-	public function testPrependLocationHeader() {
+final class CreatedResponseTest extends TestCase\Runtime {
+	public function testPrependLocationHeader(): void {
 		Assert::same(
 			['Location' => 'http://localhost', 'Accept' => 'text/html'],
 			(new Response\CreatedResponse(
@@ -26,7 +26,7 @@ final class CreatedResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function test201CreatedStatusCode() {
+	public function test201CreatedStatusCode(): void {
 		Assert::same(
 			HTTP_CREATED,
 			(new Response\CreatedResponse(

@@ -5,7 +5,6 @@ namespace FindMyFriends\Unit\Domain\Access;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -13,14 +12,14 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class GuestTest extends Tester\TestCase {
+final class GuestTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testStaticId() {
+	public function testStaticId(): void {
 		Assert::same('0', (new Access\Guest())->id());
 	}
 
-	public function testStaticProperties() {
+	public function testStaticProperties(): void {
 		Assert::same(['role' => 'guest'], (new Access\Guest())->properties());
 	}
 }

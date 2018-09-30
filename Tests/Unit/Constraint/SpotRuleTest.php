@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,7 +12,7 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SpotRuleTest extends Tester\TestCase {
+final class SpotRuleTest extends TestCase\Runtime {
 	private const BASE = [
 		'met_at' => [
 			'moment' => '2015-09-17T13:58:10+00:00',
@@ -25,11 +25,11 @@ final class SpotRuleTest extends Tester\TestCase {
 		],
 	];
 
-	public function testApplicationWithAllReturnedValues() {
+	public function testApplicationWithAllReturnedValues(): void {
 		Assert::equal(self::BASE, (new Constraint\SpotRule())->apply(self::BASE));
 	}
 
-	public function testPassingOnSomeMissing() {
+	public function testPassingOnSomeMissing(): void {
 		Assert::noError(static function () {
 			$base = self::BASE;
 			unset($base['coordinates']);
@@ -45,7 +45,7 @@ final class SpotRuleTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Exactly timeline side does not have approximation.
 	 */
-	public function testThrowingOnExactlyTimeLineSideWithApproximation() {
+	public function testThrowingOnExactlyTimeLineSideWithApproximation(): void {
 		(new Constraint\SpotRule())->apply(
 			array_replace_recursive(
 				self::BASE,
@@ -64,7 +64,7 @@ final class SpotRuleTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAllowedApproximationAsNull()
+	public function testAllowedApproximationAsNull(): void
 	{
 		Assert::noError(static function() {
 			(new Constraint\SpotRule())->apply(

@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ValidReminderRuleTest extends Tester\TestCase {
+final class ValidReminderRuleTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testInvalidAsUnknownReminder() {
+	public function testInvalidAsUnknownReminder(): void {
 		$rule = new Access\ValidReminderRule($this->connection);
 		Assert::exception(static function() use ($rule) {
 			$rule->apply('123');
@@ -25,7 +24,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 		Assert::false($rule->satisfied('123'));
 	}
 
-	public function testInvalidAsUsedReminder() {
+	public function testInvalidAsUsedReminder(): void {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData($this->connection, 'forgotten_password', ['used_at' => date('Y-m-d'), 'reminder' => $reminder]))->try();
 		$rule = new Access\ValidReminderRule($this->connection);
@@ -35,7 +34,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 		Assert::false($rule->satisfied($reminder));
 	}
 
-	public function testInvalidAsExpiredReminder() {
+	public function testInvalidAsExpiredReminder(): void {
 		$this->connection->exec('ALTER TABLE forgotten_passwords DROP CONSTRAINT forgotten_passwords_expire_at_future');
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
@@ -50,7 +49,7 @@ final class ValidReminderRuleTest extends Tester\TestCase {
 		Assert::false($rule->satisfied($reminder));
 	}
 
-	public function testPassingWithValidReminder() {
+	public function testPassingWithValidReminder(): void {
 		$reminder = str_repeat('x', 141);
 		(new Misc\SamplePostgresData(
 			$this->connection,

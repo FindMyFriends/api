@@ -5,7 +5,6 @@ namespace FindMyFriends\Unit\Domain\Access;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class CachedSeekerTest extends Tester\TestCase {
+final class CachedSeekerTest extends TestCase\Runtime {
 	use TestCase\Mockery;
 
-	public function testCallingJustOnce() {
+	public function testCallingJustOnce(): void {
 		$seeker = $this->mock(Access\Seeker::class);
 		$seeker->shouldReceive('id')
 			->once()

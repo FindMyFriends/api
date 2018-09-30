@@ -10,7 +10,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -18,10 +17,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PutTest extends Tester\TestCase {
+final class PutTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		$response = (new Endpoint\Demand\Put(
@@ -39,7 +38,7 @@ final class PutTest extends Tester\TestCase {
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(function() {
 			(new Endpoint\Demand\Put(
 				new Application\FakeRequest(new Output\FakeFormat('{"name":"bar"}')),
@@ -50,7 +49,7 @@ final class PutTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The property note is required');
 	}
 
-	public function test404OnNotExisting() {
+	public function test404OnNotExisting(): void {
 		Assert::exception(function() {
 			(new Endpoint\Demand\Put(
 				new Application\FakeRequest(
@@ -65,7 +64,7 @@ final class PutTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Demand does not exist', HTTP_NOT_FOUND);
 	}
 
-	public function test403OnForeign() {
+	public function test403OnForeign(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleDemand($this->connection))->try();
 		Assert::exception(function() use ($id, $seeker) {

@@ -11,7 +11,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -19,20 +18,20 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class VerifiedEntranceTest extends Tester\TestCase {
+final class VerifiedEntranceTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	/**
 	 * @throws \UnexpectedValueException Email has not been verified yet
 	 */
-	public function testThrowingOnNotVerifiedEmail() {
+	public function testThrowingOnNotVerifiedEmail(): void {
 		(new Access\VerifiedEntrance(
 			$this->connection,
 			new Access\FakeEntrance(new Access\FakeSeeker('1'))
 		))->enter(['unverified@bar.cz', 'heslo']);
 	}
 
-	public function testPassingOnVerifiedEmail() {
+	public function testPassingOnVerifiedEmail(): void {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->connection, ['verification_code' => ['used_at' => 'NOW()']]))->try();
 		$seeker = new Access\FakeSeeker((string) $seeker);
 		Assert::same(

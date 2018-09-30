@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Mail\Verification;
 use FindMyFriends\Mail\Verification;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class MessageTest extends Tester\TestCase {
+final class MessageTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testValidContent() {
+	public function testValidContent(): void {
 		(new Misc\SampleSeeker($this->connection, ['email' => 'me@email.cz']))->try();
 		Assert::noError(function () {
 			(new Verification\Message(

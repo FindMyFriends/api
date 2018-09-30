@@ -5,7 +5,6 @@ namespace FindMyFriends\Integration\Schema;
 
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostgresEnumTest extends Tester\TestCase {
+final class PostgresEnumTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testValuesFromEnum() {
+	public function testValuesFromEnum(): void {
 		Assert::same(
 			['pending', 'processing', 'succeed', 'failed'],
 			(new Schema\PostgresEnum('job_statuses', $this->connection))->values()

@@ -12,7 +12,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -20,10 +19,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SuitedSoulmatesTest extends Tester\TestCase {
+final class SuitedSoulmatesTest extends TestCase\Runtime {
 	use TestCase\Search;
 
-	public function testPersistingMatches() {
+	public function testPersistingMatches(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 2]))->try();
@@ -60,7 +59,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		);
 	}
 
-	public function testIgnoringOwnEvolutions() {
+	public function testIgnoringOwnEvolutions(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 1]))->try();
 		(new Interaction\IndividualDemands(
@@ -84,7 +83,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		Assert::same([], (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates'))->rows());
 	}
 
-	public function testMultiMatchCausingIncrementingVersion() {
+	public function testMultiMatchCausingIncrementingVersion(): void {
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => 2]))->try();
@@ -121,7 +120,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		Assert::same(1, $soulmates->count(new Dataset\EmptySelection()));
 	}
 
-	public function testFromParticularDemand() {
+	public function testFromParticularDemand(): void {
 		['id' => $seekerId] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
 		['id' => $otherDemand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();

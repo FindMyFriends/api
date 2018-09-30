@@ -5,7 +5,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 
 use FindMyFriends\Domain\Access;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -13,10 +12,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RefreshingEntranceTest extends Tester\TestCase {
+final class RefreshingEntranceTest extends TestCase\Runtime {
 	use TestCase\RedisSession;
 
-	public function testCreatingDifferentTokens() {
+	public function testCreatingDifferentTokens(): void {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
@@ -24,7 +23,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		Assert::notSame($id, session_id());
 	}
 
-	public function testCopyingData() {
+	public function testCopyingData(): void {
 		session_start();
 		$_SESSION['id'] = '1';
 		$seeker = (new Access\RefreshingEntrance())->enter(['token' => session_id()]);
@@ -35,7 +34,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		);
 	}
 
-	public function testKeepingPrevious() {
+	public function testKeepingPrevious(): void {
 		session_start();
 		$_SESSION['id'] = '1';
 		$id = session_id();
@@ -44,7 +43,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		Assert::count(2, $this->redis->keys('*'));
 	}
 
-	public function testStartingSessionOnce() {
+	public function testStartingSessionOnce(): void {
 		Assert::noError(static function () {
 			session_start();
 			$_SESSION['id'] = '1';
@@ -52,13 +51,13 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		});
 	}
 
-	public function testThrowingOnUnknownId() {
+	public function testThrowingOnUnknownId(): void {
 		Assert::exception(static function () {
 			(new Access\RefreshingEntrance())->enter(['token' => 'foo']);
 		}, \UnexpectedValueException::class, 'Provided token is not valid.');
 	}
 
-	public function testThrowingOnUnknownIdWithAlreadyAssignedOne() {
+	public function testThrowingOnUnknownIdWithAlreadyAssignedOne(): void {
 		session_start();
 		$_SESSION['id'] = '1';
 		Assert::exception(static function () {
@@ -66,7 +65,7 @@ final class RefreshingEntranceTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Provided token is not valid.');
 	}
 
-	public function testRemovingUnknownToken() {
+	public function testRemovingUnknownToken(): void {
 		session_start();
 		$_SESSION['id'] = '1';
 		Assert::exception(static function () {

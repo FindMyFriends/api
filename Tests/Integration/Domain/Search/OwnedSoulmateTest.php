@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class OwnedSoulmateTest extends Tester\TestCase {
+final class OwnedSoulmateTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnNotOwned() {
+	public function testThrowingOnNotOwned(): void {
 		$ex = Assert::exception(function () {
 			(new Search\OwnedSoulmate(
 				new Search\FakeSoulmate(),

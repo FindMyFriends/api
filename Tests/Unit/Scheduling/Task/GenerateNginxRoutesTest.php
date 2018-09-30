@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Scheduling\Task;
 
 use FindMyFriends\Scheduling;
+use FindMyFriends\TestCase;
 use Klapuch\Configuration;
-use Tester;
 use Tester\Assert;
 use Tester\FileMock;
 
@@ -14,8 +14,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class GenerateNginxRoutesTest extends Tester\TestCase {
-	public function testReplacingAllPlaceholders() {
+final class GenerateNginxRoutesTest extends TestCase\Runtime {
+	public function testReplacingAllPlaceholders(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
@@ -36,7 +36,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		Assert::contains('location ~* ^/evolutions/(?<name>[a-z]+)$ {', file_get_contents($destination));
 	}
 
-	public function testAddingFastCgiParams() {
+	public function testAddingFastCgiParams(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
@@ -53,7 +53,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		Assert::contains('include php.conf', file_get_contents($destination));
 	}
 
-	public function testSkippingMissingParams() {
+	public function testSkippingMissingParams(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
@@ -68,7 +68,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		Assert::notContains('fastcgi_param ROUTE_PARAM_QUERY', file_get_contents($destination));
 	}
 
-	public function testAllowedMethodsWithIncludedOptions() {
+	public function testAllowedMethodsWithIncludedOptions(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
@@ -83,7 +83,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		Assert::contains('limit_except GET PUT OPTIONS {', file_get_contents($destination));
 	}
 
-	public function testNoDoubledOptions() {
+	public function testNoDoubledOptions(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([
@@ -98,7 +98,7 @@ final class GenerateNginxRoutesTest extends Tester\TestCase {
 		Assert::contains('limit_except GET OPTIONS {', file_get_contents($destination));
 	}
 
-	public function testNoContentRedirectAsDefaultForOptions() {
+	public function testNoContentRedirectAsDefaultForOptions(): void {
 		$destination = FileMock::create();
 		(new Scheduling\Task\GenerateNginxRoutes(
 			new Configuration\FakeSource([

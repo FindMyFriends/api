@@ -8,7 +8,6 @@ use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class VisibleChangeTest extends Tester\TestCase {
+final class VisibleChangeTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnForeign() {
+	public function testThrowingOnForeign(): void {
 		['id' => $id] = (new Misc\SampleEvolution($this->connection))->try();
 		$ex = Assert::exception(function() use ($id) {
 			(new Evolution\VisibleChange(
@@ -50,7 +49,7 @@ final class VisibleChangeTest extends Tester\TestCase {
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
-	public function testPassingWithOwned() {
+	public function testPassingWithOwned(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($seeker, $id) {

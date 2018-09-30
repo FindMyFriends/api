@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Domain\Interaction;
 
 use FindMyFriends\Domain\Interaction;
+use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PublicDemandTest extends Tester\TestCase {
-	public function testFormatting() {
+final class PublicDemandTest extends TestCase\Runtime {
+	public function testFormatting(): void {
 		Assert::equal(
 			[
 				'id' => 'jR',

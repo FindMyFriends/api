@@ -8,7 +8,6 @@ use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class OwnedSpotsTest extends Tester\TestCase {
+final class OwnedSpotsTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnNotOwned() {
+	public function testThrowingOnNotOwned(): void {
 		Assert::exception(function () {
 			(new Interaction\OwnedSpots(
 				new Place\FakeSpots(),
@@ -38,7 +37,7 @@ final class OwnedSpotsTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Demand does not belong to you.');
 	}
 
-	public function testPassingOnOwned() {
+	public function testPassingOnOwned(): void {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SamplePostgresData($this->connection, 'demand_spot', ['demand_id' => $demand]))->try();

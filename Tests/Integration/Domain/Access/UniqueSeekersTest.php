@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\TestCase;
 use Klapuch\Encryption;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class UniqueSeekersTest extends Tester\TestCase {
+final class UniqueSeekersTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testCreatedSeekerWithBaseEvolution() {
+	public function testCreatedSeekerWithBaseEvolution(): void {
 		$seeker = (new Access\UniqueSeekers(
 			$this->connection,
 			new Encryption\FakeCipher()
@@ -53,7 +52,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		Assert::same(1996, $general[0]['birth_year']);
 	}
 
-	public function testJoiningMultipleDifferentEmails() {
+	public function testJoiningMultipleDifferentEmails(): void {
 		$seekers = new Access\UniqueSeekers(
 			$this->connection,
 			new Encryption\FakeCipher()
@@ -98,7 +97,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		Assert::same(2, $rows[1]['id']);
 	}
 
-	public function testThrowingOnDuplicatedEmail() {
+	public function testThrowingOnDuplicatedEmail(): void {
 		$register = function() {
 			(new Access\UniqueSeekers(
 				$this->connection,
@@ -124,7 +123,7 @@ final class UniqueSeekersTest extends Tester\TestCase {
 		Assert::exception($register, \UnexpectedValueException::class, 'Email foo@bar.cz already exists');
 	}
 
-	public function testThrowingOnDuplicatedContact() {
+	public function testThrowingOnDuplicatedContact(): void {
 		$register = function(string $email) {
 			return function () use ($email) {
 				(new Access\UniqueSeekers(

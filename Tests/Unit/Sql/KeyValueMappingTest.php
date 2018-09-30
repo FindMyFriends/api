@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Sql;
 
 use FindMyFriends\Sql;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class KeyValueMappingTest extends Tester\TestCase {
-	public function testMappingOnlyDesiredToApplication() {
+final class KeyValueMappingTest extends TestCase\Runtime {
+	public function testMappingOnlyDesiredToApplication(): void {
 		Assert::same(
 			['_lastname' => 'yyy', '_name' => 'xxx'],
 			(new Sql\KeyValueMapping(
@@ -26,7 +26,7 @@ final class KeyValueMappingTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMappingOnlyDesiredToDatabase() {
+	public function testMappingOnlyDesiredToDatabase(): void {
 		Assert::same(
 			['lastname' => 'yyy', 'name' => 'xxx'],
 			(new Sql\KeyValueMapping(
@@ -39,7 +39,7 @@ final class KeyValueMappingTest extends Tester\TestCase {
 		);
 	}
 
-	public function testKeepingOrder() {
+	public function testKeepingOrder(): void {
 		$mapping = [
 			'general_age' => 'general.age',
 			'general_ethnic_group_id' => 'general.ethnic_group_id',

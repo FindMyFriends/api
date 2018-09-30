@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class StoredDemandTest extends Tester\TestCase {
+final class StoredDemandTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testRemovingSingleDemand() {
+	public function testRemovingSingleDemand(): void {
 		(new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SampleDemand($this->connection))->try();
 		(new Interaction\StoredDemand(1, $this->connection))->retract();
@@ -33,7 +32,7 @@ final class StoredDemandTest extends Tester\TestCase {
 		);
 	}
 
-	public function testReconsideringAsWholeForSpecificId() {
+	public function testReconsideringAsWholeForSpecificId(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand(
 			$this->connection,
@@ -167,7 +166,7 @@ final class StoredDemandTest extends Tester\TestCase {
 		);
 	}
 
-	public function testReconsideringOnlyPart() {
+	public function testReconsideringOnlyPart(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleDemand(
 			$this->connection,

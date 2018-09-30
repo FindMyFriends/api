@@ -7,7 +7,6 @@ use FindMyFriends\Endpoint;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../../bootstrap.php';
 /**
  * @testCase
  */
-final class GetTest extends Tester\TestCase {
+final class GetTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		$seeker = (string) current((new Misc\SamplePostgresData($this->connection, 'seeker'))->try());
 		['id' => $demand1] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		['id' => $demand2] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
@@ -39,7 +38,7 @@ final class GetTest extends Tester\TestCase {
 		))->assert();
 	}
 
-	public function testSuccessOnNoSoulmates() {
+	public function testSuccessOnNoSoulmates(): void {
 		$response = (new Endpoint\Demand\Soulmates\Get(
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'soulmates', []),
@@ -49,7 +48,7 @@ final class GetTest extends Tester\TestCase {
 		Assert::count(0, json_decode($response->body()->serialization()));
 	}
 
-	public function testIncludedCountHeader() {
+	public function testIncludedCountHeader(): void {
 		$headers = (new Endpoint\Demand\Soulmates\Get(
 			$this->configuration['HASHIDS'],
 			new Uri\FakeUri('/', 'soulmates', []),

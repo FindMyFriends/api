@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Response;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,50 +12,50 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class JsonErrorTest extends Tester\TestCase {
-	public function testForcingJsonHeader() {
+final class JsonErrorTest extends TestCase\Runtime {
+	public function testForcingJsonHeader(): void {
 		Assert::same(
 			['content-type' => 'application/json; charset=utf8'],
 			(new Response\JsonError(new \Exception(), ['Content-Type' => 'xx']))->headers()
 		);
 	}
 
-	public function testForcingJsonHeaderWithoutCaseSensitivity() {
+	public function testForcingJsonHeaderWithoutCaseSensitivity(): void {
 		Assert::same(
 			['content-type' => 'application/json; charset=utf8'],
 			(new Response\JsonError(new \Exception(), ['content-type' => 'xx']))->headers()
 		);
 	}
 
-	public function testOtherHeadersWithoutRestriction() {
+	public function testOtherHeadersWithoutRestriction(): void {
 		Assert::same(
 			['content-type' => 'application/json; charset=utf8', 'foo' => 'bar'],
 			(new Response\JsonError(new \Exception(), ['foo' => 'bar']))->headers()
 		);
 	}
 
-	public function testTakingStatusCodeFromException() {
+	public function testTakingStatusCodeFromException(): void {
 		Assert::same(
 			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception('', HTTP_BAD_REQUEST)))->status()
 		);
 	}
 
-	public function testStatusCodeFromParameterOnUnknownOneFromException() {
+	public function testStatusCodeFromParameterOnUnknownOneFromException(): void {
 		Assert::same(
 			HTTP_FORBIDDEN,
 			(new Response\JsonError(new \Exception(), [], HTTP_FORBIDDEN))->status()
 		);
 	}
 
-	public function testDefaultStatusCodeAsBadRequest() {
+	public function testDefaultStatusCodeAsBadRequest(): void {
 		Assert::same(
 			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception()))->status()
 		);
 	}
 
-	public function testLowerStatusCodeForClientOrServerErrorOnly() {
+	public function testLowerStatusCodeForClientOrServerErrorOnly(): void {
 		Assert::same(
 			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception('', HTTP_OK)))->status()
@@ -66,7 +66,7 @@ final class JsonErrorTest extends Tester\TestCase {
 		);
 	}
 
-	public function testHigherStatusCodeForClientOrServerErrorOnly() {
+	public function testHigherStatusCodeForClientOrServerErrorOnly(): void {
 		Assert::same(
 			HTTP_BAD_REQUEST,
 			(new Response\JsonError(new \Exception('', 600)))->status()
@@ -77,7 +77,7 @@ final class JsonErrorTest extends Tester\TestCase {
 		);
 	}
 
-	public function testProperJsonOutput() {
+	public function testProperJsonOutput(): void {
 		Assert::same(
 			['message' => 'Some error'],
 			json_decode(
@@ -87,7 +87,7 @@ final class JsonErrorTest extends Tester\TestCase {
 		);
 	}
 
-	public function testNoContentLeadingToDefaultMessage() {
+	public function testNoContentLeadingToDefaultMessage(): void {
 		Assert::same(
 			['message' => 'Unknown error, contact support.'],
 			json_decode(
@@ -97,7 +97,7 @@ final class JsonErrorTest extends Tester\TestCase {
 		);
 	}
 
-	public function testXssProofContent() {
+	public function testXssProofContent(): void {
 		Assert::same(
 			['message' => '&lt;&amp;&gt;"\''],
 			json_decode(

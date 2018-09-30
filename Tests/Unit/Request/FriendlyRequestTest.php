@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Request;
 
 use FindMyFriends\Request;
+use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class FriendlyRequestTest extends Tester\TestCase {
-	public function testRethrowingWithSameCodeAndChainedPrevious() {
+final class FriendlyRequestTest extends TestCase\Runtime {
+	public function testRethrowingWithSameCodeAndChainedPrevious(): void {
 		$e = Assert::exception(static function () {
 			(new Request\FriendlyRequest(
 				new class implements Application\Request {

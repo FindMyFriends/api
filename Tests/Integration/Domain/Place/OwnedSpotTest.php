@@ -8,7 +8,6 @@ use FindMyFriends\Domain\Place;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class OwnedSpotTest extends Tester\TestCase {
+final class OwnedSpotTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnNotOwned() {
+	public function testThrowingOnNotOwned(): void {
 		Assert::exception(function () {
 			(new Place\OwnedSpot(
 				new Place\FakeSpot(),
@@ -46,7 +45,7 @@ final class OwnedSpotTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Spot does not belong to you.');
 	}
 
-	public function testPassingOnOwned() {
+	public function testPassingOnOwned(): void {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot', ['seeker_id' => $seeker]))->try();

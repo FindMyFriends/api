@@ -8,7 +8,6 @@ use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class StoredChangeTest extends Tester\TestCase {
+final class StoredChangeTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testAffectingWholeForSpecificId() {
+	public function testAffectingWholeForSpecificId(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution(
 			$this->connection,
@@ -149,7 +148,7 @@ final class StoredChangeTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAffectingAllRelatedBirthYears() {
+	public function testAffectingAllRelatedBirthYears(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		(new Misc\SampleEvolution(
 			$this->connection,
@@ -230,7 +229,7 @@ final class StoredChangeTest extends Tester\TestCase {
 		);
 	}
 
-	public function testReverting() {
+	public function testReverting(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
@@ -241,7 +240,7 @@ final class StoredChangeTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Base evolution can not be reverted
 	 */
-	public function testThrowingOnRevertingBase() {
+	public function testThrowingOnRevertingBase(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		(new Misc\SampleEvolution($this->connection))->try();

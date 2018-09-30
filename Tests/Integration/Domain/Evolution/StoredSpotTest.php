@@ -6,17 +6,16 @@ namespace FindMyFriends\Integration\Domain\Evolution;
 use FindMyFriends\Domain\Evolution;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 
 require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * @testCase
  */
-final class StoredSpotTest extends Tester\TestCase {
+final class StoredSpotTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testForgettingBySpot() {
+	public function testForgettingBySpot(): void {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $change] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		['id' => $spot] = (new Misc\SamplePostgresData($this->connection, 'spot'))->try();

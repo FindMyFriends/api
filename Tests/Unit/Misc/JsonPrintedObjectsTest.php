@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Misc;
 
 use FindMyFriends\Misc;
+use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,8 +13,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class JsonPrintedObjectsTest extends Tester\TestCase {
-	public function testMergingMultipleToPrettyArray() {
+final class JsonPrintedObjectsTest extends TestCase\Runtime {
+	public function testMergingMultipleToPrettyArray(): void {
 		Assert::same(
 			'[
     {
@@ -39,7 +39,7 @@ final class JsonPrintedObjectsTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMergingSingleToPrettyArray() {
+	public function testMergingSingleToPrettyArray(): void {
 		Assert::same(
 			'[
     {
@@ -56,7 +56,7 @@ final class JsonPrintedObjectsTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAdjustingWithKeptOrder() {
+	public function testAdjustingWithKeptOrder(): void {
 		Assert::same(
 			'[
     {

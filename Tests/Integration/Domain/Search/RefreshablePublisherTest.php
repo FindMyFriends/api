@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Search;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RefreshablePublisherTest extends Tester\TestCase {
+final class RefreshablePublisherTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnNotReadyRefresh() {
+	public function testThrowingOnNotReadyRefresh(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand]))->try();
 		Assert::exception(function () use ($demand) {
@@ -28,7 +27,7 @@ final class RefreshablePublisherTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Demand is not refreshable for soulmate yet');
 	}
 
-	public function testPassingOnReadyRefresh() {
+	public function testPassingOnReadyRefresh(): void {
 		['id' => $demand] = (new Misc\SampleDemand($this->connection))->try();
 		(new Misc\SamplePostgresData(
 			$this->connection,

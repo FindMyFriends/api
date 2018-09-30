@@ -5,9 +5,9 @@ namespace FindMyFriends\Unit\Domain\Interaction;
 
 use FindMyFriends\Domain\Interaction;
 use FindMyFriends\Domain\Place;
+use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,8 +15,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PublicSpotTest extends Tester\TestCase {
-	public function testFormatting() {
+final class PublicSpotTest extends TestCase\Runtime {
+	public function testFormatting(): void {
 		Assert::equal(
 			[
 				'assigned_at' => '2017-09-17T13:58:10+00:00',

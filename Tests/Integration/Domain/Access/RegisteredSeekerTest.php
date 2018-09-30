@@ -6,7 +6,6 @@ namespace FindMyFriends\Integration\Domain\Access;
 use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,10 +13,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class RegisteredSeekerTest extends Tester\TestCase {
+final class RegisteredSeekerTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testInfoAboutRegisteredSeeker() {
+	public function testInfoAboutRegisteredSeeker(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz', 'role' => 'member']))->try();
 		$seeker = new Access\RegisteredSeeker((string) $id, $this->connection);
 		Assert::same((string) $id, $seeker->id());
@@ -27,7 +26,7 @@ final class RegisteredSeekerTest extends Tester\TestCase {
 		);
 	}
 
-	public function testThrowingOnNotRegisteredSeeker() {
+	public function testThrowingOnNotRegisteredSeeker(): void {
 		$seeker = new Access\RegisteredSeeker('1', $this->connection);
 		Assert::exception(static function() use ($seeker) {
 			$seeker->id();

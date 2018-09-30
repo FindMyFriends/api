@@ -5,9 +5,9 @@ namespace FindMyFriends\Unit\Response;
 
 use FindMyFriends\Http;
 use FindMyFriends\Response;
+use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -15,8 +15,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
-	public function testHeaderWithExistingETag() {
+final class ConcurrentlyControlledResponseTest extends TestCase\Runtime {
+	public function testHeaderWithExistingETag(): void {
 		Assert::same(
 			'abc',
 			(new Response\ConcurrentlyControlledResponse(
@@ -26,7 +26,7 @@ final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testRestOfHeadersWithoutGeneratedETag() {
+	public function testRestOfHeadersWithoutGeneratedETag(): void {
 		Assert::same(
 			['accept' => 'text/plain'],
 			(new Response\ConcurrentlyControlledResponse(
@@ -36,7 +36,7 @@ final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testRestOfHeadersWithinGeneratedETag() {
+	public function testRestOfHeadersWithinGeneratedETag(): void {
 		Assert::same(
 			['ETag' => 'abc', 'accept' => 'text/plain'],
 			(new Response\ConcurrentlyControlledResponse(
@@ -46,7 +46,7 @@ final class ConcurrentlyControlledResponseTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPrecedenceForGeneratedETag() {
+	public function testPrecedenceForGeneratedETag(): void {
 		Assert::same(
 			'foo',
 			(new Response\ConcurrentlyControlledResponse(

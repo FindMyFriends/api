@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Storage;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class SuitedSoulmatesTest extends Tester\TestCase {
+final class SuitedSoulmatesTest extends TestCase\Runtime {
 	use TestCase\Search;
 
-	public function testEliminatingSex() {
+	public function testEliminatingSex(): void {
 		static $params = [
 			'refresh' => true,
 			'index' => 'relationships',
@@ -43,7 +42,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMatchingHairColorsWithSimilar() {
+	public function testMatchingHairColorsWithSimilar(): void {
 		static $params = [
 			'refresh' => true,
 			'index' => 'relationships',
@@ -68,7 +67,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		Assert::true($soulmates[1]['score'] > $soulmates[2]['score']);
 	}
 
-	public function testBoostingLastnameOverFirstname() {
+	public function testBoostingLastnameOverFirstname(): void {
 		static $params = [
 			'refresh' => true,
 			'index' => 'relationships',
@@ -95,7 +94,7 @@ final class SuitedSoulmatesTest extends Tester\TestCase {
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
 	}
 
-	public function testNotMatchingColorButMatchDifference() {
+	public function testNotMatchingColorButMatchDifference(): void {
 		static $params = [
 			'refresh' => true,
 			'index' => 'relationships',

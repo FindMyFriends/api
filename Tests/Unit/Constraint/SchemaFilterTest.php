@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Constraint;
 
 use FindMyFriends\Constraint;
+use FindMyFriends\TestCase;
 use Klapuch\Dataset;
 use Tester;
 use Tester\Assert;
@@ -13,8 +14,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class SchemaFilterTest extends Tester\TestCase {
-	public function testPassingOnAllValuesInEnum() {
+final class SchemaFilterTest extends TestCase\Runtime {
+	public function testPassingOnAllValuesInEnum(): void {
 		Assert::same(
 			['filter' => ['status' => 'success', 'size' => 2]],
 			(new Constraint\SchemaFilter(
@@ -31,7 +32,7 @@ final class SchemaFilterTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Schema "foo.txt" is not readable
 	 */
-	public function testThrowingOnNotReadableFile() {
+	public function testThrowingOnNotReadableFile(): void {
 		(new Constraint\SchemaFilter(
 			new class extends Dataset\Filter {
 				protected function filter(): array {
@@ -45,7 +46,7 @@ final class SchemaFilterTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException 'status' must be one of: 'success', 'fail' - 'foo' was given
 	 */
-	public function testFailingOnAnyValueOutOfEnum() {
+	public function testFailingOnAnyValueOutOfEnum(): void {
 		(new Constraint\SchemaFilter(
 			new class extends Dataset\Filter {
 				protected function filter(): array {
@@ -56,7 +57,7 @@ final class SchemaFilterTest extends Tester\TestCase {
 		))->criteria();
 	}
 
-	public function testNoRestPropertiesOutOfProperties() {
+	public function testNoRestPropertiesOutOfProperties(): void {
 		Assert::same(
 			['filter' => ['status' => 'success']],
 			(new Constraint\SchemaFilter(
@@ -73,7 +74,7 @@ final class SchemaFilterTest extends Tester\TestCase {
 	/**
 	 * @throws \UnexpectedValueException Following criteria are not allowed: "status"
 	 */
-	public function testThrowingOnForbidden() {
+	public function testThrowingOnForbidden(): void {
 		(new Constraint\SchemaFilter(
 			new class extends Dataset\Filter {
 				protected function filter(): array {
@@ -86,7 +87,7 @@ final class SchemaFilterTest extends Tester\TestCase {
 	}
 
 	private function testingSchema(): string {
-		return json_encode(
+		return (string) json_encode(
 			[
 				'$schema' => 'http://json-schema.org/draft-04/schema#',
 				'additionalProperties' => false,

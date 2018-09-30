@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Domain\Search;
 
 use FindMyFriends\Domain\Search;
+use FindMyFriends\TestCase;
 use Hashids\Hashids;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -14,8 +14,8 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PublicSoulmateTest extends Tester\TestCase {
-	public function testFormatting() {
+final class PublicSoulmateTest extends TestCase\Runtime {
+	public function testFormatting(): void {
 		Assert::equal(
 			[
 				'id' => '0E',
@@ -50,7 +50,7 @@ final class PublicSoulmateTest extends Tester\TestCase {
 		);
 	}
 
-	public function testHandlingNulls() {
+	public function testHandlingNulls(): void {
 		Assert::equal(
 			[
 				'id' => null,

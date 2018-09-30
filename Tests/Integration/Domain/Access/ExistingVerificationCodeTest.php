@@ -7,7 +7,6 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -15,10 +14,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class ExistingVerificationCodeTest extends Tester\TestCase {
+final class ExistingVerificationCodeTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
-	public function testThrowingOnUnknownCode() {
+	public function testThrowingOnUnknownCode(): void {
 		Assert::exception(function() {
 			(new Access\ExistingVerificationCode(
 				new Access\FakeVerificationCode(),
@@ -35,7 +34,7 @@ final class ExistingVerificationCodeTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The verification code does not exist');
 	}
 
-	public function testPassingOnUsingKnownCode() {
+	public function testPassingOnUsingKnownCode(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		Assert::noError(
 			function() use ($code) {
@@ -48,7 +47,7 @@ final class ExistingVerificationCodeTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPrintingCodeWithOrigin() {
+	public function testPrintingCodeWithOrigin(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		Assert::same(
 			sprintf('|abc|def||code|%s|', $code),
@@ -60,7 +59,7 @@ final class ExistingVerificationCodeTest extends Tester\TestCase {
 		);
 	}
 
-	public function testThrowingOnUsingCaseInsensitiveCode() {
+	public function testThrowingOnUsingCaseInsensitiveCode(): void {
 		['verification_code' => ['code' => $code]] = (new Misc\SampleSeeker($this->connection))->try();
 		Assert::exception(function() use ($code) {
 			(new Access\ExistingVerificationCode(

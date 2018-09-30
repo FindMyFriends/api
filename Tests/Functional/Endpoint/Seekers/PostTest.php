@@ -8,7 +8,6 @@ use FindMyFriends\TestCase;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Output;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -16,10 +15,10 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PostTest extends Tester\TestCase {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
-	public function testSuccessfulResponse() {
+	public function testSuccessfulResponse(): void {
 		$response = (new Endpoint\Seekers\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
@@ -35,7 +34,7 @@ final class PostTest extends Tester\TestCase {
 		Assert::same(HTTP_CREATED, $response->status());
 	}
 
-	public function test400OnBadInput() {
+	public function test400OnBadInput(): void {
 		Assert::exception(function() {
 			(new Endpoint\Seekers\Post(
 				new Application\FakeRequest(new Output\FakeFormat('{"foo": "bar"}')),
@@ -46,7 +45,7 @@ final class PostTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'The property email is required');
 	}
 
-	public function test409ForDuplication() {
+	public function test409ForDuplication(): void {
 		$post = new Endpoint\Seekers\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(

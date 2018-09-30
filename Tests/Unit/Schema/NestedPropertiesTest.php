@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Schema;
 
 use FindMyFriends\Schema;
-use Tester;
+use FindMyFriends\TestCase;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -12,8 +12,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class NestedPropertiesTest extends Tester\TestCase {
-	public function testGatheredPropertiesObjects() {
+final class NestedPropertiesTest extends TestCase\Runtime {
+	public function testGatheredPropertiesObjects(): void {
 		Assert::same(
 			[
 				'status',

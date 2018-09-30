@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace FindMyFriends\Unit\Http;
 
 use FindMyFriends\Http;
+use FindMyFriends\TestCase;
 use Klapuch\Uri;
-use Tester;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -13,8 +13,8 @@ require __DIR__ . '/../../bootstrap.php';
 /**
  * @testCase
  */
-final class HeaderLinkTest extends Tester\TestCase {
-	public function testAddingSingleDirection() {
+final class HeaderLinkTest extends TestCase\Runtime {
+	public function testAddingSingleDirection(): void {
 		Assert::same(
 			'<https://localhost/abc?page=1>; rel="first"',
 			(new Http\HeaderLink(
@@ -24,7 +24,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAppendingPathWithoutDoubledSlashes() {
+	public function testAppendingPathWithoutDoubledSlashes(): void {
 		Assert::same(
 			'<https://localhost/abc/?page=1>; rel="first"',
 			(new Http\HeaderLink(
@@ -34,7 +34,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAddingMultipleDirections() {
+	public function testAddingMultipleDirections(): void {
 		Assert::same(
 			'<https://localhost/abc?page=1>; rel="first", <https://localhost/abc?page=4>; rel="last"',
 			(new Http\HeaderLink(
@@ -47,7 +47,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testMergingWithCurrentDirections() {
+	public function testMergingWithCurrentDirections(): void {
 		Assert::same(
 			'<https://localhost/abc?page=1&per_page=20>; rel="first"',
 			(new Http\HeaderLink(
@@ -57,7 +57,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testPaginationPageWithPrecedence() {
+	public function testPaginationPageWithPrecedence(): void {
 		Assert::same(
 			'<https://localhost/abc?page=1&per_page=20>; rel="first"',
 			(new Http\HeaderLink(
@@ -67,7 +67,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testUsingRFC3986() {
+	public function testUsingRFC3986(): void {
 		Assert::same(
 			'<https://localhost/abc?page=1&foo%20bar=bar%20foo>; rel="first"',
 			(new Http\HeaderLink(
@@ -77,7 +77,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testDynamicAddingWithDynamicPrecedence() {
+	public function testDynamicAddingWithDynamicPrecedence(): void {
 		Assert::same(
 			'<https://localhost/abc?page=2>; rel="first", <https://localhost/abc?page=4>; rel="last"',
 			(new Http\HeaderLink(
@@ -87,7 +87,7 @@ final class HeaderLinkTest extends Tester\TestCase {
 		);
 	}
 
-	public function testAdjusting() {
+	public function testAdjusting(): void {
 		Assert::same(
 			'<https://localhost/abc?page=2>; rel="first"',
 			(new Http\HeaderLink(
