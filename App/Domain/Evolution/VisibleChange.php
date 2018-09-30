@@ -10,7 +10,7 @@ use Klapuch\Storage;
 /**
  * Evolution change which belongs only to me
  */
-final class OwnedChange implements Change {
+final class VisibleChange implements Change {
 	/** @var \FindMyFriends\Domain\Evolution\Change */
 	private $origin;
 
@@ -60,7 +60,7 @@ final class OwnedChange implements Change {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format {
-		if (!$this->owned($this->id, $this->owner))
+		if (!$this->visible($this->id, $this->owner))
 			throw $this->exception($this->id);
 		return $this->origin->print($format);
 	}
@@ -69,6 +69,14 @@ final class OwnedChange implements Change {
 		return (new Storage\NativeQuery(
 			$this->connection,
 			'SELECT is_evolution_owned(:evolution, :seeker)',
+			['evolution' => $id, 'seeker' => $owner->id()]
+		))->field();
+	}
+
+	private function visible(int $id, Access\Seeker $owner): bool {
+		return (new Storage\NativeQuery(
+			$this->connection,
+			'SELECT is_evolution_visible(:evolution, :seeker)',
 			['evolution' => $id, 'seeker' => $owner->id()]
 		))->field();
 	}

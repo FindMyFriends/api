@@ -16,13 +16,13 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class OwnedChangeTest extends Tester\TestCase {
+final class VisibleChangeTest extends Tester\TestCase {
 	use TestCase\TemplateDatabase;
 
 	public function testThrowingOnForeign() {
 		['id' => $id] = (new Misc\SampleEvolution($this->connection))->try();
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
@@ -31,7 +31,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
@@ -40,7 +40,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Evolution change does not belong to you.');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 		$ex = Assert::exception(function() use ($id) {
-			(new Evolution\OwnedChange(
+			(new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker('1000'),
@@ -54,7 +54,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 		['id' => $seeker] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
 		['id' => $id] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker]))->try();
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
@@ -63,7 +63,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			$evolution->print(new Output\FakeFormat());
 		});
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
@@ -72,7 +72,7 @@ final class OwnedChangeTest extends Tester\TestCase {
 			$evolution->affect([]);
 		});
 		Assert::noError(function() use ($seeker, $id) {
-			$evolution = new Evolution\OwnedChange(
+			$evolution = new Evolution\VisibleChange(
 				new Evolution\FakeChange(),
 				$id,
 				new Access\FakeSeeker((string) $seeker),
@@ -83,4 +83,4 @@ final class OwnedChangeTest extends Tester\TestCase {
 	}
 }
 
-(new OwnedChangeTest())->run();
+(new VisibleChangeTest())->run();

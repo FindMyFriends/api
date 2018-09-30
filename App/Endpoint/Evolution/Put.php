@@ -65,7 +65,7 @@ final class Put implements Application\View {
 					new Misc\ApiErrorCallback(HTTP_NOT_FOUND)
 				),
 				new Evolution\HarnessedChange(
-					new Evolution\OwnedChange(
+					new Evolution\VisibleChange(
 						new Evolution\FakeChange(),
 						$parameters['id'],
 						$this->seeker,

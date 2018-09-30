@@ -49,7 +49,7 @@ final class Get implements Application\View {
 					new Response\PlainResponse(
 						(new Evolution\PublicChange(
 							new Evolution\HarnessedChange(
-								new Evolution\OwnedChange(
+								new Evolution\VisibleChange(
 									new Evolution\StoredChange(
 										$parameters['id'],
 										$this->connection

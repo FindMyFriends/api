@@ -50,7 +50,7 @@ final class Get implements Application\View {
 						...iterator_to_array(
 							(new Evolution\PublicSpots(
 								new Place\HarnessedSpots(
-									new Evolution\OwnedSpots(
+									new Evolution\VisibleSpots(
 										new Evolution\ChangeSpots(
 											$parameters['id'],
 											$this->connection

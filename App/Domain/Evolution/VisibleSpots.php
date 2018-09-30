@@ -10,7 +10,7 @@ use Klapuch\Storage;
 /**
  * Spots owned by one particular seeker
  */
-final class OwnedSpots implements Place\Spots {
+final class VisibleSpots implements Place\Spots {
 	/** @var \FindMyFriends\Domain\Access\Seeker */
 	private $owner;
 
@@ -50,7 +50,7 @@ final class OwnedSpots implements Place\Spots {
 	 * @throws \UnexpectedValueException
 	 */
 	public function history(): \Iterator {
-		if (!$this->owned($this->change, $this->owner))
+		if (!$this->visible($this->change, $this->owner))
 			throw $this->exception($this->change);
 		return $this->origin->history();
 	}
@@ -59,6 +59,14 @@ final class OwnedSpots implements Place\Spots {
 		return (new Storage\NativeQuery(
 			$this->connection,
 			'SELECT is_evolution_owned(:evolution, :seeker)',
+			['evolution' => $change, 'seeker' => $owner->id()]
+		))->field();
+	}
+
+	private function visible(int $change, Access\Seeker $owner): bool {
+		return (new Storage\NativeQuery(
+			$this->connection,
+			'SELECT is_evolution_visible(:evolution, :seeker)',
 			['evolution' => $change, 'seeker' => $owner->id()]
 		))->field();
 	}

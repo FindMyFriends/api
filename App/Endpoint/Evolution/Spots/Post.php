@@ -51,7 +51,7 @@ final class Post implements Application\View {
 	public function response(array $parameters): Application\Response {
 		(new Place\ChainedSpots(
 			new Place\HarnessedSpots(
-				new Evolution\OwnedSpots(
+				new Evolution\VisibleSpots(
 					new Place\FakeSpots(),
 					$this->seeker,
 					$parameters['id'],

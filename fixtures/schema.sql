@@ -933,6 +933,18 @@ $$
 LANGUAGE SQL
 VOLATILE;
 
+CREATE FUNCTION is_evolution_visible(in_evolution_id evolutions.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT is_evolution_owned(in_evolution_id, in_seeker_id) OR EXISTS(
+  SELECT 1
+  FROM soulmates
+  JOIN demands ON demands.id = soulmates.demand_id
+  WHERE soulmates.evolution_id = in_evolution_id AND demands.seeker_id = in_seeker_id
+)
+$$
+LANGUAGE SQL
+VOLATILE;
+
 CREATE FUNCTION created_base_evolution(
   in_seeker_id seekers.id%type,
   in_sex general.sex%type,
