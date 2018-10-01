@@ -51,15 +51,36 @@ final class OwnedSoulmate implements Soulmate {
 	 * @throws \UnexpectedValueException
 	 */
 	public function clarify(array $clarification): void {
-		if (!$this->owned($this->id))
+		if (
+			!$this->owned($this->id)
+			|| (isset($clarification['is_exposed']) && !$this->evolving($this->id))
+			|| (isset($clarification['is_correct']) && !$this->demanding($this->id))
+		) {
 			throw $this->exception($this->id);
+		}
 		$this->origin->clarify($clarification);
+	}
+
+	private function demanding(int $id): bool {
+		return (new Storage\NativeQuery(
+			$this->connection,
+			'SELECT is_demanding_soulmate_owned(:soulmate, :seeker)',
+			['soulmate' => $id, 'seeker' => $this->owner->id()]
+		))->field();
+	}
+
+	private function evolving(int $id): bool {
+		return (new Storage\NativeQuery(
+			$this->connection,
+			'SELECT is_evolving_soulmate_owned(:soulmate, :seeker)',
+			['soulmate' => $id, 'seeker' => $this->owner->id()]
+		))->field();
 	}
 
 	private function owned(int $id): bool {
 		return (new Storage\NativeQuery(
 			$this->connection,
-			'SELECT is_soulmate_permitted(:soulmate, :seeker)',
+			'SELECT is_soulmate_owned(:soulmate, :seeker)',
 			['soulmate' => $id, 'seeker' => $this->owner->id()]
 		))->field();
 	}

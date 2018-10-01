@@ -126,20 +126,20 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		['id' => $otherDemand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
 		(new Storage\NativeQuery(
 			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score)
-			 VALUES (?, ?, 20)',
+			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed)
+			 VALUES (?, ?, 20, FALSE)',
 			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
 		(new Storage\NativeQuery(
 			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-			(?, ?, 30)',
+			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
+			(?, ?, 30, TRUE)',
 			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
 		(new Storage\NativeQuery(
 			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-			(?, ?, 5)
+			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
+			(?, ?, 5, FALSE)
 			RETURNING demand_id',
 			[$otherDemand, (new Misc\SampleEvolution($this->connection))->try()['id']]
 		))->execute();
@@ -177,7 +177,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		$matches->next();
 		$current = $matches->current();
 		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
-		Assert::same(1, $soulmate['evolution_id']);
+		Assert::same(null, $soulmate['evolution_id']);
 		Assert::same(1, $soulmate['demand_id']);
 		Assert::same($seekerId, $soulmate['seeker_id']);
 		$matches->next();

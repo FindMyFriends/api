@@ -21,6 +21,7 @@ final class Select implements Sql\Select {
 				'related_at',
 				'searched_at',
 				'is_correct',
+				'is_exposed',
 			]
 		);
 	}

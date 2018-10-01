@@ -1206,6 +1206,7 @@ CREATE TABLE soulmates (
   version integer NOT NULL DEFAULT 1,
   related_at timestamp WITH TIME ZONE NOT NULL DEFAULT now(),
   is_correct boolean NOT NULL DEFAULT TRUE,
+  is_exposed boolean NOT NULL DEFAULT FALSE,
   CONSTRAINT soulmates_demand_id_evolution_id_ukey UNIQUE (demand_id, evolution_id),
   CONSTRAINT soulmates_demands_demand_id_fk FOREIGN KEY (demand_id) REFERENCES demands(id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
@@ -1213,7 +1214,7 @@ CREATE TABLE soulmates (
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION is_soulmate_permitted(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+CREATE FUNCTION is_demanding_soulmate_owned(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
 AS $$
 SELECT EXISTS(
   SELECT 1
@@ -1224,6 +1225,28 @@ SELECT EXISTS(
     WHERE seeker_id = in_seeker_id
   )
 );
+$$
+LANGUAGE SQL
+VOLATILE;
+
+CREATE FUNCTION is_evolving_soulmate_owned(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+SELECT EXISTS(
+  SELECT 1
+  FROM soulmates
+  WHERE id = in_soulmate_id AND evolution_id IN (
+    SELECT id
+    FROM evolutions
+    WHERE seeker_id = in_seeker_id
+  )
+);
+$$
+LANGUAGE SQL
+VOLATILE;
+
+CREATE FUNCTION is_soulmate_owned(in_soulmate_id soulmates.id%type, in_seeker_id seekers.id%type) RETURNS boolean
+AS $$
+  SELECT is_evolving_soulmate_owned(in_soulmate_id, in_seeker_id) OR is_demanding_soulmate_owned(in_soulmate_id, in_seeker_id);
 $$
 LANGUAGE SQL
 VOLATILE;
@@ -1329,15 +1352,15 @@ CREATE TRIGGER soulmate_requests_row_bi_trigger BEFORE INSERT ON soulmate_reques
 CREATE VIEW suited_soulmates AS
   SELECT
     soulmates.id,
-    soulmates.evolution_id,
+    CASE WHEN soulmates.is_exposed THEN soulmates.evolution_id ELSE NULL END AS evolution_id,
     soulmates.is_correct,
+    soulmates.is_exposed,
     soulmate_requests.demand_id,
     soulmates.score,
     soulmates.related_at,
     soulmate_requests.searched_at,
     version = 1 AS new,
-    row_number()
-    OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
+    row_number() OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
     seeker_id
   FROM soulmates
   LEFT JOIN (

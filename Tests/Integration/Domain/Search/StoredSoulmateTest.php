@@ -27,8 +27,8 @@ final class StoredSoulmateTest extends TestCase\Runtime {
 			[
 				(new Storage\NativeQuery(
 					$this->connection,
-					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-					(?, ?, 20)
+					'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
+					(?, ?, 20, TRUE)
 					RETURNING demand_id',
 					[
 						(new Misc\SampleDemand($this->connection))->try()['id'],
@@ -38,8 +38,8 @@ final class StoredSoulmateTest extends TestCase\Runtime {
 				'pending',
 				(new Storage\NativeQuery(
 					$this->connection,
-					'INSERT INTO soulmates (demand_id, evolution_id, score) VALUES
-					(?, ?, 30)
+					'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
+					(?, ?, 30, TRUE)
 					RETURNING id',
 					[
 						(new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try()['id'],

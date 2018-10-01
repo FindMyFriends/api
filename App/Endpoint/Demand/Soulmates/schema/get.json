@@ -51,6 +51,12 @@
                 "boolean",
                 "null"
             ]
+        },
+        "is_exposed": {
+            "type": [
+                "boolean",
+                "null"
+            ]
         }
     },
     "required": [
@@ -62,7 +68,8 @@
         "new",
         "searched_at",
         "related_at",
-        "is_correct"
+        "is_correct",
+        "is_exposed"
     ],
     "type": "object"
 }

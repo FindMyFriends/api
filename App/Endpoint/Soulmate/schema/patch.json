@@ -6,6 +6,11 @@
             "type": [
                 "boolean"
             ]
+        },
+        "is_exposed": {
+            "type": [
+                "boolean"
+            ]
         }
     },
     "type": "object",
@@ -13,6 +18,11 @@
         {
             "required": [
                 "is_correct"
+            ]
+        },
+        {
+            "required": [
+                "is_exposed"
             ]
         }
     ]

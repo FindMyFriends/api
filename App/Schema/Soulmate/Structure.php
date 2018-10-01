@@ -18,6 +18,7 @@ final class Structure {
 				'searched_at' => ['type' => 'string', 'format' => 'date-time'],
 				'related_at' => ['type' => ['string', 'null'], 'format' => 'date-time'],
 				'is_correct' => ['type' => ['boolean', 'null']],
+				'is_exposed' => ['type' => ['boolean', 'null']],
 			],
 			'required' => [
 				'id',
@@ -29,6 +30,7 @@ final class Structure {
 				'searched_at',
 				'related_at',
 				'is_correct',
+				'is_exposed',
 			],
 			'type' => 'object',
 		];
@@ -49,8 +51,10 @@ final class Structure {
 		);
 		$schema['anyOf'] = [
 			['required' => ['is_correct']],
+			['required' => ['is_exposed']],
 		];
 		$properties['is_correct']['type'] = ['boolean'];
+		$properties['is_exposed']['type'] = ['boolean'];
 		unset($schema['required']);
 		return $schema;
 	}

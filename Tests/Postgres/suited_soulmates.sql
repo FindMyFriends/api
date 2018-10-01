@@ -6,13 +6,7 @@ DECLARE
 BEGIN
   SELECT samples.demand()
   INTO v_demand_id;
-  INSERT INTO soulmates (demand_id, evolution_id, score, version, related_at) VALUES (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    6,
-    1,
-    '2010-01-01'
-  );
+  INSERT INTO soulmates (demand_id, evolution_id, score, version, related_at) VALUES (v_demand_id, (SELECT samples.evolution()), 6, 1, '2010-01-01');
   INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2005-01-01', 'pending')
   RETURNING id
   INTO v_soulmate_request_id;
@@ -43,17 +37,9 @@ DECLARE
 BEGIN
   SELECT samples.demand()
   INTO v_demand_id;
-  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    7,
-    1
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    6,
-    1
-  );
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES
+    (v_demand_id, (SELECT samples.evolution()), 7, 1),
+    (v_demand_id, (SELECT samples.evolution()), 6, 1);
   INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
   OPEN new_soulmates;
   FETCH new_soulmates INTO v_soulmate;
@@ -77,17 +63,9 @@ DECLARE
 BEGIN
   SELECT samples.demand()
   INTO v_demand_id;
-  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    6,
-    2
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    8,
-    1
-  );
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES
+    (v_demand_id, (SELECT samples.evolution()), 6, 2),
+    (v_demand_id, (SELECT samples.evolution()), 8, 1);
   INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
   OPEN new_soulmates;
   FETCH new_soulmates INTO v_soulmate;
@@ -113,22 +91,10 @@ DECLARE
 BEGIN
   SELECT samples.demand()
   INTO v_demand_id;
-  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    6,
-    2
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    8,
-    1
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    9,
-    1
-  );
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES
+    (v_demand_id, (SELECT samples.evolution()), 6, 2),
+    (v_demand_id, (SELECT samples.evolution()), 8, 1),
+    (v_demand_id, (SELECT samples.evolution()), 9, 1);
   INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
   OPEN new_soulmates;
   FETCH new_soulmates INTO v_soulmate;
@@ -160,26 +126,37 @@ BEGIN
   INTO v_seeker_id;
   SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb)
   INTO v_demand_id;
-  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (
-    v_demand_id, (SELECT samples.evolution()),
-    6,
-    2
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    8,
-    1
-  ), (
-    v_demand_id,
-    (SELECT samples.evolution()),
-    9,
-    1
-  );
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES
+    (v_demand_id, (SELECT samples.evolution()), 6, 2),
+    (v_demand_id, (SELECT samples.evolution()), 8, 1),
+    (v_demand_id, (SELECT samples.evolution()), 9, 1);
   INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
   OPEN new_soulmates;
   FETCH new_soulmates INTO v_soulmate;
   PERFORM assert.same(v_seeker_id, (SELECT v_soulmate.seeker_id));
   CLOSE new_soulmates;
+END
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION tests.shown_evolution_by_expose_flag() RETURNS void
+AS $$
+DECLARE
+  v_demand_id demands.id%type;
+  v_soulmate_id soulmates.id%type;
+  v_soulmate_request_id soulmate_requests.id%type;
+BEGIN
+  SELECT samples.demand()
+  INTO v_demand_id;
+  INSERT INTO soulmates (demand_id, evolution_id, score, version, related_at) VALUES (v_demand_id, (SELECT samples.evolution()), 6, 1, '2010-01-01') RETURNING id INTO v_soulmate_id;
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, '2005-01-01', 'pending')
+  RETURNING id
+  INTO v_soulmate_request_id;
+  INSERT INTO soulmate_requests (demand_id, searched_at, status, self_id) VALUES (v_demand_id, '2006-01-01', 'processing', v_soulmate_request_id);
+  INSERT INTO soulmate_requests (demand_id, searched_at, status, self_id) VALUES (v_demand_id, NOW(), 'succeed', v_soulmate_request_id);
+  PERFORM assert.null((SELECT evolution_id FROM suited_soulmates));
+  UPDATE soulmates SET is_exposed = TRUE WHERE id = v_soulmate_id;
+  PERFORM assert.not_null((SELECT evolution_id FROM suited_soulmates));
 END
 $$
 LANGUAGE plpgsql;

@@ -15,7 +15,7 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql
-IMMUTABLE;
+VOLATILE;
 
 CREATE FUNCTION assert.not_same(expected anyelement, actual anyelement) RETURNS void
 AS $$
@@ -31,7 +31,7 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql
-IMMUTABLE;
+VOLATILE;
 
 CREATE FUNCTION assert.true(actual anyelement) RETURNS void
 AS $$
@@ -40,7 +40,7 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql
-IMMUTABLE;
+VOLATILE;
 
 CREATE FUNCTION assert.false(actual anyelement) RETURNS void
 AS $$
@@ -49,8 +49,25 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql
-IMMUTABLE;
+VOLATILE;
 
+CREATE FUNCTION assert.null(actual anyelement) RETURNS void
+AS $$
+BEGIN
+  PERFORM assert.same(NULL, actual);
+END
+$$
+LANGUAGE plpgsql
+VOLATILE;
+
+CREATE FUNCTION assert.not_null(actual anyelement) RETURNS void
+AS $$
+BEGIN
+  PERFORM assert.not_same(NULL, actual);
+END
+$$
+LANGUAGE plpgsql
+VOLATILE;
 
 CREATE TYPE error AS (message text, state text);
 CREATE FUNCTION assert.throws(query text, expected error) RETURNS void
@@ -58,7 +75,7 @@ AS $BODY$
 BEGIN
     EXECUTE query;
     RAISE EXCEPTION USING
-      ERRCODE = 'C1',
+      ERRCODE = 'XX000',
       MESSAGE = 'EXCEPTION WAS NOT THROWN',
       HINT = format('EXPECTED EXCEPTION WAS "%s"', expected);
     EXCEPTION WHEN OTHERS THEN
