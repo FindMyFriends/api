@@ -13,6 +13,8 @@ This is a simple REST API in JSON serving as data source for React application. 
 Please see issues for more information.
 
 ## Installation
+Import certificate (`docker/nginx/ssl/rootCA-Development.pem`) to your browser to support HTTPS.
+
 Run docker environment, then exec into php image and run:
 `make init`
 then exec into database image and run:
