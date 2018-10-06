@@ -30,9 +30,8 @@ final class RandomDatabases implements Databases {
 	}
 
 	public function drop(): void {
-		$this->database('postgres')->exec(
-			sprintf('DROP DATABASE %s', $this->name)
-		);
+		if (getenv('TRAVIS') === 'true') // Travis slows down
+			$this->database('postgres')->exec(sprintf('DROP DATABASE %s', $this->name));
 	}
 
 	private function database(string $name): Storage\Connection {
