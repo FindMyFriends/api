@@ -160,3 +160,20 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql;
+
+CREATE FUNCTION tests.ownership_by_seeker() RETURNS void
+AS $$
+DECLARE
+  v_seeker_id seekers.id%type;
+  v_demand_id demands.id%type;
+BEGIN
+  SELECT samples.seeker() INTO v_seeker_id;
+  SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb) INTO v_demand_id;
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (v_demand_id, (SELECT samples.evolution()), 6, 2);
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
+  PERFORM assert.same('theirs', (SELECT ownership FROM suited_soulmates));
+  PERFORM globals_set_seeker(v_seeker_id);
+  PERFORM assert.same('yours', (SELECT ownership FROM suited_soulmates));
+END
+$$
+LANGUAGE plpgsql;

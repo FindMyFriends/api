@@ -32,6 +32,8 @@ CREATE FUNCTION constant.timeline_sides() RETURNS text[] AS $$SELECT ARRAY['exac
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.breast_sizes() RETURNS text[] AS $$SELECT ARRAY['A', 'B', 'C', 'D'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sex() RETURNS text[] AS $$SELECT ARRAY['man', 'woman'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.ownerships() RETURNS text[] AS $$SELECT ARRAY['yours', 'theirs'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql IMMUTABLE;
 
 
 -- schema audit
@@ -174,6 +176,36 @@ CREATE TYPE flat_description AS (
 
 
 -- functions
+CREATE FUNCTION globals_get_variable(in_variable text) RETURNS text
+AS $$
+BEGIN
+  RETURN nullif(current_setting(format('globals.%s', in_variable)), '');
+  EXCEPTION WHEN OTHERS THEN
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE FUNCTION globals_get_seeker() RETURNS integer
+AS $$
+  SELECT globals_get_variable('seeker')::integer;
+$$ LANGUAGE sql;
+
+
+CREATE FUNCTION globals_set_variable(in_variable text, in_value text) RETURNS text
+AS $$
+  SELECT set_config(format('globals.%s', in_variable), in_value, false);
+$$ LANGUAGE sql;
+
+
+CREATE FUNCTION globals_set_seeker(in_seeker integer) RETURNS void
+AS $$
+BEGIN
+  PERFORM globals_set_variable('seeker', nullif(in_seeker, constant.guest_id())::text);
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE FUNCTION similar_colors(integer) RETURNS smallint[]
 AS $$
 SELECT array_agg(colors.color_id)
@@ -1361,12 +1393,11 @@ CREATE VIEW suited_soulmates AS
     soulmate_requests.searched_at,
     version = 1 AS new,
     row_number() OVER (PARTITION BY soulmate_requests.demand_id ORDER BY score DESC) AS position,
-    seeker_id
+    seeker_id,
+    CASE WHEN seeker_id = globals_get_seeker() THEN 'yours' ELSE 'theirs' END AS ownership
   FROM soulmates
   LEFT JOIN (
-    SELECT
-    demand_id,
-    MAX(searched_at) AS searched_at
+    SELECT demand_id, max(searched_at) AS searched_at
     FROM soulmate_requests
     GROUP BY demand_id
   ) AS soulmate_requests ON soulmate_requests.demand_id = soulmates.demand_id

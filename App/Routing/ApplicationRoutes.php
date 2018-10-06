@@ -65,7 +65,10 @@ final class ApplicationRoutes implements Routing\Routes {
 		$request = new CachedRequest(new Application\PlainRequest());
 		$seeker = (new Access\HarnessedEntrance(
 			new Access\RateLimitedEntrance(
-				new Access\ApiEntrance($this->connection),
+				new Access\PgEntrance(
+					new Access\ApiEntrance($this->connection),
+					$this->connection
+				),
 				$this->redis
 			),
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)

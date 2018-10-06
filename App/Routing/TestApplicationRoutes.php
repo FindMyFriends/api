@@ -21,6 +21,15 @@ final class TestApplicationRoutes implements Routing\Routes {
 			new Uri\FakeUri(),
 			new class implements Storage\Connection {
 				public function prepare(string $statement): \PDOStatement {
+					return new class extends \PDOStatement {
+						/**
+						 * @param int $columnNumber
+						 * @return mixed
+						 */
+						public function fetchColumn($columnNumber = 0) {
+							return null;
+						}
+					};
 				}
 
 				public function exec(string $statement): void {

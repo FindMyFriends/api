@@ -57,6 +57,15 @@
                 "boolean",
                 "null"
             ]
+        },
+        "ownership": {
+            "type": [
+                "string"
+            ],
+            "enum": [
+                "theirs",
+                "yours"
+            ]
         }
     },
     "required": [
@@ -69,7 +78,8 @@
         "searched_at",
         "related_at",
         "is_correct",
-        "is_exposed"
+        "is_exposed",
+        "ownership"
     ],
     "type": "object"
 }

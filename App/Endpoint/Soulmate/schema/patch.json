@@ -11,6 +11,15 @@
             "type": [
                 "boolean"
             ]
+        },
+        "ownership": {
+            "type": [
+                "string"
+            ],
+            "enum": [
+                "theirs",
+                "yours"
+            ]
         }
     },
     "type": "object",
