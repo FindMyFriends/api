@@ -44,6 +44,7 @@ CREATE TABLE audit.history (
   "table" text NOT NULL,
   operation audit.operation NOT NULL,
   changed_at timestamp with time zone NOT NULL DEFAULT now(),
+  seeker_id integer,
   old jsonb,
   new jsonb
 );
@@ -60,11 +61,12 @@ BEGIN
   END IF;
 
   EXECUTE format(
-    'INSERT INTO audit.history ("table", operation, old, new) VALUES (%L, %L, %L, %L)',
+    'INSERT INTO audit.history ("table", operation, seeker_id, old, new) VALUES (%L, %L, %L, %L, %L)',
     TG_TABLE_NAME,
     TG_OP,
+    globals_get_seeker(),
     CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
-    CASE WHEN TG_OP IN ('UPDATE') THEN row_to_json(new) ELSE NULL END
+    CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
   );
 
   RETURN r;
@@ -204,7 +206,6 @@ BEGIN
   PERFORM globals_set_variable('seeker', nullif(in_seeker, constant.guest_id())::text);
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE FUNCTION similar_colors(integer) RETURNS smallint[]
 AS $$
@@ -938,7 +939,7 @@ CREATE TABLE spots (
   CONSTRAINT spots_met_at_approximation_max_interval_check CHECK (is_approximate_interval_in_range(met_at))
 );
 
-CREATE TRIGGER spots_audit_trigger AFTER UPDATE OR DELETE ON spots FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+CREATE TRIGGER spots_audit_trigger AFTER UPDATE OR DELETE OR INSERT ON spots FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 
 CREATE TABLE evolutions (
