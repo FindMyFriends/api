@@ -19,7 +19,7 @@ require __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class SuitedSoulmatesTest extends TestCase\Runtime {
+final class DemandedSoulmatesTest extends TestCase\Runtime {
 	use TestCase\Search;
 
 	public function testPersistingMatches(): void {
@@ -46,7 +46,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
+		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
@@ -79,7 +79,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 			]
 		);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
-		(new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
+		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
 		Assert::same([], (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates'))->rows());
 	}
 
@@ -102,7 +102,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		];
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
-		$soulmates = new Search\SuitedSoulmates($id, $this->elasticsearch, $this->connection);
+		$soulmates = new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection);
 		$soulmates->seek();
 		$soulmates->seek();
 		(new Storage\NativeQuery(
@@ -162,7 +162,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 			(?, ?)',
 			[$otherDemand, 'pending']
 		))->field();
-		$soulmates = new Search\SuitedSoulmates(
+		$soulmates = new Search\DemandedSoulmates(
 			$demand,
 			$this->elasticsearch,
 			$this->connection
@@ -185,4 +185,4 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 	}
 }
 
-(new SuitedSoulmatesTest())->run();
+(new DemandedSoulmatesTest())->run();

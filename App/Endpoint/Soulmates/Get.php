@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Endpoint\Demand\Soulmates;
+namespace FindMyFriends\Endpoint\Soulmates;
 
-use Elasticsearch;
 use FindMyFriends\Constraint;
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\Response;
@@ -12,10 +12,15 @@ use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Storage;
 use Klapuch\UI;
-use Klapuch\Uri;
+use Klapuch\Uri\Uri;
 
 final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
+
+	public const SORTS = [
+		'searched_at',
+		'related_at',
+	];
 
 	/** @var mixed[] */
 	private $hashids;
@@ -26,19 +31,19 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Elasticsearch\Client */
-	private $elasticsearch;
+	/** @var \FindMyFriends\Domain\Access\Seeker */
+	private $seeker;
 
 	public function __construct(
 		array $hashids,
-		Uri\Uri $url,
+		Uri $url,
 		Storage\Connection $connection,
-		Elasticsearch\Client $elasticsearch
+		Access\Seeker $seeker
 	) {
 		$this->hashids = $hashids;
 		$this->url = $url;
 		$this->connection = $connection;
-		$this->elasticsearch = $elasticsearch;
+		$this->seeker = $seeker;
 	}
 
 	/**
@@ -46,14 +51,15 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$soulmates = new Search\PublicSoulmates(
-			new Search\DemandedSoulmates(
-				$parameters['demand_id'],
-				$this->elasticsearch,
-				$this->connection
-			),
+			new Search\OwnedSoulmates($this->seeker, $this->connection),
 			$this->hashids
 		);
-		$count = $soulmates->count(new Dataset\EmptySelection());
+		$count = $soulmates->count(
+			new Constraint\SchemaFilter(
+				new Dataset\RestFilter($parameters),
+				new \SplFileInfo(self::SCHEMA)
+			)
+		);
 		return new Response\PartialResponse(
 			new Response\PaginatedResponse(
 				new Response\JsonResponse(
@@ -61,16 +67,22 @@ final class Get implements Application\View {
 						new Misc\JsonPrintedObjects(
 							...iterator_to_array(
 								$soulmates->matches(
-									new Dataset\CombinedSelection(
-										new Constraint\SchemaSort(
-											new Dataset\RestSort(
-												$parameters['sort']
+									new Constraint\MappedSelection(
+										new Dataset\CombinedSelection(
+											new Constraint\AllowedSort(
+												new Dataset\RestSort($parameters['sort']),
+												self::SORTS
 											),
-											new \SplFileInfo(self::SCHEMA)
-										),
-										new Dataset\RestPaging(
-											$parameters['page'],
-											$parameters['per_page']
+											new Constraint\SchemaFilter(
+												new Dataset\RestFilter(
+													$parameters
+												),
+												new \SplFileInfo(self::SCHEMA)
+											),
+											new Dataset\RestPaging(
+												$parameters['page'],
+												$parameters['per_page']
+											)
 										)
 									)
 								)

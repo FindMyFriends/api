@@ -34,7 +34,7 @@ final class Head implements Application\View {
 	}
 
 	public function response(array $parameters): Application\Response {
-		$count = (new Search\SuitedSoulmates(
+		$count = (new Search\DemandedSoulmates(
 			$parameters['demand_id'],
 			$this->elasticsearch,
 			$this->connection

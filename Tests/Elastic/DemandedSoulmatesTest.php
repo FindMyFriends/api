@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 /**
  * @testCase
  */
-final class SuitedSoulmatesTest extends TestCase\Runtime {
+final class DemandedSoulmatesTest extends TestCase\Runtime {
 	use TestCase\Search;
 
 	public function testEliminatingSex(): void {
@@ -31,7 +31,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 1, 'general.sex' => 'random']]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'man']]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman']]);
-		(new Search\SuitedSoulmates(
+		(new Search\DemandedSoulmates(
 			$demand,
 			$this->elasticsearch,
 			$this->connection
@@ -56,7 +56,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 1, 'general.sex' => 'woman', 'hair.color_id' => 8]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'woman', 'hair.color_id' => 12]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'woman', 'hair.color_id' => 2]]);
-		(new Search\SuitedSoulmates(
+		(new Search\DemandedSoulmates(
 			$demand,
 			$this->elasticsearch,
 			$this->connection
@@ -84,7 +84,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		))->try();
 		$this->elasticsearch->index($params + ['body' => ['id' => 1, 'general.sex' => 'man', 'general.lastname' => 'Klapuch']]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'man', 'general.firstname' => 'Dominik']]);
-		(new Search\SuitedSoulmates(
+		(new Search\DemandedSoulmates(
 			$demand,
 			$this->elasticsearch,
 			$this->connection
@@ -112,7 +112,7 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 1, 'general.sex' => 'man', 'right_eye.color_id' => 10, 'left_eye.color_id' => 8]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general.sex' => 'man', 'right_eye.color_id' => 3, 'left_eye.color_id' => 4]]); // diff
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general.sex' => 'man', 'right_eye.color_id' => 5, 'left_eye.color_id' => 5]]);
-		(new Search\SuitedSoulmates(
+		(new Search\DemandedSoulmates(
 			$demand,
 			$this->elasticsearch,
 			$this->connection
@@ -123,4 +123,4 @@ final class SuitedSoulmatesTest extends TestCase\Runtime {
 	}
 }
 
-(new SuitedSoulmatesTest())->run();
+(new DemandedSoulmatesTest())->run();

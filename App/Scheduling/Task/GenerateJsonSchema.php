@@ -75,6 +75,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 		$soulmate = new Schema\Soulmate\Structure($this->connection);
 		$schemas->save($soulmate->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Demand/Soulmates/schema/get.json'));
+		$schemas->save($soulmate->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Soulmates/schema/get.json'));
 		$schemas->save($soulmate->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Soulmate/schema/patch.json'));
 
 		$soulmateRequest = new Schema\SoulmateRequest\Structure($this->connection);

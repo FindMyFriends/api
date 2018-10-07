@@ -177,3 +177,19 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql;
+
+CREATE FUNCTION tests.seeker_from_demand() RETURNS void
+AS $$
+DECLARE
+  v_seeker_id seekers.id%type;
+  v_demand_id demands.id%type;
+BEGIN
+  SELECT samples.seeker() INTO v_seeker_id;
+  SELECT samples.demand(json_build_object('seeker_id', v_seeker_id)::jsonb) INTO v_demand_id;
+  INSERT INTO soulmates (demand_id, evolution_id, score, version) VALUES (v_demand_id, (SELECT samples.evolution()), 6, 2);
+  INSERT INTO soulmate_requests (demand_id, searched_at, status) VALUES (v_demand_id, NOW(), 'pending');
+  PERFORM assert.same((SELECT seeker_id FROM demands WHERE id = v_demand_id), (SELECT seeker_id FROM suited_soulmates));
+  PERFORM assert.same(v_seeker_id, (SELECT seeker_id FROM suited_soulmates));
+END
+$$
+LANGUAGE plpgsql;

@@ -7,6 +7,7 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint\Demand;
 use FindMyFriends\Endpoint\Demands;
 use FindMyFriends\Endpoint\Evolutions;
+use FindMyFriends\Endpoint\Soulmates;
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
@@ -70,6 +71,9 @@ final class SortTest extends TestCase\Runtime {
 			],
 			[
 				sprintf('evolutions?sort=%s', implode(',', Evolutions\Get::SORTS)),
+			],
+			[
+				sprintf('soulmates?sort=%s', implode(',', Soulmates\Get::SORTS)),
 			],
 			[
 				sprintf(

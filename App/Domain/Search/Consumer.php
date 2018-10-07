@@ -35,7 +35,7 @@ final class Consumer extends Task\Consumer {
 				$this->connection
 			))->refresh('pending'),
 			new SubsequentRequests($body['id'], $this->connection),
-			new SuitedSoulmates($body['id'], $this->elasticsearch, $this->connection)
+			new DemandedSoulmates($body['id'], $this->elasticsearch, $this->connection)
 		))->seek();
 	}
 

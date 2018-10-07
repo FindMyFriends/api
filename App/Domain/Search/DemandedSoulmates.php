@@ -10,9 +10,9 @@ use Klapuch\Sql;
 use Klapuch\Storage;
 
 /**
- * Soulmates suited for the particular seeker
+ * Soulmates suited for the particular demand
  */
-final class SuitedSoulmates implements Soulmates {
+final class DemandedSoulmates implements Soulmates {
 	/** @var int */
 	private $demand;
 
