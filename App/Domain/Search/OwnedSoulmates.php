@@ -34,7 +34,7 @@ final class OwnedSoulmates implements Soulmates {
 			new Dataset\SelectiveStatement(
 				(new FindMyFriends\Sql\SuitedSoulmates\Select())
 					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+					->where('is_soulmate_owned(id, :seeker)', ['seeker' => $this->seeker->id()]),
 				$selection
 			)
 		))->rows();
@@ -52,7 +52,7 @@ final class OwnedSoulmates implements Soulmates {
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
 					->from(['suited_soulmates'])
-					->where('seeker_id = :seeker', ['seeker' => $this->seeker->id()]),
+					->where('is_soulmate_owned(id, :seeker)', ['seeker' => $this->seeker->id()]),
 				$selection
 			)
 		))->field();

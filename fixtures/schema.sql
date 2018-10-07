@@ -1282,7 +1282,7 @@ AS $$
   SELECT is_evolving_soulmate_owned(in_soulmate_id, in_seeker_id) OR is_demanding_soulmate_owned(in_soulmate_id, in_seeker_id);
 $$
 LANGUAGE SQL
-VOLATILE;
+STABLE;
 
 CREATE FUNCTION soulmates_trigger_row_ad() RETURNS trigger
 AS $$

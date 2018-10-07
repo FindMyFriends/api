@@ -31,12 +31,14 @@ final class OwnedSoulmatesTest extends TestCase\Runtime {
 		['id' => $evolution2] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $seeker1]))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand1]))->try();
 		(new Misc\SamplePostgresData($this->connection, 'soulmate_request', ['demand_id' => $demand2]))->try();
-		['id' => $soulmate] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand1, 'evolution_id' => $evolution1]))->try();
-		(new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand2, 'evolution_id' => $evolution2]))->try();
+		['id' => $soulmate1] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand1, 'evolution_id' => $evolution1]))->try();
+		['id' => $soulmate2] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand2, 'evolution_id' => $evolution2]))->try();
 		$soulmates = new Search\OwnedSoulmates($seeker, $this->connection);
-		Assert::same(1, $soulmates->count(new Dataset\EmptySelection()));
+		Assert::same(2, $soulmates->count(new Dataset\EmptySelection()));
 		$matches = $soulmates->matches(new Dataset\EmptySelection());
-		Assert::same($soulmate, (new DecodedJson($matches->current()->print(new Output\Json())->serialization()))->values()['id']);
+		Assert::same($soulmate1, (new DecodedJson($matches->current()->print(new Output\Json())->serialization()))->values()['id']);
+		$matches->next();
+		Assert::same($soulmate2, (new DecodedJson($matches->current()->print(new Output\Json())->serialization()))->values()['id']);
 		$matches->next();
 		Assert::null($matches->current());
 	}
