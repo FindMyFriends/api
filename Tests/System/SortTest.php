@@ -81,12 +81,6 @@ final class SortTest extends TestCase\Runtime {
 					$this->query(Demand\SoulmateRequests\Get::SCHEMA)
 				),
 			],
-			[
-				sprintf(
-					'demands/2wrWlWqMg7DY/soulmates?sort=%s',
-					$this->query(Demand\Soulmates\Get::SCHEMA)
-				),
-			],
 		];
 	}
 

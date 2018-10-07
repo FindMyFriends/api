@@ -22,13 +22,6 @@ final class PublicSoulmates implements Soulmates {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException
-	 */
-	public function seek(): void {
-		$this->origin->seek();
-	}
-
-	/**
 	 * @param \Klapuch\Dataset\Selection $selection
 	 * @throws \UnexpectedValueException
 	 * @return \Iterator

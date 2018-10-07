@@ -332,23 +332,12 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
-			'demands/{demand_id}/soulmates [GET]' => function() use ($seeker): Application\View {
+			'soulmates [HEAD]' => function() use ($seeker): Application\View {
 				return new View\AuthenticatedView(
-					new Endpoint\Demand\Soulmates\Get(
-						$this->hashids,
+					new Endpoint\Soulmates\Head(
 						$this->uri,
 						$this->connection,
-						$this->elasticsearch->create()
-					),
-					new Http\ChosenRole($seeker, ['member'])
-				);
-			},
-			'demands/{demand_id}/soulmates [HEAD]' => function() use ($seeker): Application\View {
-				return new View\AuthenticatedView(
-					new Endpoint\Demand\Soulmates\Head(
-						$this->uri,
-						$this->connection,
-						$this->elasticsearch->create()
+						$seeker
 					),
 					new Http\ChosenRole($seeker, ['member'])
 				);

@@ -10,7 +10,6 @@ use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
 use Klapuch\Dataset;
-use Klapuch\Output;
 use Klapuch\Storage;
 use Tester\Assert;
 
@@ -46,7 +45,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$this->elasticsearch->index($params + ['body' => ['id' => 3, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
-		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
+		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->matches(new Dataset\EmptySelection());
 		Assert::same(
 			[
 				['demand_id' => $id, 'evolution_id' => 2, 'version' => 1],
@@ -79,7 +78,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			]
 		);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
-		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->seek();
+		(new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection))->matches(new Dataset\EmptySelection());
 		Assert::same([], (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates'))->rows());
 	}
 
@@ -103,8 +102,8 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 		$this->elasticsearch->index($params + ['body' => ['id' => 2, 'general' => ['sex' => 'man']]]);
 		$id = (new Storage\NativeQuery($this->connection, 'SELECT id FROM demands'))->field();
 		$soulmates = new Search\DemandedSoulmates($id, $this->elasticsearch, $this->connection);
-		$soulmates->seek();
-		$soulmates->seek();
+		$soulmates->matches(new Dataset\EmptySelection());
+		$soulmates->matches(new Dataset\EmptySelection());
 		(new Storage\NativeQuery(
 			$this->connection,
 			"INSERT INTO soulmate_requests (demand_id, status)
@@ -118,70 +117,6 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			))->rows()
 		);
 		Assert::same(1, $soulmates->count(new Dataset\EmptySelection()));
-	}
-
-	public function testFromParticularDemand(): void {
-		['id' => $seekerId] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
-		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
-		['id' => $otherDemand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seekerId]))->try();
-		(new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed)
-			 VALUES (?, ?, 20, FALSE)',
-			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
-		))->execute();
-		(new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
-			(?, ?, 30, TRUE)',
-			[$demand, (new Misc\SampleEvolution($this->connection))->try()['id']]
-		))->execute();
-		(new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmates (demand_id, evolution_id, score, is_exposed) VALUES
-			(?, ?, 5, FALSE)
-			RETURNING demand_id',
-			[$otherDemand, (new Misc\SampleEvolution($this->connection))->try()['id']]
-		))->execute();
-		$selfId = (new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmate_requests (demand_id, status) VALUES
-			(?, ?)
-			RETURNING id',
-			[$demand, 'pending']
-		))->field();
-		(new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmate_requests (demand_id, status, self_id) VALUES
-			(?, ?, ?)',
-			[$demand, 'processing', $selfId]
-		))->field();
-		(new Storage\NativeQuery(
-			$this->connection,
-			'INSERT INTO soulmate_requests (demand_id, status) VALUES
-			(?, ?)',
-			[$otherDemand, 'pending']
-		))->field();
-		$soulmates = new Search\DemandedSoulmates(
-			$demand,
-			$this->elasticsearch,
-			$this->connection
-		);
-		$matches = $soulmates->matches(new Dataset\EmptySelection());
-		Assert::same(2, $soulmates->count(new Dataset\EmptySelection()));
-		$current = $matches->current();
-		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
-		Assert::same(2, $soulmate['evolution_id']);
-		Assert::same(1, $soulmate['demand_id']);
-		Assert::same($seekerId, $soulmate['seeker_id']);
-		$matches->next();
-		$current = $matches->current();
-		$soulmate = json_decode($current->print(new Output\Json())->serialization(), true);
-		Assert::same(null, $soulmate['evolution_id']);
-		Assert::same(1, $soulmate['demand_id']);
-		Assert::same($seekerId, $soulmate['seeker_id']);
-		$matches->next();
-		Assert::null($matches->current());
 	}
 }
 

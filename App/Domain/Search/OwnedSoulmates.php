@@ -24,10 +24,6 @@ final class OwnedSoulmates implements Soulmates {
 		$this->connection = $connection;
 	}
 
-	public function seek(): void {
-		throw new \RuntimeException('Not yet needed');
-	}
-
 	public function matches(Dataset\Selection $selection): \Iterator {
 		$matches = (new Storage\BuiltQuery(
 			$this->connection,

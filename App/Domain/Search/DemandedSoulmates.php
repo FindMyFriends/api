@@ -32,7 +32,7 @@ final class DemandedSoulmates implements Soulmates {
 		$this->connection = $connection;
 	}
 
-	public function seek(): void {
+	public function matches(Dataset\Selection $selection): \Iterator {
 		$demand = (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\AnsiSelect(
@@ -79,7 +79,7 @@ final class DemandedSoulmates implements Soulmates {
 		))->row();
 		$response = $this->elasticsearch->search(['body' => $this->query($demand)]);
 		if (!$response['hits']['total']) {
-			return;
+			return new \ArrayIterator();
 		}
 		$evolutions = array_column(array_column($response['hits']['hits'], '_source'), 'id');
 		$demands = array_fill(0, count($evolutions), $this->demand);
@@ -96,31 +96,14 @@ final class DemandedSoulmates implements Soulmates {
 			))->onConflict(['evolution_id', 'demand_id'])->doUpdate(['version' => 'EXCLUDED.version + 1'])->sql(),
 			array_merge(...array_map(null, $evolutions, $demands, $scores))
 		))->execute();
-	}
-
-	public function matches(Dataset\Selection $selection): \Iterator {
-		$matches = (new Storage\BuiltQuery(
-			$this->connection,
-			new Dataset\SelectiveStatement(
-				(new FindMyFriends\Sql\SuitedSoulmates\Select())
-					->from(['suited_soulmates'])
-					->where('demand_id = ?', [$this->demand]),
-				$selection
-			)
-		))->rows();
-		foreach ($matches as $match) {
-			yield new StoredSoulmate(
-				$match['id'],
-				new Storage\MemoryConnection($this->connection, $match)
-			);
-		}
+		return new \ArrayIterator();
 	}
 
 	public function count(Dataset\Selection $selection): int {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['COUNT(*)']))
+				(new Sql\AnsiSelect(['count(*)']))
 					->from(['suited_soulmates'])
 					->where('demand_id = ?', [$this->demand]),
 				$selection

@@ -7,13 +7,6 @@ use Klapuch\Dataset;
 
 interface Soulmates {
 	/**
-	 * Seek for related soulmates
-	 * @throws \UnexpectedValueException
-	 * @return void
-	 */
-	public function seek(): void;
-
-	/**
 	 * All found matches
 	 * @param \Klapuch\Dataset\Selection $selection
 	 * @throws \UnexpectedValueException

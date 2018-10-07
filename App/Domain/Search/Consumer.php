@@ -5,6 +5,7 @@ namespace FindMyFriends\Domain\Search;
 
 use Elasticsearch;
 use FindMyFriends\Task;
+use Klapuch\Dataset;
 use Klapuch\Log;
 use Klapuch\Storage;
 use PhpAmqpLib;
@@ -36,7 +37,7 @@ final class Consumer extends Task\Consumer {
 			))->refresh('pending'),
 			new SubsequentRequests($body['id'], $this->connection),
 			new DemandedSoulmates($body['id'], $this->elasticsearch, $this->connection)
-		))->seek();
+		))->matches(new Dataset\EmptySelection());
 	}
 
 	protected function queue(): string {

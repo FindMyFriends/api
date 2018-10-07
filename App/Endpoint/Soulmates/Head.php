@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Endpoint\Demand\Soulmates;
+namespace FindMyFriends\Endpoint\Soulmates;
 
-use Elasticsearch;
+use FindMyFriends\Constraint;
+use FindMyFriends\Domain\Access\Seeker;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Response;
 use Klapuch\Application;
@@ -14,31 +15,37 @@ use Klapuch\UI;
 use Klapuch\Uri;
 
 final class Head implements Application\View {
+	public const SCHEMA = __DIR__ . '/schema/get.json';
+
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Elasticsearch\Client */
-	private $elasticsearch;
+	/** @var \FindMyFriends\Domain\Access\Seeker */
+	private $seeker;
 
 	public function __construct(
 		Uri\Uri $url,
 		Storage\Connection $connection,
-		Elasticsearch\Client $elasticsearch
+		Seeker $seeker
 	) {
 		$this->url = $url;
 		$this->connection = $connection;
-		$this->elasticsearch = $elasticsearch;
+		$this->seeker = $seeker;
 	}
 
 	public function response(array $parameters): Application\Response {
-		$count = (new Search\DemandedSoulmates(
-			$parameters['demand_id'],
-			$this->elasticsearch,
+		$count = (new Search\OwnedSoulmates(
+			$this->seeker,
 			$this->connection
-		))->count(new Dataset\EmptySelection());
+		))->count(
+			new Constraint\SchemaFilter(
+				new Dataset\RestFilter($parameters),
+				new \SplFileInfo(self::SCHEMA)
+			)
+		);
 		return new Response\PaginatedResponse(
 			new Response\PlainResponse(
 				new Output\EmptyFormat(),

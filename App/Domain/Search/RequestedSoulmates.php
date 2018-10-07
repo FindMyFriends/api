@@ -24,24 +24,16 @@ final class RequestedSoulmates implements Soulmates {
 		$this->origin = $origin;
 	}
 
-	public function seek(): void {
+	public function matches(Dataset\Selection $selection): \Iterator {
 		$this->requests->refresh('processing', $this->request);
 		try {
-			$this->origin->seek();
+			$matches = $this->origin->matches($selection);
 			$this->requests->refresh('succeed', $this->request);
+			return $matches;
 		} catch (\Throwable $ex) {
 			$this->requests->refresh('failed', $this->request);
 			throw $ex;
 		}
-	}
-
-	/**
-	 * @param \Klapuch\Dataset\Selection $selection
-	 * @throws \UnexpectedValueException
-	 * @return \Iterator
-	 */
-	public function matches(Dataset\Selection $selection): \Iterator {
-		return $this->origin->matches($selection);
 	}
 
 	/**

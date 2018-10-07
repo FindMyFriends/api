@@ -6,6 +6,7 @@ namespace FindMyFriends\Elastic;
 use FindMyFriends\Domain\Search;
 use FindMyFriends\Misc;
 use FindMyFriends\TestCase;
+use Klapuch\Dataset;
 use Klapuch\Storage;
 use Tester\Assert;
 
@@ -35,7 +36,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			$demand,
 			$this->elasticsearch,
 			$this->connection
-		))->seek();
+		))->matches(new Dataset\EmptySelection());
 		Assert::same(
 			[['evolution_id' => 3]],
 			(new Storage\NativeQuery($this->connection, 'SELECT evolution_id FROM soulmates'))->rows()
@@ -60,7 +61,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			$demand,
 			$this->elasticsearch,
 			$this->connection
-		))->seek();
+		))->matches(new Dataset\EmptySelection());
 		$soulmates = (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(3, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
@@ -88,7 +89,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			$demand,
 			$this->elasticsearch,
 			$this->connection
-		))->seek();
+		))->matches(new Dataset\EmptySelection());
 		$soulmates = (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(2, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);
@@ -116,7 +117,7 @@ final class DemandedSoulmatesTest extends TestCase\Runtime {
 			$demand,
 			$this->elasticsearch,
 			$this->connection
-		))->seek();
+		))->matches(new Dataset\EmptySelection());
 		$soulmates = (new Storage\NativeQuery($this->connection, 'SELECT * FROM soulmates ORDER BY evolution_id'))->rows();
 		Assert::count(2, $soulmates);
 		Assert::true($soulmates[0]['score'] > $soulmates[1]['score']);

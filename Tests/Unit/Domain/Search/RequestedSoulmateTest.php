@@ -5,6 +5,7 @@ namespace FindMyFriends\Unit\Domain\Search;
 
 use FindMyFriends\Domain\Search;
 use FindMyFriends\TestCase;
+use Klapuch\Dataset;
 use Tester\Assert;
 
 require __DIR__ . '/../../../bootstrap.php';
@@ -21,13 +22,13 @@ final class RequestedSoulmateTest extends TestCase\Runtime {
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('succeed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
-		$origin->shouldReceive('seek')->once();
+		$origin->shouldReceive('matches')->once();
 		Assert::noError(static function () use ($requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,
 				$origin
-			))->seek();
+			))->matches(new Dataset\EmptySelection());
 		});
 	}
 
@@ -37,13 +38,13 @@ final class RequestedSoulmateTest extends TestCase\Runtime {
 		$requests->shouldReceive('refresh')->once()->with('processing', $self);
 		$requests->shouldReceive('refresh')->once()->with('failed', $self);
 		$origin = $this->mock(Search\Soulmates::class);
-		$origin->shouldReceive('seek')->once()->andThrow(new \DomainException('foo'));
+		$origin->shouldReceive('matches')->once()->andThrow(new \DomainException('foo'));
 		Assert::exception(static function () use ($requests, $origin, $self) {
 			(new Search\RequestedSoulmates(
 				$self,
 				$requests,
 				$origin
-			))->seek();
+			))->matches(new Dataset\EmptySelection());
 		}, \DomainException::class, 'foo');
 	}
 }

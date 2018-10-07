@@ -90,7 +90,7 @@ move-schemas:       ## move JSON schemas
 
 	ln -sfn $(PWD)/App/Endpoint/Activations/schema/post.json www/schema/activation/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/SoulmateRequests/schema/get.json www/schema/demand/soulmate_request/get.json
-	ln -sfn $(PWD)/App/Endpoint/Demand/Soulmates/schema/get www/schema/demand/soulmate/get.json
+	ln -sfn $(PWD)/App/Endpoint/Soulmates/schema/get www/schema/soulmate/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/get.json www/schema/demand/spot/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/post.json www/schema/demand/spot/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/get.json www/schema/demand/get.json
