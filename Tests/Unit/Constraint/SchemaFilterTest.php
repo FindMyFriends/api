@@ -44,7 +44,7 @@ final class SchemaFilterTest extends TestCase\Runtime {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException 'status' must be one of: 'success', 'fail' - 'foo' was given
+	 * @throws \UnexpectedValueException Does not have a value in the enumeration ["success","fail"]
 	 */
 	public function testFailingOnAnyValueOutOfEnum(): void {
 		(new Constraint\SchemaFilter(
@@ -86,6 +86,42 @@ final class SchemaFilterTest extends TestCase\Runtime {
 		))->criteria();
 	}
 
+	/**
+	 * @dataProvider coerceTypes
+	 * @param mixed[] $value
+	 */
+	public function testPassingOnCoerceTypes(array $value): void {
+		Assert::same(
+			['filter' => $value],
+			(new Constraint\SchemaFilter(
+				new class($value) extends Dataset\Filter {
+					/** @var mixed[]  */
+					private $value;
+
+					public function __construct(array $value) {
+						$this->value = $value;
+					}
+
+					protected function filter(): array {
+						return $this->value;
+					}
+				},
+				new \SplFileInfo(Tester\FileMock::create($this->testingSchema(), 'json'))
+			))->criteria()
+		);
+	}
+
+	/**
+	 * @return mixed[][]
+	 */
+	protected function coerceTypes(): array {
+		return [
+			[['size' => '2']],
+			[['is_valid' => 'true']],
+			[['is_valid' => 'false']],
+		];
+	}
+
 	private function testingSchema(): string {
 		return (string) json_encode(
 			[
@@ -100,6 +136,13 @@ final class SchemaFilterTest extends TestCase\Runtime {
 						'type' => ['integer'],
 						'enum' => [1, 2, 3],
 					],
+					'is_valid' => [
+						'type' => ['boolean'],
+					],
+				],
+				'required' => [
+					'status',
+					'size',
 				],
 				'type' => 'object',
 			]

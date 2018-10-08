@@ -31,3 +31,12 @@ function array_keys_exist(array $array, ...$keys): bool {
 	}
 	return true;
 }
+
+function recursive_unset(array &$array, string $key): void {
+	unset($array[$key]);
+	foreach ($array as &$value) {
+		if (is_array($value)) {
+			recursive_unset($value, $key);
+		}
+	}
+}
