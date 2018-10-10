@@ -262,6 +262,24 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.seeker_contact(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id integer;
+BEGIN
+	INSERT INTO seeker_contacts (seeker_id, facebook, instagram, phone_number) VALUES (
+		samples.random_if_not_exists((SELECT samples.seeker()), replacements, 'seeker_id'),
+		CASE WHEN replacements ->> 'facebook' IS NULL THEN NULL ELSE samples.random_if_not_exists(md5(random()::text), replacements, 'facebook') END,
+		CASE WHEN replacements ->> 'instagram' IS NULL THEN NULL ELSE samples.random_if_not_exists(md5(random()::text), replacements, 'instagram') END,
+		CASE WHEN replacements ->> 'phone_number' IS NULL THEN NULL ELSE samples.random_if_not_exists(md5(random()::text), replacements, 'phone_number') END
+	)
+	RETURNING id
+	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.verification_code(replacements jsonb = '{}') RETURNS INTEGER
 AS $$
 DECLARE

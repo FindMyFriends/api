@@ -356,6 +356,9 @@ final class ApplicationRoutes implements Routing\Routes {
 					$this->cipher
 				);
 			},
+			'seekers/me [GET]' => function() use ($seeker): Application\View {
+				return new Endpoint\Seekers\Me\Get($this->connection, $seeker);
+			},
 			'spots/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Put(
 					$request,

@@ -84,6 +84,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$schemas->save($seeker->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Seeker/schema/get.json'));
 		$schemas->save($seeker->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Seekers/schema/post.json'));
 
+		$me = new Schema\Seeker\Me\Structure();
+		$schemas->save($me->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Seekers/Me/schema/get.json'));
+
 		$token = new Schema\Token\Structure();
 		$schemas->save($token->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tokens/schema/post.json'));
 

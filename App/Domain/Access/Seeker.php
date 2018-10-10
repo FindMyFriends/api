@@ -11,7 +11,7 @@ interface Seeker {
 	public function id(): string;
 
 	/**
-	 * Properties of the seeker such as email, role, seekername, etc.
+	 * Properties of the seeker such as email, role, etc.
 	 * @return array
 	 */
 	public function properties(): array;

@@ -110,6 +110,7 @@ move-schemas:       ## move JSON schemas
 	ln -sfn $(PWD)/App/Endpoint/RefreshTokens/schema/post.json www/schema/refresh_token/post.json
 	ln -sfn $(PWD)/App/Endpoint/Seeker/schema/get.json www/schema/seeker/get.json
 	ln -sfn $(PWD)/App/Endpoint/Seekers/schema/post.json www/schema/seeker/post.json
+	ln -sfn $(PWD)/App/Endpoint/Seekers/Me/schema/get.json www/schema/seeker/get.json
 	ln -sfn $(PWD)/App/Endpoint/Soulmate/schema/patch.json www/schema/soulmate/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/patch.json www/schema/spot/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/put.json www/schema/spot/put.json
