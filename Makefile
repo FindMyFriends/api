@@ -1,7 +1,8 @@
 .DEFAULT_GOAL := check
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock move-schemas generate-schemas composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf phpstan-test
 
-PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --tab-width=4 -sp App Tests www
+PHPCS_CACHE_DIR := /tmp/cache
+PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests www
 PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-exclude=CompleteDescription.php
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ Tests/System/ -name '*.php' | grep -v '\Test.php$$'
@@ -27,6 +28,7 @@ phpstan-test:
 	PHPSTAN=1 vendor/bin/phpstan analyse -l max -c phpstan.test.neon Tests
 
 phpcs:              ## phpcs
+	@mkdir -p $(PHPCS_CACHE_DIR)
 	vendor/bin/phpcs $(PHPCS_ARGS)
 
 phpcbf:             ## phpcbf
