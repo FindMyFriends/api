@@ -2086,6 +2086,16 @@ CREATE VIEW description_parts AS
     LEFT JOIN eyebrows eyebrow ON eyebrow.id = description.eyebrow_id
     LEFT JOIN eyes left_eye ON left_eye.id = description.left_eye_id
     LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
+
+
+CREATE VIEW seeker_properties AS
+  SELECT seekers.id, seekers.email, seeker_contacts.facebook, seeker_contacts.instagram, seeker_contacts.phone_number, general.firstname, general.lastname, general.birth_year, general.ethnic_group_id, general.sex
+  FROM seekers
+  JOIN seeker_contacts ON seeker_contacts.seeker_id = seekers.id
+  JOIN evolutions ON evolutions.id = (SELECT id FROM base_evolution(seekers.id))
+  JOIN descriptions ON descriptions.id = evolutions.id
+  JOIN general ON general.id = descriptions.general_id;
+
 -----
 
 

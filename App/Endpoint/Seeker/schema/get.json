@@ -5,9 +5,6 @@
         "email": {
             "type": "string"
         },
-        "password": {
-            "type": "string"
-        },
         "general": {
             "additionalProperties": false,
             "properties": {
@@ -78,7 +75,6 @@
     },
     "required": [
         "email",
-        "password",
         "general",
         "contact"
     ],

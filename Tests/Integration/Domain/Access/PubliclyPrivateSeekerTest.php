@@ -18,6 +18,19 @@ final class PubliclyPrivateSeekerTest extends TestCase\Runtime {
 
 	public function testPropertiesFormat(): void {
 		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		(new Misc\SampleEvolution(
+			$this->connection,
+			[
+				'seeker_id' => $id,
+				'general' => [
+					'firstname' => 'Dominik',
+					'lastname' => 'Klapuch',
+					'birth_year' => 1996,
+					'ethnic_group_id' => 1,
+					'sex' => 'man',
+				],
+			]
+		))->try();
 		(new Misc\SamplePostgresData(
 			$this->connection,
 			'seeker_contact',
@@ -28,6 +41,13 @@ final class PubliclyPrivateSeekerTest extends TestCase\Runtime {
 		Assert::same(
 			[
 				'email' => 'foo@bar.cz',
+				'general' => [
+					'firstname' => 'Dominik',
+					'lastname' => 'Klapuch',
+					'birth_year' => 1996,
+					'ethnic_group_id' => 1,
+					'sex' => 'man',
+				],
 				'contact' => [
 					'facebook' => 'test_fb',
 					'instagram' => 'test_ig',

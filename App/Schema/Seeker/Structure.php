@@ -34,7 +34,6 @@ final class Structure {
 			'additionalProperties' => false,
 			'properties' => [
 				'email' => ['type' => 'string'],
-				'password' => ['type' => 'string'],
 			] + ['general' => $description['properties']['general']] + [
 				'contact' => [
 					'type' => 'object',
@@ -47,12 +46,15 @@ final class Structure {
 					],
 				],
 			],
-			'required' => ['email', 'password', 'general', 'contact'],
+			'required' => ['email', 'general', 'contact'],
 			'type' => 'object',
 		];
 	}
 
 	public function post(): array {
-		return $this->get();
+		$get = $this->get();
+		$get['properties'] = ['password' => ['type' => 'string']] + $get['properties'];
+		$get['required'] = array_merge($get['required'], ['password']);
+		return $get;
 	}
 }

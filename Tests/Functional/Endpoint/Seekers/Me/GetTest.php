@@ -17,7 +17,20 @@ final class GetTest extends TestCase\Runtime {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse(): void {
-		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker'))->try();
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'seeker', ['email' => 'foo@bar.cz']))->try();
+		(new Misc\SampleEvolution(
+			$this->connection,
+			[
+				'seeker_id' => $id,
+				'general' => [
+					'firstname' => 'Dominik',
+					'lastname' => 'Klapuch',
+					'birth_year' => 1996,
+					'ethnic_group_id' => 1,
+					'sex' => 'man',
+				],
+			]
+		))->try();
 		(new Misc\SamplePostgresData(
 			$this->connection,
 			'seeker_contact',

@@ -3,25 +3,18 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\Schema\Seeker\Me;
 
+use FindMyFriends\Schema;
+use Klapuch\Storage;
+
 final class Structure {
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
+
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
+	}
+
 	public function get(): array {
-		return [
-			'$schema' => 'http://json-schema.org/draft-04/schema#',
-			'additionalProperties' => false,
-			'properties' => ['email' => ['type' => 'string']] + [
-				'contact' => [
-					'type' => 'object',
-					'additionalProperties' => false,
-					'properties' => [
-						'facebook' => ['type' => ['string', 'null']],
-						'instagram' => ['type' => ['string', 'null']],
-						'phone_number' => ['type' => ['string', 'null']],
-					],
-					'required' => ['facebook', 'instagram', 'phone_number'],
-				],
-			],
-			'required' => ['email', 'contact'],
-			'type' => 'object',
-		];
+		return (new Schema\Seeker\Structure($this->connection))->get();
 	}
 }

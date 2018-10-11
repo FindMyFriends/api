@@ -5,9 +5,52 @@
         "email": {
             "type": "string"
         },
+        "general": {
+            "additionalProperties": false,
+            "properties": {
+                "firstname": {
+                    "type": [
+                        "string"
+                    ]
+                },
+                "sex": {
+                    "type": "string",
+                    "enum": [
+                        "man",
+                        "woman"
+                    ]
+                },
+                "lastname": {
+                    "type": [
+                        "string"
+                    ]
+                },
+                "ethnic_group_id": {
+                    "type": "integer"
+                },
+                "birth_year": {
+                    "type": "integer",
+                    "minimum": 1888,
+                    "maximum": 2003
+                }
+            },
+            "required": [
+                "lastname",
+                "firstname",
+                "ethnic_group_id",
+                "sex",
+                "birth_year"
+            ],
+            "type": "object"
+        },
         "contact": {
             "type": "object",
             "additionalProperties": false,
+            "required": [
+                "facebook",
+                "instagram",
+                "phone_number"
+            ],
             "properties": {
                 "facebook": {
                     "type": [
@@ -27,16 +70,12 @@
                         "null"
                     ]
                 }
-            },
-            "required": [
-                "facebook",
-                "instagram",
-                "phone_number"
-            ]
+            }
         }
     },
     "required": [
         "email",
+        "general",
         "contact"
     ],
     "type": "object"

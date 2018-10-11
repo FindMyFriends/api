@@ -27,14 +27,28 @@ final class PubliclyPrivateSeeker implements Seeker {
 	public function properties(): array {
 		$properties = (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT seekers.email, contacts.facebook, contacts.instagram, contacts.phone_number
-			FROM seekers
-			JOIN seeker_contacts AS contacts ON contacts.seeker_id = seekers.id
-			WHERE seekers.id = ?',
+			'SELECT email,
+			facebook,
+			instagram,
+			phone_number,
+			firstname,
+			lastname,
+			birth_year,
+			ethnic_group_id,
+			sex
+			FROM seeker_properties
+			WHERE id = ?',
 			[$this->id()]
 		))->row();
 		return [
 			'email' => $properties['email'],
+			'general' => [
+				'firstname' => $properties['firstname'],
+				'lastname' => $properties['lastname'],
+				'birth_year' => $properties['birth_year'],
+				'ethnic_group_id' => $properties['ethnic_group_id'],
+				'sex' => $properties['sex'],
+			],
 			'contact' => [
 				'facebook' => $properties['facebook'],
 				'instagram' => $properties['instagram'],
