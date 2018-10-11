@@ -57,14 +57,6 @@ services:
       networks:
         - fmf
 
-    kibana:
-      image: docker.elastic.co/kibana/kibana:6.4.2
-      container_name: find-my-friends-kibana
-      ports:
-        - 5601:5601
-      networks:
-        - fmf
-
     elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
       container_name: find-my-friends-elasticsearch
