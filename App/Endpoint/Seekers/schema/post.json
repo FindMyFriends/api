@@ -77,10 +77,10 @@
         }
     },
     "required": [
-        "email",
         "general",
         "contact",
-        "password"
+        "password",
+        "email"
     ],
     "type": "object"
 }

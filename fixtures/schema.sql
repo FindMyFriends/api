@@ -2088,6 +2088,23 @@ CREATE VIEW description_parts AS
     LEFT JOIN eyes right_eye ON right_eye.id = description.right_eye_id;
 
 
+CREATE VIEW exposed_seekers AS
+  WITH exposures AS (
+    SELECT seekers.id AS seeker_id, exposed.exposed_seeker_id, is_exposed
+    FROM seekers
+    JOIN demands ON demands.seeker_id = seekers.id
+    JOIN soulmates ON soulmates.demand_id = demands.id
+    JOIN (
+      SELECT evolutions.seeker_id AS exposed_seeker_id, soulmates.id AS soulmate_id
+      FROM seekers
+      JOIN evolutions ON evolutions.seeker_id = seekers.id
+      JOIN soulmates ON soulmates.evolution_id = evolutions.id
+    ) AS exposed ON exposed.soulmate_id = soulmates.id
+  )
+  SELECT seeker_id, exposed_seeker_id FROM exposures WHERE is_exposed = TRUE
+  UNION ALL
+  SELECT exposed_seeker_id, seeker_id FROM exposures;
+
 CREATE VIEW seeker_properties AS
   SELECT seekers.id, seekers.email, seeker_contacts.facebook, seeker_contacts.instagram, seeker_contacts.phone_number, general.firstname, general.lastname, general.birth_year, general.ethnic_group_id, general.sex
   FROM seekers

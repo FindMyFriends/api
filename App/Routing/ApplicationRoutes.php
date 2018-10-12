@@ -359,6 +359,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			'seekers/me [GET]' => function() use ($seeker): Application\View {
 				return new Endpoint\Seekers\Me\Get($this->connection, $seeker);
 			},
+			'seekers/{id} [GET]' => function() use ($seeker): Application\View {
+				return new Endpoint\Seeker\Get($this->connection, $seeker);
+			},
 			'spots/{id} [PUT]' => function() use ($seeker, $request): Application\View {
 				return new Endpoint\Spot\Put(
 					$request,

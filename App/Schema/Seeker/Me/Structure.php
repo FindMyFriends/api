@@ -15,6 +15,8 @@ final class Structure {
 	}
 
 	public function get(): array {
-		return (new Schema\Seeker\Structure($this->connection))->get();
+		$get = (new Schema\Seeker\Structure($this->connection))->get();
+		$get['required'] = array_merge($get['required'], ['email']);
+		return $get;
 	}
 }

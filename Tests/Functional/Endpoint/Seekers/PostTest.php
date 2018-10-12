@@ -42,7 +42,7 @@ final class PostTest extends TestCase\Runtime {
 				$this->rabbitMq,
 				new Encryption\FakeCipher()
 			))->response([]);
-		}, \UnexpectedValueException::class, 'The property email is required');
+		}, \UnexpectedValueException::class, 'The property general is required');
 	}
 
 	public function test409ForDuplication(): void {

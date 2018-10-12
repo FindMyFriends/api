@@ -641,11 +641,12 @@ AS $$
 DECLARE
 	v_id integer;
 BEGIN
-	INSERT INTO soulmates (demand_id, evolution_id, score, is_correct) VALUES (
+	INSERT INTO soulmates (demand_id, evolution_id, score, is_correct, is_exposed) VALUES (
 		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
 		samples.random_if_not_exists((SELECT evolution FROM samples.evolution()), replacements, 'evolution_id')::integer,
 		test_utils.better_random('integer'),
-    samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'is_correct')::boolean
+		samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'is_correct')::boolean,
+		samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'is_exposed')::boolean
 	)
 	RETURNING id
 		INTO v_id;

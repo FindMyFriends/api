@@ -74,9 +74,9 @@
         }
     },
     "required": [
-        "email",
         "general",
-        "contact"
+        "contact",
+        "email"
     ],
     "type": "object"
 }
