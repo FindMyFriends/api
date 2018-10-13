@@ -16,7 +16,7 @@ final class Test extends TestCase\Runtime {
 	/**
 	 * @dataProvider expectations.ini
 	 */
-	public function testSchemas(string $schema, string $master, string $replacements, bool $valid): void {
+	public function testSchemas(string $schema, string $master, string $replacements, string $valid): void {
 		$json = json_decode(
 			json_encode(
 				array_replace_recursive(
@@ -28,7 +28,7 @@ final class Test extends TestCase\Runtime {
 		$validator = new JsonSchema\Validator();
 		$validator->validate($json, ['$ref' => 'file://' . (new \SplFileInfo($schema))->getRealPath()]);
 		Assert::same(
-			$valid,
+			(bool) $valid,
 			$validator->isValid(),
 			sprintf('%s: %s', current($validator->getErrors())['message'], current($validator->getErrors())['property'])
 		);

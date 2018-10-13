@@ -36,7 +36,15 @@
 		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator.DisallowedShortTernaryOperator"/>
 		<exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
-		<exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/> <!-- TODO: Does not work -->
+		<exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.ControlStructureSpacing.IncorrectLinesCountBeforeControlStructure"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.ControlStructureSpacing.IncorrectLinesCountBeforeFirstControlStructure"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.ControlStructureSpacing.IncorrectLinesCountAfterControlStructure"/>
+		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.ControlStructureSpacing"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.UselessConditionWithReturn"/> <!-- TODO: Does not work -->
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireTernaryOperator"/>
 	</rule>
 
 	<rule ref="Squiz.WhiteSpace.FunctionSpacing.After"> <!-- Override rule from Consistence -->

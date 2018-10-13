@@ -17,11 +17,11 @@ final class LazyElasticsearch {
 	}
 
 	public function create(): Elasticsearch\Client {
-		if (static::$cache === null) {
-			static::$cache = Elasticsearch\ClientBuilder::create()
+		if (self::$cache === null) {
+			self::$cache = Elasticsearch\ClientBuilder::create()
 				->setHosts($this->hosts)
 				->build();
 		}
-		return static::$cache;
+		return self::$cache;
 	}
 }
