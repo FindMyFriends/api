@@ -11,6 +11,7 @@ use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri;
@@ -48,6 +49,9 @@ final class Get implements Application\View {
 		$this->seeker = $seeker;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	public function response(array $parameters): Application\Response {
 		$evolution = new Evolution\PublicChain(
 			new Evolution\IndividualChain(
@@ -62,6 +66,9 @@ final class Get implements Application\View {
 				new Response\JsonResponse(
 					new Response\PlainResponse(
 						new Misc\JsonPrintedObjects(
+							static function (Evolution\Change $change, Output\Format $format): Output\Format {
+								return $change->print($format);
+							},
 							...iterator_to_array(
 								$evolution->changes(
 									new Constraint\MappedSelection(

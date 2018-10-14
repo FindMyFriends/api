@@ -7,7 +7,7 @@ use Klapuch\Output;
 
 interface Soulmate {
 	/**
-	 * Print the soulmate to specified format
+	 * Print the soulmate match to specified format
 	 * @param \Klapuch\Output\Format $format
 	 * @return \Klapuch\Output\Format
 	 */

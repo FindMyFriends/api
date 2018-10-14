@@ -6,7 +6,7 @@ namespace FindMyFriends\Domain\Activity;
 use Klapuch\Output;
 
 final class FakeNotification implements Notification {
-	public function print(Output\Format $format): Output\Format {
+	public function receive(Output\Format $format): Output\Format {
 		return $format;
 	}
 }

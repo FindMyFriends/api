@@ -9,6 +9,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri;
@@ -42,6 +43,9 @@ final class Get implements Application\View {
 				new Response\JsonResponse(
 					new Response\PlainResponse(
 						new Misc\JsonPrintedObjects(
+							static function (Search\Request $request, Output\Format $format): Output\Format {
+								return $request->print($format);
+							},
 							...iterator_to_array(
 								$requests->all(
 									new Dataset\CombinedSelection(

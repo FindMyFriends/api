@@ -10,6 +10,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri\Uri;
@@ -65,6 +66,9 @@ final class Get implements Application\View {
 				new Response\JsonResponse(
 					new Response\PlainResponse(
 						new Misc\JsonPrintedObjects(
+							static function (Search\Soulmate $soulmate, Output\Format $format): Output\Format {
+								return $soulmate->print($format);
+							},
 							...iterator_to_array(
 								$soulmates->matches(
 									new Constraint\MappedSelection(

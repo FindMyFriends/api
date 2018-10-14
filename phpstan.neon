@@ -14,7 +14,6 @@ parameters:
 		- '~Parameter #2 \$adjustment of method Klapuch\\Output\\Format::adjusted\(\) expects callable~'
 
 		# Not good to ignore
-		- '~Call to an undefined method object::print\(\)~'
 		- '~UnexpectedValueException is never thrown in the corresponding try block~'
 
 		# Wait for PHP 7.3 solution

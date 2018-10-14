@@ -25,6 +25,9 @@ final class JsonPrintedObjectsTest extends TestCase\Runtime {
     }
 ]',
 			(new Misc\JsonPrintedObjects(
+				static function (object $object, Output\Format $format): Output\Format {
+					return $object->print($format);
+				},
 				new class {
 					public function print(): Output\Format {
 						return new Output\Json(['a' => 'b']);
@@ -47,6 +50,9 @@ final class JsonPrintedObjectsTest extends TestCase\Runtime {
     }
 ]',
 			(new Misc\JsonPrintedObjects(
+				static function (object $object, Output\Format $format): Output\Format {
+					return $object->print($format);
+				},
 				new class {
 					public function print(): Output\Format {
 						return new Output\Json(['a' => 'b']);
@@ -67,6 +73,9 @@ final class JsonPrintedObjectsTest extends TestCase\Runtime {
     }
 ]',
 			(new Misc\JsonPrintedObjects(
+				static function (object $object, Output\Format $format): Output\Format {
+					return $object->print($format);
+				},
 				new class {
 					public function print(): Output\Format {
 						return new Output\Json(['a' => 'b']);

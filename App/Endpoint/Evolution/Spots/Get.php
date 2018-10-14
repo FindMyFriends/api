@@ -10,6 +10,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Hashids\HashidsInterface;
 use Klapuch\Application;
+use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
@@ -47,6 +48,9 @@ final class Get implements Application\View {
 			new Response\JsonResponse(
 				new Response\PlainResponse(
 					new Misc\JsonPrintedObjects(
+						static function (Place\Spot $spot, Output\Format $format): Output\Format {
+							return $spot->print($format);
+						},
 						...iterator_to_array(
 							(new Evolution\PublicSpots(
 								new Place\HarnessedSpots(

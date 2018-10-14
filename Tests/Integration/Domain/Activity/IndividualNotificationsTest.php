@@ -30,10 +30,10 @@ final class IndividualNotificationsTest extends TestCase\Runtime {
 			$this->connection
 		))->receive(new Dataset\FakeSelection([]));
 		$notification = $notifications->current();
-		Assert::contains(sprintf('"seeker_id": %d', $seeker), $notification->print(new Output\Json())->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $notification->receive(new Output\Json())->serialization());
 		$notifications->next();
 		$notification = $notifications->current();
-		Assert::contains(sprintf('"seeker_id": %d', $seeker), $notification->print(new Output\Json())->serialization());
+		Assert::contains(sprintf('"seeker_id": %d', $seeker), $notification->receive(new Output\Json())->serialization());
 		$notifications->next();
 		Assert::null($notifications->current());
 	}

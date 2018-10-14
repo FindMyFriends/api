@@ -11,5 +11,5 @@ interface Notification {
 	 * @param \Klapuch\Output\Format $format
 	 * @return \Klapuch\Output\Format
 	 */
-	public function print(Output\Format $format): Output\Format;
+	public function receive(Output\Format $format): Output\Format;
 }

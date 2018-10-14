@@ -10,6 +10,7 @@ use FindMyFriends\Misc;
 use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
+use Klapuch\Output;
 use Klapuch\Storage;
 use Klapuch\UI;
 use Klapuch\Uri\Uri;
@@ -56,6 +57,9 @@ final class Get implements Application\View {
 				new Response\JsonResponse(
 					new Response\PlainResponse(
 						new Misc\JsonPrintedObjects(
+							static function (Activity\Notification $notification, Output\Format $format): Output\Format {
+								return $notification->receive($format);
+							},
 							...iterator_to_array(
 								$notifications->receive(
 									new Constraint\MappedSelection(

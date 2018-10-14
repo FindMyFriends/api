@@ -19,7 +19,7 @@ final class StoredNotification implements Notification {
 		$this->connection = $connection;
 	}
 
-	public function print(Output\Format $format): Output\Format {
+	public function receive(Output\Format $format): Output\Format {
 		$notification = (new Storage\TypedQuery(
 			$this->connection,
 			(new FindMyFriends\Sql\IndividualNotifications\Select())

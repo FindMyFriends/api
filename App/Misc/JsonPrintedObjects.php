@@ -13,7 +13,11 @@ final class JsonPrintedObjects implements Output\Format {
 	/** @var object[] */
 	private $prints;
 
-	public function __construct(object ...$prints) {
+	/** @var callable */
+	private $response;
+
+	public function __construct(callable $response, object ...$prints) {
+		$this->response = $response;
 		$this->prints = $prints;
 	}
 
@@ -21,8 +25,8 @@ final class JsonPrintedObjects implements Output\Format {
 		return (new Internal\EncodedJson(
 			array_reduce(
 				$this->prints,
-				static function(array $objects, object $object): array {
-					$objects[] = json_decode($object->print(new Output\Json())->serialization(), true);
+				function(array $objects, object $object): array {
+					$objects[] = json_decode(call_user_func_array($this->response, [$object, new Output\Json()])->serialization(), true);
 					return $objects;
 				},
 				[]
@@ -51,8 +55,8 @@ final class JsonPrintedObjects implements Output\Format {
 				},
 				array_reduce(
 					$this->prints,
-					static function(array $objects, object $object) use ($tag, $adjustment): array {
-						$objects[] = $object->print(new Output\Json())->adjusted($tag, $adjustment);
+					function(array $objects, object $object) use ($tag, $adjustment): array {
+						$objects[] = call_user_func_array($this->response, [$object, new Output\Json()])->adjusted($tag, $adjustment);
 						return $objects;
 					},
 					[]

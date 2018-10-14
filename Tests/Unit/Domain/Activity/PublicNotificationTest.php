@@ -23,7 +23,7 @@ final class PublicNotificationTest extends TestCase\Runtime {
 			json_decode(
 				(new Activity\PublicNotification(
 					new Activity\FakeNotification()
-				))->print(
+				))->receive(
 					new Output\Json(
 						[
 							'seen_at' => '2017-09-17 13:58:10.531097+00',
@@ -45,7 +45,7 @@ final class PublicNotificationTest extends TestCase\Runtime {
 			json_decode(
 				(new Activity\PublicNotification(
 					new Activity\FakeNotification()
-				))->print(
+				))->receive(
 					new Output\Json(
 						[
 							'seen_at' => null,

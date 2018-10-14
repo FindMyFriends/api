@@ -16,8 +16,8 @@ final class PublicNotification implements Notification {
 		$this->origin = $origin;
 	}
 
-	public function print(Output\Format $format): Output\Format {
-		return $this->origin->print($format)
+	public function receive(Output\Format $format): Output\Format {
+		return $this->origin->receive($format)
 			->adjusted('seen_at', static function (?string $datetime): ?string {
 				return $datetime === null ? $datetime : (new \DateTime($datetime))->format(\DateTime::ATOM);
 			})->adjusted('notified_at', static function (string $datetime): string {

@@ -11,3 +11,4 @@ parameters:
 		- '~^Parameter #1 \$json of function json_decode expects string, string\|false given\.$~' # ok
 		- '~^Parameter #1 \$output of class Klapuch\\Output\\FakeFormat constructor expects string, string\|false given\.$~'# ok
 		- '~^Cannot call method getPrevious\(\) on Throwable|null\.$~'# ok
+		- '~^Call to an undefined method object::print\(\)\.$~'# ok
