@@ -654,6 +654,28 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION samples.notification(replacements jsonb = '{}') RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_id integer;
+	v_seen boolean;
+BEGIN
+	SELECT samples.random_if_not_exists(test_utils.random_boolean(), replacements, 'seen')::boolean INTO v_seen;
+	INSERT INTO notifications (seeker_id, involved_seeker_id, type, seen, seen_at, notified_at) VALUES (
+		samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'seeker_id')::integer,
+		samples.random_if_not_exists((SELECT seeker FROM samples.seeker()), replacements, 'involved_seeker_id')::integer,
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.notification_types()), replacements, 'type')::notification_type,
+		v_seen,
+		CASE WHEN replacements ->> 'seen_at' IS NULL THEN NULL ELSE samples.random_if_not_exists(now()::text, replacements, 'seen_at')::timestamptz END,
+		samples.random_if_not_exists(now()::text, replacements, 'notified_at')::timestamptz
+	)
+	RETURNING id
+	INTO v_id;
+	RETURN v_id;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION samples.soulmate_request(replacements jsonb = '{}') RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
@@ -664,7 +686,7 @@ BEGIN
 		samples.random_if_not_exists((SELECT demand FROM samples.demand()), replacements, 'demand_id')::integer,
 		samples.random_if_not_exists(test_utils.random_enum('job_statuses'), replacements, 'status')::job_statuses,
 		samples.random_if_not_exists(NOW()::text, replacements, 'searched_at')::timestamptz,
-    samples.random_if_not_exists(NULL, replacements, 'self_id')::integer
+		samples.random_if_not_exists(NULL, replacements, 'self_id')::integer
 	)
 	RETURNING id
 		INTO v_id;

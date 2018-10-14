@@ -84,6 +84,7 @@ move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/description
 	mkdir -p www/schema/evolution
 	mkdir -p www/schema/evolution/spot
+	mkdir -p www/schema/notification
 	mkdir -p www/schema/refresh_token
 	mkdir -p www/schema/seeker
 	mkdir -p www/schema/soulmate
@@ -91,27 +92,29 @@ move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/token
 
 	ln -sfn $(PWD)/App/Endpoint/Activations/schema/post.json www/schema/activation/post.json
-	ln -sfn $(PWD)/App/Endpoint/Demand/SoulmateRequests/schema/get.json www/schema/demand/soulmate_request/get.json
-	ln -sfn $(PWD)/App/Endpoint/Soulmates/schema/get www/schema/soulmate/get.json
-	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/get.json www/schema/demand/spot/get.json
-	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/post.json www/schema/demand/spot/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/get.json www/schema/demand/get.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/patch.json www/schema/demand/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Demand/schema/put.json www/schema/demand/put.json
+	ln -sfn $(PWD)/App/Endpoint/Demand/SoulmateRequests/schema/get.json www/schema/demand/soulmate_request/get.json
+	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/get.json www/schema/demand/spot/get.json
+	ln -sfn $(PWD)/App/Endpoint/Demand/Spot/schema/post.json www/schema/demand/spot/post.json
 	ln -sfn $(PWD)/App/Endpoint/Demands/schema/post.json www/schema/demand/post.json
 	ln -sfn $(PWD)/App/Endpoint/Description/schema/get.json www/schema/description/get.json
 	ln -sfn $(PWD)/App/Endpoint/Description/schema/put.json www/schema/description/put.json
 	ln -sfn $(PWD)/App/Endpoint/Descriptions/schema/post.json www/schema/description/post.json
-	ln -sfn $(PWD)/App/Endpoint/Evolution/Spot/schema/get.json www/schema/evolution/spot/get.json
-	ln -sfn $(PWD)/App/Endpoint/Evolution/Spot/schema/post.json www/schema/evolution/spot/post.json
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/get.json www/schema/evolution/get.json
 	ln -sfn $(PWD)/App/Endpoint/Evolution/schema/put.json www/schema/evolution/put.json
+	ln -sfn $(PWD)/App/Endpoint/Evolution/Spot/schema/get.json www/schema/evolution/spot/get.json
+	ln -sfn $(PWD)/App/Endpoint/Evolution/Spot/schema/post.json www/schema/evolution/spot/post.json
 	ln -sfn $(PWD)/App/Endpoint/Evolutions/schema/post.json www/schema/evolution/post.json
+	ln -sfn $(PWD)/App/Endpoint/Notification/schema/patch.json www/schema/notification/patch.json
+	ln -sfn $(PWD)/App/Endpoint/Notifications/schema/get.json www/schema/notification/get.json
 	ln -sfn $(PWD)/App/Endpoint/RefreshTokens/schema/post.json www/schema/refresh_token/post.json
 	ln -sfn $(PWD)/App/Endpoint/Seeker/schema/get.json www/schema/seeker/get.json
-	ln -sfn $(PWD)/App/Endpoint/Seekers/schema/post.json www/schema/seeker/post.json
 	ln -sfn $(PWD)/App/Endpoint/Seekers/Me/schema/get.json www/schema/seeker/get.json
+	ln -sfn $(PWD)/App/Endpoint/Seekers/schema/post.json www/schema/seeker/post.json
 	ln -sfn $(PWD)/App/Endpoint/Soulmate/schema/patch.json www/schema/soulmate/patch.json
+	ln -sfn $(PWD)/App/Endpoint/Soulmates/schema/get www/schema/soulmate/get.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/patch.json www/schema/spot/patch.json
 	ln -sfn $(PWD)/App/Endpoint/Spot/schema/put.json www/schema/spot/put.json
 	ln -sfn $(PWD)/App/Endpoint/Tokens/schema/post.json www/schema/token/post.json

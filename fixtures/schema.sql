@@ -34,6 +34,7 @@ CREATE FUNCTION constant.breast_sizes() RETURNS text[] AS $$SELECT ARRAY['A', 'B
 CREATE FUNCTION constant.sex() RETURNS text[] AS $$SELECT ARRAY['man', 'woman'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.ownerships() RETURNS text[] AS $$SELECT ARRAY['yours', 'theirs'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.notification_types() RETURNS text[] AS $$SELECT ARRAY['soulmate-found', 'soulmate-pending_expose_permission', 'soulmate-exposed']$$ LANGUAGE sql IMMUTABLE;
 
 
 -- schema audit
@@ -132,6 +133,7 @@ CREATE DOMAIN timeline_sides AS text CHECK (VALUE = ANY(constant.timeline_sides(
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN breast_sizes AS text CHECK (VALUE = ANY(constant.breast_sizes()));
 CREATE DOMAIN sex AS text CHECK (VALUE = ANY(constant.sex()));
+CREATE DOMAIN notification_type AS text CHECK (VALUE = ANY(constant.notification_types()));
 
 -- compound types
 CREATE TYPE approximate_timestamptz AS (
@@ -1297,6 +1299,10 @@ LANGUAGE plpgsql;
 CREATE FUNCTION soulmates_trigger_row_bui() RETURNS trigger
 AS $$
 BEGIN
+  IF TG_OP = 'UPDATE' AND old.is_exposed AND new.is_exposed = FALSE THEN
+    RAISE EXCEPTION 'You can not revert expose decision';
+  END IF;
+
   IF (is_common_seeker(new.demand_id, new.evolution_id)) THEN
     RAISE EXCEPTION USING
       MESSAGE = 'Demand and evolution can not belong to the same seeker',
@@ -1307,9 +1313,36 @@ END;
 $$
 LANGUAGE plpgsql;
 
+CREATE FUNCTION soulmates_trigger_row_aiu() RETURNS trigger
+AS $$
+BEGIN
+  -- notification handling begin
+  DECLARE
+    v_demanded_seeker_id seekers.id%type;
+    v_involved_seeker_id seekers.id%type;
+
+  BEGIN
+    SELECT seeker_id INTO v_demanded_seeker_id FROM demands WHERE id = new.demand_id;
+    SELECT seeker_id INTO v_involved_seeker_id FROM evolutions WHERE id = new.evolution_id;
+
+    IF TG_OP = 'INSERT' THEN
+      INSERT INTO notifications (seeker_id, involved_seeker_id, type) VALUES (v_demanded_seeker_id, CASE WHEN new.is_exposed THEN v_involved_seeker_id ELSE NULL END, 'soulmate-found');
+      INSERT INTO notifications (seeker_id, involved_seeker_id, type) VALUES (v_involved_seeker_id, v_demanded_seeker_id, 'soulmate-pending_expose_permission');
+    ELSIF TG_OP = 'UPDATE' AND new.is_exposed THEN
+      INSERT INTO notifications (seeker_id, involved_seeker_id, type) VALUES (v_demanded_seeker_id, v_involved_seeker_id, 'soulmate-exposed');
+    END IF;
+  END;
+  -- notification handling end
+
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
 
 CREATE TRIGGER soulmates_row_ad_trigger AFTER DELETE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_ad();
 CREATE TRIGGER soulmates_row_bui_trigger BEFORE UPDATE OR INSERT ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_bui();
+CREATE TRIGGER soulmates_row_aiu_trigger AFTER INSERT OR UPDATE ON soulmates FOR EACH ROW EXECUTE PROCEDURE soulmates_trigger_row_aiu();
 
 
 CREATE TABLE soulmate_requests (
@@ -1413,6 +1446,43 @@ CREATE TABLE eyebrow_colors (
   CONSTRAINT eyebrow_colors_colors_id_fk FOREIGN KEY (color_id) REFERENCES colors(id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
+
+
+CREATE TABLE notifications (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seeker_id integer NOT NULL,
+  involved_seeker_id integer,
+  type notification_type NOT NULL,
+  seen boolean NOT NULL DEFAULT FALSE,
+  seen_at timestamptz,
+  notified_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT notifications_seeker_id_fk FOREIGN KEY (seeker_id) REFERENCES seekers(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT notifications_involved_seeker_id_fk FOREIGN KEY (involved_seeker_id) REFERENCES seekers(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE FUNCTION notifications_trigger_row_biu() RETURNS trigger
+AS $$
+BEGIN
+  BEGIN -- seen and seen_at sync handling begin
+    IF TG_OP = 'UPDATE' AND old.seen_at IS DISTINCT FROM new.seen_at THEN
+      new.seen = new.seen_at IS NOT NULL;
+    END IF;
+
+    IF new.seen THEN
+      new.seen_at = COALESCE(new.seen_at, now());
+    ELSE
+      new.seen_at = NULL;
+    END IF;
+  END; -- seen and seen_at sync handling end
+
+  RETURN new;
+END
+$$
+LANGUAGE plpgsql
+VOLATILE;
+
+CREATE TRIGGER notifications_row_biu_trigger BEFORE INSERT OR UPDATE ON notifications FOR EACH ROW EXECUTE PROCEDURE notifications_trigger_row_biu();
+
 -----
 
 -- VIEWS --

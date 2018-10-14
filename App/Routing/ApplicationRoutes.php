@@ -311,6 +311,26 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($seeker, ['member'])
 				);
 			},
+			'notifications [GET]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Notifications\Get(
+						$this->uri,
+						$this->connection,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
+			'notifications [HEAD]' => function() use ($seeker): Application\View {
+				return new View\AuthenticatedView(
+					new Endpoint\Notifications\Head(
+						$this->uri,
+						$this->connection,
+						$seeker
+					),
+					new Http\ChosenRole($seeker, ['member'])
+				);
+			},
 			'soulmates/{id} [PATCH]' => function() use ($seeker, $request): Application\View {
 				return new View\AuthenticatedView(
 					new Endpoint\Soulmate\Patch(

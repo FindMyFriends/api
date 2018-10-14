@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace FindMyFriends\System;
 
+use FindMyFriends\Domain\Access;
 use FindMyFriends\Routing;
 use FindMyFriends\TestCase;
 use Klapuch\Http;
@@ -19,8 +20,12 @@ final class HeadGetTest extends TestCase\Runtime {
 	 * @dataProvider getHeadEndpoints
 	 */
 	public function testHeadAndGetMatchingInHeaders(string $endpoint): void {
-		$headHeaders = $this->response($endpoint, 'HEAD');
-		$getHeaders = $this->response($endpoint, 'GET');
+		$headResponse = $this->response($endpoint, 'HEAD');
+		$getResponse = $this->response($endpoint, 'GET');
+		$headHeaders = $headResponse->headers();
+		$getHeaders = $getResponse->headers();
+		Assert::same(200, $headResponse->code());
+		Assert::same(200, $getResponse->code());
 		unset($headHeaders['Content-Type'], $getHeaders['Content-Type']);
 		unset($headHeaders['Content-Length'], $getHeaders['Content-Length']);
 		unset($headHeaders['Date'], $getHeaders['Date']);
@@ -42,17 +47,25 @@ final class HeadGetTest extends TestCase\Runtime {
 		);
 	}
 
-	private function response(string $endpoint, string $method): array {
+	private function response(string $endpoint, string $method): Http\Response {
 		return (new Http\BasicRequest(
 			$method,
 			new Uri\FakeUri(sprintf('http://find-my-friends-nginx/%s', $endpoint)),
-			[CURLOPT_NOBODY => true]
-		))->send()->headers();
+			[
+				CURLOPT_NOBODY => true,
+				CURLOPT_HTTPHEADER => [sprintf('Authorization: Bearer %s', $this->token())],
+			]
+		))->send();
+	}
+
+	private function token(): string {
+		return (new Access\TestingEntrance())->enter([])->id();
 	}
 
 	protected function getHeadEndpoints(): array {
 		return [
-			['demands/2wrWlWqMg7DY/soulmates'],
+			['soulmates'],
+			['notifications'],
 		];
 	}
 }

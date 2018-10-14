@@ -7,6 +7,7 @@ use FindMyFriends\Domain\Access;
 use FindMyFriends\Endpoint\Demand;
 use FindMyFriends\Endpoint\Demands;
 use FindMyFriends\Endpoint\Evolutions;
+use FindMyFriends\Endpoint\Notifications;
 use FindMyFriends\Endpoint\Soulmates;
 use FindMyFriends\Schema;
 use FindMyFriends\TestCase;
@@ -71,6 +72,9 @@ final class SortTest extends TestCase\Runtime {
 			],
 			[
 				sprintf('evolutions?sort=%s', implode(',', Evolutions\Get::SORTS)),
+			],
+			[
+				sprintf('notifications?sort=%s', implode(',', Notifications\Get::SORTS)),
 			],
 			[
 				sprintf('soulmates?sort=%s', implode(',', Soulmates\Get::SORTS)),

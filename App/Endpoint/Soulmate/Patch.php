@@ -11,6 +11,7 @@ use FindMyFriends\Response;
 use Klapuch\Application;
 use Klapuch\Internal;
 use Klapuch\Storage;
+use Klapuch\Validation;
 
 final class Patch implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/patch.json';
@@ -58,8 +59,9 @@ final class Patch implements Application\View {
 			),
 			new Search\StoredSoulmate($parameters['id'], $this->connection)
 		))->clarify(
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA)
+			(new Validation\ChainedRule(
+				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+				new Constraint\SoulmateRule()
 			))->apply(
 				(new Internal\DecodedJson(
 					$this->request->body()->serialization()

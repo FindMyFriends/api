@@ -107,6 +107,10 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 		$activation = new Schema\Activation\Structure();
 		$schemas->save($activation->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Activations/schema/post.json'));
+
+		$notification = new Schema\Notification\Structure($this->connection);
+		$schemas->save($notification->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Notifications/schema/get.json'));
+		$schemas->save($notification->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Notification/schema/patch.json'));
 	}
 
 	public function name(): string {

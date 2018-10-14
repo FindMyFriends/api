@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": [
+                "integer",
+                "null"
+            ]
+        },
+        "seeker_id": {
+            "type": "integer"
+        },
+        "involved_seeker_id": {
+            "type": [
+                "integer",
+                "null"
+            ]
+        },
+        "seen": {
+            "type": "boolean"
+        },
+        "seen_at": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time"
+        },
+        "notified_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "soulmate-exposed",
+                "soulmate-found",
+                "soulmate-pending_expose_permission"
+            ]
+        }
+    },
+    "required": [
+        "id",
+        "seeker_id",
+        "involved_seeker_id",
+        "seen",
+        "seen_at",
+        "notified_at",
+        "type"
+    ],
+    "type": "object"
+}
