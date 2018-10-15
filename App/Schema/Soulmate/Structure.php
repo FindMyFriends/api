@@ -63,7 +63,7 @@ final class Structure {
 			$properties['new'],
 			$properties['searched_at'],
 			$properties['related_at'],
-			$properties['ownerships']
+			$properties['ownership']
 		);
 		$schema['anyOf'] = [
 			['required' => ['is_correct']],
