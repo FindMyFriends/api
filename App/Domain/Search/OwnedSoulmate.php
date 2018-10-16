@@ -47,18 +47,22 @@ final class OwnedSoulmate implements Soulmate {
 	}
 
 	/**
-	 * @param array $clarification
+	 * @param bool $correct
 	 * @throws \UnexpectedValueException
 	 */
-	public function clarify(array $clarification): void {
-		if (
-			!$this->owned($this->id)
-			|| (isset($clarification['is_exposed']) && !$this->evolving($this->id))
-			|| (isset($clarification['is_correct']) && !$this->demanding($this->id))
-		) {
+	public function clarify(bool $correct): void {
+		if (!$this->owned($this->id) || !$this->demanding($this->id))
 			throw $this->exception($this->id);
-		}
-		$this->origin->clarify($clarification);
+		$this->origin->clarify($correct);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function expose(): void {
+		if (!$this->owned($this->id) || !$this->evolving($this->id))
+			throw $this->exception($this->id);
+		$this->origin->expose();
 	}
 
 	private function demanding(int $id): bool {

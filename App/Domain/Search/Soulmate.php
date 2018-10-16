@@ -15,8 +15,14 @@ interface Soulmate {
 
 	/**
 	 * Update info about soulmate a bit to be correct
-	 * @param mixed[] $clarification
+	 * @param bool $correct
 	 * @return void
 	 */
-	public function clarify(array $clarification): void;
+	public function clarify(bool $correct): void;
+
+	/**
+	 * Allow seeker to view information about found person
+	 * @return void
+	 */
+	public function expose(): void;
 }

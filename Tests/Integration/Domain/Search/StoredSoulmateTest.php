@@ -66,8 +66,17 @@ final class StoredSoulmateTest extends TestCase\Runtime {
 		(new Search\StoredSoulmate(
 			$id,
 			$this->connection
-		))->clarify(['is_correct' => false]);
+		))->clarify(false);
 		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT is_correct FROM soulmates'))->field());
+	}
+
+	public function testExposing(): void {
+		['id' => $id] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['is_exposed' => false]))->try();
+		(new Search\StoredSoulmate(
+			$id,
+			$this->connection
+		))->expose();
+		Assert::true((new Storage\TypedQuery($this->connection, 'SELECT is_exposed FROM soulmates'))->field());
 	}
 }
 

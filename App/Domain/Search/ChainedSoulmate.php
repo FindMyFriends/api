@@ -20,8 +20,13 @@ final class ChainedSoulmate implements Soulmate {
 		return $format;
 	}
 
-	public function clarify(array $clarification): void {
+	public function clarify(bool $correct): void {
 		foreach ($this->origins as $origin)
-			$origin->clarify($clarification);
+			$origin->clarify($correct);
+	}
+
+	public function expose(): void {
+		foreach ($this->origins as $origin)
+			$origin->expose();
 	}
 }

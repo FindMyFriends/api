@@ -39,7 +39,7 @@ final class Patch implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Search\ChainedSoulmate(
+		$soulmate = new Search\ChainedSoulmate(
 			new Search\HarnessedSoulmate(
 				new Search\ExistingSoulmate(
 					new Search\FakeSoulmate(),
@@ -58,16 +58,19 @@ final class Patch implements Application\View {
 				new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
 			),
 			new Search\StoredSoulmate($parameters['id'], $this->connection)
-		))->clarify(
-			(new Validation\ChainedRule(
-				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-				new Constraint\SoulmateRule()
-			))->apply(
-				(new Internal\DecodedJson(
-					$this->request->body()->serialization()
-				))->values()
-			)
 		);
+		$input = (new Validation\ChainedRule(
+			new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+			new Constraint\SoulmateRule()
+		))->apply(
+			(new Internal\DecodedJson(
+				$this->request->body()->serialization()
+			))->values()
+		);
+		if (isset($input['is_correct']))
+			$soulmate->clarify($input['is_correct']);
+		if (isset($input['is_exposed']) && $input['is_exposed'])
+			$soulmate->expose();
 		return new Response\EmptyResponse();
 	}
 }

@@ -34,14 +34,24 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				1,
 				new Access\FakeSeeker('2'),
 				$this->connection
-			))->clarify([]);
+			))->clarify(false);
+		}, \UnexpectedValueException::class, 'This is not your soulmate');
+		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
+		$ex = Assert::exception(function () {
+			(new Search\OwnedSoulmate(
+				new Search\FakeSoulmate(),
+				1,
+				new Access\FakeSeeker('2'),
+				$this->connection
+			))->expose();
 		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::type(\UnexpectedValueException::class, $ex->getPrevious());
 	}
 
 	public function testPassingOnDemandOwner(): void {
 		['id' => $seeker] = (new Misc\SampleSeeker($this->connection))->try();
-		['id' => $evolution] = (new Misc\SampleEvolution($this->connection))->try();
+		['id' => $evolvedSeeker] = (new Misc\SampleSeeker($this->connection))->try();
+		['id' => $evolution] = (new Misc\SampleEvolution($this->connection, ['seeker_id' => $evolvedSeeker]))->try();
 		['id' => $demand] = (new Misc\SampleDemand($this->connection, ['seeker_id' => $seeker]))->try();
 		['id' => $soulmate] = (new Misc\SamplePostgresData($this->connection, 'soulmate', ['demand_id' => $demand, 'evolution_id' => $evolution]))->try();
 		Assert::noError(function () use ($soulmate, $seeker) {
@@ -58,7 +68,15 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				$soulmate,
 				new Access\FakeSeeker((string) $seeker),
 				$this->connection
-			))->clarify([]);
+			))->clarify(false);
+		});
+		Assert::noError(function () use ($soulmate, $evolvedSeeker) {
+			(new Search\OwnedSoulmate(
+				new Search\FakeSoulmate(),
+				$soulmate,
+				new Access\FakeSeeker((string) $evolvedSeeker),
+				$this->connection
+			))->expose();
 		});
 	}
 
@@ -73,7 +91,7 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				$soulmate,
 				new Access\FakeSeeker((string) $seeker),
 				$this->connection
-			))->clarify(['is_exposed' => true]);
+			))->expose();
 		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::noError(function () use ($soulmate, $seeker) {
 			(new Search\OwnedSoulmate(
@@ -81,7 +99,7 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				$soulmate,
 				new Access\FakeSeeker((string) $seeker),
 				$this->connection
-			))->clarify(['is_correct' => false]);
+			))->clarify(false);
 		});
 	}
 
@@ -96,7 +114,7 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				$soulmate,
 				new Access\FakeSeeker((string) $seeker),
 				$this->connection
-			))->clarify(['is_correct' => true]);
+			))->clarify(true);
 		}, \UnexpectedValueException::class, 'This is not your soulmate');
 		Assert::noError(function () use ($soulmate, $seeker) {
 			(new Search\OwnedSoulmate(
@@ -104,7 +122,7 @@ final class OwnedSoulmateTest extends TestCase\Runtime {
 				$soulmate,
 				new Access\FakeSeeker((string) $seeker),
 				$this->connection
-			))->clarify(['is_exposed' => false]);
+			))->expose();
 		});
 	}
 }

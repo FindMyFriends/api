@@ -13,6 +13,9 @@ final class FakeSoulmate implements Soulmate {
 		return $format;
 	}
 
-	public function clarify(array $clarification): void {
+	public function clarify(bool $correct): void {
+	}
+
+	public function expose(): void {
 	}
 }

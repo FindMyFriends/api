@@ -37,13 +37,22 @@ final class ExistingSoulmate implements Soulmate {
 	}
 
 	/**
-	 * @param array $clarification
+	 * @param bool $correct
 	 * @throws \UnexpectedValueException
 	 */
-	public function clarify(array $clarification): void {
+	public function clarify(bool $correct): void {
 		if (!$this->exists($this->id))
 			throw $this->exception($this->id);
-		$this->origin->clarify($clarification);
+		$this->origin->clarify($correct);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function expose(): void {
+		if (!$this->exists($this->id))
+			throw $this->exception($this->id);
+		$this->origin->expose();
 	}
 
 	private function exists(int $id): bool {
