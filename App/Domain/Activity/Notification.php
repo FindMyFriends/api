@@ -12,4 +12,16 @@ interface Notification {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function receive(Output\Format $format): Output\Format;
+
+	/**
+	 * Mark notification as seen
+	 * @return void
+	 */
+	public function seen(): void;
+
+	/**
+	 * Mark notification as unseen
+	 * @return void
+	 */
+	public function unseen(): void;
 }

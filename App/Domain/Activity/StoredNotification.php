@@ -30,4 +30,20 @@ final class StoredNotification implements Notification {
 		))->row();
 		return new Output\FilledFormat($format, $notification);
 	}
+
+	public function seen(): void {
+		(new Storage\TypedQuery(
+			$this->connection,
+			'UPDATE notifications SET seen = TRUE WHERE id = ?',
+			[$this->id]
+		))->execute();
+	}
+
+	public function unseen(): void {
+		(new Storage\TypedQuery(
+			$this->connection,
+			'UPDATE notifications SET seen = FALSE WHERE id = ?',
+			[$this->id]
+		))->execute();
+	}
 }

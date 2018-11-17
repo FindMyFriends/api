@@ -24,4 +24,12 @@ final class PublicNotification implements Notification {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
+
+	public function seen(): void {
+		$this->origin->seen();
+	}
+
+	public function unseen(): void {
+		$this->origin->unseen();
+	}
 }

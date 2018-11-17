@@ -9,4 +9,10 @@ final class FakeNotification implements Notification {
 	public function receive(Output\Format $format): Output\Format {
 		return $format;
 	}
+
+	public function seen(): void {
+	}
+
+	public function unseen(): void {
+	}
 }
