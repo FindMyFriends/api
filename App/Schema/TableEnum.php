@@ -22,6 +22,6 @@ final class TableEnum implements Enum {
 			$this->connection,
 			sprintf('SELECT id, name FROM %s ORDER BY id', $this->table)
 		))->rows();
-		return array_combine(array_column($enum, 'id'), $enum);
+		return (array) array_combine(array_column($enum, 'id'), $enum);
 	}
 }

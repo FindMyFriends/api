@@ -28,6 +28,6 @@ final class ColorEnum implements Enum {
 				$this->set
 			)
 		))->rows();
-		return array_combine(array_column($colors, 'id'), $colors);
+		return (array) array_combine(array_column($colors, 'id'), $colors);
 	}
 }

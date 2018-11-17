@@ -17,7 +17,7 @@ final class MappedSelection implements Dataset\Selection {
 	}
 
 	public function criteria(): array {
-		return array_combine(
+		return (array) array_combine(
 			array_keys($this->origin->criteria()),
 			array_reduce(
 				$this->origin->criteria(),

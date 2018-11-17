@@ -15,13 +15,13 @@ final class KeyValueMapping implements Mapping {
 		$keys = array_intersect_key($this->map, $connection);
 		ksort($connection);
 		ksort($keys);
-		return array_combine($keys, $connection);
+		return (array) array_combine($keys, $connection);
 	}
 
 	public function database(array $application): array {
 		$keys = array_intersect_key(array_flip($this->map), $application);
 		ksort($keys);
 		ksort($application);
-		return array_combine($keys, $application);
+		return (array) array_combine($keys, $application);
 	}
 }

@@ -30,7 +30,7 @@ final class SuitedHashIdMask implements Routing\Mask {
 	 */
 	public function parameters(): array {
 		$parameters = $this->origin->parameters();
-		return array_combine(
+		return (array) array_combine(
 			array_keys($parameters),
 			array_map(
 				function(string $type, $value) {

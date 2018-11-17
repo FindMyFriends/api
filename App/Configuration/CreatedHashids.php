@@ -23,7 +23,7 @@ final class CreatedHashids implements Configuration\Source {
 	 */
 	public function read(): array {
 		$configuration = $this->origin->read();
-		return array_combine(
+		return (array) array_combine(
 			array_keys($configuration),
 			array_map(
 				static function (string $salt, int $length): Hashids {
